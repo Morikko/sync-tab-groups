@@ -14,6 +14,10 @@
         "bookmarks", "tabs"
     ],
 
+    "background": {
+        "scripts": ["background/controller.js"]
+    },
+
     "browser_action": {
         "default_icon": "icons/tabspace-32.png",
         "default_title": "Tabspace",
