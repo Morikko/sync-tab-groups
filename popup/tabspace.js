@@ -1,6 +1,11 @@
 var tabspaceBackground = browser.runtime.getBackgroundPage();
 var workspaces;
 
+function createTabspaceHeader( title ){
+
+    return React.createElement('div', {className: 'tabspace_header', key:'0'}, title);
+}
+
 /*
  * Show tabspaces in the popup
  */
@@ -8,16 +13,16 @@ function showTabspaces(){
     var tabspace_list = workspaces.map( (workspace) => {
 
       /* Header */
-      var header = React.createElement('div', {key:'0'}, workspace.tabSpace.title);
+      var header = createTabspaceHeader( workspace.tabSpace.title );
 
       /* Content tabs */
       var list_tabs = workspace.tabSpace.tabs.map( (tab) => {
         return React.createElement('li', {key: tab.id}, tab.title);
       });
-      var content_tabs = React.createElement('ul', {key:'1'}, list_tabs)
+      var content_tabs = React.createElement('ul', {className: 'tabspace_content', key:'1'}, list_tabs)
 
       /* Wrapper */
-      return React.createElement('div', {key: workspace.windowId.toString()}, [header, content_tabs]);
+      return React.createElement('div', {className: 'tabspace_wrap', key: workspace.windowId.toString()}, [header, content_tabs]);
     });
 
     // Show
