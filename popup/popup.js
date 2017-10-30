@@ -21,10 +21,12 @@ const Actions = {
   },
 
   uiHeightChanged: function() {
+    /* TODO: no need anymore, panel is not manage anymore by controller.js
     sendMessage("UI:Resize", {
       width: document.body.clientWidth,
       height: document.body.clientHeight
     });
+    */
   },
 
   renameGroup: function(groupID, title) {
@@ -39,7 +41,7 @@ const Actions = {
   },
 
   moveTabToGroup: function(sourceGroupID, tabIndex, targetGroupID) {
-    sendMessage("Group:Drop", {sourceGroupID:sourceGroupID, tabIndex:tabIndex, targetGroupID:targetGroupID});
+    sendMessage("Group:MoveTab", {sourceGroupID:sourceGroupID, tabIndex:tabIndex, targetGroupID:targetGroupID});
   },
 
   selectTab: function(groupID, tabIndex) {
@@ -80,16 +82,33 @@ document.addEventListener("DOMContentLoaded", () => {
 var popupMessenger = function ( message, sender, sendResponse ) {
   switch ( message.task ) {
     case "Groups:Changed":
-      store.dispatch(ActionCreators.setTabgroups(message.params.tabgroups));
+      init();
       break;
     case "Groups:CloseTimeoutChanged":
       store.dispatch(ActionCreators.setGroupCloseTimeout(message.params.timeout));
       break;
-    default:
-
   }
   console.log( message );
   console.log( sender );
 }
 
 browser.runtime.onMessage.addListener(popupMessenger);
+
+var tabspaceBackground = browser.runtime.getBackgroundPage();
+
+/*
+ * Access to the groups and show them
+ */
+function init() {
+  tabspaceBackground.then( (page) => {
+    store.dispatch(ActionCreators.setTabgroups(page.groups));
+  });
+}
+
+
+var readyStateCheckInterval = setInterval(function() {
+    if (document.readyState === "complete") {
+        clearInterval(readyStateCheckInterval);
+        init();
+    }
+}, 10);
