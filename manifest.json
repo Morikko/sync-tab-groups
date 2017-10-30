@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Tabspace",
     "version": "0.1",
 
+    "name": "Tabspace",
     "description": "Add an icon in the tabs panel for grouping tabs and switching between groups.",
     "homepage_url": "https://github.com/Morikko/tabspace",
     "icons": {
@@ -23,6 +23,6 @@
     "browser_action": {
         "default_icon": "icons/tabspace-32.png",
         "default_title": "Tabspace",
-        "default_popup": "popup/tabspace.html"
+        "default_popup": "popup/popup.html"
     }
 }

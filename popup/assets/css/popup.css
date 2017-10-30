@@ -1,0 +1,144 @@
+ul, li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+  li {
+    list-style-type: none;
+    cursor: move;
+  }
+
+.group-title {
+  display: block;
+  overflow: hidden;
+  padding-right: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+  .group.active .group-title, .tab.active {
+    font-weight: bold;
+  }
+
+  .group:hover .group-title {
+    padding-right: 15px;
+  }
+
+.group-title input {
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 0;
+  padding: 1px;
+  width: calc(100% - 25px);
+}
+
+.group, .tab {
+  border-radius: 3px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 5px;
+  position: relative;
+}
+
+  .tab {
+    padding: 0;
+  }
+
+  .group:hover, .tab:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.12);
+  }
+
+  .group.dragSourceGroup {
+    border: inherit;
+    background-color : inherit;
+  }
+
+   .group.draggingOver, .draggingOver {
+    border: 1px dashed #ccc;
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+.tab-list {
+  display: none;
+  margin-top: 5px;
+}
+
+  .expanded .tab-list {
+    display: block;
+  }
+
+.tab-title {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: calc(100% - 32px);
+  padding: 5px 5px 1px;
+  margin-bottom: 1px;
+}
+
+.tab-icon {
+  height: 16px;
+  width: 16px;
+  margin-right: 1px;
+  margin-bottom: 1px;
+  margin-left: 4px;
+}
+
+.tab-icon:-moz-broken {
+  background: url("chrome://mozapps/skin/places/defaultFavicon.png");
+  background-size: contain;
+  display: inline-block;
+}
+
+@media (min-resolution: 1.1dppx) {
+  .tab-icon:-moz-broken {
+    background-image: url("chrome://mozapps/skin/places/defaultFavicon@2x.png");
+  }
+}
+
+.expanded .group-title {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  padding-bottom: 5px;
+}
+
+.group-controls {
+  display: inline-block;
+  font-size: 120%;
+  opacity: 0.7;
+  position: absolute;
+  right: 5px;
+  top: 4px;
+}
+
+  .group.editing .group-controls {
+    top: 6px;
+  }
+
+  .group.closing .group-controls .group-close,
+  .group.closing:hover .group-controls .group-close,
+  .group.closing .group-controls .fa-chevron-down,
+  .group.closing .group-controls .group-edit {
+    display: none;
+  }
+
+  .group.closing .group-title {
+    color: #ccc;
+    text-decoration: line-through;
+  }
+
+.group:hover .group-title {
+  padding-right: 55px;
+}
+
+  .group .group-controls .group-close,
+  .group .group-controls .group-edit {
+    display: none;
+  }
+
+    .group:hover .group-controls .group-close,
+    .group:hover .group-controls .group-edit {
+      display: inline-block;
+    }
