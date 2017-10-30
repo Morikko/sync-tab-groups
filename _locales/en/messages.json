@@ -1,0 +1,46 @@
+{
+  "bindPanoramaShortcut_title": {
+    "message": "Listen to Ctrl/Cmd-Shift-E",
+    "description": "Listen to Ctrl/Cmd-Shift-E"
+  },
+
+  "groupUndoCloseTimeout_title": {
+    "message": "Closing group delay",
+    "description": "Closing group delay"
+  },
+
+  "enableAlphabeticSort_title": {
+    "message": "Enable alphabetic sorting",
+    "description": "Enable alphabetic sorting"
+  },
+
+  "groupUndoCloseTimeout_description": {
+    "message": "Delay in seconds to wait before the group gets actually closed.",
+    "description": "Delay in seconds to wait before the group gets actually closed."
+  },
+
+  "add_group": {
+    "message": "Create new group",
+    "description": "Create new group"
+  },
+
+  "panelButton_label": {
+    "message": "Group Tabs",
+    "description": "Group Tabs"
+  },
+
+  "unnamed_group": {
+    "message": "Unnamed Group",
+    "description": "Unnamed Group"
+  },
+
+  "close_group_prompt_title": {
+    "message": "Close group",
+    "description": "Close group"
+  },
+
+  "close_group_prompt_message": {
+    "message": "Do you want to close this group?",
+    "description": "Do you want to close this group?"
+  }
+}

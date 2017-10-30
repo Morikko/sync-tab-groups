@@ -1,0 +1,46 @@
+{
+  "bindPanoramaShortcut_title": {
+    "message": "Sneltoets Ctrl/Cmd-Shift-E activeren",
+    "description": "Sneltoets Ctrl/Cmd-Shift-E activeren"
+  },
+
+  "groupUndoCloseTimeout_title": {
+    "message": "Vertraging op sluiten van groepen",
+    "description": "Vertraging op sluiten van groepen"
+  },
+
+  "enableAlphabeticSort_title": {
+    "message": "Alfabetische sortering activeren",
+    "description": "Alfabetische sortering activeren"
+  },
+
+  "groupUndoCloseTimeout_description": {
+    "message": "Vertraging in seconden waarna de groep gesloten zal worden",
+    "description": "Vertraging in seconden waarna de groep gesloten zal worden"
+  },
+
+  "add_group": {
+    "message": "Nieuwe groep toevoegen",
+    "description": "Nieuwe groep toevoegen"
+  },
+
+  "panelButton_label": {
+    "message": "Tabbladen groeperen",
+    "description": "Tabbladen groeperen"
+  },
+
+  "unnamed_group": {
+    "message": "Niet-benoemde groep",
+    "description": "Niet-benoemde groep"
+  },
+
+  "close_group_prompt_title": {
+    "message": "Groep sluiten",
+    "description": "Groep sluiten"
+  },
+
+  "close_group_prompt_message": {
+    "message": "Wilt u deze groep sluiten?",
+    "description": "Wilt u deze groep sluiten?"
+  }
+}
