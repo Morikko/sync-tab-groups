@@ -7,9 +7,32 @@ var Group = function(id, title = "", tabs = []) {
 var groups = [];
 var currentGroupIndex = 0;
 
+/*
+ * Return true if the url is privileged
+ * Privileged url: chrome: URLs, javascript: URLs,
+                    data: URLs, file: URLs, about: URLs
+ * Non-privileged URLs: about:blank, about:newtab ( should be
+ * replaced by null ), all the other ones
+ */
+function filterPrivilegedURL(url) {
+  if (url === "about:newtab")
+    return false;
+  if (url.startsWith("chrome:") ||
+    url.startsWith("javascript:") ||
+    url.startsWith("data:") ||
+    url.startsWith("file:") ||
+    url.startsWith("about:"))
+    return true;
+
+  return false;
+}
+
+
 function TabManager(storage) {
   //this._storage = storage;
 }
+
+
 
 TabManager.prototype = {
   /**
@@ -39,6 +62,19 @@ TabManager.prototype = {
     return retGroups;
   },
 
+  /*
+   * Take the current tabs on the current frame and set it as the tabs
+   * for the group: groupId
+   */
+  updateGroup: function(groupId) {
+    browser.tabs.query({
+      currentWindow: true
+    }).then((tabs) => {
+      console.log(groupId + " " + tabs);
+      groups[groupId].tabs = tabs;
+    });
+  },
+
   /**
    * Open all the tabs
    * Return the last tab creation promise
@@ -46,16 +82,15 @@ TabManager.prototype = {
    */
   createListOfTabs: function(tabs) {
     tabs.map((tab, index) => {
+      tab.url = (tab.url === "") ? null : tab.url;
       browser.tabs.create({
-        url: (tab.url === "") ? null : tab.url,
+        url: tab.url,
         active: tab.active,
         pinned: tab.pinned,
         index: index
       });
     });
   },
-
-
 
   /**
    * Close all the current tabs and open the tabs from the selected group
@@ -78,19 +113,21 @@ TabManager.prototype = {
       // 2. Add new group tabs
       if (groups[groupId].tabs.length === 0) {
         groups[groupId].tabs.push({
-          url: "", // no url will replaced by null and open about:newtab
+          url: "about:newtab",
           active: true,
           pinned: false
         });
       }
       //this.createListOfTabs(groups[groupId].tabs);
       groups[groupId].tabs.map((tab, index) => {
-        browser.tabs.create({
-          url: (tab.url === "") ? null : tab.url,
-          active: tab.active,
-          pinned: tab.pinned,
-          index: index
-        });
+        if ( !filterPrivilegedURL( tab.url ) ) {
+          browser.tabs.create({
+            url: (tab.url === "about:newtab") ? null : tab.url,
+            active: tab.active,
+            pinned: tab.pinned,
+            index: index
+          });
+        }
       });
 
       // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
@@ -149,7 +186,7 @@ TabManager.prototype = {
     // Get not supported link tab id
     var tabsIds = [];
     groups[groupID].tabs.map((tab) => {
-      if (tab.url.startsWith("about:"))
+      if ( filterPrivilegedURL(tab.url) )
         tabsIds.push(tab.id);
     });
 
@@ -162,6 +199,7 @@ TabManager.prototype = {
         groups[groupID].tabs = tabs;
       });
     });
+
   },
 
   /**
@@ -177,6 +215,8 @@ TabManager.prototype = {
     this.removeUnallowedURL(currentGroupIndex);
 
     this.changeGroupTo(groupID);
+
+    this.update(groupID);
   },
 
   /**

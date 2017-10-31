@@ -214,33 +214,33 @@ Controller.prototype = {
 
 // Event from: tabs, windows
 var controllerMessenger = function(message) {
-    switch (message.task) {
-      case "Group:Add":
-        controller.onGroupAdd();
+  switch (message.task) {
+    case "Group:Add":
+      controller.onGroupAdd();
+      break;
+    case "Group:AddWithTab":
+      controller.onGroupAddWithTab();
+      break;
+    case "Group:Close":
+      controller.onGroupClose(message.params);
+      break;
+    case "Group:Rename":
+      controller.onGroupRename(message.params);
+      break;
+    case "Group:Select":
+      if (message.params.groupID === null) {
+        console.log("No GROUPID....");
         break;
-      case "Group:AddWithTab":
-        controller.onGroupAddWithTab();
-        break;
-      case "Group:Close":
-        controller.onGroupClose(message.params);
-        break;
-      case "Group:Rename":
-        controller.onGroupRename(message.params);
-        break;
-      case "Group:Select":
-        if ( message.params.groupID === null ) {
-          console.log( "No GROUPID...." );
-          break;
-        }
-        controller.onGroupSelect(message.params);
-        break;
-      case "Group:MoveTab":
-        controller.onMoveTabToGroup(message.params);
-        break;
-      case "Tab:Select":
-        controller.onTabSelect(message.params);
-        break;
-    }
+      }
+      controller.onGroupSelect(message.params);
+      break;
+    case "Group:MoveTab":
+      controller.onMoveTabToGroup(message.params);
+      break;
+    case "Tab:Select":
+      controller.onTabSelect(message.params);
+      break;
+  }
   console.log(message);
 }
 
@@ -249,25 +249,36 @@ var controller = new Controller();
 browser.runtime.onMessage.addListener(controllerMessenger);
 
 // Event from: tabs, windows
+function updateGroup() {
+  controller.tabmanager.updateGroup(currentGroupIndex);
+  controller.refreshUi();
+}
+
 // TODO query and rewrite data
 browser.tabs.onActivated.addListener(() => {
-
+  updateGroup();
 });
 browser.tabs.onCreated.addListener(() => {
-
+  updateGroup();
 });
 browser.tabs.onRemoved.addListener(() => {
-
+  /* Bug: onRemoved is fired before the tab is really close
+   * Workaround: keep a delay
+   * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
+   */
+  setTimeout(()=>{
+    updateGroup();
+  }, 300);
 });
 browser.tabs.onMoved.addListener(() => {
-
+  updateGroup();
 });
 browser.tabs.onUpdated.addListener(() => {
-
+  updateGroup();
 });
 browser.tabs.onAttached.addListener(() => {
-
+  updateGroup();
 });
 browser.tabs.onDetached.addListener(() => {
-
+  updateGroup();
 });
