@@ -38,6 +38,7 @@ const TabList = React.createClass({
         this.props.tabs.map((tab) => {
           return React.createElement(Tab, {
             key: tab.index,
+            group: this.props.group,
             tab: tab,
             onTabClick: this.props.onTabClick,
             onTabDrag: this.props.onTabDrag,

@@ -79,17 +79,16 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 });
 
-var popupMessenger = function ( message, sender, sendResponse ) {
-  switch ( message.task ) {
-    case "Groups:Changed":
-      init();
-      break;
-    case "Groups:CloseTimeoutChanged":
-      store.dispatch(ActionCreators.setGroupCloseTimeout(message.params.timeout));
-      break;
-  }
+var popupMessenger = function ( message ) {
+    switch ( message.task ) {
+      case "Groups:Changed":
+        init();
+        break;
+      case "Groups:CloseTimeoutChanged":
+        store.dispatch(ActionCreators.setGroupCloseTimeout(message.params.timeout));
+        break;
+    }
   console.log( message );
-  console.log( sender );
 }
 
 browser.runtime.onMessage.addListener(popupMessenger);

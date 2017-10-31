@@ -1,12 +1,11 @@
-var Group = function(id, title="", tabs=[] ) {
-    this.title = title;
-    this.tabs = tabs;
-    this.id = id;
+var Group = function(id, title = "", tabs = []) {
+  this.title = title;
+  this.tabs = tabs;
+  this.id = id;
 }
 
 var groups = [];
-var currentGroupIndex;
-
+var currentGroupIndex = 0;
 
 function TabManager(storage) {
   //this._storage = storage;
@@ -23,7 +22,7 @@ TabManager.prototype = {
 
     let retGroups = groups.map((group, index) => {
       return Object.assign({}, group, {
-        tabs:tabs
+        tabs: tabs
       });
     });
 
@@ -41,43 +40,64 @@ TabManager.prototype = {
   },
 
   /**
-   * TODO
+   * Open all the tabs
+   * Return the last tab creation promise
+   * Asynchronous
    */
-  createTab: function( tab ) {
-
+  createListOfTabs: function(tabs) {
+    tabs.map((tab, index) => {
+      browser.tabs.create({
+        url: (tab.url === "") ? null : tab.url,
+        active: tab.active,
+        pinned: tab.pinned,
+        index: index
+      });
+    });
   },
+
+
 
   /**
    * Close all the current tabs and open the tabs from the selected group
    * The active tab will be the last one active
    * @param {Number} groupId - the group index
+   * Return the last action promise
+   * Asynchronous
    */
-  changeGroupTo: function( groupId ) {
-    // Change group
-    // Get current tabs
-    var tabsIds = [];
+  changeGroupTo: function(groupId) {
+    var self = this;
+
     browser.tabs.query({
-        currentWindow: true
-      }).then((tabs) => {
-        tabs.map( (tab) => {
-          tabsIds.push(tab.id);
-        });
+      currentWindow: true
+    }).then((tabs) => {
+      // 1. Save current tabs id for removing them after
+      var tabsIds = [];
+      tabs.map((tab) => {
+        tabsIds.push(tab.id);
       });
 
-    // Add new group tabs
-    groups[groupId].tabs.map( (tab, index) => {
-      browser.tabs.create({
-          url:tab.url,
+      // 2. Add new group tabs
+      if (groups[groupId].tabs.length === 0) {
+        groups[groupId].tabs.push({
+          url: "", // no url will replaced by null and open about:newtab
+          active: true,
+          pinned: false
+        });
+      }
+      //this.createListOfTabs(groups[groupId].tabs);
+      tabs.map((tab, index) => {
+        browser.tabs.create({
+          url: (tab.url === "") ? null : tab.url,
           active: tab.active,
           pinned: tab.pinned,
           index: index
-       });
+        });
+      });
+
+      // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
+      browser.tabs.remove(tabsIds);
+      currentGroupIndex = groupId;
     });
-
-    // Remove old group tabs
-    browser.tabs.remove(tabsIds);
-
-    currentGroup = groupID;
   },
 
   /**
@@ -85,18 +105,79 @@ TabManager.prototype = {
    * The tab needs to be in the window
    * @param {Number} tabId - the tab index
    */
-  activeTabInWindow: function( tabId ) {
+  activeTabInWindow: function(tabId) {
     browser.tabs.query({
+      currentWindow: true
+    }).then((tabs) => {
+      for (var tab of tabs) {
+        if (tab.index === tabId) {
+          browser.tabs.update(tab.id, {
+            active: true
+          });
+        }
+      }
+    });
+  },
+
+  /**
+   * Move tab beetwen groups
+   * TODO: Get sourceGroupID for handling all the cases
+   * @param {Number} tabIndex - the tabs index
+   * @param {Number} targetGroupID - target groupID (where to move tab)
+   */
+  moveTabToGroup: function(sourceGroupID, tabIndex, targetGroupID) {
+    console.log("moveTabToGroup won't work")
+    if (currentGroupIndex === targetGroupID) {
+      return;
+    }
+
+    let tab = groups[currentGroupIndex].tabs[tabIndex];
+    // Update groups
+    groups[targetGroupID].tabs.push(tab);
+    groups[currentGroupIndex].tabs.splice(tabIndex, 1);
+
+    if (tab.active) {
+      this.changeGroupTo(groupID);
+      this.activeTabInWindow(tabIndex);
+    }
+  },
+
+  /**
+   * Return a promise on the last action
+   * Asynchronous
+   */
+  removeUnallowedURL: function(groupID) {
+    // Get not supported link tab id
+    var tabsIds = [];
+    groups[groupID].tabs.map((tab) => {
+      if (tab.url.startsWith("about:"))
+        tabsIds.push(tab.id);
+    });
+
+    // Remove them
+    browser.tabs.remove(tabsIds).then(() => {
+      // Update data
+      browser.tabs.query({
         currentWindow: true
       }).then((tabs) => {
-        for (var tab of tabs) {
-          if (tab.id === tabId) {
-            browser.tabs.update(tabId, {
-                active: true
-            });
-          }
-        }
+        groups[groupID].tabs = tabs;
       });
+    });
+  },
+
+  /**
+   * Selects a given group.
+   * @param {Number} groupID - the groupID
+   * @param {Number} tabIndex - the tab to activate
+   */
+  selectGroup: function(groupID) {
+    if (currentGroupIndex === groupID) {
+      return;
+    }
+
+    this.removeUnallowedURL(currentGroupIndex);
+
+    this.changeGroupTo(groupID);
   },
 
   /**
@@ -106,46 +187,8 @@ TabManager.prototype = {
    * @param {Number} groupID - the tabs groupID
    */
   selectTab: function(tabId, groupID) {
-    let currentGroup = groups[currentGroupIndex];
-
-    if (currentGroup !== groupID) {
-      changeGroupTo( groupID );
-    }
-    activeTabInWindow( tabId );
-  },
-
-  /**
-   * Move tab beetwen groups
-   *
-   * @param {Number} tabIndex - the tabs index
-   * @param {Number} targetGroupID - target groupID (where to move tab)
-   */
-  moveTabToGroup: function(tabIndex, targetGroupID) {
-    if ( currentGroup === targetGroupID) {
-      return;
-    }
-
-    let tab = groups[currentGroup].tabs[tabIndex];
-    // Update groups
-    groups[targetGroupID].tabs.push(tab);
-    groups[currentGroup].tabs.splice(tabIndex, 1);
-
-    if (tab.active) {
-      changeGroupTo( groupID );
-      activeTabInWindow( tabIndex );
-    }
-  },
-
-  /**
-   * Selects a given group.
-   * @param {Number} groupID - the groupID
-   * @param {Number} tabIndex - the tab to activate
-   */
-  selectGroup: function(chromeWindow, tabBrowser, groupID) {
-    if (currentGroup === groupID) {
-      return;
-    }
-    changeGroupTo( groupID );
+    this.selectGroup(groupID)
+    this.activeTabInWindow(tabId);
   },
 
   /**
@@ -158,9 +201,9 @@ TabManager.prototype = {
       return;
     }
 
-    targetGroupID = (currentGroup + direction + groups.length) % groups.length;
+    targetGroupID = (currentGroupIndex + direction + groups.length) % groups.length;
 
-    changeGroupTo( targetGroupID )
+    this.changeGroupTo(targetGroupID)
   },
 
   /**
@@ -178,7 +221,7 @@ TabManager.prototype = {
    * TODO: title, blanck tab ??
    */
   addGroup: function(title = "") {
-    groups.push( new Group(groups.length) );
+    groups.push(new Group(groups.length));
 
   },
 
@@ -188,8 +231,8 @@ TabManager.prototype = {
    * @param {Array[Tab]} tabs - the tabs to place into the new group
    * @param {String} title - the name to give to that group
    */
-  addGroupWithTab: function(tabs, title="") {
-    groups.push( new Group(groups.length, title, tabs) );
+  addGroupWithTab: function(tabs, title = "") {
+    groups.push(new Group(groups.length, title, tabs));
   },
 
   /**
@@ -199,9 +242,9 @@ TabManager.prototype = {
    */
   removeGroup: function(groupID) {
     // Switch group
-    if (currentGroup == groupID) {
-      this.selectNextPrevGroup( 1 );
+    if (currentGroupIndex == groupID) {
+      this.selectNextPrevGroup(1);
     }
-    groups.splice( groupID, 1 );
+    groups.splice(groupID, 1);
   }
 };

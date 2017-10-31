@@ -122,6 +122,7 @@ const Group = React.createClass({
           TabList,
           {
             tabs: this.props.group.tabs,
+            group: this.props.group,
             onTabClick: this.props.onTabClick,
             onTabDrag: this.props.onTabDrag,
             onTabDragStart: this.props.onTabDragStart,

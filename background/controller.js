@@ -164,8 +164,10 @@ Controller.prototype = {
   },
 
   onGroupAddWithTab: function() {
-    browser.tabs.query({currentWindow: true}).then((tabs) => {
-      controller.tabmanager.addGroupWithTab( tabs );
+    browser.tabs.query({
+      currentWindow: true
+    }).then((tabs) => {
+      controller.tabmanager.addGroupWithTab(tabs);
       controller.refreshUi();
     })
   },
@@ -202,6 +204,7 @@ Controller.prototype = {
 
   onMoveTabToGroup: function(params) {
     this.tabmanager.moveTabToGroup(
+      params.sourceGroupID,
       params.tabIndex,
       params.targetGroupID
     );
@@ -210,32 +213,35 @@ Controller.prototype = {
 };
 
 // Event from: tabs, windows
-var controllerMessenger = function(message, sender, sendResponse) {
-  switch (message.task) {
-    case "Group:Add":
-      controller.onGroupAdd();
-      break;
-    case "Group:AddWithTab":
-      controller.onGroupAddWithTab();
-      break;
-    case "Group:Close":
-      controller.onGroupClose(message.params);
-      break;
-    case "Group:Rename":
-      controller.onGroupRename(message.params);
-      break;
-    case "Group:Select":
-      controller.onGroupSelect(message.params);
-      break;
-    case "Group:MoveTab":
-      controller.onMoveTabToGroup(message.params);
-      break;
-    case "Tab:Select":
-      controller.onTabSelect(message.params);
-      break;
-  }
+var controllerMessenger = function(message) {
+    switch (message.task) {
+      case "Group:Add":
+        controller.onGroupAdd();
+        break;
+      case "Group:AddWithTab":
+        controller.onGroupAddWithTab();
+        break;
+      case "Group:Close":
+        controller.onGroupClose(message.params);
+        break;
+      case "Group:Rename":
+        controller.onGroupRename(message.params);
+        break;
+      case "Group:Select":
+        if ( message.params.groupID === null ) {
+          console.log( "No GROUPID...." );
+          break;
+        }
+        controller.onGroupSelect(message.params);
+        break;
+      case "Group:MoveTab":
+        controller.onMoveTabToGroup(message.params);
+        break;
+      case "Tab:Select":
+        controller.onTabSelect(message.params);
+        break;
+    }
   console.log(message);
-  console.log(sender);
 }
 
 var controller = new Controller();

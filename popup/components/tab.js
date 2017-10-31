@@ -35,7 +35,7 @@ const Tab = React.createClass({
     let favicon = React.DOM.img({
       alt: "",
       className: "tab-icon",
-      src: this.props.tab.icon
+      src: this.props.tab.favIconUrl
     });
 
     let tabClasses = classNames({
@@ -61,9 +61,10 @@ const Tab = React.createClass({
   handleTabClick: function(event) {
     event.stopPropagation();
 
+    let group = this.props.group;
     let tab = this.props.tab;
     this.props.onTabClick(
-      tab.group,
+      group.id,
       tab.index
     );
   },
