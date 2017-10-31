@@ -44,8 +44,7 @@ const Tab = React.createClass({
     });
 
     return (
-      React.DOM.li(
-        {
+      React.DOM.li({
           className: tabClasses,
           onClick: this.handleTabClick,
           onDrag: this.handleTabDrag,
@@ -53,7 +52,9 @@ const Tab = React.createClass({
           draggable: true
         },
         favicon,
-        React.DOM.span({className: "tab-title"}, this.props.tab.title)
+        React.DOM.span({
+          className: "tab-title"
+        }, this.props.tab.title)
       )
     );
   },
@@ -72,12 +73,13 @@ const Tab = React.createClass({
   handleTabDrag: function(event) {
     event.stopPropagation();
 
+    let group = this.props.group;
     let tab = this.props.tab;
     event.dataTransfer.setData("tab/index", tab.index);
-    event.dataTransfer.setData("tab/group", tab.group);
+    event.dataTransfer.setData("tab/group", group.id);
 
     this.props.onTabDrag(
-      tab.group,
+      group.id,
       tab.index
     );
   },
@@ -85,12 +87,13 @@ const Tab = React.createClass({
   handleTabDragStart: function(event) {
     event.stopPropagation();
 
+    let group = this.props.group;
     let tab = this.props.tab;
     event.dataTransfer.setData("tab/index", tab.index);
-    event.dataTransfer.setData("tab/group", tab.group);
+    event.dataTransfer.setData("tab/group", group.id);
 
     this.props.onTabDragStart(
-      tab.group,
+      group.id,
       tab.index
     );
   }

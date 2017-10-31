@@ -159,25 +159,27 @@ TabManager.activeTabInWindow = function(tabId) {
 
 /**
  * Move tab beetwen groups
- * TODO: Get sourceGroupID for handling all the cases
  * @param {Number} tabIndex - the tabs index
  * @param {Number} targetGroupID - target groupID (where to move tab)
  */
 TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
-  console.log("moveTabToGroup won't work")
   if (currentGroupIndex === targetGroupID) {
     return;
   }
 
-  let tab = groups[currentGroupIndex].tabs[tabIndex];
+  let tab = groups[sourceGroupID].tabs[tabIndex];
   // Update groups
   groups[targetGroupID].tabs.push(tab);
-  groups[currentGroupIndex].tabs.splice(tabIndex, 1);
 
+  browser.tabs.remove([tab.id]);
+
+  //groups[currentGroupIndex].tabs.splice(tabIndex, 1);
+/*
   if (tab.active) {
     TabManager.changeGroupTo(groupID);
     TabManager.activeTabInWindow(tabIndex);
   }
+  */
 }
 
 /**
@@ -217,10 +219,7 @@ TabManager.selectGroup = function(groupID) {
 
   TabManager.removeUnallowedURL(currentGroupIndex);
 
-  var pr = TabManager.changeGroupTo(groupID).then( ()=>{
-      TabManager.updateGroup(groupID);
-  });
-  return pr;
+  return TabManager.changeGroupTo(groupID);
 }
 
 /**

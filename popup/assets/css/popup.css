@@ -23,16 +23,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 ul, li {
   display: block;
   margin: 0;
   padding: 0;
 }
 
-  li {
-    list-style-type: none;
-    cursor: move;
-  }
+li {
+  list-style-type: none;
+  cursor: move;
+}
 
 .group-title {
   display: block;
@@ -42,13 +43,17 @@ ul, li {
   white-space: nowrap;
 }
 
-  .group.active .group-title, .tab.active {
-    font-weight: bold;
-  }
+.group-title-text {
+  padding-right: 16px;
+}
 
-  .group:hover .group-title {
-    padding-right: 15px;
-  }
+.group.active .group-title, .tab.active {
+  font-weight: bold;
+}
+
+.group:hover .group-title {
+  padding-right: 15px;
+}
 
 .group-title input {
   background: transparent;
@@ -66,33 +71,33 @@ ul, li {
   position: relative;
 }
 
-  .tab {
-    padding: 0;
-  }
+.tab {
+  padding: 0;
+}
 
-  .group:hover, .tab:hover {
-    background-color: rgba(0, 0, 0, 0.06);
-    border-color: rgba(0, 0, 0, 0.12);
-  }
+.group:hover, .tab:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+}
 
-  .group.dragSourceGroup {
-    border: inherit;
-    background-color : inherit;
-  }
+.group.dragSourceGroup {
+  border: inherit;
+  background-color: inherit;
+}
 
-   .group.draggingOver, .draggingOver {
-    border: 1px dashed #ccc;
-    background-color: rgba(0, 0, 0, 0.04);
-  }
+.group.draggingOver, .draggingOver {
+  border: 1px dashed #ccc;
+  background-color: rgba(0, 0, 0, 0.04);
+}
 
 .tab-list {
   display: none;
   margin-top: 5px;
 }
 
-  .expanded .tab-list {
-    display: block;
-  }
+.expanded .tab-list {
+  display: block;
+}
 
 .tab-title {
   display: inline-block;
@@ -138,32 +143,27 @@ ul, li {
   top: 4px;
 }
 
-  .group.editing .group-controls {
-    top: 6px;
-  }
+.group.editing .group-controls {
+  top: 6px;
+}
 
-  .group.closing .group-controls .group-close,
-  .group.closing:hover .group-controls .group-close,
-  .group.closing .group-controls .fa-chevron-down,
-  .group.closing .group-controls .group-edit {
-    display: none;
-  }
+.group.closing .group-controls .group-close, .group.closing:hover .group-controls .group-close, .group.closing .group-controls .fa-chevron-down, .group.closing .group-controls .group-edit {
+  display: none;
+}
 
-  .group.closing .group-title {
-    color: #ccc;
-    text-decoration: line-through;
-  }
+.group.closing .group-title {
+  color: #ccc;
+  text-decoration: line-through;
+}
 
 .group:hover .group-title {
   padding-right: 55px;
 }
 
-  .group .group-controls .group-close,
-  .group .group-controls .group-edit {
-    display: none;
-  }
+.group .group-controls .group-close, .group .group-controls .group-edit {
+  display: none;
+}
 
-    .group:hover .group-controls .group-close,
-    .group:hover .group-controls .group-edit {
-      display: inline-block;
-    }
+.group:hover .group-controls .group-close, .group:hover .group-controls .group-edit {
+  display: inline-block;
+}

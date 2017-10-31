@@ -54,28 +54,32 @@ const Group = React.createClass({
 
   getTitle: function() {
     return this.props.group.title || (
-        browser.i18n.getMessage("unnamed_group") + " " + this.props.group.id
-      );
+      browser.i18n.getMessage("unnamed_group") + " " + this.props.group.id
+    );
   },
 
   render: function() {
     let titleElement;
     if (this.state.editing) {
-      titleElement = React.DOM.input(
-        {
-          type: "text",
-          defaultValue: this.getTitle(),
-          onChange: (event) => {
-            this.setState({newTitle: event.target.value});
-          },
-          onClick: (event) => {
-            event.stopPropagation();
-          },
-          onKeyUp: this.handleGroupTitleInputKey
-        }
-      );
+      titleElement = React.DOM.input({
+        type: "text",
+        defaultValue: this.getTitle(),
+        onChange: (event) => {
+          this.setState({
+            newTitle: event.target.value
+          });
+        },
+        onClick: (event) => {
+          event.stopPropagation();
+        },
+        onKeyUp: this.handleGroupTitleInputKey
+      });
     } else {
-      titleElement = React.DOM.span({}, this.getTitle());
+      titleElement = React.DOM.span({
+          className: "group-title-text"
+        },
+        this.getTitle()
+      );
     }
 
     let groupClasses = classNames({
@@ -89,8 +93,7 @@ const Group = React.createClass({
     });
 
     return (
-      React.DOM.li(
-        {
+      React.DOM.li({
           className: groupClasses,
           onClick: this.handleGroupClick,
           onDragOver: this.handleGroupDragOver,
@@ -98,14 +101,12 @@ const Group = React.createClass({
           onDragLeave: this.handleGroupDragLeave,
           onDrop: this.handleGroupDrop
         },
-        React.DOM.span(
-          {
+        React.DOM.span({
             className: "group-title"
           },
           titleElement,
           React.createElement(
-            GroupControls,
-            {
+            GroupControls, {
               closing: this.state.closing,
               editing: this.state.editing,
               expanded: this.state.expanded,
@@ -119,8 +120,7 @@ const Group = React.createClass({
           )
         ),
         this.state.expanded && React.createElement(
-          TabList,
-          {
+          TabList, {
             tabs: this.props.group.tabs,
             group: this.props.group,
             onTabClick: this.props.onTabClick,
@@ -135,8 +135,12 @@ const Group = React.createClass({
 
   handleGroupCloseClick: function(event) {
     event.stopPropagation();
-    this.setState({editing: false});
-    this.setState({closing: true});
+    this.setState({
+      editing: false
+    });
+    this.setState({
+      closing: true
+    });
 
     let group = this;
 
@@ -157,28 +161,38 @@ const Group = React.createClass({
 
   handleGroupEditClick: function(event) {
     event.stopPropagation();
-    this.setState({editing: !this.state.editing});
+    this.setState({
+      editing: !this.state.editing
+    });
   },
 
   handleGroupEditAbortClick: function(event) {
     event.stopPropagation();
-    this.setState({editing: false});
+    this.setState({
+      editing: false
+    });
   },
 
   handleGroupEditSaveClick: function(event) {
     event.stopPropagation();
-    this.setState({editing: false});
+    this.setState({
+      editing: false
+    });
     this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
   },
 
   handleGroupExpandClick: function(event) {
     event.stopPropagation();
-    this.setState({expanded: !this.state.expanded});
+    this.setState({
+      expanded: !this.state.expanded
+    });
   },
 
   handleGroupTitleInputKey: function(event) {
     if (event.keyCode == 13) {
-      this.setState({editing: false});
+      this.setState({
+        editing: false
+      });
       this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
     }
   },
@@ -186,7 +200,9 @@ const Group = React.createClass({
   handleGroupDrop: function(event) {
     event.stopPropagation();
 
-    this.setState({draggingOverCounter: 0});
+    this.setState({
+      draggingOverCounter: 0
+    });
 
     let sourceGroup = event.dataTransfer.getData("tab/group");
     let tabIndex = event.dataTransfer.getData("tab/index");
@@ -210,10 +226,14 @@ const Group = React.createClass({
 
     let sourceGroupId = event.dataTransfer.getData("tab/group");
     let isSourceGroup = sourceGroupId == this.props.group.id;
-    this.setState({dragSourceGroup: isSourceGroup});
+    this.setState({
+      dragSourceGroup: isSourceGroup
+    });
 
     let draggingCounterValue = (this.state.draggingOverCounter == 1) ? 2 : 1;
-    this.setState({draggingOverCounter: draggingCounterValue});
+    this.setState({
+      draggingOverCounter: draggingCounterValue
+    });
   },
 
   handleGroupDragLeave: function(event) {
@@ -221,9 +241,13 @@ const Group = React.createClass({
     event.preventDefault();
 
     if (this.state.draggingOverCounter == 2) {
-      this.setState({draggingOverCounter: 1});
+      this.setState({
+        draggingOverCounter: 1
+      });
     } else if (this.state.draggingOverCounter == 1) {
-      this.setState({draggingOverCounter: 0});
+      this.setState({
+        draggingOverCounter: 0
+      });
     }
 
     return false;
@@ -232,6 +256,8 @@ const Group = React.createClass({
   handleGroupCloseAbortClick: function(event) {
     event.stopPropagation();
 
-    this.setState({closing: false});
+    this.setState({
+      closing: false
+    });
   }
 });
