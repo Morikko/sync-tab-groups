@@ -65,13 +65,12 @@ TabManager.prototype = {
    * Asynchronous
    */
   changeGroupTo: function(groupId) {
-    var self = this;
 
+    var tabsIds = [];
     browser.tabs.query({
       currentWindow: true
     }).then((tabs) => {
       // 1. Save current tabs id for removing them after
-      var tabsIds = [];
       tabs.map((tab) => {
         tabsIds.push(tab.id);
       });
@@ -85,7 +84,7 @@ TabManager.prototype = {
         });
       }
       //this.createListOfTabs(groups[groupId].tabs);
-      tabs.map((tab, index) => {
+      groups[groupId].tabs.map((tab, index) => {
         browser.tabs.create({
           url: (tab.url === "") ? null : tab.url,
           active: tab.active,
