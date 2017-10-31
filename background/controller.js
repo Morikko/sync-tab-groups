@@ -13,8 +13,6 @@ function Controller() {
   this._hotkeyNextGroup = null;
   this._hotkeyPrevGroup = null;
 
-  this.tabmanager = new TabManager(null);
-
   this.init();
 }
 
@@ -68,7 +66,7 @@ Controller.prototype = {
     this._hotkeyNextGroup = Hotkey({
       combo: "accel-`",
       onPress: () => {
-        this.tabmanager.selectNextPrevGroup(
+        TabManager.selectNextPrevGroup(
           this._getWindow(),
           this._getTabBrowser(),
           1
@@ -78,7 +76,7 @@ Controller.prototype = {
     this._hotkeyPrevGroup = Hotkey({
       combo: "accel-shift-`",
       onPress: () => {
-        this.tabmanager.selectNextPrevGroup(
+        TabManager.selectNextPrevGroup(
           this._getWindow(),
           this._getTabBrowser(),
           -1
@@ -142,7 +140,7 @@ Controller.prototype = {
 
   refreshUi: function() {
     // TODO Add sorting again ???
-    //let groups = this.tabmanager.getGroups(Prefs.prefs.enableAlphabeticSort);
+    //let groups = TabManager.getGroups(Prefs.prefs.enableAlphabeticSort);
 
     sendMessage("Groups:Changed", {
       groups: groups
@@ -159,7 +157,7 @@ Controller.prototype = {
   },
 
   onGroupAdd: function() {
-    this.tabmanager.addGroup();
+    TabManager.addGroup();
     this.refreshUi();
   },
 
@@ -167,20 +165,20 @@ Controller.prototype = {
     browser.tabs.query({
       currentWindow: true
     }).then((tabs) => {
-      controller.tabmanager.addGroupWithTab(tabs);
+      TabManager.addGroupWithTab(tabs);
       controller.refreshUi();
     })
   },
 
   onGroupRemove: function(params) {
-    this.tabmanager.removeGroup(
+    TabManager.removeGroup(
       params.groupID
     );
     this.refreshUi();
   },
 
   onGroupRename: function(params) {
-    this.tabmanager.renameGroup(
+    TabManager.renameGroup(
       params.groupID,
       params.title
     );
@@ -188,14 +186,14 @@ Controller.prototype = {
   },
 
   onGroupSelect: function(params) {
-    this.tabmanager.selectGroup(
+    TabManager.selectGroup(
       params.groupID
     );
     this.refreshUi();
   },
 
   onTabSelect: function(params) {
-    this.tabmanager.selectTab(
+    TabManager.selectTab(
       params.tabIndex,
       params.groupID
     );
@@ -203,7 +201,7 @@ Controller.prototype = {
   },
 
   onMoveTabToGroup: function(params) {
-    this.tabmanager.moveTabToGroup(
+    TabManager.moveTabToGroup(
       params.sourceGroupID,
       params.tabIndex,
       params.targetGroupID
@@ -214,6 +212,7 @@ Controller.prototype = {
 
 // Event from: tabs, windows
 var controllerMessenger = function(message) {
+  console.log(message);
   switch (message.task) {
     case "Group:Add":
       controller.onGroupAdd();
@@ -228,10 +227,6 @@ var controllerMessenger = function(message) {
       controller.onGroupRename(message.params);
       break;
     case "Group:Select":
-      if (message.params.groupID === null) {
-        console.log("No GROUPID....");
-        break;
-      }
       controller.onGroupSelect(message.params);
       break;
     case "Group:MoveTab":
@@ -241,7 +236,6 @@ var controllerMessenger = function(message) {
       controller.onTabSelect(message.params);
       break;
   }
-  console.log(message);
 }
 
 var controller = new Controller();
@@ -250,7 +244,7 @@ browser.runtime.onMessage.addListener(controllerMessenger);
 
 // Event from: tabs, windows
 function updateGroup() {
-  controller.tabmanager.updateGroup(currentGroupIndex);
+  TabManager.updateGroup(currentGroupIndex);
   controller.refreshUi();
 }
 
@@ -266,7 +260,7 @@ browser.tabs.onRemoved.addListener(() => {
    * Workaround: keep a delay
    * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
    */
-  setTimeout(()=>{
+  setTimeout(() => {
     updateGroup();
   }, 300);
 });

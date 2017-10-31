@@ -85,10 +85,10 @@ var popupMessenger = function ( message ) {
         init();
         break;
       case "Groups:CloseTimeoutChanged":
+        console.log( message );
         store.dispatch(ActionCreators.setGroupCloseTimeout(message.params.timeout));
         break;
     }
-  console.log( message );
 }
 
 browser.runtime.onMessage.addListener(popupMessenger);
