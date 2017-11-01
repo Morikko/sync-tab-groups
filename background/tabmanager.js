@@ -240,13 +240,15 @@ TabManager.selectTab = function(tabId, groupID) {
  * @param {Number} direction
  */
 TabManager.selectNextPrevGroup = function(direction) {
+  // Should never happen
   if (groups.length == 0) {
+    console.log("selectNextPrevGroup can't go to the next group as there is no other one.");
     return;
   }
 
   targetGroupID = (currentGroupIndex + direction + groups.length) % groups.length;
 
-  TabManager.changeGroupTo(targetGroupID)
+  TabManager.changeGroupTo(targetGroupID);
 }
 
 /**
@@ -286,6 +288,8 @@ TabManager.addGroupWithTab = function(tabs, title = "") {
 TabManager.removeGroup = function(groupID) {
   // Switch group
   if (currentGroupIndex == groupID) {
+    if ( groups.length === 0 )
+      TabManager.addGroup();
     TabManager.selectNextPrevGroup(1);
   }
   groups.splice(groupID, 1);

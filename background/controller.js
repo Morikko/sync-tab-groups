@@ -143,7 +143,7 @@ Controller.prototype = {
     //let groups = TabManager.getGroups(Prefs.prefs.enableAlphabeticSort);
 
     sendMessage("Groups:Changed", {
-      groups: groups
+      // groups: groups // WONT WORK UNDEFINED
     });
   },
 
@@ -221,7 +221,7 @@ var controllerMessenger = function(message) {
       controller.onGroupAddWithTab();
       break;
     case "Group:Close":
-      controller.onGroupClose(message.params);
+      controller.onGroupRemove(message.params);
       break;
     case "Group:Rename":
       controller.onGroupRename(message.params);

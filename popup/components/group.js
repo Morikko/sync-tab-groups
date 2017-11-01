@@ -149,7 +149,7 @@ const Group = React.createClass({
       return;
     }
 
-    setTimeout(function() {
+    this.closingTimer = setTimeout(function() {
       group.props.onGroupCloseClick(group.props.group.id);
     }, this.props.closeTimeout * 1000);
   },
@@ -256,6 +256,7 @@ const Group = React.createClass({
   handleGroupCloseAbortClick: function(event) {
     event.stopPropagation();
 
+    clearTimeout( this.closingTimer );
     this.setState({
       closing: false
     });
