@@ -172,15 +172,12 @@ TabManager.changeGroupTo = function(windowId, oldGroupId, newGroupId) {
  * The tab needs to be in the window
  * @param {Number} tabIndex - the tab index
  */
-TabManager.activeTabInWindow = function(tabIndex) {
+TabManager.activeTabInWindow = function(windowId, tabIndex) {
   browser.tabs.query({
-    currentWindow: true
+    windowId: windowId
   }).then((tabs) => {
-    console.log(tabs);
-    console.log(tabId);
     for (var tab of tabs) {
-      if (tab.index === tabId) {
-        console.log(tab.index);
+      if (tab.index === tabIndex) {
         browser.tabs.update(tab.id, {
           active: true
         });
@@ -321,12 +318,13 @@ TabManager.selectGroup = function(groupID) {
 /**
  * Selects a given tab.
  * Switch to another group if necessary
- * @param {Number} index - the tabs index
+ * @param {Number} tabIndex - the tabs index
  * @param {Number} groupID - the tabs groupID
  */
-TabManager.selectTab = function(tabId, groupID) {
+TabManager.selectTab = function(tabIndex, groupID) {
   TabManager.selectGroup(groupID).then(() => {
-    TabManager.activeTabInWindow(tabId);
+    let windowId = groups[groupID].windowId;
+    TabManager.activeTabInWindow(windowId, tabIndex);
   });
 }
 
