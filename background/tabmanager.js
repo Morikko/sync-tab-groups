@@ -1,38 +1,61 @@
-var Group = function(id, title = "", tabs = []) {
+var Group = function(id,
+  title = "",
+  tabs = [],
+  windowId = browser.windows.WINDOW_ID_NONE) {
   this.title = title;
   this.tabs = tabs;
-  this.id = id;
+  this.id = id; // Equal to index in array groups
+  this.windowId = windowId;
 }
 
 var groups = [];
 var currentGroupIndex = 0;
 
-/*
-function TabManager(storage) {
-  //this._storage = storage;
-}
-*/
-
 var TabManager = TabManager || {};
 
-/*
- * Take the current tabs on the current frame and set it as the tabs
- * for the group: groupId
+/**
+ * Return the groupId displayed in the window with windowId
+ * If no group found: return -1
+ * @param {Number} - windowId
+ * @returns {Number} - group index
  */
-TabManager.updateGroup = function(groupId) {
+TabManager.getGroupIdInWindow = function(windowId) {
+  for (group of groups) {
+    if (group.windowId === windowId)
+      return group.id;
+  }
+  // Should never occur !!
+  return -1;
+}
+
+/**
+ * Take the current tabs on the desire window and set it as the tabs
+ * for the group
+ * Asynchronous
+ * @param {Number} window id
+ */
+TabManager.updateGroup = function(windowId) {
+  let groupId = TabManager.getGroupIdInWindow(windowId);
+  if (groupId === -1) {
+    console.log("Group not found for window: " + windowId);
+    return;
+  }
+
   browser.tabs.query({
-    currentWindow: true
+    windowId: windowId
   }).then((tabs) => {
     groups[groupId].tabs = tabs;
   });
 }
 
-/*
+/**
  * Return true if the url is privileged
  * Privileged url: chrome: URLs, javascript: URLs,
                     data: URLs, file: URLs, about: URLs
  * Non-privileged URLs: about:blank, about:newtab ( should be
  * replaced by null ), all the other ones
+ * @param {string} url
+ * @returns {boolean}
  */
 TabManager.filterPrivilegedURL = function(url) {
   if (url === "about:newtab")
@@ -48,18 +71,13 @@ TabManager.filterPrivilegedURL = function(url) {
 }
 
 /**
- * Returns all groups with their tabs.
- *
- * @param {boolean} sort
- * @returns {Object}
+ * Sort the groups to be in alphabetical order
+ * Change the groups var directly
+ * TODO
  */
-TabManager.getGroups = function(sort) {
-
-  let retGroups = groups.map((group, index) => {
-    return Object.assign({}, group, {
-      tabs: tabs
-    });
-  });
+TabManager.sortGroups = function() {
+  console.log("sortGroups not implemented: WONT WORK");
+  return;
 
   if (sort) {
     retGroups.sort((a, b) => {
@@ -76,8 +94,8 @@ TabManager.getGroups = function(sort) {
 
 /**
  * Open all the tabs
- * Return the last tab creation promise
  * Asynchronous
+ * @param {array[Tab]} tabs
  */
 TabManager.createListOfTabs = function(tabs) {
   tabs.map((tab, index) => {
@@ -95,7 +113,7 @@ TabManager.createListOfTabs = function(tabs) {
  * Close all the current tabs and open the tabs from the selected group
  * The active tab will be the last one active
  * @param {Number} groupId - the group index
- * Return the last action promise
+ * @returns {Promise} - the remove tabs promise (last)
  * Asynchronous
  */
 TabManager.changeGroupTo = function(groupId) {
@@ -138,9 +156,9 @@ TabManager.changeGroupTo = function(groupId) {
 /**
  * Go to the tab specified with tabId
  * The tab needs to be in the window
- * @param {Number} tabId - the tab index
+ * @param {Number} tabIndex - the tab index
  */
-TabManager.activeTabInWindow = function(tabId) {
+TabManager.activeTabInWindow = function(tabIndex) {
   browser.tabs.query({
     currentWindow: true
   }).then((tabs) => {
@@ -159,27 +177,34 @@ TabManager.activeTabInWindow = function(tabId) {
 
 /**
  * Move tab beetwen groups
- * @param {Number} tabIndex - the tabs index
- * @param {Number} targetGroupID - target groupID (where to move tab)
+ * @param {Number} sourceGroupID
+ * @param {Number} tabIndex
+ * @param {Number} targetGroupID
+ * TODO
  */
 TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
+  // Case 1: same group
   if (currentGroupIndex === targetGroupID) {
     return;
   }
 
   let tab = groups[sourceGroupID].tabs[tabIndex];
-  // Update groups
-  groups[targetGroupID].tabs.push(tab);
 
+  // Case 2: Closed Group -> Closed Group
+  groups[targetGroupID].tabs.push(tab);
+  groups[sourceGroupID].tabs.splice(tabIndex, 1);
+
+  // Case 3: Open Group -> Closed Group
+  groups[targetGroupID].tabs.push(tab);
   browser.tabs.remove([tab.id]);
 
-  //groups[currentGroupIndex].tabs.splice(tabIndex, 1);
-/*
-  if (tab.active) {
-    TabManager.changeGroupTo(groupID);
-    TabManager.activeTabInWindow(tabIndex);
-  }
-  */
+  // Case 4: Closed Group -> Open Group
+  browser.tabs.create([tab.id]);
+  groups[sourceGroupID].tabs.splice(tabIndex, 1);
+
+  // Case 5: Open Group -> Open Group
+  browser.tabs.move();
+
 }
 
 /**
@@ -190,7 +215,7 @@ TabManager.removeUnallowedURL = function(groupID) {
   // Get not supported link tab id
   var tabsIds = [];
   groups[groupID].tabs.map((tab) => {
-    if ( TabManager.filterPrivilegedURL(tab.url) )
+    if (TabManager.filterPrivilegedURL(tab.url))
       tabsIds.push(tab.id);
   });
 
@@ -229,7 +254,7 @@ TabManager.selectGroup = function(groupID) {
  * @param {Number} groupID - the tabs groupID
  */
 TabManager.selectTab = function(tabId, groupID) {
-  TabManager.selectGroup(groupID).then(()=>{
+  TabManager.selectGroup(groupID).then(() => {
     TabManager.activeTabInWindow(tabId);
   });
 }
@@ -262,12 +287,24 @@ TabManager.renameGroup = function(groupID, title) {
 }
 
 /**
- * Adds a blank group
- * TODO: title, blanck tab ??
+ * Add a new group with one tab: "newtab"
+ * No window is associated with this group
+ * Title is kept blank if not given
  */
-TabManager.addGroup = function(title = "") {
-  groups.push(new Group(groups.length));
+TabManager.addGroup = function(title = "",
+  windowId = browser.windows.WINDOW_ID_NONE) {
+  let tabs = [];
+  tabs.push({
+    url: "about:newtab",
+    active: true,
+    pinned: false
+  });
 
+  groups.push(new Group(groups.length,
+    title,
+    tabs,
+    windowId
+  ));
 }
 
 /**
@@ -276,8 +313,14 @@ TabManager.addGroup = function(title = "") {
  * @param {Array[Tab]} tabs - the tabs to place into the new group
  * @param {String} title - the name to give to that group
  */
-TabManager.addGroupWithTab = function(tabs, title = "") {
-  groups.push(new Group(groups.length, title, tabs));
+TabManager.addGroupWithTab = function(tabs,
+  title = ""
+  ){
+  if ( tabs.length === 0 ){
+    TabManager.addGroup( title );
+    return;
+  }
+  groups.push(new Group(groups.length, title, tabs, tabs[0].windowId));
 }
 
 /**
@@ -288,7 +331,7 @@ TabManager.addGroupWithTab = function(tabs, title = "") {
 TabManager.removeGroup = function(groupID) {
   // Switch group
   if (currentGroupIndex == groupID) {
-    if ( groups.length === 0 )
+    if (groups.length === 0)
       TabManager.addGroup();
     TabManager.selectNextPrevGroup(1);
   }

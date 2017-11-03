@@ -1,5 +1,6 @@
 const store = Redux.createStore(Reducer);
 
+// TODO import utils.js in popup.html to use this function
 var sendMessage = function(_task, _params) {
   browser.runtime.sendMessage({
     task: _task,
@@ -12,6 +13,7 @@ const Actions = {
     sendMessage("Group:Add", {});
   },
 
+  // TODO seems it is not used any more
   addGroupWithTab: function(sourceGroupID, tabIndex) {
     sendMessage("Group:AddWithTab", {
       sourceGroupID: sourceGroupID,

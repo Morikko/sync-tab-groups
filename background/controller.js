@@ -19,7 +19,21 @@ function Controller() {
 Controller.prototype = {
   init: function() {
     // TODO Hotkeys
-    this.onGroupAddWithTab();
+
+    // Match windows and group
+    let windows = browser.windows.getAll({
+      windowTypes: ['normal']
+    }).then( (windowInfoArray) =>{
+
+      for ( windowInfo of windowInfoArray ) {
+        browser.tabs.query({
+          windowId: windowInfo.id
+        }).then((tabs) => {
+          TabManager.addGroupWithTab(tabs);
+          controller.refreshUi();
+        });
+      }
+    });
   },
 
   /* TODO DO I still need the binding
@@ -167,7 +181,7 @@ Controller.prototype = {
     }).then((tabs) => {
       TabManager.addGroupWithTab(tabs);
       controller.refreshUi();
-    })
+    });
   },
 
   onGroupRemove: function(params) {
@@ -243,36 +257,36 @@ var controller = new Controller();
 browser.runtime.onMessage.addListener(controllerMessenger);
 
 // Event from: tabs, windows
-function updateGroup() {
-  TabManager.updateGroup(currentGroupIndex);
+function updateGroup(windowId) {
+  TabManager.updateGroup(windowId);
   controller.refreshUi();
 }
 
-// TODO query and rewrite data
-browser.tabs.onActivated.addListener(() => {
-  updateGroup();
+/**** Event about tabs *****/
+browser.tabs.onActivated.addListener( (activeInfo) => {
+  updateGroup(activeInfo.windowId);
 });
-browser.tabs.onCreated.addListener(() => {
-  updateGroup();
+browser.tabs.onCreated.addListener( (tab) => {
+  updateGroup(tab.windowId);
 });
-browser.tabs.onRemoved.addListener(() => {
+browser.tabs.onRemoved.addListener( (tabId, removeInfo) => {
   /* Bug: onRemoved is fired before the tab is really close
    * Workaround: keep a delay
    * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
    */
-  setTimeout(() => {
-    updateGroup();
+  setTimeout( () => {
+    updateGroup(removeInfo.windowId);
   }, 300);
 });
-browser.tabs.onMoved.addListener(() => {
-  updateGroup();
+browser.tabs.onMoved.addListener( (tabId, moveInfo) => {
+  updateGroup(moveInfo.windowId);
 });
-browser.tabs.onUpdated.addListener(() => {
-  updateGroup();
+browser.tabs.onUpdated.addListener( (tabId, changeInfo, tab) => {
+  updateGroup(tab.windowId);
 });
-browser.tabs.onAttached.addListener(() => {
-  updateGroup();
+browser.tabs.onAttached.addListener( (tabId, attachInfo) => {
+  updateGroup(attachInfo.newWindowId);
 });
-browser.tabs.onDetached.addListener(() => {
-  updateGroup();
+browser.tabs.onDetached.addListener( (tabId, detachInfo) => {
+  updateGroup(detachInfo.oldWindowId);
 });
