@@ -129,7 +129,6 @@ TabManager.createListOfTabs = function(tabsToOpen) {
  */
 TabManager.changeGroupTo = function(windowId, oldGroupId, newGroupId) {
 
-
   return new Promise( (resolve, reject) => {
     browser.tabs.query({
       windowId: windowId
@@ -255,17 +254,6 @@ TabManager.removeUnallowedURL = function(groupID) {
  */
 TabManager.isGroupInOpenWindow = function(groupID) {
   if (groups[groupID].windowId !== browser.windows.WINDOW_ID_NONE)
-    return true;
-  else
-    return false;
-}
-
-/**
- * @param {Number} groupID
- * @returns {boolean}
- */
-TabManager.isGroupInCurrentWindow = function(groupID) {
-  if (groups[groupID].windowId === browser.windows.WINDOW_ID_CURRENT)
     return true;
   else
     return false;
