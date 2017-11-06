@@ -290,3 +290,15 @@ browser.tabs.onAttached.addListener( (tabId, attachInfo) => {
 browser.tabs.onDetached.addListener( (tabId, detachInfo) => {
   updateGroup(detachInfo.oldWindowId);
 });
+
+/**** Event about windows *****/
+browser.windows.onCreated.addListener( (window) => {
+  // Create new group
+  TabManager.addGroup( "", window.id )
+});
+browser.windows.onRemoved.addListener( (windowId) => {
+  TabManager.detachWindow( windowId );
+});
+browser.windows.onFocusChanged.addListener( (windowId) => {
+  // nothing to do
+});

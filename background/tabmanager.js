@@ -1,7 +1,7 @@
 var Group = function(id,
-  title = "",
-  tabs = [],
-  windowId = browser.windows.WINDOW_ID_NONE) {
+    title = "",
+    tabs = [],
+    windowId = browser.windows.WINDOW_ID_NONE) {
   this.title = title;
   this.tabs = tabs;
   this.id = id; // Equal to index in array groups
@@ -352,12 +352,13 @@ TabManager.renameGroup = function(groupID, title) {
 TabManager.addGroup = function(title = "",
   windowId = browser.windows.WINDOW_ID_NONE) {
   let tabs = [];
+  /*
   tabs.push({
     url: "about:newtab",
     active: true,
     pinned: false
   });
-
+  */
   groups.push(new Group(groups.length,
     title,
     tabs,
@@ -394,4 +395,15 @@ TabManager.removeGroup = function(groupID) {
     TabManager.selectNextPrevGroup(1);
   }
   groups.splice(groupID, 1);
+}
+
+/**
+ * Remove the windowId associated to a group
+ * @param {Number} windowId
+ */
+TabManager.detachWindow = function( windowId ) {
+  for (g of groups) {
+    if ( g.windowId === windowId )
+      g.windowId = browser.windows.WINDOW_ID_NONE;
+  }
 }
