@@ -89,6 +89,7 @@ const Group = React.createClass({
       draggingOver: this.state.draggingOverCounter !== 0,
       dragSourceGroup: this.state.dragSourceGroup,
       expanded: this.state.expanded,
+      focusGroup: this.props.currentWindowId === this.props.group.windowId,
       group: true
     });
 

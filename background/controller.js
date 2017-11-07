@@ -301,5 +301,5 @@ browser.windows.onRemoved.addListener( (windowId) => {
   TabManager.detachWindow( windowId );
 });
 browser.windows.onFocusChanged.addListener( (windowId) => {
-  // nothing to do
+  controller.refreshUi();
 });

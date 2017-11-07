@@ -51,6 +51,7 @@ const GroupList = (() => {
           return React.createElement(Group, {
             key: group.id,
             group: group,
+            currentWindowId: this.props.currentWindowId,
             closeTimeout: this.props.closeTimeout,
             onGroupClick: this.props.onGroupClick,
             onGroupDrop: this.props.onGroupDrop,
@@ -76,7 +77,8 @@ const GroupList = (() => {
   return ReactRedux.connect((state) => {
     return {
       groups: state.get("tabgroups"),
-      closeTimeout: state.get("closeTimeout")
+      closeTimeout: state.get("closeTimeout"),
+      currentWindowId: state.get("currentWindowId")
     };
   }, ActionCreators)(GroupListStandalone);
 })();
