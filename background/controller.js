@@ -170,6 +170,12 @@ Controller.prototype = {
     */
   },
 
+  onOpenGroupInNewWindow: function(params) {
+    TabManager.openGroupInNewWindow(params.groupID).then( () =>{
+      controller.refreshUi();
+    });
+  },
+
   onGroupAdd: function() {
     TabManager.addGroup();
     this.refreshUi();
@@ -249,6 +255,9 @@ var controllerMessenger = function(message) {
     case "Tab:Select":
       controller.onTabSelect(message.params);
       break;
+    case "Group:OpenGroupInNewWindow":
+      controller.onOpenGroupInNewWindow(message.params);
+      break;
   }
 }
 
@@ -294,11 +303,14 @@ browser.tabs.onDetached.addListener( (tabId, detachInfo) => {
 
 /**** Event about windows *****/
 browser.windows.onCreated.addListener( (window) => {
-  // Create new group
-  TabManager.addGroup( "", window.id )
+  // Let time for opening well and be sure it is a new one
+  setTimeout( () => {
+    TabManager.addGroup( "", window.id );
+  }, 1000);
 });
 browser.windows.onRemoved.addListener( (windowId) => {
   TabManager.detachWindow( windowId );
+  controller.refreshUi();
 });
 browser.windows.onFocusChanged.addListener( (windowId) => {
   controller.refreshUi();

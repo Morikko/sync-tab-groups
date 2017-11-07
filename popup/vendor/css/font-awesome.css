@@ -51,3 +51,5 @@
 .fa-chevron-up:before { content: "\f077"; }
 .fa-chevron-down:before { content: "\f078"; }
 .fa-undo:before { content: "\f079"; }
+.fa-plus:before { content: "\f067"; }
+.fa-trash:before { content: "\f1f8"; }

@@ -34,6 +34,7 @@ const Group = React.createClass({
     onTabClick: React.PropTypes.func,
     onTabDrag: React.PropTypes.func,
     onTabDragStart: React.PropTypes.func,
+    onOpenInNewWindowClick: React.PropTypes.func,
     uiHeightChanged: React.PropTypes.func
   },
 
@@ -116,7 +117,8 @@ const Group = React.createClass({
               onEditAbort: this.handleGroupEditAbortClick,
               onEditSave: this.handleGroupEditSaveClick,
               onExpand: this.handleGroupExpandClick,
-              onUndoCloseClick: this.handleGroupCloseAbortClick
+              onUndoCloseClick: this.handleGroupCloseAbortClick,
+              onOpenInNewWindow: this.handleOpenInNewWindowClick
             }
           )
         ),
@@ -133,6 +135,12 @@ const Group = React.createClass({
       )
     );
   },
+
+  handleOpenInNewWindowClick: function(event) {
+    event.stopPropagation();
+    this.props.onOpenInNewWindowClick(this.props.group.id);
+  },
+
 
   handleGroupCloseClick: function(event) {
     event.stopPropagation();

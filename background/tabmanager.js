@@ -352,14 +352,11 @@ TabManager.renameGroup = function(groupID, title) {
  */
 TabManager.addGroup = function(title = "",
   windowId = browser.windows.WINDOW_ID_NONE) {
+  if ( TabManager.isWindowAlreadyRegistered( windowId ) )
+    return;
+
   let tabs = [];
-  /*
-  tabs.push({
-    url: "about:newtab",
-    active: true,
-    pinned: false
-  });
-  */
+
   groups.push(new Group(groups.length,
     title,
     tabs,
@@ -380,6 +377,11 @@ TabManager.addGroupWithTab = function(tabs,
     TabManager.addGroup(title);
     return;
   }
+  let windowId = tabs[0].windowId;
+
+  if ( TabManager.isWindowAlreadyRegistered( windowId ) )
+    return;
+
   groups.push(new Group(groups.length, title, tabs, tabs[0].windowId));
 }
 
@@ -406,5 +408,31 @@ TabManager.detachWindow = function( windowId ) {
   for (g of groups) {
     if ( g.windowId === windowId )
       g.windowId = browser.windows.WINDOW_ID_NONE;
+  }
+}
+
+TabManager.isWindowAlreadyRegistered = function ( windowId ) {
+  if ( windowId === browser.windows.WINDOW_ID_NONE )
+    return false;
+  for (g of groups) {
+    if ( g.windowId === windowId )
+      return true;
+  }
+  return false;
+}
+
+TabManager.openGroupInNewWindow = function( groupID ) {
+  for (g of groups) {
+    if ( g.id === groupID ) {
+      // list of urls to open
+      let urls = [];
+      groups[groupID].tabs.forEach((t)=>{urls.push(t.url);})
+      return browser.windows.create({
+        state: "maximized",
+        url: urls
+      }).then((w)=>{
+        groups[groupID].windowId = w.id;
+      });
+    }
   }
 }

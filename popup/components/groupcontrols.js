@@ -31,7 +31,8 @@ const GroupControls = React.createClass({
     onEditAbort: React.PropTypes.func,
     onEditSave: React.PropTypes.func,
     onExpand: React.PropTypes.func,
-    onUndoCloseClick: React.PropTypes.func
+    onUndoCloseClick: React.PropTypes.func,
+    onOpenInNewWindow: React.PropTypes.func
   },
 
   getEditControls: function() {
@@ -88,7 +89,11 @@ const GroupControls = React.createClass({
       },
       groupControls,
       React.DOM.i({
-        className: "group-close fa fa-fw fa-times",
+        className: "group-edit fa fa-fw fa-plus",
+        onClick: this.props.onOpenInNewWindow
+      }),
+      React.DOM.i({
+        className: "group-edit fa fa-fw fa-times",
         onClick: this.props.onClose
       }),
       React.DOM.i({

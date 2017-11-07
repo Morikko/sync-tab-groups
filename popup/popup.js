@@ -21,6 +21,12 @@ const Actions = {
     });
   },
 
+  OpenGroupInNewWindow: function(groupID) {
+    sendMessage("Group:OpenGroupInNewWindow", {
+      groupID: groupID,
+    });
+  },
+
   closeGroup: function(groupID) {
     sendMessage("Group:Close", {
       groupID: groupID
@@ -95,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onTabClick: Actions.selectTab,
         onTabDrag: Actions.dragTab,
         onTabDragStart: Actions.dragTabStart,
+        onOpenInNewWindowClick: Actions.OpenGroupInNewWindow,
         uiHeightChanged: Actions.uiHeightChanged
       })
     ),
