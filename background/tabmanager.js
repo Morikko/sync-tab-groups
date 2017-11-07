@@ -33,6 +33,7 @@ TabManager.getGroupIdInWindow = function(windowId) {
  * for the group
  * Asynchronous
  * @param {Number} window id
+ * @return {Premise} - last asynchronous tasks
  */
 TabManager.updateGroup = function(windowId) {
   let groupId = TabManager.getGroupIdInWindow(windowId);
@@ -41,7 +42,7 @@ TabManager.updateGroup = function(windowId) {
     return;
   }
 
-  browser.tabs.query({
+  return browser.tabs.query({
     windowId: windowId
   }).then((tabs) => {
     groups[groupId].tabs = tabs;

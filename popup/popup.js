@@ -105,9 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 var popupMessenger = function(message) {
   switch (message.task) {
     case "Groups:Changed":
-      tabspaceBackground.then((page) => {
-        store.dispatch(ActionCreators.setTabgroups(page.groups));
-      });
+      store.dispatch(ActionCreators.setTabgroups(message.params.groups));
       break;
     case "Groups:CloseTimeoutChanged":
       // TODO

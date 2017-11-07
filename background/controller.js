@@ -157,7 +157,7 @@ Controller.prototype = {
     //let groups = TabManager.getGroups(Prefs.prefs.enableAlphabeticSort);
 
     sendMessage("Groups:Changed", {
-      // groups: groups // WONT WORK UNDEFINED
+      groups: groups // WONT WORK UNDEFINED
     });
   },
 
@@ -258,8 +258,9 @@ browser.runtime.onMessage.addListener(controllerMessenger);
 
 // Event from: tabs, windows
 function updateGroup(windowId) {
-  TabManager.updateGroup(windowId);
-  controller.refreshUi();
+  TabManager.updateGroup(windowId).then( ()=>{
+    controller.refreshUi();
+  });
 }
 
 /**** Event about tabs *****/

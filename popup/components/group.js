@@ -83,7 +83,7 @@ const Group = React.createClass({
     }
 
     let groupClasses = classNames({
-      active: this.props.group.active,
+      active: (this.props.group.windowId > -1),
       editing: this.state.editing,
       closing: this.state.closing,
       draggingOver: this.state.draggingOverCounter !== 0,
@@ -189,7 +189,7 @@ const Group = React.createClass({
   },
 
   handleGroupTitleInputKey: function(event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode == 13) { // Enter key
       this.setState({
         editing: false
       });
