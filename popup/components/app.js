@@ -36,7 +36,6 @@ const App = React.createClass({
     onTabDrag: React.PropTypes.func,
     onTabDragStart: React.PropTypes.func,
     onOpenInNewWindowClick: React.PropTypes.func,
-    uiHeightChanged: React.PropTypes.func
   },
 
   render: function() {

@@ -13,8 +13,10 @@ const Actions = {
     sendMessage("Group:Add", {});
   },
 
-  // TODO seems it is not used any more
+  // TODO: Drag & Drop tab on create button
   addGroupWithTab: function(sourceGroupID, tabIndex) {
+    console.log("addGroupWithTab in popup doesn't work");
+    return;
     sendMessage("Group:AddWithTab", {
       sourceGroupID: sourceGroupID,
       tabIndex: tabIndex
@@ -31,15 +33,6 @@ const Actions = {
     sendMessage("Group:Close", {
       groupID: groupID
     });
-  },
-
-  uiHeightChanged: function() {
-    /* TODO: no need anymore, panel is not manage anymore by controller.js
-    sendMessage("UI:Resize", {
-      width: document.body.clientWidth,
-      height: document.body.clientHeight
-    });
-    */
   },
 
   renameGroup: function(groupID, title) {
@@ -101,8 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onTabClick: Actions.selectTab,
         onTabDrag: Actions.dragTab,
         onTabDragStart: Actions.dragTabStart,
-        onOpenInNewWindowClick: Actions.OpenGroupInNewWindow,
-        uiHeightChanged: Actions.uiHeightChanged
+        onOpenInNewWindowClick: Actions.OpenGroupInNewWindow
       })
     ),
     document.getElementById("content")
@@ -142,7 +134,7 @@ function init() {
   store.dispatch(ActionCreators.setGroupCloseTimeout(5))
 }
 
-
+// Wait popup to be completely loaded
 var readyStateCheckInterval = setInterval(function() {
   if (document.readyState === "complete") {
     clearInterval(readyStateCheckInterval);

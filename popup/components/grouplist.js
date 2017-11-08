@@ -38,11 +38,6 @@ const GroupList = (() => {
       onTabDrag: React.PropTypes.func,
       onTabDragStart: React.PropTypes.func,
       onOpenInNewWindowClick: React.PropTypes.func,
-      uiHeightChanged: React.PropTypes.func
-    },
-
-    componentDidUpdate: function() {
-      this.props.uiHeightChanged && this.props.uiHeightChanged();
     },
 
     render: function() {
@@ -62,7 +57,6 @@ const GroupList = (() => {
             onTabDrag: this.props.onTabDrag,
             onTabDragStart: this.props.onTabDragStart,
             onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
-            uiHeightChanged: this.props.uiHeightChanged
           });
         }),
         React.createElement(

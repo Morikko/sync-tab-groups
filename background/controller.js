@@ -30,7 +30,6 @@ Controller.prototype = {
       }
     });
 
-    // Load Storage
   },
 
   /* TODO DO I still need the binding
@@ -155,15 +154,6 @@ Controller.prototype = {
     });
   },
 
-  resizePanel: function(dimensions) {
-    /* TODO Useful ??
-    this._groupsPanel.resize(
-      this._groupsPanel.width,
-      dimensions.height + 18
-    );
-    */
-  },
-
   onOpenGroupInNewWindow: function(params) {
     TabManager.openGroupInNewWindow(params.groupID).then( () =>{
       controller.refreshUi();
@@ -176,12 +166,7 @@ Controller.prototype = {
   },
 
   onGroupAddWithTab: function() {
-    browser.tabs.query({
-      currentWindow: true
-    }).then((tabs) => {
-      GroupManager.addGroupWithTab(tabs);
-      controller.refreshUi();
-    });
+    // TODO see addGroupWithTab in popup.js
   },
 
   onGroupRemove: function(params) {

@@ -43,7 +43,6 @@ const TabList = React.createClass({
             onTabClick: this.props.onTabClick,
             onTabDrag: this.props.onTabDrag,
             onTabDragStart: this.props.onTabDragStart,
-            uiHeightChanged: this.props.uiHeightChanged
           });
         })
       )

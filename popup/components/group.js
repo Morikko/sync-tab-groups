@@ -35,7 +35,6 @@ const Group = React.createClass({
     onTabDrag: React.PropTypes.func,
     onTabDragStart: React.PropTypes.func,
     onOpenInNewWindowClick: React.PropTypes.func,
-    uiHeightChanged: React.PropTypes.func
   },
 
   getInitialState: function() {
@@ -47,10 +46,6 @@ const Group = React.createClass({
       dragSourceGroup: false,
       newTitle: this.getTitle()
     };
-  },
-
-  componentDidUpdate: function() {
-    this.props.uiHeightChanged && this.props.uiHeightChanged();
   },
 
   getTitle: function() {
