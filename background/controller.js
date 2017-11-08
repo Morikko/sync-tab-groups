@@ -1,12 +1,7 @@
 // Portage help from SDK/XUL to Web extension
-// More on https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Comparison_with_the_Add-on_SDK
-// self -> runtime.getManifest() and extension.getURL() for data.url()
-// l10n -> i18n
+// https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Comparison_with_the_Add-on_SDK
 // hotkeys -> commands
 // sdk/simple-prefs -> storage and options_ui
-// TabsUtils = Low level API: useless
-// tabs -> tabs
-// sdk/window/utils -> windows
 
 function Controller() {
   this._hotkeyOpen = null;
@@ -29,11 +24,13 @@ Controller.prototype = {
         browser.tabs.query({
           windowId: windowInfo.id
         }).then((tabs) => {
-          TabManager.addGroupWithTab(tabs);
+          GroupManager.addGroupWithTab(tabs);
           controller.refreshUi();
         });
       }
     });
+
+    // Load Storage
   },
 
   /* TODO DO I still need the binding
@@ -153,11 +150,8 @@ Controller.prototype = {
   */
 
   refreshUi: function() {
-    // TODO Add sorting again ???
-    //let groups = TabManager.getGroups(Prefs.prefs.enableAlphabeticSort);
-
-    sendMessage("Groups:Changed", {
-      groups: groups // WONT WORK UNDEFINED
+    Utils.sendMessage("Groups:Changed", {
+      groups: GroupManager.groups
     });
   },
 
@@ -177,7 +171,7 @@ Controller.prototype = {
   },
 
   onGroupAdd: function() {
-    TabManager.addGroup();
+    GroupManager.addGroup();
     this.refreshUi();
   },
 
@@ -185,7 +179,7 @@ Controller.prototype = {
     browser.tabs.query({
       currentWindow: true
     }).then((tabs) => {
-      TabManager.addGroupWithTab(tabs);
+      GroupManager.addGroupWithTab(tabs);
       controller.refreshUi();
     });
   },
@@ -305,11 +299,11 @@ browser.tabs.onDetached.addListener( (tabId, detachInfo) => {
 browser.windows.onCreated.addListener( (window) => {
   // Let time for opening well and be sure it is a new one
   setTimeout( () => {
-    TabManager.addGroup( "", window.id );
+    GroupManager.addGroup( "", window.id );
   }, 1000);
 });
 browser.windows.onRemoved.addListener( (windowId) => {
-  TabManager.detachWindow( windowId );
+  GroupManager.detachWindow( windowId );
   controller.refreshUi();
 });
 browser.windows.onFocusChanged.addListener( (windowId) => {

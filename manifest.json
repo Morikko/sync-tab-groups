@@ -11,11 +11,11 @@
     },
 
     "permissions": [
-        "bookmarks", "tabs"
+        "bookmarks", "tabs", "storage"
     ],
 
     "background": {
-        "scripts": ["background/utils.js", "background/tabmanager.js", "background/controller.js"]
+        "scripts": ["background/utils.js", "background/groupmanager.js", "background/tabmanager.js", "background/controller.js"]
     },
 
     "default_locale": "en",

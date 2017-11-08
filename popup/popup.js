@@ -134,7 +134,7 @@ var tabspaceBackground = browser.runtime.getBackgroundPage();
  */
 function init() {
   tabspaceBackground.then((page) => {
-    store.dispatch(ActionCreators.setTabgroups(page.groups));
+    store.dispatch(ActionCreators.setTabgroups(page.GroupManager.groups));
   });
   browser.windows.getLastFocused({windowTypes:['normal']}).then((w)=>{
     store.dispatch(ActionCreators.setCurrentWindowId(w.id));

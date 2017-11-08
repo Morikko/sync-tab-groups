@@ -1,32 +1,9 @@
-var Group = function(id,
-    title = "",
-    tabs = [],
-    windowId = browser.windows.WINDOW_ID_NONE) {
-  this.title = title;
-  this.tabs = tabs;
-  this.id = id; // Equal to index in array groups
-  this.windowId = windowId;
-}
-
-var groups = [];
-var currentGroupIndex = 0;
-
-var TabManager = TabManager || {};
-
 /**
- * Return the groupId displayed in the window with windowId
- * If no group found: return -1
- * @param {Number} - windowId
- * @returns {Number} - group index
+ * Functions that update the tabs/windows in browser
+ * All are insynchronous functions
+ * Have direct access (R/W) to the data
  */
-TabManager.getGroupIdInWindow = function(windowId) {
-  for (group of groups) {
-    if (group.windowId === windowId)
-      return group.id;
-  }
-  // Should never occur !!
-  return -1;
-}
+var TabManager = TabManager || {};
 
 /**
  * Take the current tabs on the desire window and set it as the tabs
@@ -36,7 +13,7 @@ TabManager.getGroupIdInWindow = function(windowId) {
  * @return {Premise} - last asynchronous tasks
  */
 TabManager.updateGroup = function(windowId) {
-  let groupId = TabManager.getGroupIdInWindow(windowId);
+  let groupId = GroupManager.getGroupIdInWindow(windowId);
   if (groupId === -1) {
     console.log("Group not found for window: " + windowId);
     return;
@@ -45,52 +22,8 @@ TabManager.updateGroup = function(windowId) {
   return browser.tabs.query({
     windowId: windowId
   }).then((tabs) => {
-    groups[groupId].tabs = tabs;
+    GroupManager.groups[groupId].tabs = tabs;
   });
-}
-
-/**
- * Return true if the url is privileged
- * Privileged url: chrome: URLs, javascript: URLs,
-                    data: URLs, file: URLs, about: URLs
- * Non-privileged URLs: about:blank, about:newtab ( should be
- * replaced by null ), all the other ones
- * @param {string} url
- * @returns {boolean}
- */
-TabManager.isPrivilegedURL = function(url) {
-  if (url === "about:newtab")
-    return false;
-  if (url.startsWith("chrome:") ||
-    url.startsWith("javascript:") ||
-    url.startsWith("data:") ||
-    url.startsWith("file:") ||
-    url.startsWith("about:"))
-    return true;
-
-  return false;
-}
-
-/**
- * Sort the groups to be in alphabetical order
- * Change the groups var directly
- * TODO
- */
-TabManager.sortGroups = function() {
-  console.log("sortGroups not implemented: WONT WORK");
-  return;
-
-  if (sort) {
-    retGroups.sort((a, b) => {
-      if (a.title.toLowerCase() == b.title.toLowerCase()) {
-        return 0;
-      }
-
-      return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
-    });
-  }
-
-  return retGroups;
 }
 
 /**
@@ -99,14 +32,14 @@ TabManager.sortGroups = function() {
  * @param {array[Tab]} tabsToOpen
  * @return {Promise} - last open tab
  */
-TabManager.createListOfTabs = function(tabsToOpen) {
+TabManager.openListOfTabs = function(tabsToOpen) {
   if ( tabsToOpen.length === 0 )
-    return Promise.resolve("createListOfTabs done!");
+    return Promise.resolve("openListOfTabs done!");
 
   return new Promise( (resolve, reject) =>{
     var lastPromise;
     tabsToOpen.map((tab, index) => {
-      if (!TabManager.isPrivilegedURL(tab.url)) {
+      if (!Utils.isPrivilegedURL(tab.url)) {
         // Create a tab to tab.url or to newtab
         lastPromise = browser.tabs.create({
           url: (tab.url === "about:newtab") ? null : tab.url,
@@ -139,10 +72,10 @@ TabManager.changeGroupTo = function(windowId, oldGroupId, newGroupId) {
       tabs.map((tab) => {
         tabsToRemove.push(tab.id);
       });
-      var tabsToOpen = groups[newGroupId].tabs;
+      var tabsToOpen = GroupManager.groups[newGroupId].tabs;
       // Switch window associated
-      groups[oldGroupId].windowId = browser.windows.WINDOW_ID_NONE;
-      groups[newGroupId].windowId = windowId;
+      GroupManager.groups[oldGroupId].windowId = browser.windows.WINDOW_ID_NONE;
+      GroupManager.groups[newGroupId].windowId = windowId;
 
 
       // 2. Open new group tabs
@@ -153,12 +86,11 @@ TabManager.changeGroupTo = function(windowId, oldGroupId, newGroupId) {
           pinned: false
         });
       }
-      TabManager.createListOfTabs(tabsToOpen).then( ()=> {
+      TabManager.openListOfTabs(tabsToOpen).then( ()=> {
 
 
         // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
         // Var will be deprecated
-        currentGroupIndex = newGroupId;
         browser.tabs.remove(tabsToRemove).then( ()=> {
           resolve("changeGroupTo done!");
         });
@@ -191,27 +123,27 @@ TabManager.activeTabInWindow = function(windowId, tabIndex) {
  * @param {Number} sourceGroupID
  * @param {Number} tabIndex
  * @param {Number} targetGroupID
- * TODO
+ * TODO: need to handle cases separatly and fix case 5
  */
 TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
   // Case 1: same group
-  if (currentGroupIndex === targetGroupID) {
+  if (sourceGroupID === targetGroupID) {
     return;
   }
 
-  let tab = groups[sourceGroupID].tabs[tabIndex];
+  let tab = GroupManager.groups[sourceGroupID].tabs[tabIndex];
 
   // Case 2: Closed Group -> Closed Group
-  groups[targetGroupID].tabs.push(tab);
-  groups[sourceGroupID].tabs.splice(tabIndex, 1);
+  GroupManager.groups[targetGroupID].tabs.push(tab);
+  GroupManager.groups[sourceGroupID].tabs.splice(tabIndex, 1);
 
   // Case 3: Open Group -> Closed Group
-  groups[targetGroupID].tabs.push(tab);
+  GroupManager.groups[targetGroupID].tabs.push(tab);
   browser.tabs.remove([tab.id]);
 
   // Case 4: Closed Group -> Open Group
   browser.tabs.create([tab.id]);
-  groups[sourceGroupID].tabs.splice(tabIndex, 1);
+  GroupManager.groups[sourceGroupID].tabs.splice(tabIndex, 1);
 
   // Case 5: Open Group -> Open Group
   browser.tabs.move();
@@ -230,8 +162,8 @@ TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
 TabManager.removeUnallowedURL = function(groupID) {
   // Get not supported link tab id
   var tabsIds = [];
-  groups[groupID].tabs.map((tab) => {
-    if (TabManager.isPrivilegedURL(tab.url))
+  GroupManager.groups[groupID].tabs.map((tab) => {
+    if (Utils.isPrivilegedURL(tab.url))
       tabsIds.push(tab.id);
   });
 
@@ -240,24 +172,13 @@ TabManager.removeUnallowedURL = function(groupID) {
     browser.tabs.remove(tabsIds).then(() => {
       // Update data
       browser.tabs.query({
-        windowId: groups[groupID].windowId
+        windowId: GroupManager.groups[groupID].windowId
       }).then((tabs) => {
-        groups[groupID].tabs = tabs;
+        GroupManager.groups[groupID].tabs = tabs;
         resolve("removeUnallowedURL done!")
       });
     });
   });
-}
-
-/**
- * @param {Number} groupID
- * @returns {boolean}
- */
-TabManager.isGroupInOpenWindow = function(groupID) {
-  if (groups[groupID].windowId !== browser.windows.WINDOW_ID_NONE)
-    return true;
-  else
-    return false;
 }
 
 /**
@@ -271,9 +192,9 @@ TabManager.isGroupInOpenWindow = function(groupID) {
  */
 TabManager.selectGroup = function(groupID) {
   // Case 1: Another window
-  if (TabManager.isGroupInOpenWindow(groupID)) {
+  if (GroupManager.isGroupInOpenWindow(groupID)) {
     return browser.windows.update(
-      groups[groupID].windowId, {
+      GroupManager.groups[groupID].windowId, {
         focused: true
       }
     );
@@ -284,7 +205,7 @@ TabManager.selectGroup = function(groupID) {
       // So that the user can change the window without disturbing
       browser.windows.getCurrent().then((currentWindow) => {
         let currentWindowId = currentWindow.id;
-        let currentGroupIndex = TabManager.getGroupIdInWindow(
+        let currentGroupIndex = GroupManager.getGroupIdInWindow(
           currentWindowId
         );
         if (currentGroupIndex === -1) {
@@ -312,7 +233,7 @@ TabManager.selectGroup = function(groupID) {
  */
 TabManager.selectTab = function(tabIndex, groupID) {
   TabManager.selectGroup(groupID).then(() => {
-    let windowId = groups[groupID].windowId;
+    let windowId = GroupManager.groups[groupID].windowId;
     TabManager.activeTabInWindow(windowId, tabIndex);
   });
 }
@@ -322,67 +243,16 @@ TabManager.selectTab = function(tabIndex, groupID) {
  * direction>0, go to the next groups OR direction<0, go to the previous groups
  * @param {Number} direction
  */
-TabManager.selectNextPrevGroup = function(direction) {
+TabManager.selectNextPrevGroup = function(sourceGroupId, direction) {
   // Should never happen
-  if (groups.length == 0) {
+  if (GroupManager.groups.length == 0) {
     console.log("selectNextPrevGroup can't go to the next group as there is no other one.");
     return;
   }
 
-  targetGroupID = (currentGroupIndex + direction + groups.length) % groups.length;
+  targetGroupID = (currentGroupIndex + direction + GroupManager.groups.length) % GroupManager.groups.length;
 
   TabManager.selectGroup(targetGroupID);
-}
-
-/**
- * Renames a given group.
- *
- * @param {Number} groupID - the groupID
- * @param {String} title - the new title
- */
-TabManager.renameGroup = function(groupID, title) {
-  groups[groupID].title = title;
-}
-
-/**
- * Add a new group with one tab: "newtab"
- * No window is associated with this group
- * @param {String} title - kept blank if not given
- * @param {Number} windowId
- */
-TabManager.addGroup = function(title = "",
-  windowId = browser.windows.WINDOW_ID_NONE) {
-  if ( TabManager.isWindowAlreadyRegistered( windowId ) )
-    return;
-
-  let tabs = [];
-
-  groups.push(new Group(groups.length,
-    title,
-    tabs,
-    windowId
-  ));
-}
-
-/**
- * Adds a group with associated tab.
- *
- * @param {Array[Tab]} tabs - the tabs to place into the new group
- * @param {String} title - the name to give to that group
- */
-TabManager.addGroupWithTab = function(tabs,
-  title = ""
-) {
-  if (tabs.length === 0) {
-    TabManager.addGroup(title);
-    return;
-  }
-  let windowId = tabs[0].windowId;
-
-  if ( TabManager.isWindowAlreadyRegistered( windowId ) )
-    return;
-
-  groups.push(new Group(groups.length, title, tabs, tabs[0].windowId));
 }
 
 /**
@@ -393,45 +263,25 @@ TabManager.addGroupWithTab = function(tabs,
 TabManager.removeGroup = function(groupID) {
   // Switch group
   if (currentGroupIndex == groupID) {
-    if (groups.length === 0)
-      TabManager.addGroup();
-    TabManager.selectNextPrevGroup(1);
+    if (GroupManager.groups.length === 0)
+      GroupManager.addGroup();
+    TabManager.selectNextPrevGroup(groupID, 1);
   }
-  groups.splice(groupID, 1);
+  GroupManager.groups.splice(groupID, 1);
 }
 
-/**
- * Remove the windowId associated to a group
- * @param {Number} windowId
- */
-TabManager.detachWindow = function( windowId ) {
-  for (g of groups) {
-    if ( g.windowId === windowId )
-      g.windowId = browser.windows.WINDOW_ID_NONE;
-  }
-}
-
-TabManager.isWindowAlreadyRegistered = function ( windowId ) {
-  if ( windowId === browser.windows.WINDOW_ID_NONE )
-    return false;
-  for (g of groups) {
-    if ( g.windowId === windowId )
-      return true;
-  }
-  return false;
-}
 
 TabManager.openGroupInNewWindow = function( groupID ) {
-  for (g of groups) {
+  for (g of GroupManager.groups) {
     if ( g.id === groupID ) {
       // list of urls to open
       let urls = [];
-      groups[groupID].tabs.forEach((t)=>{urls.push(t.url);})
+      GroupManager.groups[groupID].tabs.forEach((t)=>{urls.push(t.url);})
       return browser.windows.create({
         state: "maximized",
         url: urls
       }).then((w)=>{
-        groups[groupID].windowId = w.id;
+        GroupManager.groups[groupID].windowId = w.id;
       });
     }
   }
