@@ -1,55 +1,47 @@
 const store = Redux.createStore(Reducer);
 
-// TODO import utils.js in popup.html to use this function
-var sendMessage = function(_task, _params) {
-  browser.runtime.sendMessage({
-    task: _task,
-    params: _params
-  });
-}
-
 const Actions = {
   addGroup: function() {
-    sendMessage("Group:Add", {});
+    Utils.sendMessage("Group:Add", {});
   },
 
   // TODO: Drag & Drop tab on create button
   addGroupWithTab: function(sourceGroupID, tabIndex) {
     console.log("addGroupWithTab in popup doesn't work");
     return;
-    sendMessage("Group:AddWithTab", {
+    Utils.sendMessage("Group:AddWithTab", {
       sourceGroupID: sourceGroupID,
       tabIndex: tabIndex
     });
   },
 
   OpenGroupInNewWindow: function(groupID) {
-    sendMessage("Group:OpenGroupInNewWindow", {
+    Utils.sendMessage("Group:OpenGroupInNewWindow", {
       groupID: groupID,
     });
   },
 
   closeGroup: function(groupID) {
-    sendMessage("Group:Close", {
+    Utils.sendMessage("Group:Close", {
       groupID: groupID
     });
   },
 
   renameGroup: function(groupID, title) {
-    sendMessage("Group:Rename", {
+    Utils.sendMessage("Group:Rename", {
       groupID: groupID,
       title: title
     });
   },
 
   selectGroup: function(groupID) {
-    sendMessage("Group:Select", {
+    Utils.sendMessage("Group:Select", {
       groupID: groupID
     });
   },
 
   moveTabToGroup: function(sourceGroupID, tabIndex, targetGroupID) {
-    sendMessage("Group:MoveTab", {
+    Utils.sendMessage("Group:MoveTab", {
       sourceGroupID: sourceGroupID,
       tabIndex: tabIndex,
       targetGroupID: targetGroupID
@@ -57,21 +49,21 @@ const Actions = {
   },
 
   selectTab: function(groupID, tabIndex) {
-    sendMessage("Tab:Select", {
+    Utils.sendMessage("Tab:Select", {
       groupID: groupID,
       tabIndex: tabIndex
     });
   },
 
   dragTab: function(groupID, tabIndex) {
-    sendMessage("Tab:Drag", {
+    Utils.sendMessage("Tab:Drag", {
       groupID: groupID,
       tabIndex: tabIndex
     });
   },
 
   dragTabStart: function(groupID, tabIndex) {
-    sendMessage("Tab:DragStart", {
+    Utils.sendMessage("Tab:DragStart", {
       groupID: groupID,
       tabIndex: tabIndex
     });
