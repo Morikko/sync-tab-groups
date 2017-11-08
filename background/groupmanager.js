@@ -18,8 +18,8 @@ GroupManager.Group = function(id,
 GroupManager.groups = [];
 
 /**
- * Return the groupId displayed in the window with windowId
- * If no group found: return -1
+ * Return the group id displayed in the window with windowId
+ * If no group found: throw Error
  * @param {Number} - windowId
  * @returns {Number} - group id
  */
@@ -28,8 +28,8 @@ GroupManager.getGroupIdInWindow = function(windowId) {
     if (group.windowId === windowId)
       return group.id;
   }
-  // Should never occur !!
-  return -1;
+
+  throw Error("getGroupIdInWindow: Failed to find group in window " + windowId);
 }
 
 /**
