@@ -208,8 +208,9 @@ const Group = React.createClass({
       draggingOverCounter: 0
     });
 
-    let sourceGroup = event.dataTransfer.getData("tab/group");
-    let tabIndex = event.dataTransfer.getData("tab/index");
+    // -0 to get
+    let sourceGroup = parseInt(event.dataTransfer.getData("tab/group"), 10);
+    let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
 
     this.props.onGroupDrop(
       sourceGroup,
