@@ -13,12 +13,30 @@ WindowManager.WINDOW_GROUPID = "GROUPID";
  * Close all the current tabs and open the tabs from the selected group
  * in the window with windowId
  * The active tab will be the last one active
- * @param {Number} groupId - the group index
+ * @param {Number} oldGroupId - the group id opened
+  * @param {Number} newGroupId - the group id to open
  * @returns {Promise} - the remove tabs promise (last)
  * Asynchronous
  */
-WindowManager.changeGroupInWindow = function(windowId, oldGroupId, newGroupId) {
+WindowManager.changeGroupInWindow = function(oldGroupId, newGroupId) {
   return new Promise((resolve, reject) => {
+    var newGroupIndex, oldGroupIndex, windowId;
+    try {
+      newGroupIndex = GroupManager.getGroupIndexFromGroupId(
+        newGroupId
+      );
+      oldGroupIndex = GroupManager.getGroupIndexFromGroupId(
+        oldGroupId
+      );
+      windowId = GroupManager.getWindowIdFromGroupId(
+        oldGroupId
+      );
+    } catch (e) {
+      let msg = "WindowManager.changeGroupInWindow failed; " + e.message;
+      console.error(msg);
+      reject(msg);
+    }
+
     TabManager.removeTabsWithUnallowedURL(oldGroupId).then(() => {
       browser.tabs.query({
         windowId: windowId
@@ -29,25 +47,10 @@ WindowManager.changeGroupInWindow = function(windowId, oldGroupId, newGroupId) {
           tabsToRemove.push(tab.id);
         });
 
-        var newGroupIndex, oldGroupIndex;
-        try {
-          newGroupIndex = GroupManager.getGroupIndexFromGroupId(
-            newGroupId
-          );
-          oldGroupIndex = GroupManager.getGroupIndexFromGroupId(
-            oldGroupId
-          );
-        } catch (e) {
-          let msg = "WindowManager.changeGroupInWindow failed; " + e.message;
-          console.error(msg);
-          reject(msg);
-        }
-
         var tabsToOpen = GroupManager.groups[newGroupIndex].tabs;
         // Switch window associated
         GroupManager.groups[oldGroupIndex].windowId = browser.windows.WINDOW_ID_NONE;
         GroupManager.groups[newGroupIndex].windowId = windowId;
-
 
         // 2. Open new group tabs
         if (tabsToOpen.length === 0) {
@@ -115,7 +118,7 @@ WindowManager.selectGroup = function(newGroupId) {
           console.error(msg);
           reject(msg);
         }
-        WindowManager.changeGroupInWindow(currentWindowId, currentGroupId, newGroupId).then(() => {
+        WindowManager.changeGroupInWindow(currentGroupId, newGroupId).then(() => {
           resolve("End of WindowManager.selectGroup");
         });
       });
@@ -162,7 +165,7 @@ WindowManager.selectNextGroup = function(sourceGroupId) {
       }
     }
 
-    var lastPromise = WindowManager.changeGroupInWindow(GroupManager.groups[sourceGroupIndex].windowId,sourceGroupId, nextGroupId);
+    var lastPromise = WindowManager.changeGroupInWindow(sourceGroupId, nextGroupId);
 
     resolve(lastPromise);
   });

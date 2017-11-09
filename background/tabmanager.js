@@ -151,9 +151,12 @@ TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
  */
 TabManager.removeTabsWithUnallowedURL = function(groupID) {
   return new Promise((resolve, reject) => {
-    let groupIndex;
+    let groupIndex, windowId;
     try {
       groupIndex = GroupManager.getGroupIndexFromGroupId(
+        groupID
+      );
+      windowId = GroupManager.getWindowIdFromGroupId(
         groupID
       );
     } catch (e) {
@@ -173,7 +176,7 @@ TabManager.removeTabsWithUnallowedURL = function(groupID) {
     browser.tabs.remove(tabsIds).then(() => {
       // Update data
       browser.tabs.query({
-        windowId: GroupManager.groups[groupIndex].windowId
+        windowId: windowId
       }).then((tabs) => {
         GroupManager.groups[groupIndex].tabs = tabs;
         resolve("removeUnallowedURL done!")
