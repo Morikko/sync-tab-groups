@@ -147,7 +147,7 @@ WindowManager.selectNextGroup = function(sourceGroupId) {
     for ( let i=sourceGroupIndex; i<sourceGroupIndex+GroupManager.groups.length; i++ ) {
       let targetGroupIndex = (i) % GroupManager.groups.length;
 
-      if ( GroupManager.groups[targetGroupIndex].windowId !== browser.windows.WINDOW_ID_NONE ) {
+      if ( GroupManager.groups[targetGroupIndex].windowId === browser.windows.WINDOW_ID_NONE ) {
         nextGroupId = GroupManager.groups[targetGroupIndex].id;
         break;
       }
@@ -158,11 +158,11 @@ WindowManager.selectNextGroup = function(sourceGroupId) {
       try {
         nextGroupId = GroupManager.addGroup();
       } catch (e) {
-        console.error("Controller - onGroupAdd failed: " + e);
+        console.error("WindowManager.selectNextGroup failed; " + e);
       }
     }
 
-    var lastPromise = WindowManager.changeGroupInWindow(GroupManager.groups[sourceGroupId].windowId,sourceGroupId, nextGroupId);
+    var lastPromise = WindowManager.changeGroupInWindow(GroupManager.groups[sourceGroupIndex].windowId,sourceGroupId, nextGroupId);
 
     resolve(lastPromise);
   });
