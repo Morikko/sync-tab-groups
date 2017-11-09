@@ -10,8 +10,14 @@
         "32": "icons/tabspace-active-32.png"
     },
 
+    "applications": {
+      "gecko": {
+        "id": "sync-tab-groups@eric.masseran"
+      }
+    },
+
     "permissions": [
-        "bookmarks", "tabs", "storage"
+        "bookmarks", "tabs", "storage", "sessions"
     ],
 
     "background": {

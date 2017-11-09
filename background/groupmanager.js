@@ -6,9 +6,9 @@
 var GroupManager = GroupManager || {};
 
 GroupManager.Group = function(id,
-    title = "",
-    tabs = [],
-    windowId = browser.windows.WINDOW_ID_NONE) {
+  title = "",
+  tabs = [],
+  windowId = browser.windows.WINDOW_ID_NONE) {
   this.title = title;
   this.tabs = tabs;
   this.id = id; // Unique in all group
@@ -39,7 +39,7 @@ GroupManager.getGroupIdInWindow = function(windowId) {
  * @returns {Number} - group index
  */
 GroupManager.getGroupIndexFromGroupId = function(groupId) {
-  for (let i=0; i< GroupManager.groups.length; i++) {
+  for (let i = 0; i < GroupManager.groups.length; i++) {
     if (GroupManager.groups[i].id === groupId)
       return i;
   }
@@ -62,18 +62,18 @@ GroupManager.isGroupInOpenWindow = function(groupID) {
  * Remove the windowId associated to a group
  * @param {Number} windowId
  */
-GroupManager.detachWindow = function( windowId ) {
+GroupManager.detachWindow = function(windowId) {
   for (g of GroupManager.groups) {
-    if ( g.windowId === windowId )
+    if (g.windowId === windowId)
       g.windowId = browser.windows.WINDOW_ID_NONE;
   }
 }
 
-GroupManager.isWindowAlreadyRegistered = function ( windowId ) {
-  if ( windowId === browser.windows.WINDOW_ID_NONE )
+GroupManager.isWindowAlreadyRegistered = function(windowId) {
+  if (windowId === browser.windows.WINDOW_ID_NONE)
     return false;
   for (g of GroupManager.groups) {
-    if ( g.windowId === windowId )
+    if (g.windowId === windowId)
       return true;
   }
   return false;
@@ -97,7 +97,7 @@ GroupManager.renameGroup = function(groupID, title) {
  */
 GroupManager.addGroup = function(title = "",
   windowId = browser.windows.WINDOW_ID_NONE) {
-  if ( GroupManager.isWindowAlreadyRegistered( windowId ) )
+  if (GroupManager.isWindowAlreadyRegistered(windowId))
     return;
 
   let tabs = [];
@@ -109,32 +109,30 @@ GroupManager.addGroup = function(title = "",
       windowId
     ));
   } catch (e) {
-    console.log("addGroupWithTab: Group not created because " + e.message );
+    throw Error("addGroup: Group not created because " + e.message);
   }
 }
 
 /**
  * Adds a group with associated tab.
- *
+ * Error Throwable
  * @param {Array[Tab]} tabs - the tabs to place into the new group
  * @param {String} title - the name to give to that group
  */
 GroupManager.addGroupWithTab = function(tabs,
-  title = ""
-) {
+  title = "") {
   if (tabs.length === 0) {
-    GroupManager.addGroup(title);
-    return;
+    return GroupManager.addGroup(title);
   }
   let windowId = tabs[0].windowId;
 
-  if ( GroupManager.isWindowAlreadyRegistered( windowId ) )
-    return;
-
   try {
-    GroupManager.groups.push(new GroupManager.Group(GroupManager.createUniqueGroupId(), title, tabs, tabs[0].windowId));
+    let uniqueGroupId = GroupManager.createUniqueGroupId();
+    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, tabs[0].windowId));
+    return uniqueGroupId;
   } catch (e) {
-    console.log("addGroupWithTab: Group not created because " + e.message );
+    // Propagate Error
+    throw Error("addGroupWithTab: Group not created because " + e.message);
   }
 }
 
@@ -142,24 +140,57 @@ GroupManager.addGroupWithTab = function(tabs,
  * Find an Id that is not used in the groups
  * @return {Number} uniqueGroupId
  */
-GroupManager.createUniqueGroupId = function () {
-  var uniqueGroupId = GroupManager.groups.length-1;
-  let isUnique = true, count=0;
+GroupManager.createUniqueGroupId = function() {
+  var uniqueGroupId = GroupManager.groups.length - 1;
+  let isUnique = true,
+    count = 0;
 
   do {
     uniqueGroupId++;
     count++;
     isUnique = true;
-    for ( g of GroupManager.groups ) {
+    for (g of GroupManager.groups) {
       isUnique = isUnique && g.id !== uniqueGroupId;
     }
 
-    if ( count > 100000 )
+    if (count > 100000)
       throw Error("createUniqueGroupId: Can't find an unique group Id");
 
-  } while(!isUnique);
+  } while (!isUnique);
 
   return uniqueGroupId;
+}
+
+/**
+ * Set all windowIds to browser.windows.WINDOW_ID_NONE
+ */
+GroupManager.resetAssociatedWindows = function ( ) {
+  for ( g of GroupManager.groups ) {
+    g.windowId = browser.windows.WINDOW_ID_NONE;
+  }
+}
+
+/**
+ * Asynchronous function
+ * Get the saved groups if exist else set empty array
+ * @return {Promise}
+ */
+GroupManager.init = function() {
+  return new Promise((resolve, reject) => {
+    StorageManager.Local.loadGroups( ).then((groups) => {
+      GroupManager.groups = groups;
+      GroupManager.resetAssociatedWindows();
+      resolve("GroupManager.init done");
+    }).catch(() => {
+      reject("GroupManager.init failed");
+    });
+  });
+}
+/**
+ * Save groups
+ */
+GroupManager.store = function() {
+  StorageManager.Local.saveGroups( GroupManager.groups );
 }
 
 /**

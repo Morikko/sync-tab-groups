@@ -3,6 +3,9 @@
 // hotkeys -> commands
 // sdk/simple-prefs -> storage and options_ui
 
+/**
+ * Only read groups data, never write directly
+ */
 function Controller() {
   this._hotkeyOpen = null;
   this._hotkeyNextGroup = null;
@@ -15,21 +18,19 @@ Controller.prototype = {
   init: function() {
     // TODO Hotkeys
 
-    // Match windows and group
-    let windows = browser.windows.getAll({
-      windowTypes: ['normal']
-    }).then( (windowInfoArray) =>{
-
-      for ( windowInfo of windowInfoArray ) {
-        browser.tabs.query({
-          windowId: windowInfo.id
-        }).then((tabs) => {
-          GroupManager.addGroupWithTab(tabs);
-          controller.refreshUi();
-        });
-      }
+    // 1. Set the data
+    GroupManager.init().then( ()=>{
+      // 2. Integrate open windows
+      browser.windows.getAll({
+        windowTypes: ['normal']
+      }).then( (windowInfoArray) =>{
+        for ( windowInfo of windowInfoArray ) {
+          TabManager.integrateWindow( windowInfo.id ).then(()=>{
+            GroupManager.store();
+          });
+        }
+      });
     });
-
   },
 
   /* TODO DO I still need the binding
@@ -156,13 +157,19 @@ Controller.prototype = {
 
   onOpenGroupInNewWindow: function(params) {
     TabManager.openGroupInNewWindow(params.groupID).then( () =>{
+      GroupManager.store();
       controller.refreshUi();
     });
   },
 
   onGroupAdd: function() {
-    GroupManager.addGroup();
-    this.refreshUi();
+    try {
+      GroupManager.addGroup();
+      GroupManager.store();
+      this.refreshUi();
+    } catch (e) {
+      console.error("Controller - onGroupAdd failed: " + e);
+    }
   },
 
   onGroupAddWithTab: function() {
@@ -172,31 +179,38 @@ Controller.prototype = {
   onGroupRemove: function(params) {
     TabManager.removeGroup(
       params.groupID
-    );
-    this.refreshUi();
+    ).then(()=>{
+      GroupManager.store();
+      controller.refreshUi();
+    });
   },
 
   onGroupRename: function(params) {
-    TabManager.renameGroup(
+    GroupManager.renameGroup(
       params.groupID,
       params.title
     );
+    GroupManager.store();
     this.refreshUi();
   },
 
   onGroupSelect: function(params) {
     TabManager.selectGroup(
       params.groupID
-    );
-    this.refreshUi();
+    ).then(()=>{
+      GroupManager.store();
+      controller.refreshUi();
+    });
   },
 
   onTabSelect: function(params) {
     TabManager.selectTab(
       params.tabIndex,
       params.groupID
-    );
-    this.refreshUi();
+    ).then(()=>{
+      GroupManager.store();
+      controller.refreshUi();
+    });
   },
 
   onMoveTabToGroup: function(params) {
@@ -204,8 +218,10 @@ Controller.prototype = {
       params.sourceGroupID,
       params.tabIndex,
       params.targetGroupID
-    );
-    this.refreshUi();
+    ).then(()=>{
+      GroupManager.store();
+      controller.refreshUi();
+    });
   }
 };
 
@@ -247,6 +263,7 @@ browser.runtime.onMessage.addListener(controllerMessenger);
 // Event from: tabs, windows
 function updateGroup(windowId) {
   TabManager.updateGroup(windowId).then( ()=>{
+    GroupManager.store();
     controller.refreshUi();
   });
 }
@@ -284,7 +301,7 @@ browser.tabs.onDetached.addListener( (tabId, detachInfo) => {
 browser.windows.onCreated.addListener( (window) => {
   // Let time for opening well and be sure it is a new one
   setTimeout( () => {
-    GroupManager.addGroup( "", window.id );
+    TabManager.integrateWindow( window.id );
   }, 1000);
 });
 browser.windows.onRemoved.addListener( (windowId) => {

@@ -6,6 +6,8 @@
  */
 var TabManager = TabManager || {};
 
+TabManager.WINDOW_GROUPID = "GROUPID";
+
 /**
  * Take the current tabs on the desire window and set it as the tabs
  * for the group
@@ -114,7 +116,8 @@ TabManager.changeGroupTo = function(windowId, oldGroupId, newGroupId) {
 
         // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
         browser.tabs.remove(tabsToRemove).then(() => {
-          resolve("changeGroupTo done!");
+          var lastPromise = TabManager.associateGroupIdToWindow (windowId, newGroupId);
+          resolve(lastPromise);
         });
       });
     });
@@ -367,8 +370,10 @@ TabManager.removeGroup = function(groupID) {
     }
     // Switch group
     if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE) {
-      if (GroupManager.groups.length === 0)
+      if (GroupManager.groups.length === 0) {
+        //  TODO Handle Error
         GroupManager.addGroup();
+      }
       TabManager.selectNextPrevGroup(groupID, 1);
     }
     GroupManager.groups.splice(groupIndex, 1);
@@ -399,7 +404,77 @@ TabManager.openGroupInNewWindow = function(groupID) {
       url: urls
     }).then((w) => {
       GroupManager.groups[groupIndex].windowId = w.id;
-      resolve("TabManager.openGroupInNewWindow done on groupid " + groupID);
+      var lastPromise = TabManager.associateGroupIdToWindow (w.id, groupID);
+      resolve(lastPromise);
+    });
+  });
+}
+
+TabManager.associateGroupIdToWindow = function (windowId, groupId ) {
+  return browser.sessions.setWindowValue(
+    windowId, // integer
+    TabManager.WINDOW_GROUPID, // string
+    groupId.toString()
+  );
+}
+
+TabManager.addGroupFromWindow = function(windowId) {
+  return new Promise((resolve, reject) => {
+    browser.tabs.query({
+      windowId: windowId
+    }).then((tabs) => {
+      try {
+        var newGroupId = GroupManager.addGroupWithTab(tabs);
+        var lastPromise = TabManager.associateGroupIdToWindow(
+          windowId,
+          newGroupId
+        );
+        resolve(lastPromise);
+      } catch (e) {
+        console.error("TabManager.integrateWindow failed on New Window with window " + windowId + " and " + e);
+        reject("TabManager.integrateWindow failed for windowId " + windowId);
+      }
+
+    }).catch(() => {
+      reject("TabManager.integrateWindow on Get tabs in Window failed for windowId " + windowId);
+    });
+  });
+}
+
+/**
+ * Link an existing window to the groups
+ * 1. If already linked, update the link
+ * 2. If new window, add group
+ * @param {Number} windowId
+ * @return {Promise}
+ */
+TabManager.integrateWindow = function(windowId) {
+  return new Promise((resolve, reject) => {
+    browser.sessions.getWindowValue(
+      windowId, // integer
+      TabManager.WINDOW_GROUPID // string
+    ).then((key) => {
+      // New Window
+      if (key === undefined) {
+          var lastPromise = TabManager.addGroupFromWindow( windowId );
+          resolve(lastPromise);
+      // Update Group
+      } else {
+        let groupIndex;
+        try {
+          groupIndex = GroupManager.getGroupIndexFromGroupId(
+            parseInt(key, 10)
+          );
+          GroupManager.groups[groupIndex].windowId = windowId;
+          resolve("TabManager.integrateWindow done on window " + windowId);
+        } catch (e) {
+          // Has a key but a wrong, start from 0
+          var lastPromise = TabManager.addGroupFromWindow( windowId );
+          resolve(lastPromise);
+        }
+      }
+    }).catch((msg) => {
+      reject("TabManager.integrateWindow failed on Get Key Value for windowId " + windowId + "\n Error msg: " + msg);
     });
   });
 }
