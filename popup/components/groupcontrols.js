@@ -26,6 +26,7 @@ SOFTWARE.
 const GroupControls = React.createClass({
   propTypes: {
     expanded: React.PropTypes.bool.isRequired,
+    opened: React.PropTypes.bool.isRequired,
     onClose: React.PropTypes.func,
     onEdit: React.PropTypes.func,
     onEditAbort: React.PropTypes.func,
@@ -83,19 +84,29 @@ const GroupControls = React.createClass({
       "fa-chevron-up": this.props.expanded
     });
 
-    return React.DOM.span(
-      {
+    let openedControls = [];
+    if (this.props.opened) {
+      openedControls = [
+        React.DOM.i({
+          className: "group-edit fa fa-fw fa-times",
+          onClick: this.props.onClose
+        })
+      ];
+    } else {
+      openedControls = [
+        React.DOM.i({
+          className: "group-edit fa fa-fw fa-plus",
+          onClick: this.props.onOpenInNewWindow
+        })
+      ];
+    }
+
+
+    return React.DOM.span({
         className: "group-controls"
       },
       groupControls,
-      React.DOM.i({
-        className: "group-edit fa fa-fw fa-plus",
-        onClick: this.props.onOpenInNewWindow
-      }),
-      React.DOM.i({
-        className: "group-edit fa fa-fw fa-times",
-        onClick: this.props.onClose
-      }),
+      openedControls,
       React.DOM.i({
         className: expanderClasses,
         onClick: this.props.onExpand

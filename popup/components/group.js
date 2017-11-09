@@ -42,6 +42,7 @@ const Group = React.createClass({
       closing: false,
       editing: false,
       expanded: false,
+      opened: this.props.group.windowId !== browser.windows.WINDOW_ID_NONE,
       draggingOverCounter: 0,
       dragSourceGroup: false,
       newTitle: this.getTitle()
@@ -107,6 +108,7 @@ const Group = React.createClass({
               closing: this.state.closing,
               editing: this.state.editing,
               expanded: this.state.expanded,
+              opened: this.state.opened,
               onClose: this.handleGroupCloseClick,
               onEdit: this.handleGroupEditClick,
               onEditAbort: this.handleGroupEditAbortClick,
