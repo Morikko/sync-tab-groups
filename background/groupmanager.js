@@ -48,6 +48,23 @@ GroupManager.getGroupIndexFromGroupId = function(groupId) {
 }
 
 /**
+ * Return the windowId for a specific group
+ * If no window opened: throw Error
+ * @param {Number} - group id
+ * @returns {Number} - windowId
+ */
+GroupManager.getWindowIdFromGroupId = function(groupId) {
+  for (let i = 0; i < GroupManager.groups.length; i++) {
+    if (GroupManager.groups[i].id === groupId) {
+      if ( GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE)
+        return GroupManager.groups[i].windowId;
+    }
+  }
+
+  throw Error("GroupManager.getWindowIdFromGroupId: Failed to find opened window for id:  " + groupId);
+}
+
+/**
  * @param {Number} groupIndex
  * @returns {boolean}
  */
