@@ -107,11 +107,10 @@ WindowManager.selectGroup = function(newGroupId) {
     else {
       // So that the user can change the window without disturbing
       browser.windows.getCurrent().then((currentWindow) => {
-        let currentWindowId = currentWindow.id;
         let currentGroupId;
         try {
           currentGroupId = GroupManager.getGroupIdInWindow(
-            currentWindowId
+            currentWindow.id
           );
         } catch (e) {
           let msg = "WindowManager.selectGroup failed; " + e.message;
@@ -131,6 +130,7 @@ WindowManager.selectGroup = function(newGroupId) {
  * Open the next group in the list that is not opened.
  * If no group available, create an empty one.
  * @param {Number} sourceGroupId -- group id ref
+ * @return {Promise}
  */
 WindowManager.selectNextGroup = function(sourceGroupId) {
   return new Promise((resolve, reject) => {
@@ -162,6 +162,7 @@ WindowManager.selectNextGroup = function(sourceGroupId) {
         nextGroupId = GroupManager.addGroup();
       } catch (e) {
         console.error("WindowManager.selectNextGroup failed; " + e);
+        reject("WindowManager.selectNextGroup failed; " + e.message);
       }
     }
 
@@ -172,33 +173,72 @@ WindowManager.selectNextGroup = function(sourceGroupId) {
 }
 
 /**
- * Closes a group and all attached tabs
- * TODO: split in 2 functions remove and close,  selectNextPrevGroup should handle any case for moving, Promise when all is done
- * @param {Number} groupID - the groupID
+ * Close an open window and detach the group from it
+ * @param {Number} groupID
+ * @return {Promise}
  */
-WindowManager.removeGroup = function(groupID) {
+WindowManager.closeWindowFromGroupId = function(groupID) {
   return new Promise((resolve, reject) => {
-    let groupIndex;
+    let windowId;
+    try {
+      windowId = GroupManager.getWindowIdFromGroupId(
+        groupID
+      );
+    } catch (e) {
+      let msg = "TabManager.removeTabsWithUnallowedURL failed; " + e.message;
+      console.error(msg);
+      reject(msg);
+    }
+    browser.windows.remove(  windowId   ).then(()=>{
+      GroupManager.detachWindow( windowId );
+      resolve("WindowManager.closeWindowFromGroupId done on groupId " + groupID);
+    });
+  });
+}
+
+
+/**
+ * Closes a group and all attached tabs.
+ * If group is in current window, open the next available group (WindowManager.selectNextGroup).
+ * If group is in another window, close the window.
+ * TODO
+ * @param {Number} groupID
+ * @return {Promise}
+ */
+WindowManager.closeGroup = function(groupID) {
+  return new Promise((resolve, reject) => {
+    let groupIndex, windowId;
     try {
       groupIndex = GroupManager.getGroupIndexFromGroupId(
         groupID
       );
+      windowId = GroupManager.getWindowIdFromGroupId(
+        groupID
+      );
     } catch (e) {
-      let msg = "WindowManager.removeGroup failed; " + e.message;
+      let msg = "WindowManager.closeGroup failed; " + e.message;
       console.error(msg);
       reject(msg);
     }
-    // Switch group
-    if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE) {
-      if (GroupManager.groups.length === 0) {
-        //  TODO Handle Error
-        GroupManager.addGroup();
-      }
-      WindowManager.selectNextGroup(groupID, 1);
-    }
-    GroupManager.groups.splice(groupIndex, 1);
-    resolve("WindowManager.removeGroup done on groupid " + groupID);
+
+    browser.windows.getCurrent().then((currentWindow) => {
+      if ( currentWindow.id === windowId )
+        resolve(WindowManager.selectNextGroup(groupID));
+      else
+        resolve(WindowManager.closeWindowFromGroupId(groupID));
+    });
   });
+}
+
+/**
+ * Remove a group
+ * If group is opened, close it (WindowManager.closeGroup)
+ * TODO
+ * @param {Number} groupID
+ * @return {Promise}
+ */
+WindowManager.removeGroup = function(groupID) {
+    GroupManager.groups.splice(groupIndex, 1);
 }
 
 /**

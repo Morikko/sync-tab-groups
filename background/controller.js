@@ -235,7 +235,7 @@ var controllerMessenger = function(message) {
       controller.onGroupAddWithTab();
       break;
     case "Group:Close":
-      controller.onGroupRemove(message.params);
+      controller.onGroupClose(message.params);
       break;
     case "Group:Rename":
       controller.onGroupRename(message.params);
