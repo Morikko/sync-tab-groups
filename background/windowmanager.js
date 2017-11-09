@@ -125,25 +125,46 @@ WindowManager.selectGroup = function(newGroupId) {
 }
 
 /**
- * Selects the next or previous group in the list
- * direction>0, go to the next groups OR direction<0, go to the previous groups
- * TODO: check next group is not already open, if no group create one, add full Promise support
- * @param {Number} sourceGroupIndex -- group index reference
- * @param {Number} direction
+ * Open the next group in the list that is not opened.
+ * If no group available, create an empty one.
+ * @param {Number} sourceGroupId -- group id ref
  */
-WindowManager.selectNextPrevGroup = function(sourceGroupIndex, direction) {
+WindowManager.selectNextGroup = function(sourceGroupId) {
   return new Promise((resolve, reject) => {
-    console.log("WindowManager.selectNextPrevGroup not implemented yet.");
-    reject("Not implemented");
-
-    // Should never happen
-    if (GroupManager.groups.length == 0) {
-      resolve("selectNextPrevGroup can't go to the next group as there is no other one.");
+    let nextGroupId = -1;
+    let sourceGroupIndex;
+    try {
+      sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
+        sourceGroupId
+      );
+    } catch (e) {
+      let msg = "WindowManager.selectNextGroup failed; " + e.message;
+      console.error(msg);
+      reject(msg);
     }
 
-    let targetGroupIndex = (sourceGroupIndex + direction + GroupManager.groups.length) % GroupManager.groups.length;
+    // Search next unopened group
+    for ( let i=sourceGroupIndex; i<sourceGroupIndex+GroupManager.groups.length; i++ ) {
+      let targetGroupIndex = (i) % GroupManager.groups.length;
 
-    WindowManager.selectGroup(GroupManager.groups[targetGroupIndex].id);
+      if ( GroupManager.groups[targetGroupIndex].windowId !== browser.windows.WINDOW_ID_NONE ) {
+        nextGroupId = GroupManager.groups[targetGroupIndex].id;
+        break;
+      }
+    }
+
+    // No group found, create one
+    if (nextGroupId === -1) {
+      try {
+        nextGroupId = GroupManager.addGroup();
+      } catch (e) {
+        console.error("Controller - onGroupAdd failed: " + e);
+      }
+    }
+
+    var lastPromise = WindowManager.changeGroupInWindow(GroupManager.groups[sourceGroupId].windowId,sourceGroupId, nextGroupId);
+
+    resolve(lastPromise);
   });
 }
 
@@ -170,7 +191,7 @@ WindowManager.removeGroup = function(groupID) {
         //  TODO Handle Error
         GroupManager.addGroup();
       }
-      WindowManager.selectNextPrevGroup(groupID, 1);
+      WindowManager.selectNextGroup(groupID, 1);
     }
     GroupManager.groups.splice(groupIndex, 1);
     resolve("WindowManager.removeGroup done on groupid " + groupID);

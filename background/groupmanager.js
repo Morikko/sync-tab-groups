@@ -86,7 +86,7 @@ GroupManager.isWindowAlreadyRegistered = function(windowId) {
  * @param {String} title - the new title
  */
 GroupManager.renameGroup = function(groupIndex, title) {
-  GroupManager.groups[groupID].title = title;
+  GroupManager.groups[groupIndex].title = title;
 }
 
 /**
