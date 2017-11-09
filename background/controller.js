@@ -25,7 +25,7 @@ Controller.prototype = {
         windowTypes: ['normal']
       }).then( (windowInfoArray) =>{
         for ( windowInfo of windowInfoArray ) {
-          TabManager.integrateWindow( windowInfo.id ).then(()=>{
+          WindowManager.integrateWindow( windowInfo.id ).then(()=>{
             GroupManager.store();
           });
         }
@@ -77,7 +77,7 @@ Controller.prototype = {
     this._hotkeyNextGroup = Hotkey({
       combo: "accel-`",
       onPress: () => {
-        TabManager.selectNextPrevGroup(
+        WindowManager.selectNextPrevGroup(
           this._getWindow(),
           this._getTabBrowser(),
           1
@@ -87,7 +87,7 @@ Controller.prototype = {
     this._hotkeyPrevGroup = Hotkey({
       combo: "accel-shift-`",
       onPress: () => {
-        TabManager.selectNextPrevGroup(
+        WindowManager.selectNextPrevGroup(
           this._getWindow(),
           this._getTabBrowser(),
           -1
@@ -156,7 +156,7 @@ Controller.prototype = {
   },
 
   onOpenGroupInNewWindow: function(params) {
-    TabManager.openGroupInNewWindow(params.groupID).then( () =>{
+    WindowManager.openGroupInNewWindow(params.groupID).then( () =>{
       GroupManager.store();
       controller.refreshUi();
     });
@@ -177,7 +177,7 @@ Controller.prototype = {
   },
 
   onGroupRemove: function(params) {
-    TabManager.removeGroup(
+    WindowManager.removeGroup(
       params.groupID
     ).then(()=>{
       GroupManager.store();
@@ -195,7 +195,7 @@ Controller.prototype = {
   },
 
   onGroupSelect: function(params) {
-    TabManager.selectGroup(
+    WindowManager.selectGroup(
       params.groupID
     ).then(()=>{
       GroupManager.store();
@@ -262,7 +262,7 @@ browser.runtime.onMessage.addListener(controllerMessenger);
 
 // Event from: tabs, windows
 function updateGroup(windowId) {
-  TabManager.updateGroup(windowId).then( ()=>{
+  TabManager.updateTabsInGroup(windowId).then( ()=>{
     GroupManager.store();
     controller.refreshUi();
   });
@@ -301,7 +301,7 @@ browser.tabs.onDetached.addListener( (tabId, detachInfo) => {
 browser.windows.onCreated.addListener( (window) => {
   // Let time for opening well and be sure it is a new one
   setTimeout( () => {
-    TabManager.integrateWindow( window.id );
+    WindowManager.integrateWindow( window.id );
   }, 1000);
 });
 browser.windows.onRemoved.addListener( (windowId) => {
