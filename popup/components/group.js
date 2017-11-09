@@ -160,7 +160,10 @@ const Group = React.createClass({
 
   handleGroupClick: function(event) {
     event.stopPropagation();
-    this.props.onGroupClick(this.props.group.id);
+    if ( this.props.currentWindowId === this.props.group.windowId )
+      window.close();
+    else
+      this.props.onGroupClick(this.props.group.id);
   },
 
   handleGroupEditClick: function(event) {
