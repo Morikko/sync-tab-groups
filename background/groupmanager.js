@@ -48,11 +48,11 @@ GroupManager.getGroupIndexFromGroupId = function(groupId) {
 }
 
 /**
- * @param {Number} groupID
+ * @param {Number} groupIndex
  * @returns {boolean}
  */
-GroupManager.isGroupInOpenWindow = function(groupID) {
-  if (GroupManager.groups[groupID].windowId !== browser.windows.WINDOW_ID_NONE)
+GroupManager.isGroupInOpenWindow = function(groupIndex) {
+  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE)
     return true;
   else
     return false;
@@ -82,10 +82,10 @@ GroupManager.isWindowAlreadyRegistered = function(windowId) {
 /**
  * Renames a given group.
  *
- * @param {Number} groupID - the groupID
+ * @param {Number} groupIndex
  * @param {String} title - the new title
  */
-GroupManager.renameGroup = function(groupID, title) {
+GroupManager.renameGroup = function(groupIndex, title) {
   GroupManager.groups[groupID].title = title;
 }
 

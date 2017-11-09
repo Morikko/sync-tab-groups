@@ -79,18 +79,18 @@ WindowManager.changeGroupInWindow = function(windowId, oldGroupId, newGroupId) {
  */
 WindowManager.selectGroup = function(newGroupId) {
   return new Promise((resolve, reject) => {
+    let newGroupIndex;
+    try {
+      newGroupIndex = GroupManager.getGroupIndexFromGroupId(
+        newGroupId
+      );
+    } catch (e) {
+      let msg = "WindowManager.selectGroup failed; " + e.message;
+      console.error(msg);
+      reject(msg);
+    }
     // Case 1: Another window
-    if (GroupManager.isGroupInOpenWindow(newGroupId)) {
-      let newGroupIndex;
-      try {
-        newGroupIndex = GroupManager.getGroupIndexFromGroupId(
-          newGroupId
-        );
-      } catch (e) {
-        let msg = "WindowManager.selectGroup failed; " + e.message;
-        console.error(msg);
-        reject(msg);
-      }
+    if (GroupManager.isGroupInOpenWindow(newGroupIndex)) {
       var lastPromise = browser.windows.update(
         GroupManager.groups[newGroupIndex].windowId, {
           focused: true

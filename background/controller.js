@@ -16,7 +16,6 @@ function Controller() {
 
 Controller.prototype = {
   init: function() {
-    // TODO Hotkeys
 
     // 1. Set the data
     GroupManager.init().then( ()=>{
@@ -187,7 +186,7 @@ Controller.prototype = {
 
   onGroupRename: function(params) {
     GroupManager.renameGroup(
-      params.groupID,
+      GroupManager.getGroupIndexFromGroupId(params.groupID),
       params.title
     );
     GroupManager.store();
