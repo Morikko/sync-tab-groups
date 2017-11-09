@@ -103,11 +103,13 @@ GroupManager.addGroup = function(title = "",
   let tabs = [];
 
   try {
-    GroupManager.groups.push(new GroupManager.Group(GroupManager.createUniqueGroupId(),
+    let uniqueGroupId = GroupManager.createUniqueGroupId();
+    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId,
       title,
       tabs,
       windowId
     ));
+    return uniqueGroupId;
   } catch (e) {
     throw Error("addGroup: Group not created because " + e.message);
   }
