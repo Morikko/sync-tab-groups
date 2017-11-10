@@ -256,7 +256,7 @@ WindowManager.removeGroup = function(groupID) {
     // Is close
     } else {
       GroupManager.groups.splice(groupIndex, 1);
-      resolve("WindowManager.removeGroup done on groupId " + groupId);
+      resolve("WindowManager.removeGroup done on groupId " + groupID);
     }
   });
 }
