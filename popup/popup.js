@@ -21,8 +21,9 @@ const Actions = {
     });
   },
 
-  closeGroup: function(groupID) {
+  closeGroup: function(taskRef, groupID) {
     Utils.sendMessage("Group:Close", {
+      taskRef: taskRef,
       groupID: groupID
     });
   },

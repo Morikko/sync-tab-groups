@@ -21,7 +21,8 @@
     ],
 
     "background": {
-        "scripts": ["background/utils.js", "background/localstorage.js", "background/groupmanager.js",
+        "scripts": ["background/utils.js",
+          "background/delayedtaskmananager.js", "background/localstorage.js", "background/groupmanager.js",
           "background/windowmanager.js", "background/tabmanager.js", "background/controller.js"]
     },
 

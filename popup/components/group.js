@@ -144,20 +144,31 @@ const Group = React.createClass({
     this.setState({
       editing: false
     });
-    this.setState({
-      closing: true
-    });
 
-    let group = this;
-
-    if (this.props.closeTimeout == 0) {
-      group.props.onGroupCloseClick(group.props.group.id);
-      return;
+    // Already click once, do it now
+    if ( this.state.closing ) {
+      this.setState({
+        closing: false
+      });
+      this.props.onGroupCloseClick(DelayedTasks.FORCE, this.props.group.id);
+    // Delayed close
+    } else {
+      this.setState({
+        closing: true
+      });
+      this.props.onGroupCloseClick(DelayedTasks.ASK, this.props.group.id);s
     }
 
-    this.closingTimer = setTimeout(function() {
-      group.props.onGroupCloseClick(group.props.group.id);
-    }, this.props.closeTimeout * 1000);
+  },
+
+  handleGroupCloseAbortClick: function(event) {
+    event.stopPropagation();
+
+    this.props.onGroupCloseClick(DelayedTasks.CANCEL, this.props.group.id);
+
+    this.setState({
+      closing: false
+    });
   },
 
   handleGroupClick: function(event) {
@@ -262,13 +273,4 @@ const Group = React.createClass({
 
     return false;
   },
-
-  handleGroupCloseAbortClick: function(event) {
-    event.stopPropagation();
-
-    clearTimeout( this.closingTimer );
-    this.setState({
-      closing: false
-    });
-  }
 });

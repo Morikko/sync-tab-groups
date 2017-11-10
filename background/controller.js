@@ -11,6 +11,7 @@ function Controller() {
   this._hotkeyNextGroup = null;
   this._hotkeyPrevGroup = null;
 
+  DelayedTasks.init();
   this.init();
 }
 
@@ -150,7 +151,8 @@ Controller.prototype = {
 
   refreshUi: function() {
     Utils.sendMessage("Groups:Changed", {
-      groups: GroupManager.groups
+      groups: GroupManager.groups,
+      delayedTasks: this.delayedTasks
     });
   },
 
@@ -175,13 +177,22 @@ Controller.prototype = {
     // TODO see addGroupWithTab in popup.js
   },
 
-  onGroupRemove: function(params) {
-    WindowManager.removeGroup(
-      params.groupID
-    ).then(()=>{
-      GroupManager.store();
-      controller.refreshUi();
-    });
+  onGroupClose: function(params) {
+    var delayedFunction = function(){
+      WindowManager.closeGroup(
+        params.groupID
+      ).then(()=>{
+        GroupManager.store();
+        controller.refreshUi();
+      });
+    };
+
+    DelayedTasks.manageDelayedTask(
+      params.taskRef,
+      DelayedTasks.CLOSE_REFERENCE,
+      params.groupID,
+      delayedFunction
+    );
   },
 
   onGroupRename: function(params) {

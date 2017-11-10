@@ -1,4 +1,13 @@
+/**
+ * Useful code shared in all the apps
+ */
 var Utils = Utils || {};
+
+var DelayedTasks = DelayedTasks || {};
+DelayedTasks.ASK = "ASK";
+DelayedTasks.CANCEL = "CANCEL";
+DelayedTasks.FORCE = "FORCE";
+DelayedTasks.CLOSE_REFERENCE = "close";
 
 /**
  * Return true if the url is privileged
