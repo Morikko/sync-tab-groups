@@ -14,7 +14,7 @@ WindowManager.WINDOW_GROUPID = "GROUPID";
  * in the window with windowId
  * The active tab will be the last one active
  * @param {Number} oldGroupId - the group id opened
-  * @param {Number} newGroupId - the group id to open
+ * @param {Number} newGroupId - the group id to open
  * @returns {Promise} - the remove tabs promise (last)
  * Asynchronous
  */
@@ -147,10 +147,10 @@ WindowManager.selectNextGroup = function(sourceGroupId) {
     }
 
     // Search next unopened group
-    for ( let i=sourceGroupIndex; i<sourceGroupIndex+GroupManager.groups.length; i++ ) {
+    for (let i = sourceGroupIndex; i < sourceGroupIndex + GroupManager.groups.length; i++) {
       let targetGroupIndex = (i) % GroupManager.groups.length;
 
-      if ( GroupManager.groups[targetGroupIndex].windowId === browser.windows.WINDOW_ID_NONE ) {
+      if (GroupManager.groups[targetGroupIndex].windowId === browser.windows.WINDOW_ID_NONE) {
         nextGroupId = GroupManager.groups[targetGroupIndex].id;
         break;
       }
@@ -189,8 +189,8 @@ WindowManager.closeWindowFromGroupId = function(groupID) {
       console.error(msg);
       reject(msg);
     }
-    browser.windows.remove(  windowId   ).then(()=>{
-      GroupManager.detachWindow( windowId );
+    browser.windows.remove(windowId).then(() => {
+      GroupManager.detachWindow(windowId);
       resolve("WindowManager.closeWindowFromGroupId done on groupId " + groupID);
     });
   });
@@ -201,7 +201,6 @@ WindowManager.closeWindowFromGroupId = function(groupID) {
  * Closes a group and all attached tabs.
  * If group is in current window, open the next available group (WindowManager.selectNextGroup).
  * If group is in another window, close the window.
- * TODO
  * @param {Number} groupID
  * @return {Promise}
  */
@@ -222,7 +221,7 @@ WindowManager.closeGroup = function(groupID) {
     }
 
     browser.windows.getCurrent().then((currentWindow) => {
-      if ( currentWindow.id === windowId )
+      if (currentWindow.id === windowId)
         resolve(WindowManager.selectNextGroup(groupID));
       else
         resolve(WindowManager.closeWindowFromGroupId(groupID));
@@ -233,12 +232,36 @@ WindowManager.closeGroup = function(groupID) {
 /**
  * Remove a group
  * If group is opened, close it (WindowManager.closeGroup)
- * TODO
  * @param {Number} groupID
  * @return {Promise}
  */
 WindowManager.removeGroup = function(groupID) {
-    GroupManager.groups.splice(groupIndex, 1);
+  return new Promise((resolve, reject) => {
+    let groupIndex, windowId;
+    try {
+      groupIndex = GroupManager.getGroupIndexFromGroupId(
+        groupID
+      );
+      windowId = GroupManager.getWindowIdFromGroupId(
+        groupID
+      );
+    } catch (e) {
+      let msg = "WindowManager.removeGroup failed; " + e.message;
+      console.error(msg);
+      reject(msg);
+    }
+    // Is open
+    if ( GroupManager.isGroupInOpenWindow(groupIndex) ) {
+      WindowManager.closeGroup( groupID ).then(()=>{
+        GroupManager.groups.splice(groupIndex, 1);
+        resolve("WindowManager.removeGroup done on groupId " + groupID);
+      });
+    // Is close
+    } else {
+      GroupManager.groups.splice(groupIndex, 1);
+      resolve("WindowManager.removeGroup done on groupId " + groupId);
+    }
+  });
 }
 
 /**

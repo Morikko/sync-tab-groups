@@ -28,6 +28,7 @@ const GroupControls = React.createClass({
     expanded: React.PropTypes.bool.isRequired,
     opened: React.PropTypes.bool.isRequired,
     onClose: React.PropTypes.func,
+    onRemove: React.PropTypes.func,
     onEdit: React.PropTypes.func,
     onEditAbort: React.PropTypes.func,
     onEditSave: React.PropTypes.func,
@@ -70,7 +71,7 @@ const GroupControls = React.createClass({
 
   render: function() {
     let groupControls;
-    if (this.props.closing) {
+    if (this.props.closing || this.props.removing) {
       groupControls = this.getClosingControls();
     } else {
       groupControls = this.getEditControls();
@@ -85,20 +86,33 @@ const GroupControls = React.createClass({
     });
 
     let openedControls = [];
-    if (this.props.opened) {
-      openedControls = [
-        React.DOM.i({
-          className: "group-edit fa fa-fw fa-times",
-          onClick: this.props.onClose
-        })
-      ];
-    } else {
-      openedControls = [
+    if ( !this.props.opened
+      && !this.props.closing
+      && !this.props.removing ) {
+      openedControls.push(
         React.DOM.i({
           className: "group-edit fa fa-fw fa-plus",
           onClick: this.props.onOpenInNewWindow
         })
-      ];
+      );
+    }
+
+    if (this.props.opened &&  !this.props.removing  ) {
+      openedControls.push(
+        React.DOM.i({
+          className: "group-edit fa fa-fw fa-times",
+          onClick: this.props.onClose
+        })
+      );
+    }
+
+    if ( !this.props.closing  ) {
+      openedControls.push(
+        React.DOM.i({
+          className: "group-edit fa fa-fw fa-trash",
+          onClick: this.props.onRemove
+        })
+      );
     }
 
 

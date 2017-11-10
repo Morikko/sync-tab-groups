@@ -9,6 +9,7 @@ DelayedTasks.timeoutDelay = 5000;
 DelayedTasks.init = function() {
   DelayedTasks.delayedTasks = new Object();
   DelayedTasks.delayedTasks[DelayedTasks.CLOSE_REFERENCE] = new Object();
+  DelayedTasks.delayedTasks[DelayedTasks.REMOVE_REFERENCE] = new Object();
 }
 
 /**

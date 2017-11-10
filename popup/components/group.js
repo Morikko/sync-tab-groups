@@ -29,6 +29,7 @@ const Group = React.createClass({
     onGroupClick: React.PropTypes.func,
     onGroupDrop: React.PropTypes.func,
     onGroupCloseClick: React.PropTypes.func,
+    onGroupRemoveClick: React.PropTypes.func,
     onGroupTitleChange: React.PropTypes.func,
     onTabClick: React.PropTypes.func,
     onTabDrag: React.PropTypes.func,
@@ -39,6 +40,7 @@ const Group = React.createClass({
   getInitialState: function() {
     return {
       closing: false,
+      removing: false,
       editing: false,
       expanded: false,
       opened: this.props.group.windowId !== browser.windows.WINDOW_ID_NONE,
@@ -82,6 +84,7 @@ const Group = React.createClass({
       active: (this.props.group.windowId > -1),
       editing: this.state.editing,
       closing: this.state.closing,
+      removing: this.state.removing,
       draggingOver: this.state.draggingOverCounter !== 0,
       dragSourceGroup: this.state.dragSourceGroup,
       expanded: this.state.expanded,
@@ -105,10 +108,12 @@ const Group = React.createClass({
           React.createElement(
             GroupControls, {
               closing: this.state.closing,
+              removing: this.state.removing,
               editing: this.state.editing,
               expanded: this.state.expanded,
               opened: this.state.opened,
               onClose: this.handleGroupCloseClick,
+              onRemove: this.handleGroupRemoveClick,
               onEdit: this.handleGroupEditClick,
               onEditAbort: this.handleGroupEditAbortClick,
               onEditSave: this.handleGroupEditSaveClick,
@@ -137,11 +142,34 @@ const Group = React.createClass({
     this.props.onOpenInNewWindowClick(this.props.group.id);
   },
 
+  handleGroupRemoveClick: function(event) {
+    event.stopPropagation();
+    this.setState({
+      editing: false,
+      closing: false
+    });
+
+    // Already click once, do it now
+    if ( this.state.removing ) {
+      this.setState({
+        removing: false
+      });
+      this.props.onGroupRemoveClick(DelayedTasks.FORCE, this.props.group.id);
+    // Delayed close
+    } else {
+      this.setState({
+        removing: true
+      });
+      this.props.onGroupRemoveClick(DelayedTasks.ASK, this.props.group.id);
+    }
+
+  },
 
   handleGroupCloseClick: function(event) {
     event.stopPropagation();
     this.setState({
-      editing: false
+      editing: false,
+      removing: false
     });
 
     // Already click once, do it now
@@ -155,7 +183,7 @@ const Group = React.createClass({
       this.setState({
         closing: true
       });
-      this.props.onGroupCloseClick(DelayedTasks.ASK, this.props.group.id);s
+      this.props.onGroupCloseClick(DelayedTasks.ASK, this.props.group.id);
     }
 
   },
@@ -164,9 +192,11 @@ const Group = React.createClass({
     event.stopPropagation();
 
     this.props.onGroupCloseClick(DelayedTasks.CANCEL, this.props.group.id);
+    this.props.onGroupRemoveClick(DelayedTasks.CANCEL, this.props.group.id);
 
     this.setState({
-      closing: false
+      closing: false,
+      removing: false
     });
   },
 

@@ -147,11 +147,11 @@ li {
   top: 6px;
 }
 
-.group.closing .group-controls .group-close, .group.closing:hover .group-controls .group-close, .group.closing .group-controls .fa-chevron-down, .group.closing .group-controls .group-edit {
+.group.closing .group-controls .group-close, .group.closing:hover .group-controls .group-close, .group.closing .group-controls .group-edit {
   display: none;
 }
 
-.group.closing .group-title {
+.group.closing .group-title, .group.removing .group-title {
   color: #ccc;
   text-decoration: line-through;
 }

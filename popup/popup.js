@@ -28,6 +28,13 @@ const Actions = {
     });
   },
 
+  removeGroup: function(taskRef, groupID) {
+    Utils.sendMessage("Group:Remove", {
+      taskRef: taskRef,
+      groupID: groupID
+    });
+  },
+
   renameGroup: function(groupID, title) {
     Utils.sendMessage("Group:Rename", {
       groupID: groupID,
@@ -83,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onGroupClick: Actions.selectGroup,
         onGroupDrop: Actions.moveTabToGroup,
         onGroupCloseClick: Actions.closeGroup,
+        onGroupRemoveClick: Actions.removeGroup,
         onGroupTitleChange: Actions.renameGroup,
         onTabClick: Actions.selectTab,
         onTabDrag: Actions.dragTab,
