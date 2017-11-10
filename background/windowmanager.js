@@ -278,18 +278,16 @@ WindowManager.openGroupInNewWindow = function(groupID) {
       console.error(msg);
       reject(msg);
     }
-    // list of urls to open
-    let urls = [];
-    GroupManager.groups[groupIndex].tabs.forEach((t) => {
-      urls.push(t.url);
-    })
     browser.windows.create({
       state: "maximized",
-      url: urls
     }).then((w) => {
       GroupManager.groups[groupIndex].windowId = w.id;
-      var lastPromise = WindowManager.associateGroupIdToWindow(w.id, groupID);
-      resolve(lastPromise);
+      WindowManager.associateGroupIdToWindow(w.id, groupID);
+
+      TabManager.openListOfTabs(GroupManager.groups[groupIndex].tabs, w.id).then(()=>{
+        // Remove first new tab open with window
+        resolve(browser.tabs.remove([w.tabs[0].id]));
+      });
     });
   });
 }
