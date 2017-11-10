@@ -26,6 +26,9 @@ SOFTWARE.
 const Group = React.createClass({
   propTypes: {
     group: React.PropTypes.object.isRequired,
+    currentWindowId: React.PropTypes.number.isRequired,
+    currentlyClosing: React.PropTypes.bool.isRequired,
+    currentlyRemoving: React.PropTypes.bool.isRequired,
     onGroupClick: React.PropTypes.func,
     onGroupDrop: React.PropTypes.func,
     onGroupCloseClick: React.PropTypes.func,
@@ -39,8 +42,9 @@ const Group = React.createClass({
 
   getInitialState: function() {
     return {
-      closing: false,
-      removing: false,
+      // Removing is more priority
+      closing: this.props.currentlyClosing && !this.props.currentlyRemoving,
+      removing: this.props.currentlyRemoving,
       editing: false,
       expanded: false,
       opened: this.props.group.windowId !== browser.windows.WINDOW_ID_NONE,
@@ -50,6 +54,14 @@ const Group = React.createClass({
     };
   },
 
+  // When a component got new props, use this to update
+  componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          closing: nextProps.currentlyClosing && !nextProps.currentlyRemoving,
+          removing: nextProps.currentlyRemoving,
+        })
+    },
+
   getTitle: function() {
     return this.props.group.title || (
       browser.i18n.getMessage("unnamed_group") + " " + this.props.group.id
@@ -57,6 +69,7 @@ const Group = React.createClass({
   },
 
   render: function() {
+
     let titleElement;
     if (this.state.editing) {
       titleElement = React.DOM.input({

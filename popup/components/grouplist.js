@@ -40,14 +40,24 @@ const GroupList = (() => {
       onOpenInNewWindowClick: React.PropTypes.func,
     },
 
+    isCurrently: function(action, groupId) {
+      if ( this.props.delayedTasks[action] !== undefined ) {
+        return this.props.delayedTasks[action][groupId] !== undefined;
+      }
+      else {
+        return false;
+      }
+    },
+
     render: function() {
       return React.DOM.ul(
         {className: "group-list"},
         this.props.groups.map((group) => {
           return React.createElement(Group, {
-            key: group.id,
             group: group,
             currentWindowId: this.props.currentWindowId,
+            currentlyClosing: this.isCurrently(DelayedTasks.CLOSE_REFERENCE, group.id),
+            currentlyRemoving: this.isCurrently(DelayedTasks.REMOVE_REFERENCE, group.id),
             onGroupClick: this.props.onGroupClick,
             onGroupDrop: this.props.onGroupDrop,
             onGroupCloseClick: this.props.onGroupCloseClick,
@@ -73,7 +83,8 @@ const GroupList = (() => {
   return ReactRedux.connect((state) => {
     return {
       groups: state.get("tabgroups"),
-      currentWindowId: state.get("currentWindowId")
+      currentWindowId: state.get("currentWindowId"),
+      delayedTasks: state.get("delayedTasks")
     };
   }, ActionCreators)(GroupListStandalone);
 })();

@@ -152,7 +152,7 @@ Controller.prototype = {
   refreshUi: function() {
     Utils.sendMessage("Groups:Changed", {
       groups: GroupManager.groups,
-      delayedTasks: this.delayedTasks
+      delayedTasks: DelayedTasks.delayedTasks
     });
   },
 

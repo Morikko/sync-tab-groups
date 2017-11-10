@@ -33,8 +33,15 @@ const ActionCreators = {
 
   setCurrentWindowId: function(currentWindowId) {
     return {
-      type: "CURRENT_WINDOWS_ID_RECIEVE",
+      type: "CURRENT_WINDOWS_ID_RECEIVE",
       currentWindowId: currentWindowId
+    };
+  },
+
+  setDelayedTasks: function(delayedTasks) {
+    return {
+      type: "DELAYED_TASKS_RECEIVE",
+      delayedTasks: delayedTasks
     };
   }
 };

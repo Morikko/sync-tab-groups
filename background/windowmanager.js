@@ -237,12 +237,9 @@ WindowManager.closeGroup = function(groupID) {
  */
 WindowManager.removeGroup = function(groupID) {
   return new Promise((resolve, reject) => {
-    let groupIndex, windowId;
+    let groupIndex;
     try {
       groupIndex = GroupManager.getGroupIndexFromGroupId(
-        groupID
-      );
-      windowId = GroupManager.getWindowIdFromGroupId(
         groupID
       );
     } catch (e) {

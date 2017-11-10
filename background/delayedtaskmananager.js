@@ -3,7 +3,7 @@
  */
 var DelayedTasks = DelayedTasks || {};
 
-DelayedTasks.timeoutDelay = 5000;
+DelayedTasks.timeoutDelay = 10000;
 
 // In object: {actionRef: {id: timeoutfunction} }
 DelayedTasks.init = function() {
@@ -42,10 +42,11 @@ DelayedTasks.manageDelayedTask = function(taskRef, actionRef, groupId, delayedFu
 * @param {Fucntion} delayedFunction- the delayed function to execute (without parameter)
 */
 DelayedTasks.addDelayedTask = function(actionRef, groupId, delayedFunction) {
-  this.removeDelayedTask(actionRef, groupId);
+  DelayedTasks.removeDelayedTask(actionRef, groupId);
 
-  this.delayedTasks[actionRef][groupId] = setTimeout(() => {
+  DelayedTasks.delayedTasks[actionRef][groupId] = setTimeout(() => {
     delayedFunction();
+    DelayedTasks.removeDelayedTask(actionRef, groupId);
   }, DelayedTasks.timeoutDelay);
 };
 
@@ -56,8 +57,8 @@ DelayedTasks.addDelayedTask = function(actionRef, groupId, delayedFunction) {
 */
 DelayedTasks.removeDelayedTask =
 function(actionRef, groupId) {
-  if (this.delayedTasks[actionRef][groupId] !== undefined) {
-    clearTimeout(this.delayedTasks[actionRef][groupId]);
-    delete(this.delayedTasks[actionRef][groupId]);
+  if (DelayedTasks.delayedTasks[actionRef][groupId] !== undefined) {
+    clearTimeout(DelayedTasks.delayedTasks[actionRef][groupId]);
+    delete(DelayedTasks.delayedTasks[actionRef][groupId]);
   }
 };
