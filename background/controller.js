@@ -173,8 +173,14 @@ Controller.prototype = {
     }
   },
 
-  onGroupAddWithTab: function() {
-    // TODO see addGroupWithTab in popup.js
+  onGroupAddWithTab: function(params) {
+    TabManager.moveTabToNewGroup(
+      params.sourceGroupID,
+      params.tabIndex
+    ).then(() => {
+      GroupManager.store();
+      controller.refreshUi();
+    });
   },
 
   onGroupClose: function(params) {
@@ -261,7 +267,7 @@ var controllerMessenger = function(message) {
       controller.onGroupAdd();
       break;
     case "Group:AddWithTab":
-      controller.onGroupAddWithTab();
+      controller.onGroupAddWithTab(message.params);
       break;
     case "Group:Close":
       controller.onGroupClose(message.params);

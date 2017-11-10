@@ -68,7 +68,7 @@ GroupManager.getWindowIdFromGroupId = function(groupId) {
  * @param {Number} groupIndex
  * @returns {boolean}
  */
-GroupManager.isGroupInOpenWindow = function(groupIndex) {
+GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
   if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE)
     return true;
   else
@@ -139,15 +139,15 @@ GroupManager.addGroup = function(title = "",
  * @param {String} title - the name to give to that group
  */
 GroupManager.addGroupWithTab = function(tabs,
+  windowId = browser.windows.WINDOW_ID_NONE,
   title = "") {
   if (tabs.length === 0) {
     return GroupManager.addGroup(title);
   }
-  let windowId = tabs[0].windowId;
 
   try {
     let uniqueGroupId = GroupManager.createUniqueGroupId();
-    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, tabs[0].windowId));
+    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, windowId));
     return uniqueGroupId;
   } catch (e) {
     // Propagate Error

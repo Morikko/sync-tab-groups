@@ -5,10 +5,8 @@ const Actions = {
     Utils.sendMessage("Group:Add", {});
   },
 
-  // TODO: Drag & Drop tab on create button
+  // Drag & Drop tab on create button
   addGroupWithTab: function(sourceGroupID, tabIndex) {
-    console.log("addGroupWithTab in popup doesn't work");
-    return;
     Utils.sendMessage("Group:AddWithTab", {
       sourceGroupID: sourceGroupID,
       tabIndex: tabIndex

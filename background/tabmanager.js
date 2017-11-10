@@ -95,7 +95,7 @@ TabManager.activeTabInWindow = function(windowId, tabIndex) {
  * @param {Number} tabIndex
  * @param {Number} targetGroupID
  * @return {Promise}
- * TODO: need to handle cases separatly and fix case 5, add promises
+ * TODO: need to handle cases separatly and fix case 6, add promises
  */
 TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
   return new Promise((resolve, reject) => {
@@ -123,6 +123,10 @@ TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
 
     let tab = GroupManager.groups[sourceGroupIndex].tabs[tabIndex];
 
+    let isSourceGroupOpen = GroupManager.isGroupIndexInOpenWindow(sourceGroupIndex);
+    let isTargetGroupOpen = GroupManager.isGroupIndexInOpenWindow(targetGroupIndex);
+
+
     // Case 2: Closed Group -> Closed Group
     GroupManager.groups[targetGroupIndex].tabs.push(tab);
     GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
@@ -137,6 +141,40 @@ TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
 
     // Case 5: Open Group -> Open Group
     browser.tabs.move();
+  });
+}
+
+/**
+ * Move a tab to a new group
+ * @param {Number} sourceGroupID
+ * @param {Number} tabIndex
+ * @return {Promise}
+ */
+TabManager.moveTabToNewGroup = function(sourceGroupID, tabIndex) {
+  return new Promise((resolve, reject) => {
+    var sourceGroupIndex;
+    try {
+      sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
+        sourceGroupID
+      );
+    } catch (e) {
+      let msg = "TabManager.moveTabToNewGroup failed; " + e.message;
+      console.error(msg);
+      reject(msg);
+    }
+
+    let tab = GroupManager.groups[sourceGroupIndex].tabs[tabIndex];
+    GroupManager.addGroupWithTab([tab]);
+
+    let isSourceGroupOpen = GroupManager.isGroupIndexInOpenWindow(sourceGroupIndex);
+
+    if( isSourceGroupOpen ) {
+      resolve(browser.tabs.remove([tab.id]));
+    }
+    else {
+      GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
+      resolve("TabManager.moveTabToNewGroup done!");
+    }
   });
 }
 

@@ -95,7 +95,7 @@ WindowManager.selectGroup = function(newGroupId) {
       reject(msg);
     }
     // Case 1: Another window
-    if (GroupManager.isGroupInOpenWindow(newGroupIndex)) {
+    if (GroupManager.isGroupIndexInOpenWindow(newGroupIndex)) {
       var lastPromise = browser.windows.update(
         GroupManager.groups[newGroupIndex].windowId, {
           focused: true
@@ -248,7 +248,7 @@ WindowManager.removeGroup = function(groupID) {
       reject(msg);
     }
     // Is open
-    if ( GroupManager.isGroupInOpenWindow(groupIndex) ) {
+    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
       WindowManager.closeGroup( groupID ).then(()=>{
         GroupManager.groups.splice(groupIndex, 1);
         resolve("WindowManager.removeGroup done on groupId " + groupID);
@@ -320,7 +320,7 @@ WindowManager.addGroupFromWindow = function(windowId) {
       windowId: windowId
     }).then((tabs) => {
       try {
-        var newGroupId = GroupManager.addGroupWithTab(tabs);
+        var newGroupId = GroupManager.addGroupWithTab(tabs, windowId);
         var lastPromise = WindowManager.associateGroupIdToWindow(
           windowId,
           newGroupId
