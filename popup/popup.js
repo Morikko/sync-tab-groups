@@ -75,6 +75,10 @@ const Actions = {
       groupID: groupID,
       tabIndex: tabIndex
     });
+  },
+
+  askData: function() {
+    Utils.sendMessage("Data:Ask", {});
   }
 };
 
@@ -123,9 +127,7 @@ var tabspaceBackground = browser.runtime.getBackgroundPage();
  * Access to the groups and show them
  */
 function init() {
-  tabspaceBackground.then((page) => {
-    store.dispatch(ActionCreators.setTabgroups(page.GroupManager.groups));
-  });
+  Actions.askData();
   browser.windows.getLastFocused({
     windowTypes: ['normal']
   }).then((w) => {
@@ -133,10 +135,13 @@ function init() {
   });
 }
 
+// Don't wait the page is loaded
+init();
+
 // Wait popup to be completely loaded
 var readyStateCheckInterval = setInterval(function() {
   if (document.readyState === "complete") {
     clearInterval(readyStateCheckInterval);
-    init();
+
   }
 }, 10);

@@ -284,6 +284,9 @@ var controllerMessenger = function(message) {
     case "Group:OpenGroupInNewWindow":
       controller.onOpenGroupInNewWindow(message.params);
       break;
+    case "Data:Ask":
+      controller.refreshUi();
+      break;
   }
 }
 
