@@ -25,7 +25,6 @@ SOFTWARE.
 */
 const Group = React.createClass({
   propTypes: {
-    closeTimeout: React.PropTypes.number,
     group: React.PropTypes.object.isRequired,
     onGroupClick: React.PropTypes.func,
     onGroupDrop: React.PropTypes.func,

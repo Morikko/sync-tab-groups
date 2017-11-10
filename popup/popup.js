@@ -98,14 +98,11 @@ var popupMessenger = function(message) {
   switch (message.task) {
     case "Groups:Changed":
       store.dispatch(ActionCreators.setTabgroups(message.params.groups));
-      browser.windows.getLastFocused({windowTypes:['normal']}).then((w)=>{
+      browser.windows.getLastFocused({
+        windowTypes: ['normal']
+      }).then((w) => {
         store.dispatch(ActionCreators.setCurrentWindowId(w.id));
       });
-      break;
-    case "Groups:CloseTimeoutChanged":
-      // TODO
-      console.log(message);
-      store.dispatch(ActionCreators.setGroupCloseTimeout(message.params.timeout));
       break;
   }
 }
@@ -121,10 +118,11 @@ function init() {
   tabspaceBackground.then((page) => {
     store.dispatch(ActionCreators.setTabgroups(page.GroupManager.groups));
   });
-  browser.windows.getLastFocused({windowTypes:['normal']}).then((w)=>{
+  browser.windows.getLastFocused({
+    windowTypes: ['normal']
+  }).then((w) => {
     store.dispatch(ActionCreators.setCurrentWindowId(w.id));
   });
-  store.dispatch(ActionCreators.setGroupCloseTimeout(5))
 }
 
 // Wait popup to be completely loaded

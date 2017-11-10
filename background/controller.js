@@ -195,6 +195,24 @@ Controller.prototype = {
     );
   },
 
+  onGroupRemove: function(params) {
+    var delayedFunction = function(){
+      WindowManager.removeGroup(
+        params.groupID
+      ).then(()=>{
+        GroupManager.store();
+        controller.refreshUi();
+      });
+    };
+
+    DelayedTasks.manageDelayedTask(
+      params.taskRef,
+      DelayedTasks.REMOVE_REFERENCE,
+      params.groupID,
+      delayedFunction
+    );
+  },
+
   onGroupRename: function(params) {
     GroupManager.renameGroup(
       GroupManager.getGroupIndexFromGroupId(params.groupID),

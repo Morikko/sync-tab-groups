@@ -3,6 +3,8 @@
  */
 var DelayedTasks = DelayedTasks || {};
 
+DelayedTasks.timeoutDelay = 5000;
+
 // In object: {actionRef: {id: timeoutfunction} }
 DelayedTasks.init = function() {
   DelayedTasks.delayedTasks = new Object();
@@ -43,7 +45,7 @@ DelayedTasks.addDelayedTask = function(actionRef, groupId, delayedFunction) {
 
   this.delayedTasks[actionRef][groupId] = setTimeout(() => {
     delayedFunction();
-  }, 5000);
+  }, DelayedTasks.timeoutDelay);
 };
 
 /**

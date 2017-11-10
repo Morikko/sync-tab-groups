@@ -8,6 +8,7 @@ DelayedTasks.ASK = "ASK";
 DelayedTasks.CANCEL = "CANCEL";
 DelayedTasks.FORCE = "FORCE";
 DelayedTasks.CLOSE_REFERENCE = "close";
+DelayedTasks.REMOVE_REFERENCE = "remove";
 
 /**
  * Return true if the url is privileged

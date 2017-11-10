@@ -31,13 +31,6 @@ const ActionCreators = {
     };
   },
 
-  setGroupCloseTimeout: function(timeout) {
-    return {
-      type: "GROUP_CLOSE_TIMEOUT_RECIEVE",
-      closeTimeout: timeout
-    };
-  },
-
   setCurrentWindowId: function(currentWindowId) {
     return {
       type: "CURRENT_WINDOWS_ID_RECIEVE",
