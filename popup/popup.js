@@ -61,6 +61,7 @@ const Actions = {
     });
   },
 
+  // TODO Unused
   dragTab: function(groupID, tabIndex) {
     Utils.sendMessage("Tab:Drag", {
       groupID: groupID,
@@ -68,6 +69,7 @@ const Actions = {
     });
   },
 
+  // TODO Unused
   dragTabStart: function(groupID, tabIndex) {
     Utils.sendMessage("Tab:DragStart", {
       groupID: groupID,

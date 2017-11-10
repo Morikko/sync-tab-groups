@@ -60,7 +60,7 @@ WindowManager.changeGroupInWindow = function(oldGroupId, newGroupId) {
             pinned: false
           });
         }
-        TabManager.openListOfTabs(tabsToOpen).then(() => {
+        TabManager.openListOfTabs(tabsToOpen, windowId).then(() => {
 
           // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
           browser.tabs.remove(tabsToRemove).then(() => {

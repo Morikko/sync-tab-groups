@@ -35,10 +35,11 @@ const TabList = React.createClass({
     return (
       React.DOM.ul(
         {className: "tab-list"},
-        this.props.tabs.map((tab) => {
+        this.props.tabs.map((tab, index) => {
           return React.createElement(Tab, {
-            key: tab.index,
+            key: index,
             group: this.props.group,
+            tabIndex: index,
             tab: tab,
             onTabClick: this.props.onTabClick,
             onTabDrag: this.props.onTabDrag,

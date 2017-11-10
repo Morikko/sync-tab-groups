@@ -40,12 +40,26 @@ TabManager.updateTabsInGroup = function(windowId) {
  * Asynchronous
  * @param {array[Tab]} tabsToOpen
  * @return {Promise} - last open tab
- * TODO: Add window id to create
  */
-TabManager.openListOfTabs = function(tabsToOpen) {
+TabManager.openListOfTabs = function(tabsToOpen, windowId, inLastPos = false) {
   return new Promise((resolve, reject) => {
     if (tabsToOpen.length === 0) {
       resolve("TabManager.openListOfTabs: tabsToOpen was empty, no tab to open");
+    }
+    // Always open in last pos
+    let indexOffset = 0;
+    if (inLastPos) {
+      var groupIndex;
+      try {
+        groupIndex = GroupManager.getGroupIndexFromGroupId(
+          GroupManager.getGroupIdInWindow(windowId)
+        );
+      } catch (e) {
+        let msg = "TabManager.openListOfTabs failed; " + e.message;
+        console.error(msg);
+        reject(msg);
+      }
+      indexOffset = GroupManager.groups[groupIndex].tabs.length;
     }
     var lastPromise;
     tabsToOpen.map((tab, index) => {
@@ -55,7 +69,8 @@ TabManager.openListOfTabs = function(tabsToOpen) {
           url: (tab.url === "about:newtab") ? null : tab.url,
           active: tab.active,
           pinned: tab.pinned,
-          index: index
+          index: indexOffset + index,
+          windowId: windowId
         });
       }
     });
@@ -90,21 +105,18 @@ TabManager.activeTabInWindow = function(windowId, tabIndex) {
 }
 
 /**
- * Move tab beetwen groups
+ * Move tab beetwen groups already created (closed or opened)
  * @param {Number} sourceGroupID
  * @param {Number} tabIndex
  * @param {Number} targetGroupID
  * @return {Promise}
- * TODO: need to handle cases separatly and fix case 6, add promises
  */
 TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
   return new Promise((resolve, reject) => {
-    console.log("TabManager.moveTabToGroup not implemented yet.");
-    reject("Not implemented");
 
     // Case 1: same group
     if (sourceGroupID === targetGroupID) {
-      resolve("");
+      resolve("TabManager.moveTabToGroup done!");
     }
 
     var targetGroupIndex, sourceGroupIndex;
@@ -126,21 +138,34 @@ TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
     let isSourceGroupOpen = GroupManager.isGroupIndexInOpenWindow(sourceGroupIndex);
     let isTargetGroupOpen = GroupManager.isGroupIndexInOpenWindow(targetGroupIndex);
 
-
     // Case 2: Closed Group -> Closed Group
-    GroupManager.groups[targetGroupIndex].tabs.push(tab);
-    GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
-
-    // Case 3: Open Group -> Closed Group
-    GroupManager.groups[targetGroupIndex].tabs.push(tab);
-    browser.tabs.remove([tab.id]);
-
+    if (!isSourceGroupOpen && !isTargetGroupOpen) {
+      GroupManager.groups[targetGroupIndex].tabs.push(tab);
+      GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
+      resolve("TabManager.moveTabToGroup done!");
+    }
+    // Case 3: Open Group -> Closed Groups
+    else if (isSourceGroupOpen && !isTargetGroupOpen) {
+      GroupManager.groups[targetGroupIndex].tabs.push(tab);
+      resolve(browser.tabs.remove([tab.id]));
+    }
     // Case 4: Closed Group -> Open Group
-    browser.tabs.create([tab.id]);
-    GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
-
+    else if (!isSourceGroupOpen && isTargetGroupOpen) {
+      GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
+      resolve(TabManager.openListOfTabs(
+        [tab],
+        GroupManager.groups[targetGroupIndex].windowId,
+        true));
+    }
     // Case 5: Open Group -> Open Group
-    browser.tabs.move();
+    else {
+      resolve(browser.tabs.move(
+        tab.id, {
+          index: -1,
+          windowId: GroupManager.groups[targetGroupIndex].windowId
+        }
+      ));
+    }
   });
 }
 
@@ -168,10 +193,9 @@ TabManager.moveTabToNewGroup = function(sourceGroupID, tabIndex) {
 
     let isSourceGroupOpen = GroupManager.isGroupIndexInOpenWindow(sourceGroupIndex);
 
-    if( isSourceGroupOpen ) {
+    if (isSourceGroupOpen) {
       resolve(browser.tabs.remove([tab.id]));
-    }
-    else {
+    } else {
       GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
       resolve("TabManager.moveTabToNewGroup done!");
     }

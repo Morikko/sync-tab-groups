@@ -66,13 +66,13 @@ const Tab = React.createClass({
     let tab = this.props.tab;
     this.props.onTabClick(
       group.id,
-      tab.index
+      this.props.tabIndex
     );
   },
 
   handleTabDrag: function(event) {
     event.stopPropagation();
-
+    /*
     let group = this.props.group;
     let tab = this.props.tab;
     event.dataTransfer.setData("tab/index", tab.index);
@@ -82,6 +82,7 @@ const Tab = React.createClass({
       group.id,
       tab.index
     );
+    */
   },
 
   handleTabDragStart: function(event) {
@@ -89,7 +90,7 @@ const Tab = React.createClass({
 
     let group = this.props.group;
     let tab = this.props.tab;
-    event.dataTransfer.setData("tab/index", tab.index);
+    event.dataTransfer.setData("tab/index", this.props.tabIndex);
     event.dataTransfer.setData("tab/group", group.id);
 
     this.props.onTabDragStart(

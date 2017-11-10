@@ -54,6 +54,7 @@ const GroupList = (() => {
         {className: "group-list"},
         this.props.groups.map((group) => {
           return React.createElement(Group, {
+            key: group.id,
             group: group,
             currentWindowId: this.props.currentWindowId,
             currentlyClosing: this.isCurrently(DelayedTasks.CLOSE_REFERENCE, group.id),
