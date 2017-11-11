@@ -23,9 +23,14 @@ Due to the new API, I won't be able to add hide/show tabs for improving speed ch
 # Future Features
 - Keybinding
 - Move tabs from menu on right click on tab page
+- Option to track/untrack pinned tabs
+- Option to track/untrack private window
 
 # Languages
 Only English and French. You can add your own one in `_locales/`
+
+# Bugs
+If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-groups/issues) or send me an email.
 
 # Thanks
 I thank [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups) for his UI code, I reused as a base.
