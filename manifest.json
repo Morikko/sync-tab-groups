@@ -3,7 +3,7 @@
     "version": "0.1",
 
     "name": "Sync Tab Groups",
-    "description": "Add an icon in the tabs panel for grouping tabs and switching between groups.",
+    "description": "Sync Tab Groups are an easy way to organize your current tabs depending on a topic. Each open group is synchronized with a window so that all tabs change are saved. Hence, you can close a current tabs-flow while opening another one.",
     "homepage_url": "https://github.com/Morikko/tabspace",
     "icons": {
         "64": "icons/tabspace-active-64.png",
