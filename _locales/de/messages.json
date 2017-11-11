@@ -1,22 +1,7 @@
 {
-  "bindPanoramaShortcut_title": {
-    "message": "Strg/Cmd-Umschalt-E verwenden",
-    "description": "Strg/Cmd-Umschalt-E verwenden"
-  },
-
-  "enableAlphabeticSort_title": {
-    "message": "Alphabetische Sortierung",
-    "description": "Alphabetische Sortierung"
-  },
-
   "add_group": {
     "message": "Neue Gruppe anlegen",
     "description": "Neue Gruppe anlegen"
-  },
-
-  "panelButton_label": {
-    "message": "Tabs gruppieren",
-    "description": "Tabs gruppieren"
   },
 
   "unnamed_group": {

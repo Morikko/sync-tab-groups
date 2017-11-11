@@ -1,32 +1,7 @@
 {
-  "bindPanoramaShortcut_title": {
-    "message": "Utiliser le raccourci Ctrl/Cmd-Maj-E",
-    "description": "Utiliser le raccourci Ctrl/Cmd-Maj-E"
-  },
-
-  "groupUndoCloseTimeout_title": {
-    "message": "Closing group delay",
-    "description": "Closing group delay"
-  },
-
-  "enableAlphabeticSort_title": {
-    "message": "Enable alphabetic sorting",
-    "description": "Enable alphabetic sorting"
-  },
-
-  "groupUndoCloseTimeout_description": {
-    "message": "Delay in seconds to wait before the group gets actually closed.",
-    "description": "Delay in seconds to wait before the group gets actually closed."
-  },
-
   "add_group": {
     "message": "Ajouter un groupe",
     "description": "Ajouter un groupe"
-  },
-
-  "panelButton_label": {
-    "message": "Groupes d'onglets",
-    "description": "Groupes d'onglets"
   },
 
   "unnamed_group": {
@@ -34,13 +9,44 @@
     "description": "Groupe sans nom"
   },
 
-  "close_group_prompt_title": {
-    "message": "Close group",
-    "description": "Close group"
+  "close_group": {
+    "message": "Fermer",
+    "description": "Aide pour le bouton fermer le groupe"
   },
 
-  "close_group_prompt_message": {
-    "message": "Do you want to close this group?",
-    "description": "Do you want to close this group?"
+  "remove_group": {
+    "message": "Supprimer",
+    "description": "Aide pour le bouton supprimer le groupe"
+  },
+
+  "open_window_group": {
+    "message": "Ouvrir dans une nouvelle fenêtre",
+    "description": "Aide pour le bouton ouvrir dans une nouvelle fenêtre"
+  },
+
+  "rename_group": {
+    "message": "Renommer",
+    "description": "Aide pour le bouton Renommer le groupe"
+  },
+
+  "undo_removing": {
+    "message": "Annuler la suppression",
+    "description": "Aide pour le bouton Annuler la suppression"
+  },
+
+  "undo_closing": {
+    "message": "Annuler la fermeture",
+    "description": "Aide pour le bouton Annuler la fermeture"
+  },
+
+  "force_removing": {
+    "message": "Supprimer maintenant",
+    "description": "Aide pour le bouton Supprimer maintenant"
+  },
+
+  "force_closing": {
+    "message": "Fermer maintenant",
+    "description": "Aide pour le bouton Fermer maintenant"
   }
+
 }
