@@ -220,7 +220,7 @@ GroupManager.store = function() {
 GroupManager.sortGroups = function() {
   console.log("sortGroups not implemented: WONT WORK");
   return;
-
+  /*
   if (sort) {
     retGroups.sort((a, b) => {
       if (a.title.toLowerCase() == b.title.toLowerCase()) {
@@ -232,4 +232,5 @@ GroupManager.sortGroups = function() {
   }
 
   return retGroups;
+  */
 }

@@ -41,6 +41,11 @@ Utils.sendMessage = function(_task, _params) {
     browser.runtime.sendMessage({
       task: _task,
       params: _params
+    // Catch it to avoid Error msg when no receiver
+    }).then((handleResponse, handleError)=>{
+
+    }).catch((onRejected)=>{
+
     });
 }
 
