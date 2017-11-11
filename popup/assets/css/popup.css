@@ -35,6 +35,10 @@ li {
   cursor: move;
 }
 
+.group {
+  min-width: 300px;
+}
+
 .group-title {
   display: block;
   overflow: hidden;
@@ -157,7 +161,7 @@ li {
 }
 
 .group:hover .group-title {
-  padding-right: 55px;
+  padding-right: 90px;
 }
 
 .group .group-controls .group-close, .group .group-controls .group-edit {
