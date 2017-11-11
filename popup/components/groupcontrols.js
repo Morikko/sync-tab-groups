@@ -52,6 +52,7 @@ const GroupControls = React.createClass({
       ];
     } else {
       controls = React.DOM.i({
+        title: browser.i18n.getMessage("rename_group"),
         className: "group-edit fa fa-fw fa-pencil",
         onClick: this.props.onEdit
       });
@@ -61,8 +62,16 @@ const GroupControls = React.createClass({
   },
 
   getClosingControls: function() {
+    let overHelp;
+    if ( this.props.closing) {
+      overHelp = browser.i18n.getMessage("undo_closing");
+    }
+    else if ( this.props.removing ) {
+      overHelp = browser.i18n.getMessage("undo_removing");
+    }
     return [
       React.DOM.i({
+        title: overHelp,
         className: "group-close-undo fa fa-fw fa-undo",
         onClick: this.props.onUndoCloseClick
       })
@@ -86,20 +95,31 @@ const GroupControls = React.createClass({
     });
 
     let openedControls = [];
+    // Open in new window button
     if ( !this.props.opened
       && !this.props.closing
       && !this.props.removing ) {
       openedControls.push(
         React.DOM.i({
           className: "group-edit fa fa-fw fa-plus",
+          title: browser.i18n.getMessage("open_window_group"),
           onClick: this.props.onOpenInNewWindow
         })
       );
     }
 
+    // Close button
     if (this.props.opened &&  !this.props.removing  ) {
+      let overHelp;
+      if ( this.props.closing) {
+        overHelp = browser.i18n.getMessage("force_closing");
+      }
+      else {
+        overHelp = browser.i18n.getMessage("close_group");
+      }
       openedControls.push(
         React.DOM.i({
+          title: overHelp,
           className: "group-edit fa fa-fw fa-times",
           onClick: this.props.onClose
         })
@@ -107,8 +127,16 @@ const GroupControls = React.createClass({
     }
 
     if ( !this.props.closing  ) {
+      let overHelp;
+      if ( this.props.removing) {
+        overHelp = browser.i18n.getMessage("force_removing");
+      }
+      else {
+        overHelp = browser.i18n.getMessage("remove_group");
+      }
       openedControls.push(
         React.DOM.i({
+          title: overHelp,
           className: "group-edit fa fa-fw fa-trash",
           onClick: this.props.onRemove
         })
