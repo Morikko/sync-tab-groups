@@ -212,7 +212,7 @@ GroupManager.init = function() {
  */
 GroupManager.store = function() {
   StorageManager.Local.saveGroups( GroupManager.groups );
-  StorageManager.Bookmark.saveGroups( GroupManager.groups );
+  StorageManager.Bookmark.backUp( GroupManager.groups );
 }
 
 /**
