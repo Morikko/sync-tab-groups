@@ -53,14 +53,7 @@ WindowManager.changeGroupInWindow = function(oldGroupId, newGroupId) {
         GroupManager.groups[newGroupIndex].windowId = windowId;
 
         // 2. Open new group tabs
-        if (tabsToOpen.length === 0) {
-          tabsToOpen.push({
-            url: "about:newtab",
-            active: true,
-            pinned: false
-          });
-        }
-        TabManager.openListOfTabs(tabsToOpen, windowId).then(() => {
+        TabManager.openListOfTabs(tabsToOpen, windowId, false, true).then(() => {
 
           // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
           browser.tabs.remove(tabsToRemove).then(() => {
@@ -284,7 +277,7 @@ WindowManager.openGroupInNewWindow = function(groupID) {
       GroupManager.groups[groupIndex].windowId = w.id;
       WindowManager.associateGroupIdToWindow(w.id, groupID);
 
-      TabManager.openListOfTabs(GroupManager.groups[groupIndex].tabs, w.id).then(()=>{
+      TabManager.openListOfTabs(GroupManager.groups[groupIndex].tabs, w.id,false,true).then(()=>{
         // Remove first new tab open with window
         resolve(browser.tabs.remove([w.tabs[0].id]));
       });

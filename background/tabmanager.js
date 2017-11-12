@@ -39,12 +39,25 @@ TabManager.updateTabsInGroup = function(windowId) {
  * Open all the tabs in tabsToOpen
  * Asynchronous
  * @param {array[Tab]} tabsToOpen
+ * @param {Number} windowId
+ * @param {Boolean} inLastPos (optional) - if true the tabs are opened in last index
+ * @param {Boolean} openAtLeastOne (optional) - if true and tabsToOpen is empty, open at least a new tab
  * @return {Promise} - last open tab
  */
-TabManager.openListOfTabs = function(tabsToOpen, windowId, inLastPos = false) {
+TabManager.openListOfTabs = function(tabsToOpen, windowId, inLastPos = false, openAtLeastOne = false) {
   return new Promise((resolve, reject) => {
     if (tabsToOpen.length === 0) {
-      resolve("TabManager.openListOfTabs: tabsToOpen was empty, no tab to open");
+      if (openAtLeastOne) {
+        if (tabsToOpen.length === 0) {
+          tabsToOpen.push({
+            url: "about:newtab",
+            active: true,
+            pinned: false
+          });
+        }
+      } else {
+        resolve("TabManager.openListOfTabs: tabsToOpen was empty, no tab to open");
+      }
     }
     // Always open in last pos
     let indexOffset = 0;
@@ -155,7 +168,8 @@ TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
       resolve(TabManager.openListOfTabs(
         [tab],
         GroupManager.groups[targetGroupIndex].windowId,
-        true));
+        true,
+        false));
     }
     // Case 5: Open Group -> Open Group
     else {
