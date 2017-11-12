@@ -207,9 +207,12 @@ GroupManager.init = function() {
 }
 /**
  * Save groups
+ * In local storage
+ * Do back up in bookmarks
  */
 GroupManager.store = function() {
   StorageManager.Local.saveGroups( GroupManager.groups );
+  StorageManager.Bookmark.saveGroups( GroupManager.groups );
 }
 
 /**

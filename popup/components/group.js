@@ -50,7 +50,7 @@ const Group = React.createClass({
       opened: this.props.group.windowId !== browser.windows.WINDOW_ID_NONE,
       draggingOverCounter: 0,
       dragSourceGroup: false,
-      newTitle: this.getTitle()
+      newTitle: Utils.getGroupTitle(this.props.group)
     };
   },
 
@@ -62,19 +62,13 @@ const Group = React.createClass({
         })
     },
 
-  getTitle: function() {
-    return this.props.group.title || (
-      browser.i18n.getMessage("unnamed_group") + " " + this.props.group.id
-    );
-  },
-
   render: function() {
 
     let titleElement;
     if (this.state.editing) {
       titleElement = React.DOM.input({
         type: "text",
-        defaultValue: this.getTitle(),
+        defaultValue: Utils.getGroupTitle(this.props.group),
         onChange: (event) => {
           this.setState({
             newTitle: event.target.value
@@ -89,7 +83,7 @@ const Group = React.createClass({
       titleElement = React.DOM.span({
           className: "group-title-text"
         },
-        this.getTitle()
+        Utils.getGroupTitle(this.props.group)
       );
     }
 

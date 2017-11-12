@@ -49,6 +49,17 @@ Utils.sendMessage = function(_task, _params) {
     });
 }
 
+/**
+ * Return group title or unnamed_group in the current language if title is empty
+ * @param {Group}
+ * @return {String} Group title
+ */
+Utils.getGroupTitle = function(group) {
+  return group.title || (
+    browser.i18n.getMessage("unnamed_group") + " " + group.id
+  );
+},
+
 /* Since the current API doesn't provide an alternative, return always false.
  * TODO: find workaround
  */

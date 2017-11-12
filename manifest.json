@@ -22,7 +22,7 @@
 
     "background": {
         "scripts": ["background/utils.js",
-          "background/delayedtaskmananager.js", "background/localstorage.js", "background/groupmanager.js",
+          "background/delayedtaskmananager.js", "background/bookmarkstorage.js", "background/localstorage.js", "background/groupmanager.js",
           "background/windowmanager.js", "background/tabmanager.js", "background/controller.js"]
     },
 
