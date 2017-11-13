@@ -59,6 +59,7 @@ TabManager.openListOfTabs = function(tabsToOpen, windowId, inLastPos = false, op
         resolve("TabManager.openListOfTabs: tabsToOpen was empty, no tab to open");
       }
     }
+
     // Always open in last pos
     let indexOffset = 0;
     if (inLastPos) {
@@ -76,6 +77,7 @@ TabManager.openListOfTabs = function(tabsToOpen, windowId, inLastPos = false, op
     }
     var lastPromise;
     tabsToOpen.map((tab, index) => {
+      tab.url = (tab.url === "about:privatebrowsing") ? "about:newtab" : tab.url;
       if (!Utils.isPrivilegedURL(tab.url)) {
         // Create a tab to tab.url or to newtab
         lastPromise = browser.tabs.create({
@@ -248,16 +250,24 @@ TabManager.removeTabsWithUnallowedURL = function(groupID) {
         tabsIds.push(tab.id);
     });
 
-    // Remove them
-    browser.tabs.remove(tabsIds).then(() => {
-      // Update data
-      browser.tabs.query({
-        windowId: windowId
-      }).then((tabs) => {
-        GroupManager.groups[groupIndex].tabs = tabs;
-        resolve("removeUnallowedURL done!")
+    var wait = Promise.resolve("wait");
+    if (GroupManager.groups[groupIndex].tabs.length === tabsIds.length) {
+      wait = TabManager.openListOfTabs([], windowId, false, true);
+    }
+
+    wait.then(() => {
+      // Remove them
+      browser.tabs.remove(tabsIds).then(() => {
+        // Update data
+        browser.tabs.query({
+          windowId: windowId
+        }).then((tabs) => {
+          GroupManager.groups[groupIndex].tabs = tabs;
+          resolve("removeUnallowedURL done!")
+        });
       });
-    });
+    })
+
   });
 }
 
