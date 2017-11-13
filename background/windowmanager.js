@@ -178,14 +178,17 @@ WindowManager.closeWindowFromGroupId = function(groupID) {
         groupID
       );
     } catch (e) {
-      let msg = "TabManager.removeTabsWithUnallowedURL failed; " + e.message;
+      let msg = "TabManager.closeWindowFromGroupId failed; " + e.message;
       console.error(msg);
       reject(msg);
     }
-    browser.windows.remove(windowId).then(() => {
+    var detachFunc = function() {
       GroupManager.detachWindow(windowId);
       resolve("WindowManager.closeWindowFromGroupId done on groupId " + groupID);
-    });
+    }
+
+    // Clean windowId in success or fail
+    browser.windows.remove(windowId).then(detachFunc, detachFunc);
   });
 }
 
