@@ -271,7 +271,7 @@ TabManager.removeTabsWithUnallowedURL = function(groupID) {
  */
 TabManager.selectTab = function(tabIndex, groupID) {
   return new Promise((resolve, reject) => {
-    TabManager.selectGroup(groupID).then(() => {
+    WindowManager.selectGroup(groupID).then(() => {
       let groupIndex;
       try {
         groupIndex = GroupManager.getGroupIndexFromGroupId(
