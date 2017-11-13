@@ -29,9 +29,13 @@ StorageManager.Bookmark.backUp = function(groups) {
 
   StorageManager.Bookmark.TIME_OUT = setTimeout(() => {
     return new Promise((resolve, reject) => {
-      StorageManager.Bookmark.RenamePreviousBackUp().then(() => {
-        StorageManager.Bookmark.saveGroups(groups).then(() => {
-          resolve(StorageManager.Bookmark.cleanGroups());
+      StorageManager.Bookmark.init().then(() => {
+        StorageManager.Bookmark.RenamePreviousBackUp().then(() => {
+          StorageManager.Bookmark.saveGroups(groups).then(() => {
+            resolve(StorageManager.Bookmark.cleanGroups());
+          }).catch((reason) => {
+            reject("StorageManager.Bookmark.backUp failed: " + reason);
+          });
         }).catch((reason) => {
           reject("StorageManager.Bookmark.backUp failed: " + reason);
         });
@@ -158,5 +162,3 @@ StorageManager.Bookmark.init = function() {
     });
   });
 }
-
-StorageManager.Bookmark.init();
