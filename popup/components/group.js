@@ -59,6 +59,7 @@ const Group = React.createClass({
         this.setState({
           closing: nextProps.currentlyClosing && !nextProps.currentlyRemoving,
           removing: nextProps.currentlyRemoving,
+          opened: nextProps.group.windowId !== browser.windows.WINDOW_ID_NONE,
         })
     },
 
