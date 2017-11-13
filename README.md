@@ -5,9 +5,18 @@ Sync Tab Groups are an easy way to organize your current tabs depending on a top
 ![Sync Tab Groups example](assets/markdown-img-paste-20171111155549715.png)
 
 # Usage
-- Closing groups you are not using now and restoring them back when you need them.
-- Tabs synchronized in group change as they change in your window. (You don't have to save all tabs, open all tabs in bookmark).
+- Tabs synchronized in group change as they change in your window. (You don't have to save all tabs, open all tabs in bookmark)
+- Close a group of tabs and keep it saved (for opening it again later)
 - Tabs in closed group are really close, Firefox won't use memory any more for them
+- Groups are shared in all windows, and you can easily switch between them from the UI
+- Works with private window
+- Works with pinned tabs
+- Move tabs between groups by drag and dropping
+- Set name to your groups
+- Undo for closing and removing groups, don't regret easy click ;)
+- Groups are saved on your computer, so that you can restore them after quitting Firefox
+- A backup of your groups is done in "Other Bookmarks/SyncTabGroups"
+
 
 # About other Tabs Groups addon
 
@@ -23,14 +32,13 @@ Due to the new API, I won't be able to add hide/show tabs for improving speed ch
 # Future Features
 - Keybinding
 - Move tabs from menu on right click on tab page
-- Option to track/untrack pinned tabs
-- Option to track/untrack private window
 
 # Languages
-Only English and French. You can add your own one in `_locales/`
+English and French. 
+I would gladly accept other translations. Add it in `_locales/`, while following the en (English) file. Change message and description parts only.
 
 # Bugs
 If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-groups/issues) or send me an email.
 
 # Thanks
-I thank [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups) for his UI code, I reused as a base.
+I thank [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups) for his UI code I reused as a base.
