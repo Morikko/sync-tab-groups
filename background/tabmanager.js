@@ -177,7 +177,7 @@ TabManager.moveTabToGroup = function(sourceGroupID, tabIndex, targetGroupID) {
     else {
       resolve(browser.tabs.move(
         tab.id, {
-          index: -1,
+          index: tab.pinned?0:-1,
           windowId: GroupManager.groups[targetGroupIndex].windowId
         }
       ));
