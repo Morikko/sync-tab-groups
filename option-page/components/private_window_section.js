@@ -4,13 +4,22 @@ const PrivateWindowSection = React.createClass({
   },
 
   render: function() {
-    return React.DOM.div({
+    return React.DOM.ul({
       className: "option-section"
     }, [
-      React.DOM.h2({className: "title-section"}, 'Private Window'),
-      React.DOM.input({
-        type: "checkbox"
-      })
+      React.createElement(SectionTitle, {
+        title: 'Private Window'
+      }),
+      React.createElement(OptionCheckBox, {
+        checked: true,
+        label: "Synchronize Private Window as a new group",
+        onCheckChange: this.handleOptionChange,
+        id: "sync-private-window",
+      }),
     ]);
+  },
+
+  handleOptionChange: function(optionName, optionValue) {
+
   }
 });

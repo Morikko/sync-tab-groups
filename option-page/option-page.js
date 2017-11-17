@@ -3,6 +3,13 @@ const store = Redux.createStore(Reducer);
 const Actions = {
   askOptions: function() {
     Utils.sendMessage("Option:Ask", {});
+  },
+
+  onOptionChange: function(name, value) {
+    Utils.sendMessage("Option:Change", {
+      optionName: name,
+      optionValue: value
+    });
   }
 };
 
@@ -13,19 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         store: store
       },
       React.createElement(OptionsPanel, {
-        /*
-        onGroupAddClick: Actions.addGroup,
-        onGroupAddDrop: Actions.addGroupWithTab,
-        onGroupClick: Actions.selectGroup,
-        onGroupDrop: Actions.moveTabToGroup,
-        onGroupCloseClick: Actions.closeGroup,
-        onGroupRemoveClick: Actions.removeGroup,
-        onGroupTitleChange: Actions.renameGroup,
-        onTabClick: Actions.selectTab,
-        onTabDrag: Actions.dragTab,
-        onTabDragStart: Actions.dragTabStart,
-        onOpenInNewWindowClick: Actions.OpenGroupInNewWindow
-        */
+        onOptionChange: Actions.onOptionChange,
       })
     ),
     document.getElementById("content")
