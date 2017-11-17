@@ -95,6 +95,7 @@ StorageManager.Bookmark.saveGroups = function(groups) {
 /**
  * Rename Previous back up in Other bookmarks / StorageManager.Bookmark.ROOT /
  * Change: StorageManager.Bookmark.BACKUP -> StorageManager.Bookmark.BACKUP_OLD
+ TODO: search only in ROOT_ID
  */
 StorageManager.Bookmark.RenamePreviousBackUp = function() {
   return new Promise((resolve, reject) => {
