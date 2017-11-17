@@ -19,7 +19,7 @@ OptionManager.TEMPLATE = function() {
       sync: true,
       removeOnClose: false,
     },
-    pinnedTabs: {
+    pinnedTab: {
       sync: true
     }
   };

@@ -10,6 +10,10 @@ const OptionsPanel = (() => {
           options: this.props.options.privateWindow,
           onOptionChange: this.props.onOptionChange,
         }),
+        React.createElement(PinnedTabSection, {
+          options: this.props.options.pinnedTab,
+          onOptionChange: this.props.onOptionChange,
+        }),
         React.DOM.b({}, JSON.stringify(this.props.options))
       ]);
     }
@@ -17,7 +21,7 @@ const OptionsPanel = (() => {
 
   return ReactRedux.connect((state) => {
     return {
-      options: state.get("options"),
+      options: state,
     };
   }, ActionCreators)(OptionsPanelStandalone);
 })();
