@@ -149,6 +149,12 @@ Controller.prototype = {
   },
   */
 
+  sendOptions: function() {
+    Utils.sendMessage("Option:Changed", {
+      options: OptionManager.options,
+    });
+  },
+
   refreshUi: function() {
     Utils.sendMessage("Groups:Changed", {
       groups: GroupManager.groups,
@@ -259,8 +265,8 @@ Controller.prototype = {
   }
 };
 
-// Event from: tabs, windows
-var controllerMessenger = function(message) {
+// Event from: popup
+var popupMessenger = function(message) {
   console.log(message);
   switch (message.task) {
     case "Group:Add":
@@ -296,9 +302,19 @@ var controllerMessenger = function(message) {
   }
 }
 
-var controller = new Controller();
+// Event from: popup
+var optionMessenger = function(message) {
+  console.log(message);
+  switch (message.task) {
+    case "Option:Ask":
+      controller.sendOptions();
+      break;
+  }
+}
 
-browser.runtime.onMessage.addListener(controllerMessenger);
+var controller = new Controller();
+browser.runtime.onMessage.addListener(popupMessenger);
+browser.runtime.onMessage.addListener(optionMessenger);
 
 // Event from: tabs, windows
 function updateGroup(windowId) {
