@@ -33,5 +33,10 @@
         "default_icon": "icons/tabspace-32.png",
         "default_title": "Sync Tab Groups",
         "default_popup": "popup/popup.html"
+    },
+
+    "options_ui": {
+      "page": "option-page/options.html",
+      "browser_style": true
     }
 }
