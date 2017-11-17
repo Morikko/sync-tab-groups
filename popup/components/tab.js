@@ -72,7 +72,7 @@ const Tab = React.createClass({
 
   handleTabDrag: function(event) {
     event.stopPropagation();
-    /*
+    /* TODO to keep ?
     let group = this.props.group;
     let tab = this.props.tab;
     event.dataTransfer.setData("tab/index", tab.index);
