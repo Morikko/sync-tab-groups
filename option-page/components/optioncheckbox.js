@@ -25,7 +25,8 @@ const OptionCheckBox = React.createClass({
   handleClick: function(event) {
     event.stopPropagation();
     this.props.checked = !this.props.checked
-    console.log(this.props.id + " is " + this.props.checked);
+
+    this.props.onCheckChange(this.props.id, this.props.checked);
   }
 
 });

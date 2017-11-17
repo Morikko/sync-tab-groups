@@ -1,5 +1,5 @@
 const INITIAL_STATE = Immutable.fromJS({
-  options: {},
+  options: OptionManager.TEMPLATE(),
 });
 
 const Reducer = function(state = INITIAL_STATE, action) {

@@ -7,7 +7,7 @@ const OptionsPanel = (() => {
     render: function() {
       return React.DOM.ul({}, [
         React.createElement(PrivateWindowSection, {
-          privateWindowOptions: this.props.options.privateWindow,
+          options: this.props.options.privateWindow,
           onOptionChange: this.props.onOptionChange,
         }),
         React.DOM.b({}, JSON.stringify(this.props.options))

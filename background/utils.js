@@ -10,6 +10,22 @@ DelayedTasks.FORCE = "FORCE";
 DelayedTasks.CLOSE_REFERENCE = "close";
 DelayedTasks.REMOVE_REFERENCE = "remove";
 
+
+var OptionManager = OptionManager || {};
+
+OptionManager.TEMPLATE = function() {
+  return {
+    privateWindow: {
+      sync: true,
+      removeOnClose: false,
+    },
+    pinnedTabs: {
+      sync: true
+    }
+  };
+};
+
+
 /**
  * Return true if the url is privileged
  * Privileged url: chrome: URLs, javascript: URLs,

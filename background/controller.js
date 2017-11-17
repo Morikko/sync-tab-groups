@@ -149,7 +149,7 @@ Controller.prototype = {
   },
   */
 
-  sendOptions: function() {
+  refreshOptionsUI: function() {
     Utils.sendMessage("Option:Changed", {
       options: OptionManager.options,
     });
@@ -307,7 +307,11 @@ var optionMessenger = function(message) {
   console.log(message);
   switch (message.task) {
     case "Option:Ask":
-      controller.sendOptions();
+      controller.refreshOptionsUI();
+      break;
+    case "Option:Change":
+      OptionManager.updateOption(message.params.optionName, message.params.optionValue);
+      controller.refreshOptionsUI();
       break;
   }
 }

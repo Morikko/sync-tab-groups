@@ -1,7 +1,10 @@
 const PrivateWindowSection = React.createClass({
   propTypes: {
-    privateWindowOptions: React.PropTypes.object.isRequired
+    options: React.PropTypes.object.isRequired,
+    onOptionChange: React.PropTypes.func,
   },
+
+  prefix: "privateWindow",
 
   render: function() {
     return React.DOM.ul({
@@ -11,15 +14,18 @@ const PrivateWindowSection = React.createClass({
         title: 'Private Window'
       }),
       React.createElement(OptionCheckBox, {
-        checked: true,
-        label: "Synchronize Private Window as a new group",
-        onCheckChange: this.handleOptionChange,
-        id: "sync-private-window",
+        checked: this.props.options.sync,
+        label: "Synchronize the private windows as groups.",
+        onCheckChange: this.props.onOptionChange,
+        id: this.prefix + "-sync",
+      }),
+      React.createElement(OptionCheckBox, {
+        checked: this.props.options.removeOnClose,
+        label: "Remove the groups in the private windows when those windows are closed.",
+        onCheckChange: this.props.onOptionChange,
+        id: this.prefix + "-removeOnClose",
       }),
     ]);
   },
 
-  handleOptionChange: function(optionName, optionValue) {
-
-  }
 });
