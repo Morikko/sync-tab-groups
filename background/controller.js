@@ -3,6 +3,11 @@
 // hotkeys -> commands
 // sdk/simple-prefs -> storage and options_ui
 
+DelayedTasks.fromUI = {
+  [DelayedTasks.CLOSE_REFERENCE]: new DelayedTasks.DelayedTasks(),
+  [DelayedTasks.REMOVE_REFERENCE]: new DelayedTasks.DelayedTasks()
+}
+
 /**
  * Only read groups data, never write directly
  */
@@ -11,7 +16,6 @@ function Controller() {
   this._hotkeyNextGroup = null;
   this._hotkeyPrevGroup = null;
 
-  DelayedTasks.init();
   this.init();
 }
 
@@ -163,7 +167,7 @@ Controller.prototype = {
   refreshUi: function() {
     Utils.sendMessage("Groups:Changed", {
       groups: GroupManager.groups,
-      delayedTasks: DelayedTasks.delayedTasks
+      delayedTasks: DelayedTasks.fromUI
     });
   },
 
@@ -204,11 +208,10 @@ Controller.prototype = {
       });
     };
 
-    DelayedTasks.manageDelayedTask(
+    DelayedTasks.fromUI[DelayedTasks.CLOSE_REFERENCE].manageDelayedTask(
       params.taskRef,
-      DelayedTasks.CLOSE_REFERENCE,
+      delayedFunction,
       params.groupID,
-      delayedFunction
     );
   },
 
@@ -222,11 +225,10 @@ Controller.prototype = {
       });
     };
 
-    DelayedTasks.manageDelayedTask(
+    DelayedTasks.fromUI[DelayedTasks.REMOVE_REFERENCE].manageDelayedTask(
       params.taskRef,
-      DelayedTasks.REMOVE_REFERENCE,
+      delayedFunction,
       params.groupID,
-      delayedFunction
     );
   },
 

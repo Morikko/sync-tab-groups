@@ -42,7 +42,7 @@ const GroupList = (() => {
 
     isCurrently: function(action, groupId) {
       if ( this.props.delayedTasks[action] !== undefined ) {
-        return this.props.delayedTasks[action][groupId] !== undefined;
+        return this.props.delayedTasks[action].delayedTasks[groupId] !== undefined;
       }
       else {
         return false;
