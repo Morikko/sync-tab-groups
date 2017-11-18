@@ -123,10 +123,10 @@ GroupManager.detachWindow = function(windowId) {
     OptionManager.options.privateWindow.removeOnClose) {
     GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
   }
-  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
-GroupManager.removeGroupFromId = function ( groupId ) {
+GroupManager.removeGroupFromId = function(groupId) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromGroupId(
@@ -138,8 +138,8 @@ GroupManager.removeGroupFromId = function ( groupId ) {
     return;
   }
 
-  GroupManager.groups.splice( groupIndex, 1);
-  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+  GroupManager.groups.splice(groupIndex, 1);
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
 
@@ -151,7 +151,7 @@ GroupManager.removeGroupFromId = function ( groupId ) {
  */
 GroupManager.renameGroup = function(groupIndex, title) {
   GroupManager.groups[groupIndex].title = title;
-  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
 /**
@@ -178,7 +178,7 @@ GroupManager.addGroup = function(title = "",
     throw Error("addGroup: Group not created because " + e.message);
   }
 
-  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   return uniqueGroupId;
 }
 
@@ -204,7 +204,7 @@ GroupManager.addGroupWithTab = function(tabs,
     throw Error("addGroupWithTab: Group not created because " + e.message);
   }
 
-  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   return uniqueGroupId;
 }
 
@@ -215,7 +215,7 @@ GroupManager.resetAssociatedWindows = function() {
   for (g of GroupManager.groups) {
     g.windowId = browser.windows.WINDOW_ID_NONE;
   }
-  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
 /******** OTHER *********/
@@ -261,16 +261,24 @@ GroupManager.createUniqueGroupId = function() {
  * Get the saved groups if exist else set empty array
  * @return {Promise}
  */
-GroupManager.init = function() {
-  return new Promise((resolve, reject) => {
-    StorageManager.Local.loadGroups().then((groups) => {
-      GroupManager.groups = groups;
-      GroupManager.resetAssociatedWindows();
-      resolve("GroupManager.init done");
-    }).catch(() => {
-      reject("GroupManager.init failed");
+GroupManager.init = async function() {
+  try {
+    // 1. Set the data
+    const groups = await StorageManager.Local.loadGroups();
+    GroupManager.groups = groups;
+    GroupManager.resetAssociatedWindows();
+
+    // 2. Integrate open windows
+    const windowInfoArray = await browser.windows.getAll({
+      windowTypes: ['normal']
     });
-  });
+    for (windowInfo of windowInfoArray) {
+      await WindowManager.integrateWindow(windowInfo.id);
+    }
+    return "GroupManager.init done";
+  } catch (e) {
+    return "GroupManager.init failed: " + e;
+  }
 }
 /**
  * Save groups
@@ -285,7 +293,7 @@ GroupManager.store = function() {
 GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
   () => {
     GroupManager.delaytask.addDelayedTask(
-      ()=>{
+      () => {
         GroupManager.store();
       },
       DelayedTasks.LIMITED_MODE,

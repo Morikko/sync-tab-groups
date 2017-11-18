@@ -24,18 +24,9 @@ Controller.prototype = {
 
     OptionManager.init().then(()=>{
 
-      // 1. Set the data
+      
       GroupManager.init().then(() => {
-        // 2. Integrate open windows
-        browser.windows.getAll({
-          windowTypes: ['normal']
-        }).then((windowInfoArray) => {
-          for (windowInfo of windowInfoArray) {
-            WindowManager.integrateWindow(windowInfo.id).then(() => {
-              GroupManager.store();
-            });
-          }
-        });
+
       });
 
     });
