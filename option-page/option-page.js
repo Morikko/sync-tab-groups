@@ -44,4 +44,4 @@ function init() {
   Actions.askOptions();
 }
 
-init();
+//init();

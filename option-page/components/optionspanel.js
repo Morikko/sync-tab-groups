@@ -21,7 +21,7 @@ const OptionsPanel = (() => {
 
   return ReactRedux.connect((state) => {
     return {
-      options: state,
+      options: state.get("options"),
     };
   }, ActionCreators)(OptionsPanelStandalone);
 })();

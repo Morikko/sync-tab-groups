@@ -6,6 +6,11 @@ const PrivateWindowSection = React.createClass({
 
   prefix: "privateWindow",
 
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+    })
+  },
+
   render: function() {
     return React.DOM.ul({
       className: "option-section"

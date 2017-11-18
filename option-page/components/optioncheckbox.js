@@ -6,13 +6,25 @@ const OptionCheckBox = React.createClass({
     id: React.PropTypes.string,
   },
 
+  getInitialState: function() {
+    return {
+      checked: this.props.checked
+    };
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      checked: nextProps.checked
+    })
+  },
+
   render: function() {
     return React.DOM.div({
       className: "option-checkbox"
     }, [
       React.DOM.input({
         type: "checkbox",
-        checked: this.props.checked,
+        checked: this.state.checked,
         id: this.props.id,
         onClick: this.handleClick,
       }),
