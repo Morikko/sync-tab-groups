@@ -7,7 +7,7 @@ const PinnedTabSection = React.createClass({
   prefix: "pinnedTab",
 
   render: function() {
-    return React.DOM.ul({
+    return React.DOM.div({
       className: "option-section"
     }, [
       React.createElement(SectionTitle, {

@@ -5,7 +5,7 @@ const OptionsPanel = (() => {
     },
 
     render: function() {
-      return React.DOM.ul({}, [
+      return React.DOM.div({}, [
         React.createElement(PrivateWindowSection, {
           options: this.props.options.privateWindow,
           onOptionChange: this.props.onOptionChange,

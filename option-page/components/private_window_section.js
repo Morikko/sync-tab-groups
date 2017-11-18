@@ -12,7 +12,7 @@ const PrivateWindowSection = React.createClass({
   },
 
   render: function() {
-    return React.DOM.ul({
+    return React.DOM.div({
       className: "option-section"
     }, [
       React.createElement(SectionTitle, {

@@ -22,15 +22,16 @@ const OptionCheckBox = React.createClass({
     return React.DOM.div({
       className: "option-checkbox"
     }, [
-      React.DOM.input({
-        type: "checkbox",
-        checked: this.state.checked,
-        id: this.props.id,
-        onClick: this.handleClick,
-      }),
       React.DOM.label({
         for: this.props.id
-      }, this.props.label)
+      }, [React.DOM.input({
+          type: "checkbox",
+          checked: this.state.checked,
+          id: this.props.id,
+          onClick: this.handleClick,
+        }),
+        this.props.label
+      ])
     ]);
   },
 
