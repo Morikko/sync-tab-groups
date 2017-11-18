@@ -101,6 +101,25 @@ GroupManager.isWindowAlreadyRegistered = function(windowId) {
 /******** SETTER *********/
 
 /**
+ * Change tabs in group with groupId
+ * @param {Number} groupId
+ * @param {Array[Tab]} tabs
+ */
+GroupManager.setTabsInGroupId = function(groupId, tabs) {
+  try {
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId
+    );
+    GroupManager.groups[groupIndex].tabs = tabs;
+    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+  } catch (e) {
+    let msg = "GroupManager.detachWindow failed; " + e.message;
+    console.error(msg);
+  }
+}
+
+
+/**
  * Remove the windowId associated to a group
  * @param {Number} windowId
  */

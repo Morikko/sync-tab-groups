@@ -27,7 +27,7 @@ StorageManager.Local.loadGroups = async function( ) {
     else
       return local.groups;
   } catch ( e ) {
-    return "StorageManager.Local.loadGroups failed...";
+    return "StorageManager.Local.loadGroups failed... " + e ;
   }
 }
 
@@ -63,7 +63,7 @@ StorageManager.Local.loadOptions = async function( ) {
     else
       return local.options;
   } catch ( e ) {
-    return "StorageManager.Local.loadOptions failed...";
+    return "StorageManager.Local.loadOptions failed... " + e ;
   }
 }
 
