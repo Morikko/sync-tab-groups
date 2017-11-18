@@ -246,12 +246,12 @@ WindowManager.removeGroup = function(groupID) {
     // Is open
     if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
       WindowManager.closeGroup( groupID ).then(()=>{
-        GroupManager.groups.splice(groupIndex, 1);
+        GroupManager.removeGroupFromId(groupID);
         resolve("WindowManager.removeGroup done on groupId " + groupID);
       });
     // Is close
     } else {
-      GroupManager.groups.splice(groupIndex, 1);
+      GroupManager.removeGroupFromId(groupID);
       resolve("WindowManager.removeGroup done on groupId " + groupID);
     }
   });

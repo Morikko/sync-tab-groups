@@ -48,6 +48,21 @@ GroupManager.getGroupIndexFromGroupId = function(groupId) {
 }
 
 /**
+ * Return the group index for a specific window
+ * If no index found: throw Error
+ * @param {Number} - window id
+ * @returns {Number} - group index
+ */
+GroupManager.getGroupIndexFromWindowId = function(windowId) {
+  for (let i = 0; i < GroupManager.groups.length; i++) {
+    if (GroupManager.groups[i].windowId === windowId)
+      return i;
+  }
+
+  throw Error("GroupManager.getGroupIndexFromWindowId: Failed to find group index for id:  " + windowId);
+}
+
+/**
  * Return the windowId for a specific group
  * If no window opened: throw Error
  * @param {Number} - group id
@@ -56,7 +71,7 @@ GroupManager.getGroupIndexFromGroupId = function(groupId) {
 GroupManager.getWindowIdFromGroupId = function(groupId) {
   for (let i = 0; i < GroupManager.groups.length; i++) {
     if (GroupManager.groups[i].id === groupId) {
-      if ( GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE)
+      if (GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE)
         return GroupManager.groups[i].windowId;
     }
   }
@@ -80,10 +95,40 @@ GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
  * @param {Number} windowId
  */
 GroupManager.detachWindow = function(windowId) {
-  for (g of GroupManager.groups) {
-    if (g.windowId === windowId)
-      g.windowId = browser.windows.WINDOW_ID_NONE;
+  let groupIndex;
+  try {
+    groupIndex = GroupManager.getGroupIndexFromWindowId(
+      windowId
+    );
+  } catch (e) {
+    let msg = "GroupManager.detachWindow failed; " + e.message;
+    console.error(msg);
+    return;
   }
+
+  GroupManager.groups[groupIndex].windowId = browser.windows.WINDOW_ID_NONE;
+  // Remove group from private window if set
+  if (g.tabs.length > 0 &&
+    g.tabs[0].incognito &&
+    OptionManager.options.privateWindow.removeOnClose) {
+    GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
+  }
+
+}
+
+GroupManager.removeGroupFromId = function ( groupId ) {
+  let groupIndex;
+  try {
+    groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId
+    );
+  } catch (e) {
+    let msg = "GroupManager.removeGroupFromId done because group " + groupId + " was already removed.";
+    console.error(msg);
+    return;
+  }
+
+  GroupManager.groups.splice( groupIndex, 1);
 }
 
 GroupManager.isWindowAlreadyRegistered = function(windowId) {
@@ -183,8 +228,8 @@ GroupManager.createUniqueGroupId = function() {
 /**
  * Set all windowIds to browser.windows.WINDOW_ID_NONE
  */
-GroupManager.resetAssociatedWindows = function ( ) {
-  for ( g of GroupManager.groups ) {
+GroupManager.resetAssociatedWindows = function() {
+  for (g of GroupManager.groups) {
     g.windowId = browser.windows.WINDOW_ID_NONE;
   }
 }
@@ -196,7 +241,7 @@ GroupManager.resetAssociatedWindows = function ( ) {
  */
 GroupManager.init = function() {
   return new Promise((resolve, reject) => {
-    StorageManager.Local.loadGroups( ).then((groups) => {
+    StorageManager.Local.loadGroups().then((groups) => {
       GroupManager.groups = groups;
       GroupManager.resetAssociatedWindows();
       resolve("GroupManager.init done");
@@ -211,8 +256,8 @@ GroupManager.init = function() {
  * Do back up in bookmarks
  */
 GroupManager.store = function() {
-  StorageManager.Local.saveGroups( GroupManager.groups );
-  StorageManager.Bookmark.backUp( GroupManager.groups );
+  StorageManager.Local.saveGroups(GroupManager.groups);
+  StorageManager.Bookmark.backUp(GroupManager.groups);
 }
 
 /**
