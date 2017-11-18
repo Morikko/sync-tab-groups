@@ -8,7 +8,6 @@
 var OptionManager = OptionManager || {};
 
 OptionManager.EVENT_CHANGE = 'options-change';
-OptionManager.DELAYED_TASK = 'delayed-options';
 
 OptionManager.options = OptionManager.TEMPLATE();
 OptionManager.eventlistener = new EventListener();
@@ -52,11 +51,9 @@ OptionManager.store = function() {
 
 OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
   () => {
-    console.log("Ask");
     OptionManager.delaytask.addDelayedTask(
       ()=>{
         OptionManager.store();
-        console.log("DOne");
       },
       DelayedTasks.LIMITED_MODE,
     )

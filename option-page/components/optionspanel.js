@@ -14,7 +14,6 @@ const OptionsPanel = (() => {
           options: this.props.options.pinnedTab,
           onOptionChange: this.props.onOptionChange,
         }),
-        React.DOM.b({}, JSON.stringify(this.props.options))
       ]);
     }
   });
