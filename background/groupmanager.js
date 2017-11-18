@@ -1,9 +1,18 @@
 /**
  * Model of the Groups
- * Functions that read/write the data
- * All are synchronous functions
+ * Functions getter: that handle error case (else get directly the information)
+ * Functions writer: always trhough the API to fire event
+ * Event: EVENT_CHANGE
+ * DelayedTask: store() (Limited mode)
  */
 var GroupManager = GroupManager || {};
+
+GroupManager.EVENT_CHANGE = 'groups-change';
+GroupManager.eventlistener = new EventListener();
+
+GroupManager.delaytask = new DelayedTasks.DelayedTasks(500);
+
+
 
 GroupManager.Group = function(id,
   title = "",
@@ -79,16 +88,17 @@ GroupManager.getWindowIdFromGroupId = function(groupId) {
   throw Error("GroupManager.getWindowIdFromGroupId: Failed to find opened window for id:  " + groupId);
 }
 
-/**
- * @param {Number} groupIndex
- * @returns {boolean}
- */
-GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
-  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE)
-    return true;
-  else
+GroupManager.isWindowAlreadyRegistered = function(windowId) {
+  if (windowId === browser.windows.WINDOW_ID_NONE)
     return false;
+  for (g of GroupManager.groups) {
+    if (g.windowId === windowId)
+      return true;
+  }
+  return false;
 }
+
+/******** SETTER *********/
 
 /**
  * Remove the windowId associated to a group
@@ -113,7 +123,7 @@ GroupManager.detachWindow = function(windowId) {
     OptionManager.options.privateWindow.removeOnClose) {
     GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
   }
-
+  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
 }
 
 GroupManager.removeGroupFromId = function ( groupId ) {
@@ -129,17 +139,9 @@ GroupManager.removeGroupFromId = function ( groupId ) {
   }
 
   GroupManager.groups.splice( groupIndex, 1);
+  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
 }
 
-GroupManager.isWindowAlreadyRegistered = function(windowId) {
-  if (windowId === browser.windows.WINDOW_ID_NONE)
-    return false;
-  for (g of GroupManager.groups) {
-    if (g.windowId === windowId)
-      return true;
-  }
-  return false;
-}
 
 /**
  * Renames a given group.
@@ -149,6 +151,7 @@ GroupManager.isWindowAlreadyRegistered = function(windowId) {
  */
 GroupManager.renameGroup = function(groupIndex, title) {
   GroupManager.groups[groupIndex].title = title;
+  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
 }
 
 /**
@@ -163,18 +166,20 @@ GroupManager.addGroup = function(title = "",
     return;
 
   let tabs = [];
-
+  let uniqueGroupId;
   try {
-    let uniqueGroupId = GroupManager.createUniqueGroupId();
+    uniqueGroupId = GroupManager.createUniqueGroupId();
     GroupManager.groups.push(new GroupManager.Group(uniqueGroupId,
       title,
       tabs,
       windowId
     ));
-    return uniqueGroupId;
   } catch (e) {
     throw Error("addGroup: Group not created because " + e.message);
   }
+
+  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+  return uniqueGroupId;
 }
 
 /**
@@ -190,14 +195,40 @@ GroupManager.addGroupWithTab = function(tabs,
     return GroupManager.addGroup(title);
   }
 
+  let uniqueGroupId;
   try {
-    let uniqueGroupId = GroupManager.createUniqueGroupId();
+    uniqueGroupId = GroupManager.createUniqueGroupId();
     GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, windowId));
-    return uniqueGroupId;
   } catch (e) {
     // Propagate Error
     throw Error("addGroupWithTab: Group not created because " + e.message);
   }
+
+  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+  return uniqueGroupId;
+}
+
+/**
+ * Set all windowIds to browser.windows.WINDOW_ID_NONE
+ */
+GroupManager.resetAssociatedWindows = function() {
+  for (g of GroupManager.groups) {
+    g.windowId = browser.windows.WINDOW_ID_NONE;
+  }
+  GroupManager.eventlistener.fire( GroupManager.EVENT_CHANGE );
+}
+
+/******** OTHER *********/
+
+/**
+ * @param {Number} groupIndex
+ * @returns {boolean}
+ */
+GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
+  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE)
+    return true;
+  else
+    return false;
 }
 
 /**
@@ -226,15 +257,6 @@ GroupManager.createUniqueGroupId = function() {
 }
 
 /**
- * Set all windowIds to browser.windows.WINDOW_ID_NONE
- */
-GroupManager.resetAssociatedWindows = function() {
-  for (g of GroupManager.groups) {
-    g.windowId = browser.windows.WINDOW_ID_NONE;
-  }
-}
-
-/**
  * Asynchronous function
  * Get the saved groups if exist else set empty array
  * @return {Promise}
@@ -259,6 +281,16 @@ GroupManager.store = function() {
   StorageManager.Local.saveGroups(GroupManager.groups);
   StorageManager.Bookmark.backUp(GroupManager.groups);
 }
+
+GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
+  () => {
+    GroupManager.delaytask.addDelayedTask(
+      ()=>{
+        GroupManager.store();
+      },
+      DelayedTasks.LIMITED_MODE,
+    )
+  });
 
 /**
  * Sort the groups to be in alphabetical order

@@ -335,6 +335,11 @@ function updateGroup(windowId) {
   });
 }
 
+GroupManager.eventlistener.on(OptionManager.EVENT_CHANGE,
+  () => {
+    controller.refreshUi();
+  });
+
 OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
   () => {
     controller.refreshOptionsUI();
