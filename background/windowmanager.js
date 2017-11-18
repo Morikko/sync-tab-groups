@@ -266,6 +266,8 @@ WindowManager.addGroupFromWindow = async function(windowId) {
       windowId: windowId
     });
 
+    console.log(tabs);
+
     var newGroupId = GroupManager.addGroupWithTab(tabs, windowId);
     await WindowManager.associateGroupIdToWindow(
       windowId,

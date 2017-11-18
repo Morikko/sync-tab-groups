@@ -16,7 +16,7 @@ var TabManager = TabManager || {};
 TabManager.updateTabsInGroup = async function(windowId) {
   try {
     var groupId = GroupManager.getGroupIdInWindow(windowId);
-    const tabs = browser.tabs.query({
+    const tabs = await browser.tabs.query({
       windowId: windowId
     });
     GroupManager.setTabsInGroupId(groupId, tabs);
@@ -65,11 +65,11 @@ TabManager.openListOfTabs = async function(
       indexOffset = GroupManager.groups[groupIndex].tabs.length;
     }
 
-    await Promise.all(tabsToOpen.map((tab, index) => {
+    await Promise.all(tabsToOpen.map(async (tab, index) => {
       tab.url = (tab.url === "about:privatebrowsing") ? "about:newtab" : tab.url;
       if (!Utils.isPrivilegedURL(tab.url)) {
         // Create a tab to tab.url or to newtab
-        return browser.tabs.create({
+        await browser.tabs.create({
           url: (tab.url === "about:newtab") ? null : tab.url,
           active: tab.active,
           pinned: tab.pinned,

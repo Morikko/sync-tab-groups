@@ -287,7 +287,7 @@ browser.runtime.onMessage.addListener(optionMessenger);
 
 /**** Update *****/
 
-GroupManager.eventlistener.on(OptionManager.EVENT_CHANGE,
+GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
   () => {
     controller.refreshUi();
   });
