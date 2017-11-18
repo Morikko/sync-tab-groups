@@ -27,22 +27,17 @@ StorageManager.Bookmark.backUp = function(groups) {
     clearTimeout(StorageManager.Bookmark.TIME_OUT);
   }
 
-  StorageManager.Bookmark.TIME_OUT = setTimeout(() => {
-    return new Promise((resolve, reject) => {
-      StorageManager.Bookmark.init().then(() => {
-        StorageManager.Bookmark.RenamePreviousBackUp().then(() => {
-          StorageManager.Bookmark.saveGroups(groups).then(() => {
-            resolve(StorageManager.Bookmark.cleanGroups());
-          }).catch((reason) => {
-            reject("StorageManager.Bookmark.backUp failed: " + reason);
-          });
-        }).catch((reason) => {
-          reject("StorageManager.Bookmark.backUp failed: " + reason);
-        });
-      }).catch((reason) => {
-        reject("StorageManager.Bookmark.backUp failed: " + reason);
-      });
-    });
+  StorageManager.Bookmark.TIME_OUT = setTimeout(async() => {
+    try {
+      await StorageManager.Bookmark.init();
+      await StorageManager.Bookmark.RenamePreviousBackUp();
+      await StorageManager.Bookmark.saveGroups(groups);
+      await StorageManager.Bookmark.cleanGroups();
+
+      return "StorageManager.Bookmark.backUp done!";
+    } catch (e) {
+      return "StorageManager.Bookmark.backUp failed: " + e;
+    }
   }, 500);
 }
 
@@ -53,43 +48,41 @@ StorageManager.Bookmark.backUp = function(groups) {
  * In  browser.bookmarks.create, index doesn't work: https://bugzilla.mozilla.org/show_bug.cgi?id=1416573
  * @param {Array[Group]} groups
  */
-StorageManager.Bookmark.saveGroups = function(groups) {
-  return new Promise((resolve, reject) => {
+StorageManager.Bookmark.saveGroups = async function(groups) {
+  try {
     var rootId;
     // 1. Create root
-    browser.bookmarks.create({
+    const bmRoot = await browser.bookmarks.create({
       title: StorageManager.Bookmark.BACKUP,
       parentId: StorageManager.Bookmark.ROOT_ID
-    }).then((bmRoot) => {
-      rootId = bmRoot.id;
-      // For each group
-      groups.map((g) => {
-
-        // 2. Create Group folder
-        browser.bookmarks.create({
-          title: Utils.getGroupTitle(g),
-          parentId: bmRoot.id
-        }).then((bmGroup) => {
-          var lastPromise = Promise.resolve("In case...");
-          g.tabs.map((tab) => {
-
-            // 3. Create Tabs bookmarks
-            lastPromise = browser.bookmarks.create({
-              title: tab.title,
-              index: tab.index,
-              url: tab.url,
-              parentId: bmGroup.id
-            });
-          });
-          resolve(lastPromise);
-        }).catch((reason) => {
-          reject("StorageManager.Bookmark.saveGroups failed: " + reason);
-        });
-      });
-    }).catch((reason) => {
-      reject("StorageManager.Bookmark.saveGroups failed: " + reason);
     });
-  });
+
+    rootId = bmRoot.id;
+
+    // For each group
+    await Promise.all(groups.map(async(g) => {
+
+      // 2. Create Group folder
+      const bmGroup = await browser.bookmarks.create({
+        title: Utils.getGroupTitle(g),
+        parentId: bmRoot.id
+      })
+
+      // 3. Create Tabs bookmarks
+      await Promise.all(g.tabs.map(async(tab) => {
+        await browser.bookmarks.create({
+          title: tab.title,
+          index: tab.index,
+          url: tab.url,
+          parentId: bmGroup.id
+        });
+      }));
+    }));
+
+    return "StorageManager.Bookmark.saveGroups done!";
+  } catch (e) {
+    return "StorageManager.Bookmark.saveGroups failed: " + e;
+  }
 }
 
 /**
@@ -97,69 +90,63 @@ StorageManager.Bookmark.saveGroups = function(groups) {
  * Change: StorageManager.Bookmark.BACKUP -> StorageManager.Bookmark.BACKUP_OLD
  TODO: search only in ROOT_ID
  */
-StorageManager.Bookmark.RenamePreviousBackUp = function() {
-  return new Promise((resolve, reject) => {
-    browser.bookmarks.search({
+StorageManager.Bookmark.RenamePreviousBackUp = async function() {
+  try {
+    const searchResults = await browser.bookmarks.search({
       title: StorageManager.Bookmark.BACKUP
-    }).then((searchResults) => {
-      var lastPromise = Promise.resolve("In case...");
-
-      searchResults.map((searchResult) => {
-        lastPromise = browser.bookmarks.update(
-          searchResult.id, {
-            title: StorageManager.Bookmark.BACKUP_OLD
-          });
-      });
-      resolve(lastPromise);
-    }).catch((reason) => {
-      reject("StorageManager.Bookmark.RenamePreviousBackUp failed: " + reason);
     });
-  });
+
+    await Promise.all(searchResults.map(async(searchResult) => {
+      await browser.bookmarks.update(
+        searchResult.id, {
+          title: StorageManager.Bookmark.BACKUP_OLD
+        });
+    }));
+    return "StorageManager.Bookmark.RenamePreviousBackUp done!";
+  } catch (e) {
+    return "StorageManager.Bookmark.RenamePreviousBackUp failed: " + e;
+  }
 }
 
 /**
  * Clean the old back up bookmarks in Other bookmarks / StorageManager.Bookmark.ROOT /
  * Delete: StorageManager.Bookmark.BACKUP_OLD
  */
-StorageManager.Bookmark.cleanGroups = function(title = StorageManager.Bookmark.BACKUP_OLD) {
-  return new Promise((resolve, reject) => {
-    browser.bookmarks.search({
+StorageManager.Bookmark.cleanGroups = async function(title = StorageManager.Bookmark.BACKUP_OLD) {
+  try {
+    const searchResults = await browser.bookmarks.search({
       title: title
-    }).then((searchResults) => {
-      var lastPromise = Promise.resolve("In case...");
-
-      searchResults.map((searchResult) => {
-        lastPromise = browser.bookmarks.removeTree(searchResult.id);
-      });
-      resolve(lastPromise);
-    }).catch((reason) => {
-      reject("StorageManager.Bookmark.cleanGroups failed: " + reason);
     });
-  });
+
+    await Promise.all(searchResults.map(async(searchResult) => {
+      await browser.bookmarks.removeTree(searchResult.id);
+    }));
+    return "StorageManager.Bookmark.cleanGroups done!";
+  } catch (e) {
+    return "StorageManager.Bookmark.cleanGroups failed: " + e;
+  }
 }
 
 /**
  * Create Other bookmarks / StorageManager.Bookmark.ROOT / if doesn't exist.
  * Save the id of this bookmark (StorageManager.Bookmark.ROOT_ID) in order to do the backup inside later.
  */
-StorageManager.Bookmark.init = function() {
-  return new Promise((resolve, reject) => {
-    browser.bookmarks.search({
+StorageManager.Bookmark.init = async function() {
+  try {
+    const searchResults = await browser.bookmarks.search({
       title: StorageManager.Bookmark.ROOT
-    }).then((searchResults) => {
-      var lastPromise = Promise.resolve("StorageManager.Bookmark.init done");
-      if (searchResults.length === 0) {
-        lastPromise = browser.bookmarks.create({
-          title: StorageManager.Bookmark.ROOT
-        }).then((folder) => {
-          StorageManager.Bookmark.ROOT_ID = folder.id;
-        });
-      } else {
-        StorageManager.Bookmark.ROOT_ID = searchResults[0].id;
-      }
-      resolve(lastPromise);
-    }).catch((reason) => {
-      reject("StorageManager.Bookmark.cleanGroups failed: " + reason);
     });
-  });
+
+    if (searchResults.length === 0) {
+      const folder = await browser.bookmarks.create({
+        title: StorageManager.Bookmark.ROOT
+      });
+      StorageManager.Bookmark.ROOT_ID = folder.id;
+    } else {
+      StorageManager.Bookmark.ROOT_ID = searchResults[0].id;
+    }
+    return "StorageManager.Bookmark.cleanGroups done!";
+  } catch (e) {
+    return "StorageManager.Bookmark.cleanGroups failed: " + e;
+  }
 }
