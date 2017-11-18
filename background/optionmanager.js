@@ -4,7 +4,11 @@
 
 var OptionManager = OptionManager || {};
 
+OptionManager.EVENT_CHANGE = 'options-change';
+OptionManager.DELAYED_TASK = 'delayed-options';
+
 OptionManager.options = OptionManager.TEMPLATE();
+OptionManager.eventlistener = new EventListener();
 
 
 OptionManager.updateOption = function ( optionName, optionValue){
@@ -13,6 +17,7 @@ OptionManager.updateOption = function ( optionName, optionValue){
       a[b] = optionValue;
     return a[b];
   }, OptionManager.options);
+  OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
 }
 
 /**
@@ -25,6 +30,7 @@ OptionManager.init = function() {
     StorageManager.Local.loadOptions( ).then((options) => {
       OptionManager.options = options;
       resolve("OptionManager.init done");
+      OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
     }).catch(() => {
       reject("OptionManager.init failed");
     });
@@ -38,3 +44,8 @@ OptionManager.init = function() {
 OptionManager.store = function() {
   StorageManager.Local.saveOptions( OptionManager.options );
 }
+
+OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
+  () => {
+    OptionManager.store();
+  });

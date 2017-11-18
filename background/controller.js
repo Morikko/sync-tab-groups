@@ -18,19 +18,24 @@ function Controller() {
 Controller.prototype = {
   init: function() {
 
-    // 1. Set the data
-    GroupManager.init().then(() => {
-      // 2. Integrate open windows
-      browser.windows.getAll({
-        windowTypes: ['normal']
-      }).then((windowInfoArray) => {
-        for (windowInfo of windowInfoArray) {
-          WindowManager.integrateWindow(windowInfo.id).then(() => {
-            GroupManager.store();
-          });
-        }
+    OptionManager.init().then(()=>{
+
+      // 1. Set the data
+      GroupManager.init().then(() => {
+        // 2. Integrate open windows
+        browser.windows.getAll({
+          windowTypes: ['normal']
+        }).then((windowInfoArray) => {
+          for (windowInfo of windowInfoArray) {
+            WindowManager.integrateWindow(windowInfo.id).then(() => {
+              GroupManager.store();
+            });
+          }
+        });
       });
+
     });
+
   },
 
   /* TODO DO I still need the binding
@@ -320,13 +325,18 @@ var controller = new Controller();
 browser.runtime.onMessage.addListener(popupMessenger);
 browser.runtime.onMessage.addListener(optionMessenger);
 
-// Event from: tabs, windows
+/**** Update *****/
 function updateGroup(windowId) {
   TabManager.updateTabsInGroup(windowId).then(() => {
     GroupManager.store();
     controller.refreshUi();
   });
 }
+
+OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
+  () => {
+    controller.refreshOptionsUI();
+  });
 
 /**** Event about tabs *****/
 browser.tabs.onActivated.addListener((activeInfo) => {
