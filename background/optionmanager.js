@@ -1,5 +1,8 @@
 /**
  * Settings of the extension
+ *
+ * Event: EVENT_CHANGE
+ * DelayedTask: store() (Limited mode)
  */
 
 var OptionManager = OptionManager || {};
@@ -9,6 +12,8 @@ OptionManager.DELAYED_TASK = 'delayed-options';
 
 OptionManager.options = OptionManager.TEMPLATE();
 OptionManager.eventlistener = new EventListener();
+
+OptionManager.delaytask = new DelayedTasks.DelayedTasks(500);
 
 
 OptionManager.updateOption = function ( optionName, optionValue){
@@ -47,5 +52,12 @@ OptionManager.store = function() {
 
 OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
   () => {
-    OptionManager.store();
+    console.log("Ask");
+    OptionManager.delaytask.addDelayedTask(
+      ()=>{
+        OptionManager.store();
+        console.log("DOne");
+      },
+      DelayedTasks.LIMITED_MODE,
+    )
   });

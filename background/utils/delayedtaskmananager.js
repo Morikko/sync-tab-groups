@@ -11,6 +11,9 @@
 
 var DelayedTasks = DelayedTasks || {};
 
+DelayedTasks.LIMITED_MODE = false;
+DelayedTasks.OVERWRITTEN_MODE = true;
+
 DelayedTasks.DelayedTasks = function(timeoutDelay = 10000) {
  this.delayedTasks = {};
  this.timeoutDelay = timeoutDelay;
@@ -28,7 +31,7 @@ DelayedTasks.DelayedTasks = function(timeoutDelay = 10000) {
 DelayedTasks.DelayedTasks.prototype.manageDelayedTask = function(taskAction, delayedFunction, refId=0) {
   switch (taskAction) {
     case DelayedTasks.ASK:
-      this.addDelayedTask(delayedFunction, true, refId);
+      this.addDelayedTask(delayedFunction, DelayedTasks.OVERWRITTEN_MODE, refId);
       break;
     case DelayedTasks.CANCEL:
       this.removeDelayedTask(refId);
@@ -47,7 +50,7 @@ DelayedTasks.DelayedTasks.prototype.manageDelayedTask = function(taskAction, del
 * @param {boolean} overwrite - true -> Overwritten mode else false -> Limited mode
 * @param {Number} refId (default:0) - ref inside the action group
 */
-DelayedTasks.DelayedTasks.prototype.addDelayedTask = function(delayedFunction, overwrite=false, refId=0) {
+DelayedTasks.DelayedTasks.prototype.addDelayedTask = function(delayedFunction, overwrite=DelayedTasks.OVERWRITTEN_MODE, refId=0) {
   this.removeDelayedTask(refId);
 
   this.delayedTasks[refId] = setTimeout(() => {
