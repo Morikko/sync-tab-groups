@@ -16,54 +16,47 @@ WindowManager.WINDOW_GROUPID = "GROUPID";
  * @param {Number} oldGroupId - the group id opened
  * @param {Number} newGroupId - the group id to open
  * @returns {Promise} - the remove tabs promise (last)
- * Asynchronous
  */
-WindowManager.changeGroupInWindow = function(oldGroupId, newGroupId) {
-  return new Promise((resolve, reject) => {
-    var newGroupIndex, oldGroupIndex, windowId;
-    try {
-      newGroupIndex = GroupManager.getGroupIndexFromGroupId(
-        newGroupId
-      );
-      oldGroupIndex = GroupManager.getGroupIndexFromGroupId(
-        oldGroupId
-      );
-      windowId = GroupManager.getWindowIdFromGroupId(
-        oldGroupId
-      );
-    } catch (e) {
-      let msg = "WindowManager.changeGroupInWindow failed; " + e.message;
-      console.error(msg);
-      reject(msg);
-    }
+WindowManager.changeGroupInWindow = async function(oldGroupId, newGroupId) {
+  try {
+    let newGroupIndex = GroupManager.getGroupIndexFromGroupId(
+      newGroupId
+    );
+    let oldGroupIndex = GroupManager.getGroupIndexFromGroupId(
+      oldGroupId
+    );
+    let windowId = GroupManager.getWindowIdFromGroupId(
+      oldGroupId
+    );
 
-    TabManager.removeTabsWithUnallowedURL(oldGroupId).then(() => {
-      browser.tabs.query({
-        windowId: windowId
-      }).then((tabs) => {
-        // 1. Prepare tabs to open and remove
-        var tabsToRemove = [];
-        tabs.map((tab) => {
-          tabsToRemove.push(tab.id);
-        });
+    await TabManager.removeTabsWithUnallowedURL(oldGroupId);
 
-        var tabsToOpen = GroupManager.groups[newGroupIndex].tabs;
-        // Switch window associated
-        GroupManager.groups[oldGroupIndex].windowId = browser.windows.WINDOW_ID_NONE;
-        GroupManager.groups[newGroupIndex].windowId = windowId;
-
-        // 2. Open new group tabs
-        TabManager.openListOfTabs(tabsToOpen, windowId, false, true).then(() => {
-
-          // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
-          browser.tabs.remove(tabsToRemove).then(() => {
-            var lastPromise = WindowManager.associateGroupIdToWindow(windowId, newGroupId);
-            resolve(lastPromise);
-          });
-        });
-      });
+    const tabs = await browser.tabs.query({
+      windowId: windowId
     });
-  });
+
+    // 1. Prepare tabs to open and remove
+    var tabsToRemove = [];
+    tabs.map((tab) => {
+      tabsToRemove.push(tab.id);
+    });
+
+    var tabsToOpen = GroupManager.groups[newGroupIndex].tabs;
+    // Switch window associated
+    GroupManager.groups[oldGroupIndex].windowId = browser.windows.WINDOW_ID_NONE;
+    GroupManager.groups[newGroupIndex].windowId = windowId;
+
+    // 2. Open new group tabs
+    await TabManager.openListOfTabs(tabsToOpen, windowId, false, true);
+
+    // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
+    await browser.tabs.remove(tabsToRemove);
+    var lastPromise = WindowManager.associateGroupIdToWindow(windowId, newGroupId);
+    return "WindowManager.changeGroupInWindow done!";
+
+  } catch (e) {
+    return "WindowManager.changeGroupInWindow failed; " + e;
+  }
 }
 
 
@@ -71,52 +64,36 @@ WindowManager.changeGroupInWindow = function(oldGroupId, newGroupId) {
  * Selects a given group, with the tab active was the last one before closing.
  * If not open, switch to it
  * If open is another window, switch to that window
- * Asynchronous
  * @param {Number} newGroupId - the group id
- * @return {Promise} - last asynchronous promise called
+ * @return {Promise}
  */
-WindowManager.selectGroup = function(newGroupId) {
-  return new Promise((resolve, reject) => {
-    let newGroupIndex;
-    try {
-      newGroupIndex = GroupManager.getGroupIndexFromGroupId(
-        newGroupId
-      );
-    } catch (e) {
-      let msg = "WindowManager.selectGroup failed; " + e.message;
-      console.error(msg);
-      reject(msg);
-    }
+WindowManager.selectGroup = async function(newGroupId) {
+  try {
+    let newGroupIndex = GroupManager.getGroupIndexFromGroupId(
+      newGroupId
+    );
+
     // Case 1: Another window
     if (GroupManager.isGroupIndexInOpenWindow(newGroupIndex)) {
-      var lastPromise = browser.windows.update(
+      await browser.windows.update(
         GroupManager.groups[newGroupIndex].windowId, {
           focused: true
-        }
-      );
-      resolve(lastPromise);
+        });
+      return "WindowManager.selectGroup done!";
     }
     // Case 2: switch group
     else {
       // So that the user can change the window without disturbing
-      browser.windows.getCurrent().then((currentWindow) => {
-        let currentGroupId;
-        try {
-          currentGroupId = GroupManager.getGroupIdInWindow(
-            currentWindow.id
-          );
-        } catch (e) {
-          let msg = "WindowManager.selectGroup failed; " + e.message;
-          console.error(msg);
-          reject(msg);
-        }
-        WindowManager.changeGroupInWindow(currentGroupId, newGroupId).then(() => {
-          resolve("End of WindowManager.selectGroup");
-        });
-      });
+      const currentWindow = await browser.windows.getCurrent();
+      let currentGroupId = GroupManager.getGroupIdInWindow(
+        currentWindow.id
+      );
+      await WindowManager.changeGroupInWindow(currentGroupId, newGroupId);
+      return "WindowManager.selectGroup done!";
     }
-  });
-
+  } catch (e) {
+    return "WindowManager.selectGroup failed: " + e;
+  }
 }
 
 /**
@@ -125,19 +102,12 @@ WindowManager.selectGroup = function(newGroupId) {
  * @param {Number} sourceGroupId -- group id ref
  * @return {Promise}
  */
-WindowManager.selectNextGroup = function(sourceGroupId) {
-  return new Promise((resolve, reject) => {
+WindowManager.selectNextGroup = async function(sourceGroupId) {
+  try {
     let nextGroupId = -1;
-    let sourceGroupIndex;
-    try {
-      sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
-        sourceGroupId
-      );
-    } catch (e) {
-      let msg = "WindowManager.selectNextGroup failed; " + e.message;
-      console.error(msg);
-      reject(msg);
-    }
+    let sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
+      sourceGroupId
+    );
 
     // Search next unopened group
     for (let i = sourceGroupIndex; i < sourceGroupIndex + GroupManager.groups.length; i++) {
@@ -151,18 +121,15 @@ WindowManager.selectNextGroup = function(sourceGroupId) {
 
     // No group found, create one
     if (nextGroupId === -1) {
-      try {
-        nextGroupId = GroupManager.addGroup();
-      } catch (e) {
-        console.error("WindowManager.selectNextGroup failed; " + e);
-        reject("WindowManager.selectNextGroup failed; " + e.message);
-      }
+      nextGroupId = GroupManager.addGroup();
     }
 
-    var lastPromise = WindowManager.changeGroupInWindow(sourceGroupId, nextGroupId);
+    await WindowManager.changeGroupInWindow(sourceGroupId, nextGroupId);
 
     resolve(lastPromise);
-  });
+  } catch (e) {
+    return "WindowManager.selectNextGroup failed; " + e;
+  }
 }
 
 /**
@@ -170,26 +137,23 @@ WindowManager.selectNextGroup = function(sourceGroupId) {
  * @param {Number} groupID
  * @return {Promise}
  */
-WindowManager.closeWindowFromGroupId = function(groupID) {
-  return new Promise((resolve, reject) => {
-    let windowId;
-    try {
-      windowId = GroupManager.getWindowIdFromGroupId(
-        groupID
-      );
-    } catch (e) {
-      let msg = "TabManager.closeWindowFromGroupId failed; " + e.message;
-      console.error(msg);
-      reject(msg);
-    }
-    var detachFunc = function() {
-      GroupManager.detachWindow(windowId);
-      resolve("WindowManager.closeWindowFromGroupId done on groupId " + groupID);
-    }
+WindowManager.closeWindowFromGroupId = async function(groupID) {
+  try {
+    let windowId = GroupManager.getWindowIdFromGroupId(
+      groupID
+    );
 
     // Clean windowId in success or fail
-    browser.windows.remove(windowId).then(detachFunc, detachFunc);
-  });
+    try {
+      await browser.windows.remove(windowId);
+    } finally {
+      GroupManager.detachWindow(windowId);
+      return "WindowManager.closeWindowFromGroupId done on groupId " + groupID;
+    }
+
+  } catch (e) {
+    return "TabManager.closeWindowFromGroupId failed; " + e;
+  }
 }
 
 
@@ -200,29 +164,25 @@ WindowManager.closeWindowFromGroupId = function(groupID) {
  * @param {Number} groupID
  * @return {Promise}
  */
-WindowManager.closeGroup = function(groupID) {
-  return new Promise((resolve, reject) => {
-    let groupIndex, windowId;
-    try {
-      groupIndex = GroupManager.getGroupIndexFromGroupId(
-        groupID
-      );
-      windowId = GroupManager.getWindowIdFromGroupId(
-        groupID
-      );
-    } catch (e) {
-      let msg = "WindowManager.closeGroup failed; " + e.message;
-      console.error(msg);
-      reject(msg);
-    }
+WindowManager.closeGroup = async function(groupID) {
+  try {
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupID
+    );
+    let windowId = GroupManager.getWindowIdFromGroupId(
+      groupID
+    );
 
-    browser.windows.getCurrent().then((currentWindow) => {
-      if (currentWindow.id === windowId)
-        resolve(WindowManager.selectNextGroup(groupID));
-      else
-        resolve(WindowManager.closeWindowFromGroupId(groupID));
-    });
-  });
+    const currentWindow = await browser.windows.getCurrent();
+    if (currentWindow.id === windowId)
+      await WindowManager.selectNextGroup(groupID);
+    else
+      await WindowManager.closeWindowFromGroupId(groupID);
+    return "WindowManager.closeGroup done!";
+
+  } catch (e) {
+    return "WindowManager.closeGroup failed; " + e;
+  }
 }
 
 /**
@@ -231,30 +191,25 @@ WindowManager.closeGroup = function(groupID) {
  * @param {Number} groupID
  * @return {Promise}
  */
-WindowManager.removeGroup = function(groupID) {
-  return new Promise((resolve, reject) => {
-    let groupIndex;
-    try {
-      groupIndex = GroupManager.getGroupIndexFromGroupId(
-        groupID
-      );
-    } catch (e) {
-      let msg = "WindowManager.removeGroup failed; " + e.message;
-      console.error(msg);
-      reject(msg);
-    }
+WindowManager.removeGroup = async function(groupID) {
+  try {
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupID
+    );
+
     // Is open
-    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
-      WindowManager.closeGroup( groupID ).then(()=>{
-        GroupManager.removeGroupFromId(groupID);
-        resolve("WindowManager.removeGroup done on groupId " + groupID);
-      });
-    // Is close
+    if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
+      await WindowManager.closeGroup(groupID);
+      GroupManager.removeGroupFromId(groupID);
+      // Is close
     } else {
       GroupManager.removeGroupFromId(groupID);
-      resolve("WindowManager.removeGroup done on groupId " + groupID);
     }
-  });
+    return "WindowManager.removeGroup done on groupId " + groupID;
+
+  } catch (e) {
+    return "WindowManager.removeGroup failed; " + e;
+  }
 }
 
 /**
@@ -262,30 +217,27 @@ WindowManager.removeGroup = function(groupID) {
  * @param {Number} groupID
  * @return {Promise}
  */
-WindowManager.openGroupInNewWindow = function(groupID) {
-  return new Promise((resolve, reject) => {
-    let groupIndex;
-    try {
-      groupIndex = GroupManager.getGroupIndexFromGroupId(
-        groupID
-      );
-    } catch (e) {
-      let msg = "WindowManager.openGroupInNewWindow failed; " + e.message;
-      console.error(msg);
-      reject(msg);
-    }
-    browser.windows.create({
-      state: "maximized",
-    }).then((w) => {
-      GroupManager.groups[groupIndex].windowId = w.id;
-      WindowManager.associateGroupIdToWindow(w.id, groupID);
+WindowManager.openGroupInNewWindow = async function(groupID) {
+  try {
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupID
+    );
 
-      TabManager.openListOfTabs(GroupManager.groups[groupIndex].tabs, w.id,false,true).then(()=>{
-        // Remove first new tab open with window
-        resolve(browser.tabs.remove([w.tabs[0].id]));
-      });
+    const w = await browser.windows.create({
+      state: "maximized",
     });
-  });
+    GroupManager.groups[groupIndex].windowId = w.id;
+    await WindowManager.associateGroupIdToWindow(w.id, groupID);
+
+    await TabManager.openListOfTabs(GroupManager.groups[groupIndex].tabs, w.id, false, true);
+
+    // Remove first new tab open with window
+    await browser.tabs.remove([w.tabs[0].id]);
+    return "WindowManager.openGroupInNewWindow done!";
+
+  } catch (e) {
+    return "WindowManager.openGroupInNewWindow failed; " + e;
+  }
 }
 
 /**
@@ -295,7 +247,7 @@ WindowManager.openGroupInNewWindow = function(groupID) {
  * @param {Number} groupId
  * @return {Promise}
  */
-WindowManager.associateGroupIdToWindow = function(windowId, groupId) {
+WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
   return browser.sessions.setWindowValue(
     windowId, // integer
     WindowManager.WINDOW_GROUPID, // string
@@ -308,27 +260,22 @@ WindowManager.associateGroupIdToWindow = function(windowId, groupId) {
  * @param {Number} windowId
  * @return {Promise}
  */
-WindowManager.addGroupFromWindow = function(windowId) {
-  return new Promise((resolve, reject) => {
-    browser.tabs.query({
+WindowManager.addGroupFromWindow = async function(windowId) {
+  try {
+    const tabs = await browser.tabs.query({
       windowId: windowId
-    }).then((tabs) => {
-      try {
-        var newGroupId = GroupManager.addGroupWithTab(tabs, windowId);
-        var lastPromise = WindowManager.associateGroupIdToWindow(
-          windowId,
-          newGroupId
-        );
-        resolve(lastPromise);
-      } catch (e) {
-        console.error("WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e);
-        reject("WindowManager.integrateWindow failed for windowId " + windowId);
-      }
-
-    }).catch(() => {
-      reject("WindowManager.integrateWindow on Get tabs in Window failed for windowId " + windowId);
     });
-  });
+
+    var newGroupId = GroupManager.addGroupWithTab(tabs, windowId);
+    await WindowManager.associateGroupIdToWindow(
+      windowId,
+      newGroupId
+    );
+    return "WindowManager.integrateWindow done on New Window with window " + windowId;
+
+  } catch (e) {
+    return "WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e;
+  }
 }
 
 /**
@@ -338,33 +285,30 @@ WindowManager.addGroupFromWindow = function(windowId) {
  * @param {Number} windowId
  * @return {Promise}
  */
-WindowManager.integrateWindow = function(windowId) {
-  return new Promise((resolve, reject) => {
-    browser.sessions.getWindowValue(
+WindowManager.integrateWindow = async function(windowId) {
+  try {
+    const key = await browser.sessions.getWindowValue(
       windowId, // integer
       WindowManager.WINDOW_GROUPID // string
-    ).then((key) => {
-      // New Window
-      if (key === undefined) {
-        var lastPromise = WindowManager.addGroupFromWindow(windowId);
-        resolve(lastPromise);
-        // Update Group
-      } else {
-        let groupIndex;
-        try {
-          groupIndex = GroupManager.getGroupIndexFromGroupId(
-            parseInt(key, 10)
-          );
-          GroupManager.groups[groupIndex].windowId = windowId;
-          resolve("WindowManager.integrateWindow done on window " + windowId);
-        } catch (e) {
-          // Has a key but a wrong, start from 0
-          var lastPromise = WindowManager.addGroupFromWindow(windowId);
-          resolve(lastPromise);
-        }
+    );
+    // New Window
+    if (key === undefined) {
+      await WindowManager.addGroupFromWindow(windowId);
+      // Update Group
+    } else {
+      try {
+        let groupIndex = GroupManager.getGroupIndexFromGroupId(
+          parseInt(key, 10)
+        );
+        GroupManager.groups[groupIndex].windowId = windowId;
+      } catch (e) {
+        // Has a key but a wrong, start from 0
+        await WindowManager.addGroupFromWindow(windowId);
+        return "WindowManager.integrateWindow done for windowId " + windowId;
       }
-    }).catch((msg) => {
-      reject("WindowManager.integrateWindow failed on Get Key Value for windowId " + windowId + "\n Error msg: " + msg);
-    });
-  });
+    }
+    return "WindowManager.integrateWindow done for windowId " + windowId;
+  } catch (e) {
+    return "WindowManager.integrateWindow failed on Get Key Value for windowId " + windowId + "\n Error msg: " + e;
+  }
 }

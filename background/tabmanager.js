@@ -206,7 +206,7 @@ TabManager.moveTabToNewGroup = async function(sourceGroupID, tabIndex) {
  * Non-privileged URLs: about:blank, about:newtab ( should be
  * replaced by null ), all the other ones
  * Asynchronous
- * @return {Promise} - the before last action
+ * @return {Promise}
  */
 TabManager.removeTabsWithUnallowedURL = async function(groupID) {
   try {
