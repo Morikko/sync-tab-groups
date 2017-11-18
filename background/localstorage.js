@@ -34,8 +34,47 @@ StorageManager.Local.loadGroups = function( ) {
 }
 
 /**
- * Clean the local storage (this computer, this session, this extension)
+ * Remove the saved groups from the local storage  (this computer, this session, this extension)
  */
 StorageManager.Local.cleanGroups = function() {
-  return browser.storage.local.clear();
+  return browser.storage.local.remove("groups");
+}
+
+/**
+ * Save the options as JSON object in the local storage (this computer, this session)
+ * @param {Object} options
+ */
+StorageManager.Local.saveOptions = function(options) {
+  return browser.storage.local.set({
+    options: options
+  });
+}
+
+/**
+ * Load the options from the local storage (this computer, this session) and return it as a javascript object
+ * If no options were saved, return the template options (see utils.js)
+ * @return {Object} options
+ */
+StorageManager.Local.loadOptions = function( ) {
+  return new Promise((resolve, reject) => {
+    browser.storage.local.get(
+      "options"
+    ).then((local) => {
+      if ( local.options === undefined )
+        resolve(OptionManager.TEMPLATE());
+      else
+        resolve(local.options);
+      //resolve("StorageManager.Local.loadGroups loaded !");
+    }).catch(() => {
+      reject("StorageManager.Local.loadOptions failed...")
+    });
+  });
+}
+
+
+/**
+ * Remove the saved options from the local storage (this computer, this session, this extension)
+ */
+StorageManager.Local.cleanOptions = function() {
+  return browser.storage.local.remove("options");
 }

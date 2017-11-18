@@ -14,3 +14,27 @@ OptionManager.updateOption = function ( optionName, optionValue){
     return a[b];
   }, OptionManager.options);
 }
+
+/**
+ * Asynchronous function
+ * Get the saved options if exist else set template options
+ * @return {Promise}
+ */
+OptionManager.init = function() {
+  return new Promise((resolve, reject) => {
+    StorageManager.Local.loadOptions( ).then((options) => {
+      OptionManager.options = options;
+      resolve("OptionManager.init done");
+    }).catch(() => {
+      reject("OptionManager.init failed");
+    });
+  });
+}
+
+/**
+ * Save options
+ * In local storage
+ */
+OptionManager.store = function() {
+  StorageManager.Local.saveOptions( OptionManager.options );
+}
