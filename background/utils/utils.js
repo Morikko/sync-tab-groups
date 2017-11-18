@@ -1,5 +1,5 @@
 /**
- * Useful code shared in all the apps
+ * Useful code shared in all the apps UI and background
  */
 var Utils = Utils || {};
 
