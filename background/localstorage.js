@@ -17,20 +17,18 @@ StorageManager.Local.saveGroups = function(groups) {
  * If no groups array was saved, return an empty array
  * @return {Array[Group]} groups
  */
-StorageManager.Local.loadGroups = function( ) {
-  return new Promise((resolve, reject) => {
-    browser.storage.local.get(
+StorageManager.Local.loadGroups = async function( ) {
+  try {
+    const local = await browser.storage.local.get(
       "groups"
-    ).then((local) => {
-      if ( local.groups === undefined )
-        resolve([]);
-      else
-        resolve(local.groups);
-      //resolve("StorageManager.Local.loadGroups loaded !");
-    }).catch(() => {
-      reject("StorageManager.Local.loadGroups failed...")
-    });
-  });
+    );
+    if ( local.groups === undefined )
+      return [];
+    else
+      return local.groups;
+  } catch ( e ) {
+    return "StorageManager.Local.loadGroups failed...";
+  }
 }
 
 /**
@@ -55,20 +53,18 @@ StorageManager.Local.saveOptions = function(options) {
  * If no options were saved, return the template options (see utils.js)
  * @return {Object} options
  */
-StorageManager.Local.loadOptions = function( ) {
-  return new Promise((resolve, reject) => {
-    browser.storage.local.get(
+StorageManager.Local.loadOptions = async function( ) {
+  try {
+    const local = await browser.storage.local.get(
       "options"
-    ).then((local) => {
-      if ( local.options === undefined )
-        resolve(OptionManager.TEMPLATE());
-      else
-        resolve(local.options);
-      //resolve("StorageManager.Local.loadGroups loaded !");
-    }).catch(() => {
-      reject("StorageManager.Local.loadOptions failed...")
-    });
-  });
+    );
+    if ( local.options === undefined )
+      return OptionManager.TEMPLATE();
+    else
+      return local.options;
+  } catch ( e ) {
+    return "StorageManager.Local.loadOptions failed...";
+  }
 }
 
 
