@@ -29,24 +29,25 @@ OptionManager.updateOption = function ( optionName, optionValue){
  * Get the saved options if exist else set template options
  * @return {Promise}
  */
-OptionManager.init = function() {
-  return new Promise((resolve, reject) => {
-    StorageManager.Local.loadOptions( ).then((options) => {
-      OptionManager.options = options;
-      resolve("OptionManager.init done");
-      OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
-    }).catch(() => {
-      reject("OptionManager.init failed");
-    });
-  });
+OptionManager.init = async function() {
+  try {
+    const options = await StorageManager.Local.loadOptions( );
+    OptionManager.options = options;
+    OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
+    return "OptionManager.init done";
+  } catch (e) {
+    return "OptionManager.init failed: " + e;
+  }
 }
 
 /**
  * Save options
  * In local storage
+ * Asynchronous
+ * @return {Promise}
  */
 OptionManager.store = function() {
-  StorageManager.Local.saveOptions( OptionManager.options );
+  return StorageManager.Local.saveOptions( OptionManager.options );
 }
 
 OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
