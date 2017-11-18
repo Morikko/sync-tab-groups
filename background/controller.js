@@ -20,17 +20,9 @@ function Controller() {
 }
 
 Controller.prototype = {
-  init: function() {
-
-    OptionManager.init().then(()=>{
-
-      
-      GroupManager.init().then(() => {
-
-      });
-
-    });
-
+  init: async function() {
+  await OptionManager.init();
+  await GroupManager.init();
   },
 
   /* TODO DO I still need the binding
@@ -163,17 +155,12 @@ Controller.prototype = {
   },
 
   onOpenGroupInNewWindow: function(params) {
-    WindowManager.openGroupInNewWindow(params.groupID).then(() => {
-      GroupManager.store();
-      controller.refreshUi();
-    });
+    WindowManager.openGroupInNewWindow(params.groupID);
   },
 
   onGroupAdd: function() {
     try {
       GroupManager.addGroup();
-      GroupManager.store();
-      this.refreshUi();
     } catch (e) {
       console.error("Controller - onGroupAdd failed: " + e);
     }
@@ -183,20 +170,14 @@ Controller.prototype = {
     TabManager.moveTabToNewGroup(
       params.sourceGroupID,
       params.tabIndex
-    ).then(() => {
-      GroupManager.store();
-      controller.refreshUi();
-    });
+    );
   },
 
   onGroupClose: function(params) {
-    var delayedFunction = function() {
+    var delayedFunction = () => {
       WindowManager.closeGroup(
         params.groupID
-      ).then(() => {
-        GroupManager.store();
-        controller.refreshUi();
-      });
+      );
     };
 
     DelayedTasks.fromUI[DelayedTasks.CLOSE_REFERENCE].manageDelayedTask(
@@ -207,13 +188,10 @@ Controller.prototype = {
   },
 
   onGroupRemove: function(params) {
-    var delayedFunction = function() {
+    var delayedFunction = () => {
       WindowManager.removeGroup(
         params.groupID
-      ).then(() => {
-        GroupManager.store();
-        controller.refreshUi();
-      });
+      );
     };
 
     DelayedTasks.fromUI[DelayedTasks.REMOVE_REFERENCE].manageDelayedTask(
@@ -228,27 +206,19 @@ Controller.prototype = {
       GroupManager.getGroupIndexFromGroupId(params.groupID),
       params.title
     );
-    GroupManager.store();
-    this.refreshUi();
   },
 
   onGroupSelect: function(params) {
     WindowManager.selectGroup(
       params.groupID
-    ).then(() => {
-      GroupManager.store();
-      controller.refreshUi();
-    });
+    );
   },
 
   onTabSelect: function(params) {
     TabManager.selectTab(
       params.tabIndex,
       params.groupID
-    ).then(() => {
-      GroupManager.store();
-      controller.refreshUi();
-    });
+    );
   },
 
   onMoveTabToGroup: function(params) {
@@ -256,10 +226,7 @@ Controller.prototype = {
       params.sourceGroupID,
       params.tabIndex,
       params.targetGroupID
-    ).then(() => {
-      GroupManager.store();
-      controller.refreshUi();
-    });
+    );
   }
 };
 
@@ -319,12 +286,6 @@ browser.runtime.onMessage.addListener(popupMessenger);
 browser.runtime.onMessage.addListener(optionMessenger);
 
 /**** Update *****/
-function updateGroup(windowId) {
-  TabManager.updateTabsInGroup(windowId).then(() => {
-    GroupManager.store();
-    controller.refreshUi();
-  });
-}
 
 GroupManager.eventlistener.on(OptionManager.EVENT_CHANGE,
   () => {
@@ -338,10 +299,10 @@ OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
 
 /**** Event about tabs *****/
 browser.tabs.onActivated.addListener((activeInfo) => {
-  updateGroup(activeInfo.windowId);
+  TabManager.updateTabsInGroup(activeInfo.windowId);
 });
 browser.tabs.onCreated.addListener((tab) => {
-  updateGroup(tab.windowId);
+  TabManager.updateTabsInGroup(tab.windowId);
 });
 browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
   /* Bug: onRemoved is fired before the tab is really close
@@ -349,20 +310,20 @@ browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
    * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
    */
   setTimeout(() => {
-    updateGroup(removeInfo.windowId);
+    TabManager.updateTabsInGroup(removeInfo.windowId);
   }, 300);
 });
 browser.tabs.onMoved.addListener((tabId, moveInfo) => {
-  updateGroup(moveInfo.windowId);
+  TabManager.updateTabsInGroup(moveInfo.windowId);
 });
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  updateGroup(tab.windowId);
+  TabManager.updateTabsInGroup(tab.windowId);
 });
 browser.tabs.onAttached.addListener((tabId, attachInfo) => {
-  updateGroup(attachInfo.newWindowId);
+  TabManager.updateTabsInGroup(attachInfo.newWindowId);
 });
 browser.tabs.onDetached.addListener((tabId, detachInfo) => {
-  updateGroup(detachInfo.oldWindowId);
+  TabManager.updateTabsInGroup(detachInfo.oldWindowId);
 });
 
 /**** Event about windows *****/
@@ -374,7 +335,6 @@ browser.windows.onCreated.addListener((window) => {
 });
 browser.windows.onRemoved.addListener((windowId) => {
   GroupManager.detachWindow(windowId);
-  controller.refreshUi();
 });
 browser.windows.onFocusChanged.addListener((windowId) => {
   controller.refreshUi();
