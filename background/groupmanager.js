@@ -118,6 +118,44 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
   }
 }
 
+GroupManager.attachWindowWithGroupId = async function( groupId, windowId) {
+  let groupIndex;
+  try {
+    groupIndex = GroupManager.getGroupIndexFromWindowId(
+      windowId
+    );
+
+    GroupManager.groups[groupIndex].windowId = windowId;
+    await WindowManager.associateGroupIdToWindow(w.id, groupID);
+
+    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+
+  } catch (e) {
+    let msg = "GroupManager.attachWindowWithGroupId failed; " + e.message;
+    console.error(msg);
+    return;
+  }
+}
+
+/**
+ * Remove the windowId associated to a group
+ * @param {Number} windowId
+ */
+GroupManager.detachWindowFromGroupId = function(groupId) {
+  let groupIndex;
+  try {
+    windowId = GroupManager.getWindowIdFromGroupId(
+      groupId
+    );
+
+    GroupManager.detachWindow( windowId );
+
+  } catch (e) {
+    let msg = "GroupManager.detachWindowFromGroupId failed; " + e.message;
+    console.error(msg);
+    return;
+  }
+}
 
 /**
  * Remove the windowId associated to a group
@@ -129,20 +167,21 @@ GroupManager.detachWindow = function(windowId) {
     groupIndex = GroupManager.getGroupIndexFromWindowId(
       windowId
     );
+
+    GroupManager.groups[groupIndex].windowId = browser.windows.WINDOW_ID_NONE;
+    // Remove group from private window if set
+    if (g.tabs.length > 0 &&
+      g.tabs[0].incognito &&
+      OptionManager.options.privateWindow.removeOnClose) {
+      GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
+    }
+    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+
   } catch (e) {
     let msg = "GroupManager.detachWindow failed; " + e.message;
     console.error(msg);
     return;
   }
-
-  GroupManager.groups[groupIndex].windowId = browser.windows.WINDOW_ID_NONE;
-  // Remove group from private window if set
-  if (g.tabs.length > 0 &&
-    g.tabs[0].incognito &&
-    OptionManager.options.privateWindow.removeOnClose) {
-    GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
-  }
-  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
 GroupManager.removeGroupFromId = function(groupId) {
@@ -161,6 +200,58 @@ GroupManager.removeGroupFromId = function(groupId) {
   GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
+GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, changeBrowser = true) {
+  let groupIndex;
+  try {
+    groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId
+    );
+    if (GroupManager.groups[groupIndex].tabs.length <= tabIndex) {
+      throw Error("GroupManager.removeTabFromIndexInGroupId impossible");
+    }
+
+    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) && changeBrowser ) {
+      await browser.tabs.remove([GroupManager.groups[groupIndex].tabs[tabIndex].id]);
+    } else {
+      GroupManager.groups[groupIndex].tabs.splice(tabIndex, 1);
+    }
+
+    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+
+    return "GroupManager.removeTabFromIndexInGroupId done!";
+
+  } catch (e) {
+    return "GroupManager.removeTabFromIndexInGroupId done because group " + groupId + " was already removed.";
+  }
+
+}
+
+GroupManager.addTabInGroupId = async function(groupId, tab, changeBrowser = true) {
+  let groupIndex;
+  try {
+    groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId
+    );
+
+    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) && changeBrowser ) {
+      await TabManager.openListOfTabs(
+        [tab],
+        GroupManager.groups[groupIndex].windowId,
+        true,
+        false);
+    } else {
+      GroupManager.groups[groupIndex].tabs.push(tab);
+    }
+
+    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+
+    return "GroupManager.addTabFromIndexInGroupId done!";
+
+  } catch (e) {
+    return "GroupManager.addTabFromIndexInGroupId done because group " + groupId + " doesn't exist.";
+  }
+
+}
 
 /**
  * Renames a given group.

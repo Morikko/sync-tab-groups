@@ -43,15 +43,15 @@ WindowManager.changeGroupInWindow = async function(oldGroupId, newGroupId) {
 
     var tabsToOpen = GroupManager.groups[newGroupIndex].tabs;
     // Switch window associated
-    GroupManager.groups[oldGroupIndex].windowId = browser.windows.WINDOW_ID_NONE;
-    GroupManager.groups[newGroupIndex].windowId = windowId;
+    GroupManager.detachWindowFromGroupId(oldGroupId);
+    await GroupManager.attachWindowWithGroupId(newGroupId, windowId);
 
     // 2. Open new group tabs
     await TabManager.openListOfTabs(tabsToOpen, windowId, false, true);
 
     // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
     await browser.tabs.remove(tabsToRemove);
-    var lastPromise = WindowManager.associateGroupIdToWindow(windowId, newGroupId);
+
     return "WindowManager.changeGroupInWindow done!";
 
   } catch (e) {
@@ -226,8 +226,8 @@ WindowManager.openGroupInNewWindow = async function(groupID) {
     const w = await browser.windows.create({
       state: "maximized",
     });
-    GroupManager.groups[groupIndex].windowId = w.id;
-    await WindowManager.associateGroupIdToWindow(w.id, groupID);
+
+    await GroupManager.attachWindowWithGroupId(groupID, w.id);
 
     await TabManager.openListOfTabs(GroupManager.groups[groupIndex].tabs, w.id, false, true);
 
@@ -299,10 +299,7 @@ WindowManager.integrateWindow = async function(windowId) {
       // Update Group
     } else {
       try {
-        let groupIndex = GroupManager.getGroupIndexFromGroupId(
-          parseInt(key, 10)
-        );
-        GroupManager.groups[groupIndex].windowId = windowId;
+        GroupManager.attachWindowWith(parseInt(key, 10), windowId);
       } catch (e) {
         // Has a key but a wrong, start from 0
         await WindowManager.addGroupFromWindow(windowId);

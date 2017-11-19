@@ -65,7 +65,7 @@ TabManager.openListOfTabs = async function(
       indexOffset = GroupManager.groups[groupIndex].tabs.length;
     }
 
-    await Promise.all(tabsToOpen.map(async (tab, index) => {
+    await Promise.all(tabsToOpen.map(async(tab, index) => {
       tab.url = (tab.url === "about:privatebrowsing") ? "about:newtab" : tab.url;
       if (!Utils.isPrivilegedURL(tab.url)) {
         // Create a tab to tab.url or to newtab
@@ -135,34 +135,22 @@ TabManager.moveTabToGroup = async function(sourceGroupID, tabIndex, targetGroupI
 
     let isSourceGroupOpen = GroupManager.isGroupIndexInOpenWindow(sourceGroupIndex);
     let isTargetGroupOpen = GroupManager.isGroupIndexInOpenWindow(targetGroupIndex);
-    // TODO
-    // Case 2: Closed Group -> Closed Group
-    if (!isSourceGroupOpen && !isTargetGroupOpen) {
-      GroupManager.groups[targetGroupIndex].tabs.push(tab);
-      GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
-    }
-    // Case 3: Open Group -> Closed Groups
-    else if (isSourceGroupOpen && !isTargetGroupOpen) {
-      GroupManager.groups[targetGroupIndex].tabs.push(tab);
-      await browser.tabs.remove([tab.id]);
-    }
-    // Case 4: Closed Group -> Open Group
-    else if (!isSourceGroupOpen && isTargetGroupOpen) {
-      GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
-      await TabManager.openListOfTabs(
-        [tab],
-        GroupManager.groups[targetGroupIndex].windowId,
-        true,
-        false);
-    }
+
     // Case 5: Open Group -> Open Group
-    else {
+    if (isSourceGroupOpen && isTargetGroupOpen) {
       await browser.tabs.move(
         tab.id, {
           index: tab.pinned ? 0 : -1,
           windowId: GroupManager.groups[targetGroupIndex].windowId
         }
       );
+    }
+    // Case 2: Closed Group -> Closed Group
+    // Case 3: Open Group -> Closed Groups
+    // Case 4: Closed Group -> Open Group
+    else {
+      await GroupManager.addTabInGroupId(targetGroupID, tab);
+      await GroupManager.removeTabFromIndexInGroupId(sourceGroupID, tabIndex);
     }
     return "TabManager.moveTabToGroup done!";
 
@@ -185,15 +173,9 @@ TabManager.moveTabToNewGroup = async function(sourceGroupID, tabIndex) {
     let tab = GroupManager.groups[sourceGroupIndex].tabs[tabIndex];
     GroupManager.addGroupWithTab([tab]);
 
-    let isSourceGroupOpen = GroupManager.isGroupIndexInOpenWindow(sourceGroupIndex);
+    await GroupManager.removeTabFromIndexInGroupId(sourceGroupID, tabIndex);
 
-    if (isSourceGroupOpen) {
-      return browser.tabs.remove([tab.id]);
-    } else {
-      // TODO
-      GroupManager.groups[sourceGroupIndex].tabs.splice(tabIndex, 1);
-      return "TabManager.moveTabToNewGroup done!";
-    }
+    return "TabManager.moveTabToNewGroup done!";
   } catch (e) {
     return "TabManager.moveTabToNewGroup failed; " + e;
   }
