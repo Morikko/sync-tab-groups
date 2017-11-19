@@ -84,7 +84,11 @@ TabManager.openListOfTabs = async function(
     );
     let indexOffset = 0;
     if (inLastPos) {
-      indexOffset = GroupManager.groups[groupIndex].tabs.length;
+      // In case pinned tab not included
+      const tabs = await browser.tabs.query({
+        windowId: windowId
+      });
+      indexOffset = tabs.length;
     }
 
     let index = 0;
