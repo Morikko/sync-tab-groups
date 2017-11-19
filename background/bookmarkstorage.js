@@ -61,7 +61,7 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
     rootId = bmRoot.id;
 
     // For each group
-    await Promise.all(groups.map(async(g) => {
+    for (let g of groups) {
 
       // 2. Create Group folder
       const bmGroup = await browser.bookmarks.create({
@@ -69,16 +69,17 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
         parentId: bmRoot.id
       })
 
-      // 3. Create Tabs bookmarks
-      await Promise.all(g.tabs.map(async(tab) => {
+      // 3. Create Tabs bookmarks (for is mandatory for keeping order)
+      for (let tab of g.tabs) {
         await browser.bookmarks.create({
           title: tab.title,
           index: tab.index,
           url: tab.url,
           parentId: bmGroup.id
         });
-      }));
-    }));
+      }
+
+    }
 
     return "StorageManager.Bookmark.saveGroups done!";
   } catch (e) {
