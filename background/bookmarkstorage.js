@@ -6,13 +6,13 @@ var StorageManager = StorageManager || {};
 
 StorageManager.Bookmark = StorageManager.Bookmark || {};
 
-StorageManager.Bookmark.TIME_OUT;
-
 StorageManager.Bookmark.ROOT = "SyncTabGroups";
 StorageManager.Bookmark.BACKUP = "Groups [Back Up]";
 StorageManager.Bookmark.BACKUP_OLD = StorageManager.Bookmark.BACKUP + " (old)";
 
 StorageManager.Bookmark.ROOT_ID;
+
+StorageManager.Bookmark.delaytask = new DelayedTasks.DelayedTasks(500);
 
 /**
  * Save the groups as bookmarks for having a back up.
@@ -23,22 +23,23 @@ StorageManager.Bookmark.ROOT_ID;
  * @param {Array[Group]} groups
  */
 StorageManager.Bookmark.backUp = function(groups) {
-  if (StorageManager.Bookmark.TIME_OUT !== undefined) {
-    clearTimeout(StorageManager.Bookmark.TIME_OUT);
-  }
+  StorageManager.Bookmark.delaytask.addDelayedTask(
+    async() => {
+      try {
+        await StorageManager.Bookmark.init();
+        await StorageManager.Bookmark.RenamePreviousBackUp();
+        await StorageManager.Bookmark.saveGroups(groups);
+        await StorageManager.Bookmark.cleanGroups();
 
-  StorageManager.Bookmark.TIME_OUT = setTimeout(async() => {
-    try {
-      await StorageManager.Bookmark.init();
-      await StorageManager.Bookmark.RenamePreviousBackUp();
-      await StorageManager.Bookmark.saveGroups(groups);
-      await StorageManager.Bookmark.cleanGroups();
-
-      return "StorageManager.Bookmark.backUp done!";
-    } catch (e) {
-      return "StorageManager.Bookmark.backUp failed: " + e;
-    }
-  }, 500);
+        return "StorageManager.Bookmark.backUp done!";
+      } catch (e) {
+        let msg = "StorageManager.Bookmark.backUp failed: " + e;
+        console.error(msg);
+        return msg;
+      }
+    },
+    DelayedTasks.LIMITED_MODE,
+  )
 }
 
 /**
