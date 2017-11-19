@@ -221,7 +221,9 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, cha
     return "GroupManager.removeTabFromIndexInGroupId done!";
 
   } catch (e) {
-    return "GroupManager.removeTabFromIndexInGroupId done because group " + groupId + " was already removed.";
+    let msg = "GroupManager.removeTabFromIndexInGroupId done because group " + groupId + " was already removed.";
+    console.error(msg);
+    return msg;
   }
 
 }
@@ -248,7 +250,9 @@ GroupManager.addTabInGroupId = async function(groupId, tab, changeBrowser = true
     return "GroupManager.addTabFromIndexInGroupId done!";
 
   } catch (e) {
-    return "GroupManager.addTabFromIndexInGroupId done because group " + groupId + " doesn't exist.";
+    let msg = "GroupManager.addTabFromIndexInGroupId done because group " + groupId + " doesn't exist.";
+    console.error(msg);
+    return msg;
   }
 
 }

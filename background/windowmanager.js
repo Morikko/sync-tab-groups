@@ -55,7 +55,9 @@ WindowManager.changeGroupInWindow = async function(oldGroupId, newGroupId) {
     return "WindowManager.changeGroupInWindow done!";
 
   } catch (e) {
-    return "WindowManager.changeGroupInWindow failed; " + e;
+    let msg = "WindowManager.changeGroupInWindow failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -92,7 +94,9 @@ WindowManager.selectGroup = async function(newGroupId) {
       return "WindowManager.selectGroup done!";
     }
   } catch (e) {
-    return "WindowManager.selectGroup failed: " + e;
+    let msg = "WindowManager.selectGroup failed: " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -128,7 +132,9 @@ WindowManager.selectNextGroup = async function(sourceGroupId) {
 
     resolve(lastPromise);
   } catch (e) {
-    return "WindowManager.selectNextGroup failed; " + e;
+    let msg = "WindowManager.selectNextGroup failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -152,7 +158,9 @@ WindowManager.closeWindowFromGroupId = async function(groupID) {
     }
 
   } catch (e) {
-    return "TabManager.closeWindowFromGroupId failed; " + e;
+    let msg = "TabManager.closeWindowFromGroupId failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -181,7 +189,9 @@ WindowManager.closeGroup = async function(groupID) {
     return "WindowManager.closeGroup done!";
 
   } catch (e) {
-    return "WindowManager.closeGroup failed; " + e;
+    let msg = "WindowManager.closeGroup failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -208,7 +218,9 @@ WindowManager.removeGroup = async function(groupID) {
     return "WindowManager.removeGroup done on groupId " + groupID;
 
   } catch (e) {
-    return "WindowManager.removeGroup failed; " + e;
+    let msg = "WindowManager.removeGroup failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -236,7 +248,9 @@ WindowManager.openGroupInNewWindow = async function(groupID) {
     return "WindowManager.openGroupInNewWindow done!";
 
   } catch (e) {
-    return "WindowManager.openGroupInNewWindow failed; " + e;
+    let msg = "WindowManager.openGroupInNewWindow failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -276,7 +290,9 @@ WindowManager.addGroupFromWindow = async function(windowId) {
     return "WindowManager.integrateWindow done on New Window with window " + windowId;
 
   } catch (e) {
-    return "WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e;
+    let msg = "WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -308,6 +324,8 @@ WindowManager.integrateWindow = async function(windowId) {
     }
     return "WindowManager.integrateWindow done for windowId " + windowId;
   } catch (e) {
-    return "WindowManager.integrateWindow failed on Get Key Value for windowId " + windowId + "\n Error msg: " + e;
+    let msg = "WindowManager.integrateWindow failed on Get Key Value for windowId " + windowId + "\n Error msg: " + e;
+    console.error(msg);
+    return msg;
   }
 }

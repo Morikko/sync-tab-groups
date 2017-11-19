@@ -23,7 +23,9 @@ TabManager.updateTabsInGroup = async function(windowId) {
     return "TabManager.updateTabsInGroup done on window id " + windowId;
 
   } catch (e) {
-    return "TabManager.updateTabsInGroup failed; " + e;
+    let msg = "TabManager.updateTabsInGroup failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -79,7 +81,9 @@ TabManager.openListOfTabs = async function(
     return ("TabManager.openListOfTabs done!");
 
   } catch (e) {
-    return "TabManager.openListOfTabs failed; " + e;
+    let msg = "TabManager.openListOfTabs failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -153,7 +157,9 @@ TabManager.moveTabToGroup = async function(sourceGroupID, tabIndex, targetGroupI
     return "TabManager.moveTabToGroup done!";
 
   } catch (e) {
-    return "TabManager.moveTabToGroup failed; " + e;
+    let msg = "TabManager.moveTabToGroup failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -175,8 +181,10 @@ TabManager.moveTabToNewGroup = async function(sourceGroupID, tabIndex) {
 
     return "TabManager.moveTabToNewGroup done!";
   } catch (e) {
-    return "TabManager.moveTabToNewGroup failed; " + e;
-  }
+    let msg = "TabManager.moveTabToNewGroup failed; " + e;
+    console.error(msg);
+    return msg;
+s  }
 }
 
 /**
@@ -221,7 +229,9 @@ TabManager.removeTabsWithUnallowedURL = async function(groupID) {
     return "TabManager.removeTabsWithUnallowedURL done!";
 
   } catch (e) {
-    return "TabManager.removeTabsWithUnallowedURL failed; " + e;
+    let msg = "TabManager.removeTabsWithUnallowedURL failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -244,6 +254,8 @@ TabManager.selectTab = async function(tabIndex, groupID) {
     return "TabManager.selectTab done!";
 
   } catch (e) {
-    return "TabManager.selectTab failed; " + e;
+    let msg = "TabManager.selectTab failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
