@@ -194,8 +194,25 @@ WindowManager.closeGroup = async function(groupID) {
     const currentWindow = await browser.windows.getCurrent();
     if (currentWindow.id === windowId)
       await WindowManager.selectNextGroup(groupID);
-    else
+    else {
+      // Move pinned from windowId to currentWindow.id
+      if ( !OptionManager.options.pinnedTab.sync ) {
+        let pinnedTabsIds = [];
+        const tabs = await browser.tabs.query({
+          windowId: windowId
+        });
+        tabs.forEach((tab)=>{
+          if ( tab.pinned )
+            pinnedTabsIds.push(tab.id);
+        });
+        // Start at 0, don't take risk
+        await browser.tabs.move(pinnedTabsIds,{
+          windowId: currentWindow.id,
+          index: 0
+        });
+      }
       await WindowManager.closeWindowFromGroupId(groupID);
+    }
     return "WindowManager.closeGroup done!";
 
   } catch (e) {
