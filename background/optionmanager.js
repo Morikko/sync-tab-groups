@@ -31,6 +31,9 @@ OptionManager.updateOption = function ( optionName, optionValue){
     case "privateWindow-sync":
       OptionManager.onPrivateWindowSyncChange( optionValue );
       break;
+    case "pinnedTab-sync":
+      OptionManager.onPinnedTabSyncChange( );
+      break;
   }
 }
 
@@ -47,6 +50,21 @@ OptionManager.onPrivateWindowSyncChange = async function ( state ) {
     } else {
       await GroupManager.removeGroupsInPrivateWindow();
     }
+    return "OptionManager.onPrivateWindowSyncChange done!";
+  } catch ( e ) {
+    let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+/**
+ * Refresh opened groups to add/remove pinned tabs
+ * Pinned tabs in closed groups are not removed
+ */
+OptionManager.onPinnedTabSyncChange = async function ( ) {
+  try {
+    await GroupManager.updateAllOpenedGroups();
     return "OptionManager.onPrivateWindowSyncChange done!";
   } catch ( e ) {
     let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;

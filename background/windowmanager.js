@@ -30,6 +30,7 @@ WindowManager.changeGroupInWindow = async function(oldGroupId, newGroupId) {
     );
 
     await TabManager.removeTabsWithUnallowedURL(oldGroupId);
+    await TabManager.updateTabsInGroup(windowId);
 
     const tabs = await browser.tabs.query({
       windowId: windowId
@@ -38,7 +39,10 @@ WindowManager.changeGroupInWindow = async function(oldGroupId, newGroupId) {
     // 1. Prepare tabs to open and remove
     var tabsToRemove = [];
     tabs.map((tab) => {
-      tabsToRemove.push(tab.id);
+      if ((OptionManager.options.pinnedTab.sync && tab.pinned) ||
+        !tab.pinned) {
+        tabsToRemove.push(tab.id);
+      }
     });
 
     var tabsToOpen = GroupManager.groups[newGroupIndex].tabs;
@@ -332,15 +336,15 @@ WindowManager.addGroupFromWindow = async function(windowId) {
  */
 WindowManager.integrateWindow = async function(windowId) {
   try {
-    const window = await browser.windows.get( windowId );
+    const window = await browser.windows.get(windowId);
 
-    if ( window.type !== 'normal' ) {
+    if (window.type !== 'normal') {
       return "WindowManager.integrateWindow not done for windowId " + windowId + " because window is not normal";
     }
 
     // Private Window sync
-    if ( !OptionManager.options.privateWindow.sync
-    && window.incognito ) {
+    if (!OptionManager.options.privateWindow.sync &&
+      window.incognito) {
       return "WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized";
     }
 

@@ -6,6 +6,14 @@
  */
 var TabManager = TabManager || {};
 
+TabManager.removedPinnedTabs = function ( tabs ) {
+  for ( let i = tabs.length-1; i>=0; i-- ) {
+    if ( tabs[i].pinned ) {
+      tabs.splice(i, 1);
+    }
+  }
+}
+
 /**
  * Take the current tabs on the desire window and set it as the tabs
  * for the group
@@ -25,6 +33,12 @@ TabManager.updateTabsInGroup = async function(windowId) {
     const tabs = await browser.tabs.query({
       windowId: windowId
     });
+
+    // Pinned tab
+    if ( !OptionManager.options.pinnedTab.sync ) {
+      TabManager.removedPinnedTabs(tabs);
+    }
+
     GroupManager.setTabsInGroupId(groupId, tabs);
     return "TabManager.updateTabsInGroup done on window id " + windowId;
 
@@ -227,12 +241,6 @@ TabManager.removeTabsWithUnallowedURL = async function(groupID) {
     // Remove them
     await browser.tabs.remove(tabsIds);
 
-    // Update data
-    const tabs = await browser.tabs.query({
-      windowId: windowId
-    });
-
-    GroupManager.setTabsInGroupId(groupID, tabs);
     return "TabManager.removeTabsWithUnallowedURL done!";
 
   } catch (e) {

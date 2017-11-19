@@ -118,7 +118,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
   }
 }
 
-GroupManager.attachWindowWithGroupId = async function( groupId, windowId) {
+GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromGroupId(
@@ -148,7 +148,7 @@ GroupManager.detachWindowFromGroupId = function(groupId) {
       groupId
     );
 
-    GroupManager.detachWindow( windowId );
+    GroupManager.detachWindow(windowId);
 
   } catch (e) {
     let msg = "GroupManager.detachWindowFromGroupId failed; " + e.message;
@@ -189,19 +189,19 @@ GroupManager.detachWindow = function(windowId) {
  */
 GroupManager.removeGroupsInPrivateWindow = async function() {
   try {
-    for ( let i = GroupManager.groups.length-1; i>=0; i-- ) {
+    for (let i = GroupManager.groups.length - 1; i >= 0; i--) {
       // Remove group from private window if set
       if (GroupManager.groups[i].tabs.length > 0 &&
         GroupManager.groups[i].tabs[0].incognito &&
         !OptionManager.options.privateWindow.sync) {
-        if ( GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE ) {
+        if (GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE) {
           await WindowManager.desassociateGroupIdToWindow(GroupManager.groups[i].windowId);
         }
         GroupManager.removeGroupFromId(GroupManager.groups[i].id);
       }
     }
     return "GroupManager.removeGroupsInPrivateWindow done!";
-  } catch ( e ) {
+  } catch (e) {
     let msg = "GroupManager.removeGroupsInPrivateWindow failed; " + e;
     console.error(msg);
     return;
@@ -235,7 +235,7 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, cha
       throw Error("GroupManager.removeTabFromIndexInGroupId impossible");
     }
 
-    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) && changeBrowser ) {
+    if (GroupManager.isGroupIndexInOpenWindow(groupIndex) && changeBrowser) {
       await browser.tabs.remove([GroupManager.groups[groupIndex].tabs[tabIndex].id]);
     } else {
       GroupManager.groups[groupIndex].tabs.splice(tabIndex, 1);
@@ -260,7 +260,7 @@ GroupManager.addTabInGroupId = async function(groupId, tab, changeBrowser = true
       groupId
     );
 
-    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) && changeBrowser ) {
+    if (GroupManager.isGroupIndexInOpenWindow(groupIndex) && changeBrowser) {
       await TabManager.openListOfTabs(
         [tab],
         GroupManager.groups[groupIndex].windowId,
@@ -280,6 +280,14 @@ GroupManager.addTabInGroupId = async function(groupId, tab, changeBrowser = true
     return msg;
   }
 
+}
+
+GroupManager.updateAllOpenedGroups = async function() {
+  for (let g of GroupManager.groups) {
+    if (g.windowId !== browser.windows.WINDOW_ID_NONE) {
+      await TabManager.updateTabsInGroup(g.windowId);
+    }
+  }
 }
 
 /**
@@ -418,7 +426,7 @@ GroupManager.init = async function() {
 /**
  * Integrate all windows
  */
-GroupManager.integrateAllOpenedWindows = async function () {
+GroupManager.integrateAllOpenedWindows = async function() {
   const windowInfoArray = await browser.windows.getAll({
     windowTypes: ['normal']
   });
