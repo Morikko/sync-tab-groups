@@ -130,7 +130,7 @@ WindowManager.selectNextGroup = async function(sourceGroupId) {
 
     await WindowManager.changeGroupInWindow(sourceGroupId, nextGroupId);
 
-    resolve(lastPromise);
+    return "WindowManager.selectNextGroup done!";
   } catch (e) {
     let msg = "WindowManager.selectNextGroup failed; " + e;
     console.error(msg);
