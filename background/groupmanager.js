@@ -158,7 +158,7 @@ GroupManager.detachWindowFromGroupId = function(groupId) {
 }
 
 /**
- * Remove the windowId associated to a group
+ * Remove the windowId associated to a group (windows was closed)
  * @param {Number} windowId
  */
 GroupManager.detachWindow = function(windowId) {
@@ -182,6 +182,31 @@ GroupManager.detachWindow = function(windowId) {
     console.error(msg);
     return;
   }
+}
+
+/**
+ * Remove all groups that are in private window
+ */
+GroupManager.removeGroupsInPrivateWindow = async function() {
+  try {
+    for ( let i = GroupManager.groups.length-1; i>=0; i-- ) {
+      // Remove group from private window if set
+      if (GroupManager.groups[i].tabs.length > 0 &&
+        GroupManager.groups[i].tabs[0].incognito &&
+        !OptionManager.options.privateWindow.sync) {
+        if ( GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE ) {
+          await WindowManager.desassociateGroupIdToWindow(GroupManager.groups[i].windowId);
+        }
+        GroupManager.removeGroupFromId(GroupManager.groups[i].id);
+      }
+    }
+    return "GroupManager.removeGroupsInPrivateWindow done!";
+  } catch ( e ) {
+    let msg = "GroupManager.removeGroupsInPrivateWindow failed; " + e;
+    console.error(msg);
+    return;
+  }
+
 }
 
 GroupManager.removeGroupFromId = function(groupId) {
@@ -383,17 +408,25 @@ GroupManager.init = async function() {
     GroupManager.resetAssociatedWindows();
 
     // 2. Integrate open windows
-    const windowInfoArray = await browser.windows.getAll({
-      windowTypes: ['normal']
-    });
-    for (windowInfo of windowInfoArray) {
-      await WindowManager.integrateWindow(windowInfo.id);
-    }
+    await GroupManager.integrateAllOpenedWindows();
     return "GroupManager.init done";
   } catch (e) {
     return "GroupManager.init failed: " + e;
   }
 }
+
+/**
+ * Integrate all windows
+ */
+GroupManager.integrateAllOpenedWindows = async function () {
+  const windowInfoArray = await browser.windows.getAll({
+    windowTypes: ['normal']
+  });
+  for (windowInfo of windowInfoArray) {
+    await WindowManager.integrateWindow(windowInfo.id);
+  }
+}
+
 /**
  * Save groups
  * In local storage

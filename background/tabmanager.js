@@ -9,12 +9,18 @@ var TabManager = TabManager || {};
 /**
  * Take the current tabs on the desire window and set it as the tabs
  * for the group
- * Asynchronous
  * @param {Number} window id
  * @return {Promise}
  */
 TabManager.updateTabsInGroup = async function(windowId) {
   try {
+    const window = await browser.windows.get(windowId);
+    // Private Window sync
+    if (!OptionManager.options.privateWindow.sync &&
+      window.incognito) {
+      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because private window are not synchronized";
+    }
+
     var groupId = GroupManager.getGroupIdInWindow(windowId);
     const tabs = await browser.tabs.query({
       windowId: windowId
@@ -46,11 +52,11 @@ TabManager.openListOfTabs = async function(
     // Look if has Tab in tabs
     if (tabsToOpen.length === 0) {
       if (openAtLeastOne) {
-          tabsToOpen.push({
-            url: "about:newtab",
-            active: true,
-            pinned: false
-          });
+        tabsToOpen.push({
+          url: "about:newtab",
+          active: true,
+          pinned: false
+        });
       } else {
         return "TabManager.openListOfTabs: tabsToOpen was empty, no tab to open";
       }
@@ -184,7 +190,8 @@ TabManager.moveTabToNewGroup = async function(sourceGroupID, tabIndex) {
     let msg = "TabManager.moveTabToNewGroup failed; " + e;
     console.error(msg);
     return msg;
-s  }
+    s
+  }
 }
 
 /**

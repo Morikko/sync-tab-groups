@@ -14,7 +14,11 @@ OptionManager.eventlistener = new EventListener();
 
 OptionManager.delaytask = new DelayedTasks.DelayedTasks(500);
 
-
+/**
+ * Change option value
+ * @param {String} state - each part is separated with '-'
+ * @param {Object} optionValue - the value to set
+ */
 OptionManager.updateOption = function ( optionName, optionValue){
   optionName.split('-').reduce((a,b, index, array)=>{
     if ( index === array.length-1 )
@@ -22,6 +26,33 @@ OptionManager.updateOption = function ( optionName, optionValue){
     return a[b];
   }, OptionManager.options);
   OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
+
+  switch( optionName ) {
+    case "privateWindow-sync":
+      OptionManager.onPrivateWindowSyncChange( optionValue );
+      break;
+  }
+}
+
+/**
+ * Adapt groups when option change
+ * state: true -> sync private window already opened
+ * state: false -> remove groups in private window open
+ * @param {boolean} state
+ */
+OptionManager.onPrivateWindowSyncChange = async function ( state ) {
+  try {
+    if ( state ) {
+      await GroupManager.integrateAllOpenedWindows();
+    } else {
+      await GroupManager.removeGroupsInPrivateWindow();
+    }
+    return "OptionManager.onPrivateWindowSyncChange done!";
+  } catch ( e ) {
+    let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;
+    console.error(msg);
+    return msg;
+  }
 }
 
 /**
@@ -36,7 +67,9 @@ OptionManager.init = async function() {
     OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
     return "OptionManager.init done";
   } catch (e) {
-    return "OptionManager.init failed: " + e;
+    let msg = "OptionManager.init failed: " + e;
+    console.error(msg);
+    return msg;
   }
 }
 

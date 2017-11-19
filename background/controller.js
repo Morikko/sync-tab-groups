@@ -310,6 +310,7 @@ browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
    * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
    */
   setTimeout(() => {
+    // TODO: do not fire if window doesn't exist 
     TabManager.updateTabsInGroup(removeInfo.windowId);
   }, 300);
 });

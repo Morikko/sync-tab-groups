@@ -270,6 +270,33 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
 }
 
 /**
+ * Use sessions tools to associate the groupid to window.
+ * If window is restored, even if windowId change, the value is still associated with the window.
+ * @param {Number} windowId
+ * @param {Number} groupId
+ * @return {Promise}
+ */
+WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
+  return browser.sessions.setWindowValue(
+    windowId, // integer
+    WindowManager.WINDOW_GROUPID, // string
+    groupId.toString()
+  );
+}
+
+/**
+ * Remove groupid stored with the window
+ * @param {Number} windowId
+ * @return {Promise}
+ */
+WindowManager.desassociateGroupIdToWindow = async function(windowId) {
+  return browser.sessions.removeWindowValue(
+    windowId, // integer
+    WindowManager.WINDOW_GROUPID, // string
+  );
+}
+
+/**
  * Take the tabs from a current opened window and create a new group
  * @param {Number} windowId
  * @return {Promise}
@@ -305,6 +332,18 @@ WindowManager.addGroupFromWindow = async function(windowId) {
  */
 WindowManager.integrateWindow = async function(windowId) {
   try {
+    const window = await browser.windows.get( windowId );
+
+    if ( window.type !== 'normal' ) {
+      return "WindowManager.integrateWindow not done for windowId " + windowId + " because window is not normal";
+    }
+
+    // Private Window sync
+    if ( !OptionManager.options.privateWindow.sync
+    && window.incognito ) {
+      return "WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized";
+    }
+
     const key = await browser.sessions.getWindowValue(
       windowId, // integer
       WindowManager.WINDOW_GROUPID // string
