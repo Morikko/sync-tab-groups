@@ -55,7 +55,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
  * @param {Number} windowId
  * @param {Boolean} inLastPos (optional) - if true the tabs are opened in last index
  * @param {Boolean} openAtLeastOne (optional) - if true and tabsToOpen is empty, open at least a new tab
- * @return {Promise}
+ * @return {Proise{Array[Tab]} - created tab
  */
 TabManager.openListOfTabs = async function(
   tabsToOpen,
@@ -76,6 +76,8 @@ TabManager.openListOfTabs = async function(
       }
     }
 
+    let createdTabs = [];
+
     // Always open in last pos
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
       GroupManager.getGroupIdInWindow(windowId)
@@ -85,20 +87,23 @@ TabManager.openListOfTabs = async function(
       indexOffset = GroupManager.groups[groupIndex].tabs.length;
     }
 
-    await Promise.all(tabsToOpen.map(async(tab, index) => {
+    let index = 0;
+    for ( let tab of tabsToOpen ) {
       tab.url = (tab.url === "about:privatebrowsing") ? "about:newtab" : tab.url;
       if (!Utils.isPrivilegedURL(tab.url)) {
         // Create a tab to tab.url or to newtab
-        await browser.tabs.create({
+        createdTabs[index] = await browser.tabs.create({
           url: (tab.url === "about:newtab") ? null : tab.url,
           active: tab.active,
           pinned: tab.pinned,
-          index: indexOffset + index,
+          index: (tab.pinned)? 0 : (indexOffset + index),
           windowId: windowId
         });
+        index++;
       }
-    }));
-    return ("TabManager.openListOfTabs done!");
+    }
+
+    return (createdTabs);
 
   } catch (e) {
     let msg = "TabManager.openListOfTabs failed; " + e;

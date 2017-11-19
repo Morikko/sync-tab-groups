@@ -50,11 +50,17 @@ WindowManager.changeGroupInWindow = async function(oldGroupId, newGroupId) {
     GroupManager.detachWindowFromGroupId(oldGroupId);
     await GroupManager.attachWindowWithGroupId(newGroupId, windowId);
 
-    // 2. Open new group tabs
+    // Create tmp blank tab
+    const blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
+
+    // Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
+    await browser.tabs.remove(tabsToRemove);
+
+    // Open new group tabs
     await TabManager.openListOfTabs(tabsToOpen, windowId, false, true);
 
-    // 3. Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
-    await browser.tabs.remove(tabsToRemove);
+    // Remove tmp blank tab
+    await browser.tabs.remove([blank_tab[0].id]);
 
     return "WindowManager.changeGroupInWindow done!";
 
