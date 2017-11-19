@@ -83,7 +83,9 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
 
     return "StorageManager.Bookmark.saveGroups done!";
   } catch (e) {
-    return "StorageManager.Bookmark.saveGroups failed: " + e;
+    let msg = "StorageManager.Bookmark.saveGroups failed: " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -106,7 +108,9 @@ StorageManager.Bookmark.RenamePreviousBackUp = async function() {
     }));
     return "StorageManager.Bookmark.RenamePreviousBackUp done!";
   } catch (e) {
-    return "StorageManager.Bookmark.RenamePreviousBackUp failed: " + e;
+    let msg = "StorageManager.Bookmark.RenamePreviousBackUp failed: " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -125,7 +129,9 @@ StorageManager.Bookmark.cleanGroups = async function(title = StorageManager.Book
     }));
     return "StorageManager.Bookmark.cleanGroups done!";
   } catch (e) {
-    return "StorageManager.Bookmark.cleanGroups failed: " + e;
+    let msg = "StorageManager.Bookmark.cleanGroups failed: " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -149,6 +155,8 @@ StorageManager.Bookmark.init = async function() {
     }
     return "StorageManager.Bookmark.cleanGroups done!";
   } catch (e) {
-    return "StorageManager.Bookmark.cleanGroups failed: " + e;
+    let msg = "StorageManager.Bookmark.cleanGroups failed: " + e;
+    console.error(msg);
+    return msg;
   }
 }
