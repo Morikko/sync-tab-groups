@@ -170,8 +170,8 @@ GroupManager.detachWindow = function(windowId) {
 
     GroupManager.groups[groupIndex].windowId = browser.windows.WINDOW_ID_NONE;
     // Remove group from private window if set
-    if (g.tabs.length > 0 &&
-      g.tabs[0].incognito &&
+    if (GroupManager.groups[groupIndex].tabs.length > 0 &&
+      GroupManager.groups[groupIndex].tabs[0].incognito &&
       OptionManager.options.privateWindow.removeOnClose) {
       GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
     }
