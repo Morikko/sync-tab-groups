@@ -443,6 +443,7 @@ GroupManager.store = function() {
   StorageManager.Bookmark.backUp(GroupManager.groups);
 }
 
+
 GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
   () => {
     GroupManager.repeatedtask.add(
@@ -451,6 +452,19 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
       }
     )
   });
+
+GroupManager.setGroups = async function(groups, opened, focus) {
+  // 1. Close all window except one
+
+  // 2. Add groups
+
+  // 3. Switch one group
+
+  // 4. Open new one
+
+  // 5. Focus desire
+  
+}
 
 /**
  * Sort the groups to be in alphabetical order

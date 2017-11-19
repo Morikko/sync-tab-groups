@@ -9,8 +9,8 @@
  3. Change group
    1. In current window
    2. Another window
-   3. Closed group without pinned
-   4. Closed group with pinned
+   3. Change group without pinned
+   4. Change group with pinned
  3. Select tab
    1. In current window
    2. Another window
@@ -28,16 +28,18 @@
  4. Open new window
    1. Group with tabs
    2. Empty
-   3. Private (not taking in account)
+   3. Private + (not taking in account)
  5. Remove
    1. Check doesn't exist
    2. Check not open
  6. Close
-   1. Check not open
+   1. Check not open anymore
    2. With privileged url -> remove
    3. With only privileged url -> still window open (in another group)/and group present (closed)
    2. Check new focused group has changed command + -> x
    3. Private window, auto removed
+   4. Change group without pinned
+   5. Change group with pinned
 
 7. Delay
   1. Wait
@@ -58,6 +60,6 @@ TestManager.doTest = function(test) {
   // return testName, succeed, errors, groupsAtEnd
 }
 
-TestManager.doAllTests = function() {
-
-}
+TestManager.allTests = [
+  TestManager.doTest,
+]
