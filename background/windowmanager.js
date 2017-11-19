@@ -299,7 +299,7 @@ WindowManager.integrateWindow = async function(windowId) {
       // Update Group
     } else {
       try {
-        GroupManager.attachWindowWith(parseInt(key, 10), windowId);
+        GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
       } catch (e) {
         // Has a key but a wrong, start from 0
         await WindowManager.addGroupFromWindow(windowId);

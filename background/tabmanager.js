@@ -44,13 +44,11 @@ TabManager.openListOfTabs = async function(
     // Look if has Tab in tabs
     if (tabsToOpen.length === 0) {
       if (openAtLeastOne) {
-        if (tabsToOpen.length === 0) {
           tabsToOpen.push({
             url: "about:newtab",
             active: true,
             pinned: false
           });
-        }
       } else {
         return "TabManager.openListOfTabs: tabsToOpen was empty, no tab to open";
       }

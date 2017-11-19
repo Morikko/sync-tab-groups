@@ -121,12 +121,12 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
 GroupManager.attachWindowWithGroupId = async function( groupId, windowId) {
   let groupIndex;
   try {
-    groupIndex = GroupManager.getGroupIndexFromWindowId(
-      windowId
+    groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId
     );
 
     GroupManager.groups[groupIndex].windowId = windowId;
-    await WindowManager.associateGroupIdToWindow(w.id, groupID);
+    await WindowManager.associateGroupIdToWindow(windowId, groupID);
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
