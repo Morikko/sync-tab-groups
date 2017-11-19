@@ -126,7 +126,7 @@ GroupManager.attachWindowWithGroupId = async function( groupId, windowId) {
     );
 
     GroupManager.groups[groupIndex].windowId = windowId;
-    await WindowManager.associateGroupIdToWindow(windowId, groupID);
+    await WindowManager.associateGroupIdToWindow(windowId, groupId);
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
