@@ -12,7 +12,7 @@ StorageManager.Bookmark.BACKUP_OLD = StorageManager.Bookmark.BACKUP + " (old)";
 
 StorageManager.Bookmark.ROOT_ID;
 
-StorageManager.Bookmark.delaytask = new DelayedTasks.DelayedTasks(30000);
+StorageManager.Bookmark.delaytask = new DelayedTasks.DelayedTasks(5000);
 
 /**
  * Save the groups as bookmarks for having a back up.

@@ -51,10 +51,16 @@ DelayedTasks.DelayedTasks.prototype.manageDelayedTask = function(taskAction, del
 * @param {Number} refId (default:0) - ref inside the action group
 */
 DelayedTasks.DelayedTasks.prototype.addDelayedTask = function(delayedFunction, overwrite=DelayedTasks.OVERWRITTEN_MODE, refId=0) {
-  this.removeDelayedTask(refId);
+  // Already a task; keep it
+  if ( !overwrite && this.delayedTasks[refId] !== undefined )
+    return;
 
-  this.delayedTasks[refId] = setTimeout(() => {
-    delayedFunction();
+  // Already a task; remove it
+  if ( overwrite && this.delayedTasks[refId] !== undefined )
+    this.removeDelayedTask(refId);
+
+  this.delayedTasks[refId] = setTimeout(async() => {
+    await delayedFunction();
     this.removeDelayedTask(refId);
   }, this.timeoutDelay);
 };
