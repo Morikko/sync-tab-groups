@@ -12,7 +12,7 @@ StorageManager.Bookmark.BACKUP_OLD = StorageManager.Bookmark.BACKUP + " (old)";
 
 StorageManager.Bookmark.ROOT_ID;
 
-StorageManager.Bookmark.delaytask = new DelayedTasks.DelayedTasks(500);
+StorageManager.Bookmark.delaytask = new DelayedTasks.DelayedTasks(30000);
 
 /**
  * Save the groups as bookmarks for having a back up.
@@ -31,6 +31,7 @@ StorageManager.Bookmark.backUp = function(groups) {
         await StorageManager.Bookmark.saveGroups(groups);
         await StorageManager.Bookmark.cleanGroups();
 
+        console.log("Back up done");
         return "StorageManager.Bookmark.backUp done!";
       } catch (e) {
         let msg = "StorageManager.Bookmark.backUp failed: " + e;
