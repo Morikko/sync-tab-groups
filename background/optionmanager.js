@@ -12,7 +12,7 @@ OptionManager.EVENT_CHANGE = 'options-change';
 OptionManager.options = OptionManager.TEMPLATE();
 OptionManager.eventlistener = new EventListener();
 
-OptionManager.delaytask = new DelayedTasks.DelayedTasks(500);
+OptionManager.delaytask = new DelayedTasks.DelayedTasks(1000, DelayedTasks.DONE_ONCE_PER_TIME);
 
 /**
  * Change option value
@@ -106,7 +106,6 @@ OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
     OptionManager.delaytask.addDelayedTask(
       ()=>{
         OptionManager.store();
-      },
-      DelayedTasks.LIMITED_MODE,
+      }
     )
   });

@@ -12,7 +12,7 @@ StorageManager.Bookmark.BACKUP_OLD = StorageManager.Bookmark.BACKUP + " (old)";
 
 StorageManager.Bookmark.ROOT_ID;
 
-StorageManager.Bookmark.delaytask = new DelayedTasks.DelayedTasks(5000);
+StorageManager.Bookmark.delaytask = new DelayedTasks.DelayedTasks(15000, DelayedTasks.DONE_ONCE_PER_TIME);
 
 /**
  * Save the groups as bookmarks for having a back up.
@@ -38,8 +38,7 @@ StorageManager.Bookmark.backUp = function(groups) {
         console.error(msg);
         return msg;
       }
-    },
-    DelayedTasks.LIMITED_MODE,
+    }
   )
 }
 

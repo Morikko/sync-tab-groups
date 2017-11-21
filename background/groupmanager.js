@@ -10,7 +10,7 @@ var GroupManager = GroupManager || {};
 GroupManager.EVENT_CHANGE = 'groups-change';
 GroupManager.eventlistener = new EventListener();
 
-GroupManager.delaytask = new DelayedTasks.DelayedTasks(500);
+GroupManager.delaytask = new DelayedTasks.DelayedTasks(1000, DelayedTasks.DONE_ONCE_PER_TIME);
 
 
 
@@ -450,8 +450,7 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     GroupManager.delaytask.addDelayedTask(
       () => {
         GroupManager.store();
-      },
-      DelayedTasks.LIMITED_MODE,
+      }
     )
   });
 
