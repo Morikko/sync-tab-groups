@@ -31,7 +31,6 @@ StorageManager.Bookmark.backUp = function(groups) {
         await StorageManager.Bookmark.saveGroups(groups);
         await StorageManager.Bookmark.cleanGroups();
 
-        console.log("Back up done");
         return "StorageManager.Bookmark.backUp done!";
       } catch (e) {
         let msg = "StorageManager.Bookmark.backUp failed: " + e;

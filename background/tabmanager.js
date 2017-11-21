@@ -82,15 +82,25 @@ TabManager.openListOfTabs = async function(
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
       GroupManager.getGroupIdInWindow(windowId)
     );
-    let indexOffset = 0;
-    if (inLastPos) {
-      // In case pinned tab not included
+
+    let indexTabOffset = 0, indexPinnedOffset = 0;
+    if ( inLastPos || !OptionManager.options.pinnedTab.sync ){
       const tabs = await browser.tabs.query({
         windowId: windowId
       });
-      indexOffset = tabs.length;
-    }
 
+      // Count pinned tabs
+      indexPinnedOffset = tabs.reduce((count,tab)=>{
+        if ( tab.pinned )
+          count++;
+        return count;
+      }, 0 );
+      indexTabOffset = indexPinnedOffset;
+
+      if (inLastPos) {
+        indexTabOffset = indexTabOffset + tabs.length;
+      }
+    }
     let index = 0;
     for ( let tab of tabsToOpen ) {
       tab.url = (tab.url === "about:privatebrowsing") ? "about:newtab" : tab.url;
@@ -100,9 +110,13 @@ TabManager.openListOfTabs = async function(
           url: (tab.url === "about:newtab") ? null : tab.url,
           active: tab.active,
           pinned: tab.pinned,
-          index: (tab.pinned)? 0 : (indexOffset + index),
+          index: (tab.pinned)? indexPinnedOffset : indexTabOffset,
           windowId: windowId
         });
+        if ( tab.pinned ) {
+          indexPinnedOffset++;
+        }
+        indexTabOffset++;
         index++;
       }
     }
@@ -244,7 +258,7 @@ TabManager.removeTabsWithUnallowedURL = async function(groupID) {
 
     // Don't let empty window
     if (GroupManager.groups[groupIndex].tabs.length === tabsIds.length) {
-      await TabManager.openListOfTabs([], windowId, false, true);
+      await TabManager.openListOfTabs([], windowId, true, true);
     }
 
     // Remove them

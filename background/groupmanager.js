@@ -12,8 +12,6 @@ GroupManager.eventlistener = new EventListener();
 
 GroupManager.delaytask = new DelayedTasks.DelayedTasks(1000, DelayedTasks.DONE_ONCE_PER_TIME);
 
-
-
 GroupManager.Group = function(id,
   title = "",
   tabs = [],
