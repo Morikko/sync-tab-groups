@@ -395,3 +395,40 @@ WindowManager.integrateWindow = async function(windowId) {
     return msg;
   }
 }
+
+/**
+ * Close all windows except one
+ */
+WindowManager.keepOneWindowOpen = async function ( ) {
+  try {
+    const windows = await browser.windows.getAll();
+    for (let i=1; i<windows.length; i++ ) {
+      await browser.windows.remove(windows[i].id);
+    }
+    return "WindowManager.keepOneWindowOpen done";
+  } catch ( e ) {
+    let msg = "WindowManager.keepOneWindowOpen failed " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+/**
+ * Close all windows and open a new one with only a new tab
+ */
+WindowManager.OnlyOneNewWindow = async function ( ) {
+  try {
+    const windows = await browser.windows.getAll();
+
+    const w = await browser.windows.create();
+
+    for (let i=0; i<windows.length; i++ ) {
+      await browser.windows.remove(windows[i].id);
+    }
+    return w.id;
+  } catch ( e ) {
+    let msg = "WindowManager.keepOneWindowOpen failed " + e;
+    console.error(msg);
+    return msg;
+  }
+}

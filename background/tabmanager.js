@@ -6,9 +6,9 @@
  */
 var TabManager = TabManager || {};
 
-TabManager.removedPinnedTabs = function ( tabs ) {
-  for ( let i = tabs.length-1; i>=0; i-- ) {
-    if ( tabs[i].pinned ) {
+TabManager.removedPinnedTabs = function(tabs) {
+  for (let i = tabs.length - 1; i >= 0; i--) {
+    if (tabs[i].pinned) {
       tabs.splice(i, 1);
     }
   }
@@ -35,7 +35,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
     });
 
     // Pinned tab
-    if ( !OptionManager.options.pinnedTab.sync ) {
+    if (!OptionManager.options.pinnedTab.sync) {
       TabManager.removedPinnedTabs(tabs);
     }
 
@@ -83,18 +83,19 @@ TabManager.openListOfTabs = async function(
       GroupManager.getGroupIdInWindow(windowId)
     );
 
-    let indexTabOffset = 0, indexPinnedOffset = 0;
-    if ( inLastPos || !OptionManager.options.pinnedTab.sync ){
+    let indexTabOffset = 0,
+      indexPinnedOffset = 0;
+    if (inLastPos || !OptionManager.options.pinnedTab.sync) {
       const tabs = await browser.tabs.query({
         windowId: windowId
       });
 
       // Count pinned tabs
-      indexPinnedOffset = tabs.reduce((count,tab)=>{
-        if ( tab.pinned )
+      indexPinnedOffset = tabs.reduce((count, tab) => {
+        if (tab.pinned)
           count++;
         return count;
-      }, 0 );
+      }, 0);
       indexTabOffset = indexPinnedOffset;
 
       if (inLastPos) {
@@ -102,7 +103,7 @@ TabManager.openListOfTabs = async function(
       }
     }
     let index = 0;
-    for ( let tab of tabsToOpen ) {
+    for (let tab of tabsToOpen) {
       tab.url = (tab.url === "about:privatebrowsing") ? "about:newtab" : tab.url;
       if (!Utils.isPrivilegedURL(tab.url)) {
         // Create a tab to tab.url or to newtab
@@ -110,10 +111,10 @@ TabManager.openListOfTabs = async function(
           url: (tab.url === "about:newtab") ? null : tab.url,
           active: tab.active,
           pinned: tab.pinned,
-          index: (tab.pinned)? indexPinnedOffset : indexTabOffset,
+          index: (tab.pinned) ? indexPinnedOffset : indexTabOffset,
           windowId: windowId
         });
-        if ( tab.pinned ) {
+        if (tab.pinned) {
           indexPinnedOffset++;
         }
         indexTabOffset++;

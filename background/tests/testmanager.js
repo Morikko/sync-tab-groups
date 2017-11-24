@@ -8,13 +8,6 @@
  2. Rename Group
 
 
- 3. Change group
-   1. In current window
-   2. Another window
-   3. Change group without pinned
-   4. Change group with pinned
-
-
  3. Select tab
    1. In current window
    2. Another window
@@ -59,6 +52,7 @@ TestManager.ERROR = false;
 TestManager.DONE = true;
 
 TestManager.last_results = [];
+TestManager.currentTests = [];
 
 TestManager.Results = function ( code, title, msg, vars  ) {
   return {

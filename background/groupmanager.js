@@ -453,17 +453,31 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     )
   });
 
+// TODO: Currently Not implemented
 GroupManager.setGroups = async function(groups, opened, focus) {
+  return "Currently Not implemented";
   // 1. Close all window except one
+  const windows = await browser.windows.getAll();
+  for (let i=1; i<windows.length; i++ ) {
+    await browser.windows.close(windows[i].id);
+  }
+
+  let initial_size = GroupManager.groups.length;
 
   // 2. Add groups
+  for (g of groups ) {
+    GroupManager.groups.push(g);
+  }
 
   // 3. Switch one group
+  WindowManager.selectGroup(
+    params.opened[0]
+  );
 
-  // 4. Open new one
+  // 4. Open new ones
 
   // 5. Focus desire
-  
+
 }
 
 /**
