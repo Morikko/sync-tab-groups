@@ -27,9 +27,8 @@ StorageManager.Bookmark.backUp = function(groups) {
     async() => {
       try {
         await StorageManager.Bookmark.init();
-        await StorageManager.Bookmark.RenamePreviousBackUp();
-        await StorageManager.Bookmark.saveGroups(groups);
         await StorageManager.Bookmark.cleanGroups();
+        await StorageManager.Bookmark.saveGroups(groups);
 
         return "StorageManager.Bookmark.backUp done!";
       } catch (e) {
@@ -44,29 +43,28 @@ StorageManager.Bookmark.backUp = function(groups) {
 /**
  * Save the groups as back up bookmarks
  * Format: Other bookmarks / StorageManager.Bookmark.ROOT / StorageManager.Bookmark.BACKUP / Group Title / Each tabs
- *
- * In  browser.bookmarks.create, index doesn't work: https://bugzilla.mozilla.org/show_bug.cgi?id=1416573
  * @param {Array[Group]} groups
  */
 StorageManager.Bookmark.saveGroups = async function(groups) {
   try {
     var rootId;
     // 1. Create root
+    /*
     const bmRoot = await browser.bookmarks.create({
       title: StorageManager.Bookmark.BACKUP,
       parentId: StorageManager.Bookmark.ROOT_ID
     });
 
     rootId = bmRoot.id;
-
+    */
     // For each group
     for (let g of groups) {
 
       // 2. Create Group folder
       const bmGroup = await browser.bookmarks.create({
         title: Utils.getGroupTitle(g),
-        parentId: bmRoot.id
-      })
+        parentId: StorageManager.Bookmark.ROOT_ID
+      });
 
       // 3. Create Tabs bookmarks (for is mandatory for keeping order)
       for (let tab of g.tabs) {
@@ -89,43 +87,19 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
 }
 
 /**
- * Rename Previous back up in Other bookmarks / StorageManager.Bookmark.ROOT /
- * Change: StorageManager.Bookmark.BACKUP -> StorageManager.Bookmark.BACKUP_OLD
- TODO: search only in ROOT_ID
- */
-StorageManager.Bookmark.RenamePreviousBackUp = async function() {
-  try {
-    const searchResults = await browser.bookmarks.search({
-      title: StorageManager.Bookmark.BACKUP
-    });
-
-    await Promise.all(searchResults.map(async(searchResult) => {
-      await browser.bookmarks.update(
-        searchResult.id, {
-          title: StorageManager.Bookmark.BACKUP_OLD
-        });
-    }));
-    return "StorageManager.Bookmark.RenamePreviousBackUp done!";
-  } catch (e) {
-    let msg = "StorageManager.Bookmark.RenamePreviousBackUp failed: " + e;
-    console.error(msg);
-    return msg;
-  }
-}
-
-/**
  * Clean the old back up bookmarks in Other bookmarks / StorageManager.Bookmark.ROOT /
  * Delete: StorageManager.Bookmark.BACKUP_OLD
  */
 StorageManager.Bookmark.cleanGroups = async function(title = StorageManager.Bookmark.BACKUP_OLD) {
   try {
-    const searchResults = await browser.bookmarks.search({
-      title: title
-    });
+    const bookmarks_groups = await browser.bookmarks.getSubTree(
+      StorageManager.Bookmark.ROOT_ID
+    );
 
-    await Promise.all(searchResults.map(async(searchResult) => {
-      await browser.bookmarks.removeTree(searchResult.id);
-    }));
+    for (let b of bookmarks_groups[0].children) {
+      await browser.bookmarks.removeTree(b.id);
+    }
+
     return "StorageManager.Bookmark.cleanGroups done!";
   } catch (e) {
     let msg = "StorageManager.Bookmark.cleanGroups failed: " + e;
@@ -152,9 +126,9 @@ StorageManager.Bookmark.init = async function() {
     } else {
       StorageManager.Bookmark.ROOT_ID = searchResults[0].id;
     }
-    return "StorageManager.Bookmark.cleanGroups done!";
+    return "StorageManager.Bookmark.init done!";
   } catch (e) {
-    let msg = "StorageManager.Bookmark.cleanGroups failed: " + e;
+    let msg = "StorageManager.Bookmark.init failed: " + e;
     console.error(msg);
     return msg;
   }
