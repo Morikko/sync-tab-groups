@@ -6,15 +6,21 @@
   1. Empty
   2. With tabs
  2. Rename Group
+
+
  3. Change group
    1. In current window
    2. Another window
    3. Change group without pinned
    4. Change group with pinned
+
+
  3. Select tab
    1. In current window
    2. Another window
    3. Closed group
+
+
  4. Move tab
    1. Open -> Open
    2. Open -> Close
@@ -25,10 +31,15 @@
    2. Open -> Close
    3. Close -> Close
    4. Close -> Open
+
+
+
  4. Open new window
    1. Group with tabs
    2. Empty
    3. Private + (not taking in account)
+
+
  5. Remove
    1. Check doesn't exist
    2. Check not open
@@ -41,15 +52,46 @@
    4. Change group without pinned
    5. Change group with pinned
 
-7. Delay
-  1. Wait
-  2. Undo
-  3. Force
  */
 var TestManager = TestManager || {};
 
-TestManager.doTests = function(testsList) {
+TestManager.ERROR = false;
+TestManager.DONE = true;
 
+TestManager.Results = function ( code, title, msg, vars  ) {
+  return {
+    code: code,
+    title: title,
+    message: msg,
+    vars: vars
+  }
+}
+
+TestManager.printResults = function ( result ) {
+  if ( result.code === TestManager.ERROR ) {
+    console.log( "[NOK] " + result.title );
+    console.log(result.message);
+    console.log(result.vars);
+  } else {
+    console.log( "[OK] " + result.title );
+  }
+}
+
+TestManager.doTests = async function(testsList=TestManager.allTests) {
+  try {
+    let results = [], index=0;
+    for ( test of testsList ) {
+        console.log("Test number " + (index+1));
+        let result = await (new test()).test();
+        TestManager.printResults(result);
+        results.push(result);
+        index++;
+    }
+  } catch ( e ) {
+    let msg = "TestManager.doTests failed: " + e;
+    console.error(msg);
+    return msg;
+  }
 }
 
 TestManager.doTest = function(test) {
@@ -60,6 +102,4 @@ TestManager.doTest = function(test) {
   // return testName, succeed, errors, groupsAtEnd
 }
 
-TestManager.allTests = [
-  TestManager.doTest,
-]
+TestManager.allTests = [];
