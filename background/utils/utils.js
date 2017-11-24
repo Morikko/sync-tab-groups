@@ -25,6 +25,15 @@ OptionManager.TEMPLATE = function() {
   };
 };
 
+/**
+ * Promise is resolved after time ms
+ * @param {Number} time - in ms
+ */
+Utils.wait = async function(time) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, time, 'one');
+  });
+}
 
 /**
  * Return true if the url is privileged
