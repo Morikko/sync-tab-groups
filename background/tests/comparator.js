@@ -1,6 +1,8 @@
 var TestManager = TestManager || {};
 
 TestManager.compareTabs = function (tabs, tabs_ref) {
+  console.log(tabs);
+  console.log(tabs_ref);
   if ( tabs.length !== tabs_ref.length)
     return false;
 
@@ -17,5 +19,5 @@ TestManager.isWindowWithGoodTabs = async function (windowId, tabs_ref ) {
     windowId: this.windowId
   });
 
-  return Comparator.compareTabs(tabs, tabs_ref);
+  return TestManager.compareTabs(tabs, tabs_ref);
 }

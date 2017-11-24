@@ -30,7 +30,7 @@ TestManager.tabmoc = [
 
 TestManager.GroupWithoutPinned_1 = function() {
   return new GroupManager.Group(
-    1000,
+    GroupManager.createUniqueGroupId(),
     title = "Group Without Pinned 1",
     tabs = [
       TestManager.tabmoc[0],

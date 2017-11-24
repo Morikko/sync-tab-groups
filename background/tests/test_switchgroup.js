@@ -35,6 +35,7 @@ TestManager.switchgroup_pinnedsync = function() {
       let group_ref = TestManager.GroupWithoutPinned_1();
       GroupManager.groups.push(TestManager.GroupWithoutPinned_1());
       await WindowManager.selectGroup(group_ref.id);
+      await Utils.wait(2000);
 
       if ( ! (await TestManager.isWindowWithGoodTabs(this.windowId,
         (TestManager.GroupWithoutPinned_1()).tabs))
