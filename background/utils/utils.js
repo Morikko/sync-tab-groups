@@ -3,12 +3,12 @@
  */
 var Utils = Utils || {};
 
-var DelayedTasks = DelayedTasks || {};
-DelayedTasks.ASK = "ASK";
-DelayedTasks.CANCEL = "CANCEL";
-DelayedTasks.FORCE = "FORCE";
-DelayedTasks.CLOSE_REFERENCE = "close";
-DelayedTasks.REMOVE_REFERENCE = "remove";
+var TaskManager = TaskManager || {};
+TaskManager.ASK = "ASK";
+TaskManager.CANCEL = "CANCEL";
+TaskManager.FORCE = "FORCE";
+TaskManager.CLOSE_REFERENCE = "close";
+TaskManager.REMOVE_REFERENCE = "remove";
 
 
 var OptionManager = OptionManager || {};

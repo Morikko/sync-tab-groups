@@ -38,7 +38,7 @@ const ActionCreators = {
     };
   },
 
-  setDelayedTasks: function(delayedTasks) {
+  setDelayedTask: function(delayedTasks) {
     return {
       type: "DELAYED_TASKS_RECEIVE",
       delayedTasks: delayedTasks

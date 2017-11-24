@@ -3,9 +3,9 @@
 // hotkeys -> commands
 // sdk/simple-prefs -> storage and options_ui
 
-DelayedTasks.fromUI = {
-  [DelayedTasks.CLOSE_REFERENCE]: new DelayedTasks.DelayedTasks(),
-  [DelayedTasks.REMOVE_REFERENCE]: new DelayedTasks.DelayedTasks()
+TaskManager.fromUI = {
+  [TaskManager.CLOSE_REFERENCE]: new TaskManager.DelayedTask(),
+  [TaskManager.REMOVE_REFERENCE]: new TaskManager.DelayedTask()
 }
 
 /**
@@ -150,7 +150,7 @@ Controller.prototype = {
   refreshUi: function() {
     Utils.sendMessage("Groups:Changed", {
       groups: GroupManager.groups,
-      delayedTasks: DelayedTasks.fromUI
+      delayedTasks: TaskManager.fromUI
     });
   },
 
@@ -180,7 +180,7 @@ Controller.prototype = {
       );
     };
 
-    DelayedTasks.fromUI[DelayedTasks.CLOSE_REFERENCE].manageDelayedTask(
+    TaskManager.fromUI[TaskManager.CLOSE_REFERENCE].manage(
       params.taskRef,
       delayedFunction,
       params.groupID,
@@ -194,7 +194,7 @@ Controller.prototype = {
       );
     };
 
-    DelayedTasks.fromUI[DelayedTasks.REMOVE_REFERENCE].manageDelayedTask(
+    TaskManager.fromUI[TaskManager.REMOVE_REFERENCE].manage(
       params.taskRef,
       delayedFunction,
       params.groupID,
@@ -310,7 +310,7 @@ browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
    * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
    */
   setTimeout(() => {
-    // TODO: do not fire if window doesn't exist 
+    // TODO: do not fire if window doesn't exist
     TabManager.updateTabsInGroup(removeInfo.windowId);
   }, 300);
 });

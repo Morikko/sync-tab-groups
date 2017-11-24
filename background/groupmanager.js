@@ -10,7 +10,7 @@ var GroupManager = GroupManager || {};
 GroupManager.EVENT_CHANGE = 'groups-change';
 GroupManager.eventlistener = new EventListener();
 
-GroupManager.delaytask = new DelayedTasks.DelayedTasks(1000, DelayedTasks.DONE_ONCE_PER_TIME);
+GroupManager.repeatedtask = new TaskManager.RepeatedTask(1000);
 
 GroupManager.Group = function(id,
   title = "",
@@ -445,7 +445,7 @@ GroupManager.store = function() {
 
 GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
   () => {
-    GroupManager.delaytask.addDelayedTask(
+    GroupManager.repeatedtask.add(
       () => {
         GroupManager.store();
       }

@@ -8,22 +8,22 @@ StorageManager.Bookmark = StorageManager.Bookmark || {};
 
 StorageManager.Bookmark.ROOT = "SyncTabGroups";
 StorageManager.Bookmark.BACKUP = "Groups [Back Up]";
-StorageManager.Bookmark.BACKUP_OLD = StorageManager.Bookmark.BACKUP + " (old)";
 
 StorageManager.Bookmark.ROOT_ID;
 
-StorageManager.Bookmark.delaytask = new DelayedTasks.DelayedTasks(15000, DelayedTasks.DONE_ONCE_PER_TIME);
+StorageManager.Bookmark.repeatedtask = new TaskManager.RepeatedTask(5000);
+
 
 /**
  * Save the groups as bookmarks for having a back up.
  * In : Other bookmarks / StorageManager.Bookmark.ROOT /
  * First create new back up and if succeeded, delete the old backup
  * Use a time out, in order to avoid too many writing in paralel that makes the function not working.
- * Delay: 500ms without updating
  * @param {Array[Group]} groups
  */
 StorageManager.Bookmark.backUp = function(groups) {
-  StorageManager.Bookmark.delaytask.addDelayedTask(
+  // Never do it asynchronously or you can break Firefox
+  StorageManager.Bookmark.repeatedtask.add(
     async() => {
       try {
         await StorageManager.Bookmark.init();

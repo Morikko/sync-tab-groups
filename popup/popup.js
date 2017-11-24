@@ -110,7 +110,7 @@ var popupMessenger = function(message) {
   switch (message.task) {
     case "Groups:Changed":
       store.dispatch(ActionCreators.setTabgroups(message.params.groups));
-      store.dispatch(ActionCreators.setDelayedTasks(message.params.delayedTasks));
+      store.dispatch(ActionCreators.setDelayedTask(message.params.delayedTasks));
       browser.windows.getLastFocused({
         windowTypes: ['normal']
       }).then((w) => {

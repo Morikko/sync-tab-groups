@@ -12,7 +12,7 @@ OptionManager.EVENT_CHANGE = 'options-change';
 OptionManager.options = OptionManager.TEMPLATE();
 OptionManager.eventlistener = new EventListener();
 
-OptionManager.delaytask = new DelayedTasks.DelayedTasks(1000, DelayedTasks.DONE_ONCE_PER_TIME);
+OptionManager.repeatedtask = new TaskManager.RepeatedTask(1000);
 
 /**
  * Change option value
@@ -103,7 +103,7 @@ OptionManager.store = function() {
 
 OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
   () => {
-    OptionManager.delaytask.addDelayedTask(
+    OptionManager.repeatedtask.add(
       ()=>{
         OptionManager.store();
       }

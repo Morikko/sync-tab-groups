@@ -162,13 +162,13 @@ const Group = React.createClass({
       this.setState({
         removing: false
       });
-      this.props.onGroupRemoveClick(DelayedTasks.FORCE, this.props.group.id);
+      this.props.onGroupRemoveClick(TaskManager.FORCE, this.props.group.id);
     // Delayed close
     } else {
       this.setState({
         removing: true
       });
-      this.props.onGroupRemoveClick(DelayedTasks.ASK, this.props.group.id);
+      this.props.onGroupRemoveClick(TaskManager.ASK, this.props.group.id);
     }
 
   },
@@ -185,13 +185,13 @@ const Group = React.createClass({
       this.setState({
         closing: false
       });
-      this.props.onGroupCloseClick(DelayedTasks.FORCE, this.props.group.id);
+      this.props.onGroupCloseClick(TaskManager.FORCE, this.props.group.id);
     // Delayed close
     } else {
       this.setState({
         closing: true
       });
-      this.props.onGroupCloseClick(DelayedTasks.ASK, this.props.group.id);
+      this.props.onGroupCloseClick(TaskManager.ASK, this.props.group.id);
     }
 
   },
@@ -199,8 +199,8 @@ const Group = React.createClass({
   handleGroupCloseAbortClick: function(event) {
     event.stopPropagation();
 
-    this.props.onGroupCloseClick(DelayedTasks.CANCEL, this.props.group.id);
-    this.props.onGroupRemoveClick(DelayedTasks.CANCEL, this.props.group.id);
+    this.props.onGroupCloseClick(TaskManager.CANCEL, this.props.group.id);
+    this.props.onGroupRemoveClick(TaskManager.CANCEL, this.props.group.id);
 
     this.setState({
       closing: false,
