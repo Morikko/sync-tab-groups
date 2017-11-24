@@ -3,9 +3,9 @@
  * Allow to cancel a pending task and do it immediately
  * There is two modes for delaying task:
  *   1. DONE_AFTER_TIME: task is done after the delay, if a task is asked
-     again, the previous one is replaced
- *   2. DONE_ONCE_PER_TIME: do the task at most 1 / per delay, do it
-     immediately if asked
+     again, the previous one is canceled and replaced
+ *   2. DONE_ONCE_PER_TIME: do the task at most 1 per delay, do it
+     immediately when asked; wait the end of the previous task before doing the next one
  *
  * Don't use refId if single task (default: 0)
  */
@@ -62,25 +62,45 @@ DelayedTasks.DelayedTasks.prototype.addDelayedTask = async function(delayedFunct
 
 };
 
+/*
+ * Add a task
+ *  - Do the task at most 1 per delay, do it immediately when asked if delay already ended;
+ *  - Wwait the end of the previous task before doing the next one
+ */
 DelayedTasks.DelayedTasks.prototype.addIntervalTask = async function(delayedFunction, refId = 0) {
   // Free: do it
   if (this.delayedTasks[refId] === undefined) {
-    this.delayedTasks[refId] = setInterval(async() => {
+    this.delayedTasks[refId] = 0;
+    let a = performance.now();
+    await delayedFunction();
+    let total_time = performance.now() - a;
+
+    let delay = this.timeoutDelay - total_time;
+    delay = (delay<0) ? 0 : delay;
+
+    // Wait the delay at least before allowing new task / redoing one
+    this.delayedTasks[refId] = setTimeout(async() => {
       // If asked while waiting, do it now
       if (this.queuing) {
-        await delayedFunction();
         this.queuing = false;
+        this.removeDelayedTask(refId);
+        this.addIntervalTask(delayedFunction);
       } else {
         this.removeDelayedTask(refId);
       }
-    }, this.timeoutDelay);
-    await delayedFunction();
+    }, delay);
+
     // Already done; add it to the queue
   } else {
     this.queuing = true;
   }
 }
 
+/*
+ * Add a task
+ Task is done after the delay, if a task is asked
+     again, the previous one is canceled and replaced
+ */
 DelayedTasks.DelayedTasks.prototype.addTimeoutTask = async function(delayedFunction, refId = 0) {
   // Already a task; remove it
   this.removeDelayedTask(refId);
@@ -100,8 +120,9 @@ DelayedTasks.DelayedTasks.prototype.removeDelayedTask = function(refId = 0) {
     if ( this.mode === DelayedTasks.DONE_AFTER_TIME ) {
       clearTimeout(this.delayedTasks[refId]);
     } else if ( this.mode === DelayedTasks.DONE_ONCE_PER_TIME ) {
-      clearInterval(this.delayedTasks[refId]);
+      clearTimeout(this.delayedTasks[refId]);
     }
     delete(this.delayedTasks[refId]);
+    this.queuing = false;
   }
 };
