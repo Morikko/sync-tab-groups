@@ -7,6 +7,10 @@
  *   2. DONE_ONCE_PER_TIME: do the task at most 1 per delay, do it
      immediately when asked; wait the end of the previous task before doing the next one
  *
+ * Value for refId is:
+    - undefinned: nothing in process
+    - >= 0: timeout waiting
+    - -1: specific action in process
  * Don't use refId if single task (default: 0)
  */
 
@@ -27,12 +31,19 @@ TaskManager.RepeatedTask = function(timeoutDelay = 10000) {
  * @param {Fucntion} delayedFunction- the delayed function to execute (without parameter)
  * @param {Number} refId (default:0) - ref inside the action group
  */
-TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, refId = 0) {
+TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, force = false, refId = 0) {
 
   try {
-    // Free: do it
-    if (this.delayedTasks[refId] === undefined) {
-      this.delayedTasks[refId] = 0;
+    // Free: do it OR Force to do it
+    if (this.delayedTasks[refId] === undefined ||
+      (this.delayedTasks[refId] >= 0 && force)) {
+
+      // Force to do
+      if (this.delayedTasks[refId] >= 0 && force) {
+        this.remove(refId);
+      }
+
+      this.delayedTasks[refId] = -1;
       let a = performance.now();
       await delayedFunction();
       let total_time = performance.now() - a;
@@ -51,7 +62,6 @@ TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, refId =
           this.remove(refId);
         }
       }, delay);
-
       // Already done; add it to the queue
     } else {
       this.queuing = true;

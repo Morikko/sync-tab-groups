@@ -18,10 +18,10 @@ TestManager.delayedtask = function() {
       code,
       this.title,
       msg,
-      !code? {
+      {
         delay: this.delay,
         counter: this.counter
-      }: {}
+      }
     )
   };
 
@@ -93,15 +93,16 @@ TestManager.repeatedtask = function() {
       code,
       this.title,
       msg,
-      !code? {
+      {
         delay: this.delay,
         counter: this.counter
-      }: {}
+      }
     )
   };
 
   this.test = async function( ) {
     try {
+      this.delay = new TaskManager.RepeatedTask(100);
       // Done immediately and not done again
       this.delay.add(this.add_count);
       await Utils.wait(10);
@@ -146,6 +147,24 @@ TestManager.repeatedtask = function() {
         return this.return_result(TestManager.ERROR, "Didn't do the task in queue after overdelay");
       }
 
+      // Force
+      this.delay = new TaskManager.RepeatedTask(100);
+      this.delay.add(this.add_count);
+      await Utils.wait(10);
+      this.delay.add(this.add_count, force=true);
+      await Utils.wait(10);
+      if ( this.counter !== 7 ) {
+        return this.return_result(TestManager.ERROR, "Didn't do the task forced");
+      }
+
+      this.delay.add(this.add_count);
+      if ( this.counter !== 7 ) {
+        return this.return_result(TestManager.ERROR, "Didn't respect the time");
+      }
+      await Utils.wait(100);
+      if ( this.counter !== 8 ) {
+        return this.return_result(TestManager.ERROR, "Didn't do the task in queue after force");
+      }
 
       return this.return_result(TestManager.DONE);
     } catch ( e ) {
