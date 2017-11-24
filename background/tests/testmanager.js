@@ -58,6 +58,8 @@ var TestManager = TestManager || {};
 TestManager.ERROR = false;
 TestManager.DONE = true;
 
+TestManager.last_results = [];
+
 TestManager.Results = function ( code, title, msg, vars  ) {
   return {
     code: code,
@@ -74,17 +76,19 @@ TestManager.printResults = function ( result ) {
     console.log(result.vars);
   } else {
     console.log( "[OK] " + result.title );
+    console.log(result.vars);
   }
 }
 
 TestManager.doTests = async function(testsList=TestManager.allTests) {
   try {
-    let results = [], index=0;
+    TestManager.last_results = [];
+    let index=0;
     for ( test of testsList ) {
         console.log("Test number " + (index+1));
         let result = await (new test()).test();
         TestManager.printResults(result);
-        results.push(result);
+        TestManager.last_results.push(result);
         index++;
     }
   } catch ( e ) {
