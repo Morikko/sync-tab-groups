@@ -96,6 +96,14 @@ GroupManager.isWindowAlreadyRegistered = function(windowId) {
   return false;
 }
 
+/**
+ * Return a deep copy object of GroupManager.groups
+ * @return {Array[Group]}
+ */
+GroupManager.getCopy = function() {
+  return JSON.parse(JSON.stringify(GroupManager.groups));
+}
+
 /******** SETTER *********/
 
 /**
@@ -451,8 +459,8 @@ GroupManager.integrateAllOpenedWindows = async function() {
  * Do back up in bookmarks
  */
 GroupManager.store = function() {
-  StorageManager.Local.saveGroups(GroupManager.groups);
-  StorageManager.Bookmark.backUp(GroupManager.groups);
+  StorageManager.Local.saveGroups(GroupManager.getCopy());
+  StorageManager.Bookmark.backUp(GroupManager.getCopy());
 }
 
 
