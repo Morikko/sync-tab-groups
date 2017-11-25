@@ -10,7 +10,11 @@ const Actions = {
       optionName: name,
       optionValue: value
     });
-  }
+  },
+
+  onBackUpAsk: function(name, value) {
+    Utils.sendMessage("Option:BackUp", {});
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -21,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       React.createElement(OptionsPanel, {
         onOptionChange: Actions.onOptionChange,
+        onBackUpClick: Actions.onBackUpAsk,
       })
     ),
     document.getElementById("content")

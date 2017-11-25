@@ -1,7 +1,8 @@
 const OptionsPanel = (() => {
   const OptionsPanelStandalone = React.createClass({
     propTypes: {
-      onOptionChange: React.PropTypes.func
+      onOptionChange: React.PropTypes.func,
+      onBackUpClick: React.PropTypes.func
     },
 
     render: function() {
@@ -13,6 +14,11 @@ const OptionsPanel = (() => {
         React.createElement(PinnedTabSection, {
           options: this.props.options.pinnedTab,
           onOptionChange: this.props.onOptionChange,
+        }),
+        React.createElement(BookmarkSection, {
+          options: this.props.options.bookmarks,
+          onOptionChange: this.props.onOptionChange,
+          onBackUpClick: this.props.onBackUpClick
         }),
       ]);
     }

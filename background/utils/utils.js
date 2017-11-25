@@ -21,6 +21,10 @@ OptionManager.TEMPLATE = function() {
     },
     pinnedTab: {
       sync: true
+    },
+    bookmarks: {
+      sync: true,
+      folder: "Default"
     }
   };
 };

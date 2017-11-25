@@ -460,7 +460,7 @@ GroupManager.integrateAllOpenedWindows = async function() {
  */
 GroupManager.store = function() {
   StorageManager.Local.saveGroups(GroupManager.getCopy());
-  StorageManager.Bookmark.backUp(GroupManager.getCopy());
+  //StorageManager.Bookmark.backUp(GroupManager.getCopy());
 }
 
 

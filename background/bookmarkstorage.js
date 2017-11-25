@@ -7,8 +7,6 @@ var StorageManager = StorageManager || {};
 StorageManager.Bookmark = StorageManager.Bookmark || {};
 
 StorageManager.Bookmark.ROOT = "SyncTabGroups";
-StorageManager.Bookmark.BACKUP = "Groups [Back Up]";
-
 StorageManager.Bookmark.ROOT_ID;
 
 StorageManager.Bookmark.repeatedtask = new TaskManager.RepeatedTask(5000);
@@ -49,21 +47,19 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
   try {
     var rootId;
     // 1. Create root
-    /*
     const bmRoot = await browser.bookmarks.create({
-      title: StorageManager.Bookmark.BACKUP,
+      title: OptionManager.options.bookmarks.folder === "" ? "Default" : OptionManager.options.bookmarks.folder,
       parentId: StorageManager.Bookmark.ROOT_ID
     });
 
     rootId = bmRoot.id;
-    */
     // For each group
     for (let g of groups) {
 
       // 2. Create Group folder
       const bmGroup = await browser.bookmarks.create({
         title: Utils.getGroupTitle(g),
-        parentId: StorageManager.Bookmark.ROOT_ID
+        parentId: rootId
       });
 
       // 3. Create Tabs bookmarks (for is mandatory for keeping order)
@@ -97,7 +93,9 @@ StorageManager.Bookmark.cleanGroups = async function(title = StorageManager.Book
     );
 
     for (let b of bookmarks_groups[0].children) {
-      await browser.bookmarks.removeTree(b.id);
+      if (b.title === OptionManager.options.bookmarks.folder) {
+        await browser.bookmarks.removeTree(b.id);
+      }
     }
 
     return "StorageManager.Bookmark.cleanGroups done!";

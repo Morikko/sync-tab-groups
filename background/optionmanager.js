@@ -80,8 +80,8 @@ OptionManager.onPinnedTabSyncChange = async function ( ) {
  */
 OptionManager.init = async function() {
   try {
-    const options = await StorageManager.Local.loadOptions( );
-    OptionManager.options = options;
+    let options = await StorageManager.Local.loadOptions( );
+    OptionManager.options = OptionManager.check_integrity(options);
     OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
     return "OptionManager.init done";
   } catch (e) {
@@ -89,6 +89,28 @@ OptionManager.init = async function() {
     console.error(msg);
     return msg;
   }
+}
+
+OptionManager.mergeOptions = function (ref_options, options) {
+  for ( let pro in ref_options ) {
+    if ( !options.hasOwnProperty(pro) ) {
+      options[pro] = ref_options[pro];
+    }
+    if ( "object" === typeof ref_options[pro] ) {
+      OptionManager.mergeOptions(ref_options[pro], options[pro]);
+    }
+  }
+}
+
+/**
+ * Check that options object has all the good propreties
+ * @param {Object} options
+ * @return {Object} options - verified
+ */
+OptionManager.check_integrity = function( options ) {
+  var ref_options = OptionManager.TEMPLATE();
+  OptionManager.mergeOptions(ref_options, options);
+  return options;
 }
 
 /**
