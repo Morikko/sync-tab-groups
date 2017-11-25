@@ -297,21 +297,6 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
 }
 
 /**
- * Use sessions tools to associate the groupid to window.
- * If window is restored, even if windowId change, the value is still associated with the window.
- * @param {Number} windowId
- * @param {Number} groupId
- * @return {Promise}
- */
-WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
-  return browser.sessions.setWindowValue(
-    windowId, // integer
-    WindowManager.WINDOW_GROUPID, // string
-    groupId.toString()
-  );
-}
-
-/**
  * Remove groupid stored with the window
  * @param {Number} windowId
  * @return {Promise}
@@ -330,6 +315,7 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
  */
 WindowManager.addGroupFromWindow = async function(windowId) {
   try {
+    // TODO: take all tabs: should look pinned one
     const tabs = await browser.tabs.query({
       windowId: windowId
     });
@@ -381,7 +367,7 @@ WindowManager.integrateWindow = async function(windowId) {
       // Update Group
     } else {
       try {
-        GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
+        await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
       } catch (e) {
         // Has a key but a wrong, start from 0
         await WindowManager.addGroupFromWindow(windowId);
@@ -421,10 +407,12 @@ WindowManager.OnlyOneNewWindow = async function ( ) {
     const windows = await browser.windows.getAll();
 
     const w = await browser.windows.create();
+    await WindowManager.integrateWindow(w.id);
 
     for (let i=0; i<windows.length; i++ ) {
       await browser.windows.remove(windows[i].id);
     }
+
     return w.id;
   } catch ( e ) {
     let msg = "WindowManager.keepOneWindowOpen failed " + e;

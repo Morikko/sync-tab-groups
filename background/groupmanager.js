@@ -320,7 +320,7 @@ GroupManager.addGroup = function(title = "",
       windowId
     ));
   } catch (e) {
-    throw Error("addGroup: Group not created because " + e.message);
+    throw Error("addGroup: Group not created because " + e);
   }
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
@@ -362,6 +362,18 @@ GroupManager.resetAssociatedWindows = function() {
   }
   GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
+
+/**
+ *
+ */
+GroupManager.removeUnopenGroups = function() {
+  for ( let i=GroupManager.groups.length-1; i>=0; i-- ) {
+    if ( GroupManager.groups[i].windowId === browser.windows.WINDOW_ID_NONE ){
+      GroupManager.groups.splice(i, 1);
+    }
+  }
+}
+
 
 /******** OTHER *********/
 
