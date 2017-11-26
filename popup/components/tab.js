@@ -85,10 +85,8 @@ const Tab = React.createClass({
   handleOpenTabClick: function(event) {
     event.stopPropagation();
 
-    let group = this.props.group;
     let tab = this.props.tab;
     this.props.onOpenTab(
-      group.id,
       tab
     );
   },

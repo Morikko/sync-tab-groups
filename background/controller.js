@@ -253,6 +253,35 @@ Controller.prototype = {
       }
     }
   },
+
+  onTabClose: async function(params) {
+    try {
+      await GroupManager.removeTabFromIndexInGroupId(
+        params.groupId,
+        params.tabIndex
+      );
+    } catch ( e ) {
+      let msg = "Controller.onTabClose failed; " + e;
+      console.error(msg);
+      return msg;
+    }
+  },
+
+  onTabOpen: async function(params) {
+    try {
+      const currentWindow = await browser.windows.getCurrent();
+      await TabManager.openListOfTabs(
+        [params.tab],
+        currentWindow.id,
+        true,
+        false,
+      )
+    } catch (e) {
+      let msg = "Controller.onTabOpen failed; " + e;
+      console.error(msg);
+      return msg;
+    }
+  },
 };
 
 // Event from: popup
@@ -294,6 +323,12 @@ var popupMessenger = function(message) {
       break;
     case "Window:Sync":
       controller.synchronizeWindowManager(message.params);
+      break;
+    case "Tab:Open":
+      controller.onTabOpen(message.params);
+      break;
+    case "Tab:Close":
+      controller.onTabClose(message.params);
       break;
   }
 }

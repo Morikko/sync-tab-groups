@@ -100,9 +100,8 @@ const Actions = {
     });
   },
 
-  onOpenTab: function(groupId, tab) {
+  onOpenTab: function(tab) {
     Utils.sendMessage("Tab:Open", {
-      groupId: groupId,
       tab: tab
     });
   }
