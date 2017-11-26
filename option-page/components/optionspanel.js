@@ -7,6 +7,10 @@ const OptionsPanel = (() => {
 
     render: function() {
       return React.DOM.div({}, [
+        React.createElement(GroupSection, {
+          options: this.props.options.groups,
+          onOptionChange: this.props.onOptionChange,
+        }),
         React.createElement(PrivateWindowSection, {
           options: this.props.options.privateWindow,
           onOptionChange: this.props.onOptionChange,

@@ -25,6 +25,10 @@ OptionManager.TEMPLATE = function() {
     bookmarks: {
       sync: true,
       folder: "Default"
+    },
+    groups: {
+      syncNewWindow: true,
+      removeEmptyGroup: false,
     }
   };
 };
