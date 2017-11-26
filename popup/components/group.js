@@ -38,6 +38,8 @@ const Group = React.createClass({
     onTabDrag: React.PropTypes.func,
     onTabDragStart: React.PropTypes.func,
     onOpenInNewWindowClick: React.PropTypes.func,
+    onCloseTab: React.PropTypes.func,
+    onOpenTab: React.PropTypes.func,
   },
 
   getInitialState: function() {
@@ -138,7 +140,10 @@ const Group = React.createClass({
             onTabClick: this.props.onTabClick,
             onTabDrag: this.props.onTabDrag,
             onTabDragStart: this.props.onTabDragStart,
-            onTabDragEnd: this.props.onTabDragEnd
+            onTabDragEnd: this.props.onTabDragEnd,
+            opened: this.state.opened,
+            onCloseTab: this.props.onCloseTab,
+            onOpenTab: this.props.onOpenTab,
           }
         )
       )

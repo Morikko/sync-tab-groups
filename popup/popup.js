@@ -90,6 +90,21 @@ const Actions = {
       windowId: windowId,
       isSync: value,
     });
+  },
+
+  onCloseTab: function(tabId, groupId, tabIndex) {
+    Utils.sendMessage("Tab:Close", {
+      tabId: tabId,
+      groupId: groupId,
+      tabIndex: tabIndex
+    });
+  },
+
+  onOpenTab: function(groupId, tab) {
+    Utils.sendMessage("Tab:Open", {
+      groupId: groupId,
+      tab: tab
+    });
   }
 };
 
@@ -113,6 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
         onOpenInNewWindowClick: Actions.OpenGroupInNewWindow,
         onChangeWindowSync: Actions.onChangeWindowSync,
         onClickPref: Actions.openSettings,
+        onCloseTab: Actions.onCloseTab,
+        onOpenTab: Actions.onOpenTab,
       })
     ),
     document.getElementById("content")

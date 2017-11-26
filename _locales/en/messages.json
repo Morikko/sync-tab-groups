@@ -47,5 +47,10 @@
   "force_closing": {
     "message": "Force closing",
     "description": "Hover help for force closing button"
+  },
+
+  "open": {
+    "message": "Open",
+    "description": "Hover help for open button"
   }
 }

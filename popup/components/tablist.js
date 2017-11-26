@@ -28,13 +28,17 @@ const TabList = React.createClass({
     onTabClick: React.PropTypes.func,
     onTabDrag: React.PropTypes.func,
     onTabDragStart: React.PropTypes.func,
-    tabs: React.PropTypes.array.isRequired
+    tabs: React.PropTypes.array.isRequired,
+    opened: React.PropTypes.bool.isRequired,
+    onCloseTab: React.PropTypes.func,
+    onOpenTab: React.PropTypes.func,
   },
 
   render: function() {
     return (
-      React.DOM.ul(
-        {className: "tab-list"},
+      React.DOM.ul({
+          className: "tab-list"
+        },
         this.props.tabs.map((tab, index) => {
           return React.createElement(Tab, {
             key: index,
@@ -44,6 +48,9 @@ const TabList = React.createClass({
             onTabClick: this.props.onTabClick,
             onTabDrag: this.props.onTabDrag,
             onTabDragStart: this.props.onTabDragStart,
+            opened: this.props.opened,
+            onCloseTab: this.props.onCloseTab,
+            onOpenTab: this.props.onOpenTab,
           });
         })
       )

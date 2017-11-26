@@ -38,6 +38,8 @@ const App = React.createClass({
     onOpenInNewWindowClick: React.PropTypes.func,
     onChangeWindowSync: React.PropTypes.func,
     onClickPref: React.PropTypes.func,
+    onCloseTab: React.PropTypes.func,
+    onOpenTab: React.PropTypes.func,
   },
 
   render: function() {

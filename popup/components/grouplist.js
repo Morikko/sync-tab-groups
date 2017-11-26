@@ -40,28 +40,30 @@ const GroupList = (() => {
       onOpenInNewWindowClick: React.PropTypes.func,
       onChangeWindowSync: React.PropTypes.func,
       onClickPref: React.PropTypes.func,
+      onCloseTab: React.PropTypes.func,
+      onOpenTab: React.PropTypes.func,
     },
 
     isCurrently: function(action, groupId) {
-      if ( this.props.delayedTasks[action] !== undefined ) {
+      if (this.props.delayedTasks[action] !== undefined) {
         return this.props.delayedTasks[action].delayedTasks[groupId] !== undefined;
-      }
-      else {
+      } else {
         return false;
       }
     },
 
     render: function() {
       let isWindowSync = false;
-      for ( g of this.props.groups ) {
-        if ( g.windowId === this.props.currentWindowId) {
+      for (g of this.props.groups) {
+        if (g.windowId === this.props.currentWindowId) {
           isWindowSync = true;
         }
       }
 
-      return React.DOM.ul(
-        {className: "group-list"},
-        React.createElement( MainBar, {
+      return React.DOM.ul({
+          className: "group-list"
+        },
+        React.createElement(MainBar, {
           onChangeWindowSync: this.props.onChangeWindowSync,
           onClickPref: this.props.onClickPref,
           isSync: isWindowSync,
@@ -83,11 +85,12 @@ const GroupList = (() => {
             onTabDrag: this.props.onTabDrag,
             onTabDragStart: this.props.onTabDragStart,
             onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
+            onCloseTab: this.props.onCloseTab,
+            onOpenTab: this.props.onOpenTab,
           });
         }),
         React.createElement(
-          GroupAddButton,
-          {
+          GroupAddButton, {
             onClick: this.props.onGroupAddClick,
             onDrop: this.props.onGroupAddDrop
           }

@@ -28,7 +28,11 @@ const Tab = React.createClass({
     onTabClick: React.PropTypes.func,
     onTabDrag: React.PropTypes.func,
     onTabDragStart: React.PropTypes.func,
-    tab: React.PropTypes.object.isRequired
+    tab: React.PropTypes.object.isRequired,
+    tabIndex: React.PropTypes.number,
+    opened: React.PropTypes.bool,
+    onCloseTab: React.PropTypes.func,
+    onOpenTab: React.PropTypes.func,
   },
 
   render: function() {
@@ -46,15 +50,23 @@ const Tab = React.createClass({
     return (
       React.DOM.li({
           className: tabClasses,
-          onClick: this.handleTabClick,
           onDrag: this.handleTabDrag,
           onDragStart: this.handleTabDragStart,
+          onClick: this.handleTabClick,
           draggable: true
         },
         favicon,
         React.DOM.span({
-          className: "tab-title"
-        }, this.props.tab.title)
+            className: "tab-title",
+          },
+          this.props.tab.title,
+          React.createElement(
+            TabControls, {
+              opened: this.props.opened,
+              onCloseTab: this.handleCloseTabClick,
+              onOpenTab: this.handleOpenTabClick,
+            }
+          )),
       )
     );
   },
@@ -65,6 +77,29 @@ const Tab = React.createClass({
     let group = this.props.group;
     let tab = this.props.tab;
     this.props.onTabClick(
+      group.id,
+      this.props.tabIndex
+    );
+  },
+
+  handleOpenTabClick: function(event) {
+    event.stopPropagation();
+
+    let group = this.props.group;
+    let tab = this.props.tab;
+    this.props.onOpenTab(
+      group.id,
+      tab
+    );
+  },
+
+  handleCloseTabClick: function(event) {
+    event.stopPropagation();
+
+    let group = this.props.group;
+    let tab = this.props.tab;
+    this.props.onCloseTab(
+      tab.id,
       group.id,
       this.props.tabIndex
     );
