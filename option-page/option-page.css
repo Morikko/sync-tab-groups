@@ -19,7 +19,12 @@
     vertical-align: middle;
 }
 
-.option-button {
+.option-button, .option-input {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.option-input-text-help {
+    margin-left: 10px;
+    color: #ccc;
 }

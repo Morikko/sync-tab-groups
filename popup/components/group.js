@@ -245,8 +245,9 @@ const Group = React.createClass({
     });
   },
 
-  handleGroupTitleInputKey: function(event) {
-    if (event.keyCode == 13) { // Enter key
+  handleGroupTitleInputKey: function(event){
+    event.stopPropagation();
+    if (event.keyCode === 13) { // Enter key
       this.setState({
         editing: false
       });
