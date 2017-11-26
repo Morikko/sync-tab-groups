@@ -18,13 +18,13 @@ const GroupSection = React.createClass({
       React.createElement(SectionTitle, {
         title: 'Group'
       }),
-      React.createElement(OptionCheckBox, {
+      React.createElement(NiceCheckbox, {
         checked: this.props.options.syncNewWindow,
         label: "Synchronize each new window as a new group.",
         onCheckChange: this.props.onOptionChange,
         id: this.prefix + "-syncNewWindow",
       }),
-      React.createElement(OptionCheckBox, {
+      React.createElement(NiceCheckbox, {
         checked: this.props.options.removeEmptyGroup,
         label: "Remove the groups with no tab.",
         onCheckChange: this.props.onOptionChange,

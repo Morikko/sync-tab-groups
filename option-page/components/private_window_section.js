@@ -18,13 +18,13 @@ const PrivateWindowSection = React.createClass({
       React.createElement(SectionTitle, {
         title: 'Private Window'
       }),
-      React.createElement(OptionCheckBox, {
+      React.createElement(NiceCheckbox, {
         checked: this.props.options.sync,
         label: "Synchronize the private windows as groups.",
         onCheckChange: this.props.onOptionChange,
         id: this.prefix + "-sync",
       }),
-      React.createElement(OptionCheckBox, {
+      React.createElement(NiceCheckbox, {
         checked: this.props.options.removeOnClose,
         label: "Remove the groups in the private windows when those windows are closed.",
         onCheckChange: this.props.onOptionChange,

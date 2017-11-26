@@ -14,12 +14,19 @@
     vertical-align: middle;
 }
 
+li {
+    font-size: 18px;
+}
+
+div span {
+   font-size: 18px;
+}
 
 .option-checkbox input {
     vertical-align: middle;
 }
 
-.option-button, .option-input {
+.option-button, .option-input-text {
     margin-top: 10px;
     margin-bottom: 10px;
 }

@@ -37,7 +37,7 @@ const MainBar = React.createClass({
     );
   },
 
-  handleCheckChange: function(value) {
+  handleCheckChange: function(id, value) {
     this.props.onChangeWindowSync(this.props.currentWindowId, value);
   },
 

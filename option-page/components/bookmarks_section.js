@@ -22,13 +22,13 @@ const BookmarkSection = React.createClass({
           React.DOM.li({},"Do not have another SyncTabGroups folder."),
       ])),
       React.createElement(OptionInput, {
-        label: "Name of the session (subfolder): ",
+        label: "Name of the session: ",
         help: "Example: Computer 1, laptop...",
         name: this.props.options.folder,
         onChange: this.props.onOptionChange,
         id: this.prefix + "-folder",
       }),
-      React.createElement(OptionCheckBox, {
+      React.createElement(NiceCheckbox, {
         checked: this.props.options.sync,
         label: "Save groups in bookmarks automatically (Every 30s)",
         onCheckChange: this.props.onOptionChange,
