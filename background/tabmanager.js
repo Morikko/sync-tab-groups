@@ -79,10 +79,6 @@ TabManager.openListOfTabs = async function(
     let createdTabs = [];
 
     // Always open in last pos
-    let groupIndex = GroupManager.getGroupIndexFromGroupId(
-      GroupManager.getGroupIdInWindow(windowId)
-    );
-
     let indexTabOffset = 0,
       indexPinnedOffset = 0;
     if (inLastPos || !OptionManager.options.pinnedTab.sync) {
