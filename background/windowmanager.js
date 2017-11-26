@@ -104,8 +104,8 @@ WindowManager.selectGroup = async function(newGroupId) {
         );
         await WindowManager.changeGroupInWindow(currentGroupId, newGroupId);
 
-      // TODO: organize it better
-      // From non synchronized window
+        // TODO: organize it better
+        // From non synchronized window
       } catch (e) {
         let windowId = currentWindow.id;
 
@@ -387,12 +387,13 @@ WindowManager.integrateWindow = async function(windowId,
     const window = await browser.windows.get(windowId);
 
     if (window.type !== 'normal') {
-      return "WindowManager.integrateWindow not done for windowId " + windowId + " because window is not normal";
+      return "WindowManager.integrateWindow not done for windowId " + windowId + " because window is not nosrmal";
     }
 
     // Private Window sync
     if (!OptionManager.options.privateWindow.sync &&
-      window.incognito) {
+      window.incognito &&
+      !even_new_one) {
       return "WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized";
     }
 
