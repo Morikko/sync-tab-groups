@@ -34,6 +34,9 @@ OptionManager.updateOption = function ( optionName, optionValue){
     case "pinnedTab-sync":
       OptionManager.onPinnedTabSyncChange( );
       break;
+    case "groups-removeEmptyGroup":
+      OptionManager.onRemoveEmptyGroupChange( );
+      break;
   }
 }
 
@@ -70,6 +73,12 @@ OptionManager.onPinnedTabSyncChange = async function ( ) {
     let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;
     console.error(msg);
     return msg;
+  }
+}
+
+OptionManager.onRemoveEmptyGroupChange = function ( ) {
+  if ( OptionManager.options.groups.removeEmptyGroup ) {
+    GroupManager.removeEmptyGroup();
   }
 }
 

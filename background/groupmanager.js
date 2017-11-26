@@ -117,6 +117,11 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
       groupId
     );
     GroupManager.groups[groupIndex].tabs = tabs;
+
+    if ( OptionManager.options.groups.removeEmptyGroup ) {
+      GroupManager.removeEmptyGroup();
+    }
+
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   } catch (e) {
     let msg = "GroupManager.detachWindow failed; " + e.message;
@@ -249,6 +254,10 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, cha
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
+    if ( OptionManager.options.groups.removeEmptyGroup ) {
+      GroupManager.removeEmptyGroup();
+    }
+
     return "GroupManager.removeTabFromIndexInGroupId done!";
 
   } catch (e) {
@@ -317,8 +326,13 @@ GroupManager.addGroup = function(title = "",
   windowId = browser.windows.WINDOW_ID_NONE) {
   if (GroupManager.isWindowAlreadyRegistered(windowId))
     return;
-
-  let tabs = [];
+  let tabs = [
+    {
+      url: "about:newtab",
+      title: "New Tab",
+      active: true
+    }
+  ];
   let uniqueGroupId;
   try {
     uniqueGroupId = GroupManager.createUniqueGroupId();
@@ -380,8 +394,21 @@ GroupManager.removeUnopenGroups = function() {
       GroupManager.groups.splice(i, 1);
     }
   }
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
+
+/**
+ *
+ */
+GroupManager.removeEmptyGroup = function() {
+  for (let i = GroupManager.groups.length - 1; i >= 0; i--) {
+    if (GroupManager.groups[i].tabs.length === 0) {
+      GroupManager.groups.splice(i, 1);
+    }
+  }
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+}
 
 /******** OTHER *********/
 
