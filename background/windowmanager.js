@@ -196,17 +196,17 @@ WindowManager.closeGroup = async function(groupID) {
       await WindowManager.selectNextGroup(groupID);
     else {
       // Move pinned from windowId to currentWindow.id
-      if ( !OptionManager.options.pinnedTab.sync ) {
+      if (!OptionManager.options.pinnedTab.sync) {
         let pinnedTabsIds = [];
         const tabs = await browser.tabs.query({
           windowId: windowId
         });
-        tabs.forEach((tab)=>{
-          if ( tab.pinned )
+        tabs.forEach((tab) => {
+          if (tab.pinned)
             pinnedTabsIds.push(tab.id);
         });
         // Start at 0, don't take risk
-        await browser.tabs.move(pinnedTabsIds,{
+        await browser.tabs.move(pinnedTabsIds, {
           windowId: currentWindow.id,
           index: 0
         });
@@ -343,7 +343,8 @@ WindowManager.addGroupFromWindow = async function(windowId) {
  * @param {Number} windowId
  * @return {Promise}
  */
-WindowManager.integrateWindow = async function(windowId) {
+WindowManager.integrateWindow = async function(windowId,
+  even_new_one = OptionManager.options.groups.syncNewWindow) {
   try {
     const window = await browser.windows.get(windowId);
 
@@ -363,14 +364,18 @@ WindowManager.integrateWindow = async function(windowId) {
     );
     // New Window
     if (key === undefined) {
-      await WindowManager.addGroupFromWindow(windowId);
+      if (even_new_one) {
+        await WindowManager.addGroupFromWindow(windowId);
+      }
       // Update Group
     } else {
       try {
         await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
       } catch (e) {
         // Has a key but a wrong, start from 0
-        await WindowManager.addGroupFromWindow(windowId);
+        if (even_new_one) {
+          await WindowManager.addGroupFromWindow(windowId);
+        }
         return "WindowManager.integrateWindow done for windowId " + windowId;
       }
     }
@@ -385,14 +390,14 @@ WindowManager.integrateWindow = async function(windowId) {
 /**
  * Close all windows except one
  */
-WindowManager.keepOneWindowOpen = async function ( ) {
+WindowManager.keepOneWindowOpen = async function() {
   try {
     const windows = await browser.windows.getAll();
-    for (let i=1; i<windows.length; i++ ) {
+    for (let i = 1; i < windows.length; i++) {
       await browser.windows.remove(windows[i].id);
     }
     return "WindowManager.keepOneWindowOpen done";
-  } catch ( e ) {
+  } catch (e) {
     let msg = "WindowManager.keepOneWindowOpen failed " + e;
     console.error(msg);
     return msg;
@@ -402,19 +407,19 @@ WindowManager.keepOneWindowOpen = async function ( ) {
 /**
  * Close all windows and open a new one with only a new tab
  */
-WindowManager.OnlyOneNewWindow = async function ( ) {
+WindowManager.OnlyOneNewWindow = async function() {
   try {
     const windows = await browser.windows.getAll();
 
     const w = await browser.windows.create();
     await WindowManager.integrateWindow(w.id);
 
-    for (let i=0; i<windows.length; i++ ) {
+    for (let i = 0; i < windows.length; i++) {
       await browser.windows.remove(windows[i].id);
     }
 
     return w.id;
-  } catch ( e ) {
+  } catch (e) {
     let msg = "WindowManager.keepOneWindowOpen failed " + e;
     console.error(msg);
     return msg;
