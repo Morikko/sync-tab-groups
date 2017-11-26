@@ -17,7 +17,7 @@ const MainBar = React.createClass({
 
     return (
       React.DOM.li({
-          className: "main-bar",
+          className: "mainbar",
         },
         React.DOM.div({
           className: "window-synchronized"
@@ -25,18 +25,22 @@ const MainBar = React.createClass({
           React.DOM.label({
             for: id
           }, [
-            "Window synchronized ",
             React.DOM.input({
               type: "checkbox",
               checked: this.state.isSync,
               id: id,
               onClick: this.handleClick,
             }),
+            " Window synchronized"
           ]),
+        ]),
+        React.DOM.div({
+          className: "main-actions",
+        }, [
           React.DOM.i({
             className: "app-pref fa fa-fw fa-gear",
             onClick: this.props.onClickPref
-          })
+          }),
         ]),
       )
     );

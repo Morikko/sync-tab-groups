@@ -35,6 +35,45 @@ li {
   cursor: move;
 }
 
+.mainbar {
+  padding-left: 5px;
+  min-height: 40px;
+  border-bottom: #ccc solid 2px;
+  display: block;
+  position: relative;
+}
+
+.mainbar .window-synchronized {
+  height: 100%;
+  vertical-align: middle;
+  display: inline-block;
+  padding: 5px;
+  position: relative;
+}
+
+.window-synchronized label {
+  cursor: pointer;
+}
+
+.mainbar .main-actions {
+  display: inline-block;
+  font-size: 120%;
+  opacity: 0.7;
+  position: absolute;
+  right: 0px;
+  vertical-align: middle;
+  height: 100%;
+  border-left: #ccc solid 2px;
+}
+
+.mainbar .main-actions i {
+  font-size: 25px;
+  cursor: pointer;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 40px;
+}
+
 .group {
   min-width: 300px;
 }
