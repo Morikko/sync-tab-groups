@@ -86,7 +86,7 @@ const Group = React.createClass({
       titleElement = React.DOM.span({
           className: "group-title-text"
         },
-        Utils.getGroupTitle(this.props.group)
+        Utils.getGroupTitle(this.props.group) + "  (" + this.props.group.tabs.length + ")"
       );
     }
 
