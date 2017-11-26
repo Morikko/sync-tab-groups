@@ -6,12 +6,6 @@ const MainBar = React.createClass({
     currentWindowId: React.PropTypes.number.isRequired,
   },
 
-  getInitialState: function() {
-    return {
-      isSync: this.props.isSync,
-    };
-  },
-
   render: function() {
     let id = "window-is-sync";
 
@@ -22,17 +16,14 @@ const MainBar = React.createClass({
         React.DOM.div({
           className: "window-synchronized"
         }, [
-          React.DOM.label({
-            for: id
-          }, [
-            React.DOM.input({
-              type: "checkbox",
-              checked: this.state.isSync,
+          React.createElement(
+            NiceCheckbox, {
               id: id,
-              onClick: this.handleClick,
-            }),
-            " Window synchronized"
-          ]),
+              label: "Window synchronized",
+              checked: this.props.isSync,
+              onCheckChange: this.handleCheckChange,
+            }
+          ),
         ]),
         React.DOM.div({
           className: "main-actions",
@@ -46,13 +37,8 @@ const MainBar = React.createClass({
     );
   },
 
-  handleClick: function(event) {
-    event.stopPropagation();
-    this.setState({
-      isSync: !this.state.isSync
-    })
-
-    this.props.onChangeWindowSync(this.props.currentWindowId, this.state.isSync);
+  handleCheckChange: function(value) {
+    this.props.onChangeWindowSync(this.props.currentWindowId, value);
   },
 
   handleGroupDragOver: function(event) {
