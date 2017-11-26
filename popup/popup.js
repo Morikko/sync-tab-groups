@@ -82,7 +82,7 @@ const Actions = {
   },
 
   openSettings: function() {
-    Utils.sendMessage("App:openSettings", {});
+    Utils.sendMessage("App:OpenSettings", {});
   },
 
   onChangeWindowSync: function(windowId, value) {

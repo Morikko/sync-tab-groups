@@ -21,8 +21,8 @@ function Controller() {
 
 Controller.prototype = {
   init: async function() {
-  await OptionManager.init();
-  await GroupManager.init();
+    await OptionManager.init();
+    await GroupManager.init();
   },
 
   /* TODO DO I still need the binding
@@ -231,6 +231,10 @@ Controller.prototype = {
 
   onBookmarkSave: function() {
     StorageManager.Bookmark.backUp(GroupManager.getCopy(), true);
+  },
+
+  onOpenSettings: function() {
+    browser.runtime.openOptionsPage();
   }
 };
 
@@ -267,6 +271,9 @@ var popupMessenger = function(message) {
       break;
     case "Data:Ask":
       controller.refreshUi();
+      break;
+    case "App:OpenSettings":
+      controller.onOpenSettings();
       break;
   }
 }

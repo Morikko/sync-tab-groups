@@ -30,11 +30,17 @@ const MainBar = React.createClass({
         }, [
           React.DOM.i({
             className: "app-pref fa fa-fw fa-gear",
-            onClick: this.props.onClickPref
+            onClick: this.handleClickPref
           }),
         ]),
       )
     );
+  },
+
+  handleClickPref: function(event) {
+    event.stopPropagation();
+    this.props.onClickPref();
+    //window.close();
   },
 
   handleCheckChange: function(id, value) {
