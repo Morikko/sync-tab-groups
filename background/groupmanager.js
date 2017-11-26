@@ -152,17 +152,17 @@ GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
  * Remove the windowId associated to a group
  * @param {Number} windowId
  */
-GroupManager.detachWindowFromGroupId = function(groupId) {
+GroupManager.detachWindowFromGroupId = async function(groupId) {
   let groupIndex;
   try {
     windowId = GroupManager.getWindowIdFromGroupId(
       groupId
     );
 
-    GroupManager.detachWindow(windowId);
+    await GroupManager.detachWindow(windowId);
 
   } catch (e) {
-    let msg = "GroupManager.detachWindowFromGroupId failed; " + e.message;
+    let msg = "GroupManager.detachWindowFromGroupId failed; " + e;
     console.error(msg);
     return;
   }
@@ -172,7 +172,7 @@ GroupManager.detachWindowFromGroupId = function(groupId) {
  * Remove the windowId associated to a group (windows was closed)
  * @param {Number} windowId
  */
-GroupManager.detachWindow = function(windowId) {
+GroupManager.detachWindow = async function(windowId) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromWindowId(
@@ -184,12 +184,12 @@ GroupManager.detachWindow = function(windowId) {
     if (GroupManager.groups[groupIndex].tabs.length > 0 &&
       GroupManager.groups[groupIndex].tabs[0].incognito &&
       OptionManager.options.privateWindow.removeOnClose) {
-      GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
+      await GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
     }
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
   } catch (e) {
-    let msg = "GroupManager.detachWindow failed; " + e.message;
+    let msg = "GroupManager.detachWindow failed; " + e;
     console.error(msg);
     return;
   }
@@ -205,10 +205,8 @@ GroupManager.removeGroupsInPrivateWindow = async function() {
       if (GroupManager.groups[i].tabs.length > 0 &&
         GroupManager.groups[i].tabs[0].incognito &&
         !OptionManager.options.privateWindow.sync) {
-        if (GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE) {
-          await WindowManager.desassociateGroupIdToWindow(GroupManager.groups[i].windowId);
-        }
-        GroupManager.removeGroupFromId(GroupManager.groups[i].id);
+
+        await GroupManager.removeGroupFromId(GroupManager.groups[i].id);
       }
     }
     return "GroupManager.removeGroupsInPrivateWindow done!";
@@ -220,20 +218,28 @@ GroupManager.removeGroupsInPrivateWindow = async function() {
 
 }
 
-GroupManager.removeGroupFromId = function(groupId) {
+/**
+ * Remove a group
+ * Also detach opened window
+ */
+GroupManager.removeGroupFromId = async function(groupId) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromGroupId(
       groupId
     );
-  } catch (e) {
-    let msg = "GroupManager.removeGroupFromId done because group " + groupId + " was already removed.";
-    console.error(msg);
-    return;
-  }
 
-  GroupManager.groups.splice(groupIndex, 1);
-  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+    if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE) {
+      await WindowManager.desassociateGroupIdToWindow(GroupManager.groups[groupIndex].windowId);
+    }
+
+    GroupManager.groups.splice(groupIndex, 1);
+    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+  } catch (e) {
+    let msg = "GroupManager.removeGroupFromId failed on " + groupId + " because " + e;
+    console.error(msg);
+    return msg;
+  }
 }
 
 GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, changeBrowser = true) {

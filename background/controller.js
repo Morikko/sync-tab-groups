@@ -235,7 +235,24 @@ Controller.prototype = {
 
   onOpenSettings: function() {
     browser.runtime.openOptionsPage();
-  }
+  },
+
+  synchronizeWindowManager: function(params) {
+    if (params.isSync) {
+      WindowManager.integrateWindow(params.windowId, true);
+    } else {
+      try {
+        let currentGroupId = GroupManager.getGroupIdInWindow(
+          params.windowId
+        );
+        GroupManager.removeGroupFromId(currentGroupId);
+      } catch (e) {
+        let msg = "synchronizeWindowManager failed; " + e;
+        console.error(msg);
+        return msg;
+      }
+    }
+  },
 };
 
 // Event from: popup
@@ -274,6 +291,9 @@ var popupMessenger = function(message) {
       break;
     case "App:OpenSettings":
       controller.onOpenSettings();
+      break;
+    case "Window:Sync":
+      controller.synchronizeWindowManager(message.params);
       break;
   }
 }
