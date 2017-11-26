@@ -79,6 +79,17 @@ const Actions = {
 
   askData: function() {
     Utils.sendMessage("Data:Ask", {});
+  },
+
+  openSettings: function() {
+    Utils.sendMessage("App:openSettings", {});
+  },
+
+  onChangeWindowSync: function(windowId, value) {
+    Utils.sendMessage("Window:Sync", {
+      windowId: windowId,
+      isSync: value,
+    });
   }
 };
 
@@ -99,7 +110,9 @@ document.addEventListener("DOMContentLoaded", () => {
         onTabClick: Actions.selectTab,
         onTabDrag: Actions.dragTab,
         onTabDragStart: Actions.dragTabStart,
-        onOpenInNewWindowClick: Actions.OpenGroupInNewWindow
+        onOpenInNewWindowClick: Actions.OpenGroupInNewWindow,
+        onChangeWindowSync: Actions.onChangeWindowSync,
+        onClickPref: Actions.openSettings,
       })
     ),
     document.getElementById("content")

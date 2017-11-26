@@ -38,6 +38,8 @@ const GroupList = (() => {
       onTabDrag: React.PropTypes.func,
       onTabDragStart: React.PropTypes.func,
       onOpenInNewWindowClick: React.PropTypes.func,
+      onChangeWindowSync: React.PropTypes.func,
+      onClickPref: React.PropTypes.func,
     },
 
     isCurrently: function(action, groupId) {
@@ -50,8 +52,21 @@ const GroupList = (() => {
     },
 
     render: function() {
+      let isWindowSync = false;
+      for ( g of this.props.groups ) {
+        if ( g.windowId === this.props.currentWindowId) {
+          isWindowSync = true;
+        }
+      }
+
       return React.DOM.ul(
         {className: "group-list"},
+        React.createElement( MainBar, {
+          onChangeWindowSync: this.props.onChangeWindowSync,
+          onClickPref: this.props.onClickPref,
+          isSync: isWindowSync,
+          currentWindowId: this.props.currentWindowId,
+        }),
         this.props.groups.map((group) => {
           return React.createElement(Group, {
             key: group.id,
