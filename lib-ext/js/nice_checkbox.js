@@ -4,17 +4,20 @@ const NiceCheckbox = React.createClass({
     checked: React.PropTypes.bool,
     id: React.PropTypes.string,
     label: React.PropTypes.string,
+    disabled: React.PropTypes.bool,
   },
 
   getInitialState: function() {
     return {
       checked: this.props.checked,
+      disabled: this.props.disabled||false,
     };
   },
 
   componentWillReceiveProps: function(nextProps) {
     this.setState({
-      checked: nextProps.checked
+      checked: nextProps.checked,
+      disabled: nextProps.disabled||false,
     })
   },
 
@@ -26,6 +29,7 @@ const NiceCheckbox = React.createClass({
         this.props.label,
         React.DOM.input({
           type: "checkbox",
+          disabled: this.state.disabled,
           checked: this.state.checked,
           id: this.props.id,
           onClick: this.handleClick,

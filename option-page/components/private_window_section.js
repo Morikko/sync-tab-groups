@@ -2,6 +2,7 @@ const PrivateWindowSection = React.createClass({
   propTypes: {
     options: React.PropTypes.object.isRequired,
     onOptionChange: React.PropTypes.func,
+    isSync: React.PropTypes.bool,
   },
 
   prefix: "privateWindow",
@@ -19,8 +20,9 @@ const PrivateWindowSection = React.createClass({
         title: 'Private Window'
       }),
       React.createElement(NiceCheckbox, {
+        disabled: !this.props.isSync,
         checked: this.props.options.sync,
-        label: "Synchronize the private windows as groups.",
+        label: "Synchronize each new private window as a new group.",
         onCheckChange: this.props.onOptionChange,
         id: this.prefix + "-sync",
       }),
