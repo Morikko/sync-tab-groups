@@ -227,6 +227,10 @@ Controller.prototype = {
       params.tabIndex,
       params.targetGroupID
     );
+  },
+
+  onBookmarkSave: function() {
+    StorageManager.Bookmark.backUp(GroupManager.getCopy(), true);
   }
 };
 
@@ -277,6 +281,9 @@ var optionMessenger = function(message) {
     case "Option:Change":
       OptionManager.updateOption(message.params.optionName, message.params.optionValue);
       controller.refreshOptionsUI();
+      break;
+    case "Option:BackUp":
+      controller.onBookmarkSave();
       break;
   }
 }

@@ -375,8 +375,8 @@ GroupManager.resetAssociatedWindows = function() {
  *
  */
 GroupManager.removeUnopenGroups = function() {
-  for ( let i=GroupManager.groups.length-1; i>=0; i-- ) {
-    if ( GroupManager.groups[i].windowId === browser.windows.WINDOW_ID_NONE ){
+  for (let i = GroupManager.groups.length - 1; i >= 0; i--) {
+    if (GroupManager.groups[i].windowId === browser.windows.WINDOW_ID_NONE) {
       GroupManager.groups.splice(i, 1);
     }
   }
@@ -460,7 +460,9 @@ GroupManager.integrateAllOpenedWindows = async function() {
  */
 GroupManager.store = function() {
   StorageManager.Local.saveGroups(GroupManager.getCopy());
-  //StorageManager.Bookmark.backUp(GroupManager.getCopy());
+  if (OptionManager.options.bookmarks.sync) {
+    StorageManager.Bookmark.backUp(GroupManager.getCopy());
+  }
 }
 
 
@@ -478,14 +480,14 @@ GroupManager.setGroups = async function(groups, opened, focus) {
   return "Currently Not implemented";
   // 1. Close all window except one
   const windows = await browser.windows.getAll();
-  for (let i=1; i<windows.length; i++ ) {
+  for (let i = 1; i < windows.length; i++) {
     await browser.windows.close(windows[i].id);
   }
 
   let initial_size = GroupManager.groups.length;
 
   // 2. Add groups
-  for (g of groups ) {
+  for (g of groups) {
     GroupManager.groups.push(g);
   }
 

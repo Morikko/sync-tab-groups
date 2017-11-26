@@ -30,7 +30,7 @@ const BookmarkSection = React.createClass({
       }),
       React.createElement(OptionCheckBox, {
         checked: this.props.options.sync,
-        label: "Save groups in bookmarks automatically (Every 60s)",
+        label: "Save groups in bookmarks automatically (Every 30s)",
         onCheckChange: this.props.onOptionChange,
         id: this.prefix + "-sync",
       }),

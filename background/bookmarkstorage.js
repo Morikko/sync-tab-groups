@@ -9,7 +9,7 @@ StorageManager.Bookmark = StorageManager.Bookmark || {};
 StorageManager.Bookmark.ROOT = "SyncTabGroups";
 StorageManager.Bookmark.ROOT_ID;
 
-StorageManager.Bookmark.repeatedtask = new TaskManager.RepeatedTask(5000);
+StorageManager.Bookmark.repeatedtask = new TaskManager.RepeatedTask(30000);
 
 
 /**
@@ -19,7 +19,7 @@ StorageManager.Bookmark.repeatedtask = new TaskManager.RepeatedTask(5000);
  * Use a time out, in order to avoid too many writing in paralel that makes the function not working.
  * @param {Array[Group]} groups
  */
-StorageManager.Bookmark.backUp = function(groups) {
+StorageManager.Bookmark.backUp = function(groups, force=false) {
   // Never do it asynchronously or you can break Firefox
   StorageManager.Bookmark.repeatedtask.add(
     async() => {
@@ -34,8 +34,8 @@ StorageManager.Bookmark.backUp = function(groups) {
         console.error(msg);
         return msg;
       }
-    }
-  )
+    },
+  force)
 }
 
 /**
@@ -46,6 +46,7 @@ StorageManager.Bookmark.backUp = function(groups) {
 StorageManager.Bookmark.saveGroups = async function(groups) {
   try {
     var rootId;
+
     // 1. Create root
     const bmRoot = await browser.bookmarks.create({
       title: OptionManager.options.bookmarks.folder === "" ? "Default" : OptionManager.options.bookmarks.folder,
