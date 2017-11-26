@@ -18,3 +18,8 @@
 .option-checkbox input {
     vertical-align: middle;
 }
+
+.option-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
