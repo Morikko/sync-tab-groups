@@ -26,7 +26,7 @@
       "background/utils/delayedtaskmanager.js",
       "background/utils/repeatedtaskmanager.js",
       "background/utils/eventlistener.js",
-      "background/bookmarkstorage.js", "background/localstorage.js", "background/optionmanager.js", "background/groupmanager.js",
+      "background/storage/bookmarkstorage.js", "background/storage/localstorage.js", "background/optionmanager.js", "background/groupmanager.js",
       "background/windowmanager.js", "background/tabmanager.js", "background/controller.js",
       "background/tests/comparator.js", "background/tests/group_example.js",
       "background/tests/testmanager.js", "background/tests/test_taskmanager.js",
