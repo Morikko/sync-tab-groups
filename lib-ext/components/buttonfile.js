@@ -10,12 +10,16 @@ const ButtonFile = React.createClass({
       className: "button-file",
     }, [
       React.DOM.input({
+        className: "button-file-input",
         id: this.props.id,
         type: "file",
         onChange: this.handleClick,
+        tabIndex: "-1",
       }),
       React.DOM.label({
+          className: "button-file-label",
           for: this.props.id,
+          tabIndex: "0",
         },
         this.props.title
       ),
@@ -26,13 +30,13 @@ const ButtonFile = React.createClass({
     event.stopPropagation();
     try {
       let files = event.target.files;
-      if ( files.length === 0 ){
+      if (files.length === 0) {
         return "No file selected..."
       }
       const jsonContent = await StorageManager.File.readJsonFile(files[0]);
       console.log(jsonContent);
       this.props.onFileSelected(jsonContent);
-    } catch ( e ){
+    } catch (e) {
       let msg = "ButtonFile.handleClick failed: " + e;
       console.error(msg);
       return msg;

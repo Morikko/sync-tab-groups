@@ -1,3 +1,45 @@
+/*** Button ***/
+/* Source input file: https://www.creativejuiz.fr/blog/tutoriels/input-file-personnalise-css-js */
+
+.button-file {
+  position: relative;
+  /*! width: 225px; */
+  display: inline-block;
+}
+
+.button-file-input {
+  position: absolute;
+  top: 0; left: 0;
+  width: 225px;
+  padding: 14px 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.button-file-label, .option-button{
+  display: block;
+  padding: 14px 45px;
+  background: #2aa1c0;
+  color: #fff;
+  font-size: 1em;
+  transition: all .4s;
+  cursor: pointer;
+}
+
+.option-button {
+	border: none
+}
+
+.button-file-input:hover + .button-file-label,
+.button-file-input:focus + .button-file-label,
+.button-file-label:hover,
+.button-file-label:focus,
+.option-button:focus,
+.option-button:hover {
+  background: #0e647d;
+}
+
+/*** Checkbox: https://kyusuf.com/post/completely-css-custom-checkbox-radio-buttons-and-select-boxes*****/
 .control {
 	font-size: 18px;
 	position: relative;
@@ -93,3 +135,4 @@
 .control--radio input:disabled ~ .control__indicator:after {
 	background: #7b7b7b;
 }
+/*** End Checkbox *****/
