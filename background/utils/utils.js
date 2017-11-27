@@ -12,7 +12,6 @@ TaskManager.REMOVE_REFERENCE = "remove";
 
 
 var OptionManager = OptionManager || {};
-
 OptionManager.TEMPLATE = function() {
   return {
     privateWindow: {
@@ -32,6 +31,27 @@ OptionManager.TEMPLATE = function() {
     }
   };
 };
+
+var StorageManager = StorageManager || {};
+StorageManager.File = StorageManager.File || {};
+
+StorageManager.File.readJsonFile = async function(file) {
+  return new Promise((resolve, reject) => {
+    let file_reader = new FileReader();
+    file_reader.addEventListener('loadend', function(event) {
+      try {
+        resolve(JSON.parse(event.target.result));
+      } catch (e) {
+        reject("Impossible to read file: " + e);
+      }
+    });
+    file_reader.addEventListener('error', function(error) {
+      reject("Error when reading file: " + error);
+    });
+    file_reader.readAsText(file, 'utf-8');
+  });
+}
+
 
 /**
  * Promise is resolved after time ms
@@ -71,15 +91,15 @@ Utils.isPrivilegedURL = function(url) {
  * @param {Object} _params - variables sent for achieving the goals
  */
 Utils.sendMessage = function(_task, _params) {
-    browser.runtime.sendMessage({
-      task: _task,
-      params: _params
+  browser.runtime.sendMessage({
+    task: _task,
+    params: _params
     // Catch it to avoid Error msg when no receiver
-    }).then((handleResponse, handleError)=>{
+  }).then((handleResponse, handleError) => {
 
-    }).catch((onRejected)=>{
+  }).catch((onRejected) => {
 
-    });
+  });
 }
 
 /**
@@ -88,17 +108,17 @@ Utils.sendMessage = function(_task, _params) {
  * @return {String} Group title
  */
 Utils.getGroupTitle = function(group) {
-  return group.title || (
-    browser.i18n.getMessage("unnamed_group") + " " + group.id
-  );
-},
+    return group.title || (
+      browser.i18n.getMessage("unnamed_group") + " " + group.id
+    );
+  },
 
-/* Since the current API doesn't provide an alternative, return always false.
- * TODO: find workaround
- */
-Utils.isDarkTheme = function() {
-  return false;
-}
+  /* Since the current API doesn't provide an alternative, return always false.
+   * TODO: find workaround
+   */
+  Utils.isDarkTheme = function() {
+    return false;
+  }
 
 /**
  * TODO: Need to fix isDarkTheme first with new API

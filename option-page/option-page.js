@@ -15,6 +15,10 @@ const Actions = {
   onBackUpAsk: function(name, value) {
     Utils.sendMessage("Option:BackUp", {});
   },
+
+  onImportAsk: function() {
+    Utils.sendMessage("Option:Import", {});
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -26,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       React.createElement(OptionsPanel, {
         onOptionChange: Actions.onOptionChange,
         onBackUpClick: Actions.onBackUpAsk,
+        onImportClick: Actions.onImportAsk,
       })
     ),
     document.getElementById("content")
