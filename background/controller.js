@@ -288,7 +288,11 @@ Controller.prototype = {
     } catch ( e ) {
       console.error(e);
     }
-  }
+  },
+
+  onExportGroups: function() {
+    StorageManager.File.exportGroups(GroupManager.getCopy());
+  },
 };
 
 // Event from: popup
@@ -357,6 +361,9 @@ var optionMessenger = function(message) {
     case "Option:Import":
       controller.onImportGroups(message.params);
       controller.refreshUi();
+      break;
+    case "Option:Export":
+      controller.onExportGroups();
       break;
   }
 }

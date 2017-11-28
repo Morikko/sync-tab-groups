@@ -52,7 +52,6 @@ StorageManager.File.readJsonFile = async function(file) {
   });
 }
 
-
 /**
  * Promise is resolved after time ms
  * @param {Number} time - in ms

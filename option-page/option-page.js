@@ -21,6 +21,10 @@ const Actions = {
       content_file: content_file,
     });
   },
+
+  onExportAsk: function() {
+    Utils.sendMessage("Option:Export", {});
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -33,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onOptionChange: Actions.onOptionChange,
         onBackUpClick: Actions.onBackUpAsk,
         onImportClick: Actions.onImportAsk,
+        onExportClick: Actions.onExportAsk,
       })
     ),
     document.getElementById("content")

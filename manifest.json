@@ -18,7 +18,7 @@
   },
 
   "permissions": [
-    "bookmarks", "tabs", "storage", "sessions"
+    "bookmarks", "tabs", "storage", "sessions", "downloads"
   ],
 
   "background": {

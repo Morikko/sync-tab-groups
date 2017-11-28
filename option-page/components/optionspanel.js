@@ -4,6 +4,7 @@ const OptionsPanel = (() => {
       onOptionChange: React.PropTypes.func,
       onBackUpClick: React.PropTypes.func,
       onImportClick: React.PropTypes.func,
+      onExportClick: React.PropTypes.func,
     },
 
     render: function() {
@@ -29,7 +30,8 @@ const OptionsPanel = (() => {
         React.createElement(FileSection, {
           options: this.props.options.bookmarks,
           onOptionChange: this.props.onOptionChange,
-          onImportClick: this.props.onImportClick
+          onImportClick: this.props.onImportClick,
+          onExportClick: this.props.onExportClick
         }),
       ]);
     }

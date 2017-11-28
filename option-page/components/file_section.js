@@ -3,6 +3,7 @@ const FileSection = React.createClass({
     options: React.PropTypes.object.isRequired,
     onOptionChange: React.PropTypes.func,
     onImportClick: React.PropTypes.func,
+    onExportClick: React.PropTypes.func,
   },
 
   prefix: "bookmarks",
@@ -15,9 +16,9 @@ const FileSection = React.createClass({
         title: 'Import/Export groups'
       }),
       React.DOM.span({},
-        React.DOM.ul({},[
-          React.DOM.li({},"Bllooooo"),
-      ])),
+        React.DOM.ul({}, [
+          React.DOM.li({}, "Bllooooo"),
+        ])),
       /*
       React.createElement(OptionInput, {
         label: "Name of the session: ",
@@ -33,6 +34,10 @@ const FileSection = React.createClass({
         id: this.prefix + "-sync",
       }),
       */
+      React.createElement(OptionButton, {
+        title: "Export Groups",
+        onClick: this.props.onExportClick
+      }),
       React.createElement(ButtonFile, {
         title: "Import Groups",
         id: "import-groups",
