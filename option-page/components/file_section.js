@@ -36,13 +36,9 @@ const FileSection = React.createClass({
       React.createElement(ButtonFile, {
         title: "Import Groups",
         id: "import-groups",
-        onFileSelected: this.handleImportClick
+        onFileSelected: this.props.onImportClick
       }),
     ]);
   },
-
-  handleImportClick: async function(event) {
-
-  }
 
 });

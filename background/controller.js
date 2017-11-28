@@ -1,7 +1,6 @@
 // Portage help from SDK/XUL to Web extension
 // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Comparison_with_the_Add-on_SDK
 // hotkeys -> commands
-// sdk/simple-prefs -> storage and options_ui
 
 TaskManager.fromUI = {
   [TaskManager.CLOSE_REFERENCE]: new TaskManager.DelayedTask(),
@@ -260,7 +259,7 @@ Controller.prototype = {
         params.groupId,
         params.tabIndex
       );
-    } catch ( e ) {
+    } catch (e) {
       let msg = "Controller.onTabClose failed; " + e;
       console.error(msg);
       return msg;
@@ -282,6 +281,14 @@ Controller.prototype = {
       return msg;
     }
   },
+
+  onImportGroups: function ( params ) {
+    try {
+      StorageManager.File.importGroups(params.content_file);
+    } catch ( e ) {
+      console.error(e);
+    }
+  }
 };
 
 // Event from: popup
@@ -333,7 +340,7 @@ var popupMessenger = function(message) {
   }
 }
 
-// Event from: popup
+// Event from: option
 var optionMessenger = function(message) {
   console.log(message);
   switch (message.task) {
@@ -346,6 +353,10 @@ var optionMessenger = function(message) {
       break;
     case "Option:BackUp":
       controller.onBookmarkSave();
+      break;
+    case "Option:Import":
+      controller.onImportGroups(message.params);
+      controller.refreshUi();
       break;
   }
 }
