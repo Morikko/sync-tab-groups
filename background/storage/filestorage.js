@@ -7,28 +7,29 @@ StorageManager.File = StorageManager.File || {};
 StorageManager.File.exportGroups = function(groups) {
   // TODO remove it in all app
   // Clean tabs
-  for ( g of groups ) {
-    for ( let it=0; it < g.tabs.length; it++ ) {
+  for (let g of groups) {
+    for (let it = 0; it < g.tabs.length; it++) {
       g.tabs[it] = {
-        title: g.tabs[it].title||"New Tab",
-        url: g.tabs[it].url||"about:newtab",
-        pinned: g.tabs[it].pinned||false,
-        active: g.tabs[it].active||false,
-        discarded: g.tabs[it].discarded||false,
-        favIconUrl: g.tabs[it].favIconUrl||"chrome://branding/content/icon32.png",
+        title: g.tabs[it].title || "New Tab",
+        url: g.tabs[it].url || "about:newtab",
+        pinned: g.tabs[it].pinned || false,
+        active: g.tabs[it].active || false,
+        discarded: g.tabs[it].discarded || false,
+        favIconUrl: g.tabs[it].favIconUrl || "chrome://branding/content/icon32.png",
       };
     }
   }
 
   let d = new Date();
   let url = URL.createObjectURL(new Blob([
-    JSON.stringify({
-    version: ["syncTabGroups", 1],
-    groups: groups,
-  })], {
-    type: 'application/json'
-  })),
-   filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
+      JSON.stringify({
+        version: ["syncTabGroups", 1],
+        groups: groups,
+      })
+    ], {
+      type: 'application/json'
+    })),
+    filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
 
   browser.downloads.download({
     url: url,
@@ -43,15 +44,14 @@ StorageManager.File.importGroups = function(content_file) {
   }
   let groups = [];
 
-  if (content_file['version'][0] === "tabGroups") {
+  if (content_file['version'][0] === "tabGroups" ||
+    content_file['version'][0] === "sessionrestore") {
     groups = StorageManager.File.importTabGroups(content_file);
   } else if (content_file['version'][0] === "syncTabGroups") {
     groups = StorageManager.File.importSyncTabGroups(content_file);
   } else {
     throw Error("ImportGroups: Content file is not in a supported format.");
   }
-
-  console.log(groups);
 
   return groups;
 }
@@ -66,9 +66,8 @@ StorageManager.File.importSyncTabGroups = function(content_file) {
 
   let groups = [];
 
-  for (g of content_file['groups']) {
-    groups.push(new GroupManager.Group(
-      -1,
+  for (let g of content_file['groups']) {
+    groups.push(new GroupManager.Group(-1,
       g.title || "",
       g.tabs || [],
     ));
@@ -83,13 +82,13 @@ StorageManager.File.importSyncTabGroups = function(content_file) {
  */
 StorageManager.File.importTabGroups = function(content_file) {
   if (!content_file.hasOwnProperty('version') ||
-    content_file['version'][0] !== "tabGroups" ||
-    !content_file.hasOwnProperty('windows')) {
+    (content_file['version'][0] !== "tabGroups" &&
+    content_file['version'][0] !== "sessionrestore") || !content_file.hasOwnProperty('windows')) {
     throw Error("TabGroups importation: Content file is not readable.");
   }
   let groups = [];
 
-  for (w of content_file['windows']) {
+  for (let w of content_file['windows']) {
     let cross_ref = {},
       index = 0,
       tmp_groups = [];
@@ -115,7 +114,7 @@ StorageManager.File.importTabGroups = function(content_file) {
       throw Error("TabGroups importation: Content file is not readable...");
     }
 
-    for (t of w['tabs']) {
+    for (let t of w['tabs']) {
       if (!t.hasOwnProperty('extData') ||
         !t['extData'].hasOwnProperty('tabview-tab') ||
         !JSON.parse(t['extData']['tabview-tab']).hasOwnProperty('groupID') ||
@@ -134,14 +133,10 @@ StorageManager.File.importTabGroups = function(content_file) {
       });
     }
 
-    for (g of tmp_groups) {
+    for (let g of tmp_groups) {
       groups.push(g);
     }
   }
-
-
-
-
 
   return groups;
 }

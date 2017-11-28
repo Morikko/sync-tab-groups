@@ -53,6 +53,7 @@ TestManager.DONE = true;
 
 TestManager.last_results = [];
 TestManager.currentTests = [];
+TestManager.FileManager = [];
 
 TestManager.Results = function ( code, title, msg, vars  ) {
   return {
