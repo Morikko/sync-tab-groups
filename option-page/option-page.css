@@ -14,12 +14,8 @@
     vertical-align: middle;
 }
 
-li {
+li, div span {
     font-size: 18px;
-}
-
-div span {
-   font-size: 18px;
 }
 
 .option-checkbox input {

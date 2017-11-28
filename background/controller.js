@@ -282,10 +282,11 @@ Controller.prototype = {
     }
   },
 
-  onImportGroups: function ( params ) {
+  onImportGroups: function(params) {
     try {
-      StorageManager.File.importGroups(params.content_file);
-    } catch ( e ) {
+      let groups = StorageManager.File.importGroups(params.content_file);
+      GroupManager.addGroups(groups);
+    } catch (e) {
       console.error(e);
     }
   },

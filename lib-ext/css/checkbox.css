@@ -39,9 +39,12 @@
   background: #0e647d;
 }
 
+.control, .button-file-label{
+    font-size: 18px;
+}
+
 /*** Checkbox: https://kyusuf.com/post/completely-css-custom-checkbox-radio-buttons-and-select-boxes*****/
 .control {
-	font-size: 18px;
 	position: relative;
 	display: block;
 	/*margin-bottom: 15px;*/

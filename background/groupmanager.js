@@ -118,7 +118,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
     );
     GroupManager.groups[groupIndex].tabs = tabs;
 
-    if ( OptionManager.options.groups.removeEmptyGroup ) {
+    if (OptionManager.options.groups.removeEmptyGroup) {
       GroupManager.removeEmptyGroup();
     }
 
@@ -260,7 +260,7 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, cha
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
-    if ( OptionManager.options.groups.removeEmptyGroup ) {
+    if (OptionManager.options.groups.removeEmptyGroup) {
       GroupManager.removeEmptyGroup();
     }
 
@@ -332,13 +332,11 @@ GroupManager.addGroup = function(title = "",
   windowId = browser.windows.WINDOW_ID_NONE) {
   if (GroupManager.isWindowAlreadyRegistered(windowId))
     return;
-  let tabs = [
-    {
-      url: "about:newtab",
-      title: "New Tab",
-      active: true
-    }
-  ];
+  let tabs = [{
+    url: "about:newtab",
+    title: "New Tab",
+    active: true
+  }];
   let uniqueGroupId;
   try {
     uniqueGroupId = GroupManager.createUniqueGroupId();
@@ -381,11 +379,20 @@ GroupManager.addGroupWithTab = function(tabs,
   return uniqueGroupId;
 }
 
+GroupManager.addGroups = function(groups) {
+  for (let g of groups) {
+    g.id = GroupManager.createUniqueGroupId();
+    GroupManager.groups.push(g);
+  }
+
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+}
+
 /**
  * Set all windowIds to browser.windows.WINDOW_ID_NONE
  */
 GroupManager.resetAssociatedWindows = function() {
-  for (g of GroupManager.groups) {
+  for (let g of GroupManager.groups) {
     g.windowId = browser.windows.WINDOW_ID_NONE;
   }
   GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
@@ -442,7 +449,7 @@ GroupManager.createUniqueGroupId = function() {
     uniqueGroupId++;
     count++;
     isUnique = true;
-    for (g of GroupManager.groups) {
+    for (let g of GroupManager.groups) {
       isUnique = isUnique && g.id !== uniqueGroupId;
     }
 

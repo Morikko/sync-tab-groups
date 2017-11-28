@@ -34,7 +34,6 @@ const ButtonFile = React.createClass({
         return "No file selected..."
       }
       const jsonContent = await StorageManager.File.readJsonFile(files[0]);
-      console.log(jsonContent);
       this.props.onFileSelected(jsonContent);
     } catch (e) {
       let msg = "ButtonFile.handleClick failed: " + e;

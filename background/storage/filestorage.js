@@ -37,21 +37,42 @@ StorageManager.File.exportGroups = function(groups) {
   });
 }
 
-StorageManager.File.importGroups = function(file){
+StorageManager.File.importGroups = function(content_file) {
+  if (!content_file.hasOwnProperty('version')) {
+    throw Error("ImportGroups: Content file is not in a supported format.");
+  }
   let groups = [];
+
+  if (content_file['version'][0] === "tabGroups") {
+    groups = StorageManager.File.importTabGroups(content_file);
+  } else if (content_file['version'][0] === "syncTabGroups") {
+    groups = StorageManager.File.importSyncTabGroups(content_file);
+  } else {
+    throw Error("ImportGroups: Content file is not in a supported format.");
+  }
+
+  console.log(groups);
 
   return groups;
 }
 
-StorageManager.File.getFile = function () {
-  let file = "";
 
-  return file;
-}
+StorageManager.File.importSyncTabGroups = function(content_file) {
+  if (!content_file.hasOwnProperty('version') ||
+    !content_file.hasOwnProperty('groups') ||
+    content_file['version'][0] !== "syncTabGroups") {
+    throw Error("SyncTabGroups importation: Content file is not readable.")
+  }
 
-
-StorageManager.File.importSyncTabGroups = function( data_imported ){
   let groups = [];
+
+  for (g of content_file['groups']) {
+    groups.push(new GroupManager.Group(
+      -1,
+      g.title || "",
+      g.tabs || [],
+    ));
+  }
 
   return groups;
 }
@@ -60,8 +81,67 @@ StorageManager.File.importSyncTabGroups = function( data_imported ){
  *
  * legacy
  */
-StorageManager.File.importTabGroups = function( data_imported ){
+StorageManager.File.importTabGroups = function(content_file) {
+  if (!content_file.hasOwnProperty('version') ||
+    content_file['version'][0] !== "tabGroups" ||
+    !content_file.hasOwnProperty('windows')) {
+    throw Error("TabGroups importation: Content file is not readable.");
+  }
   let groups = [];
+
+  for (w of content_file['windows']) {
+    let cross_ref = {},
+      index = 0,
+      tmp_groups = [];
+
+    // Create groups
+    if (!w.hasOwnProperty('extData') ||
+      !w['extData'].hasOwnProperty('tabview-group')) {
+      throw Error("TabGroups importation: Content file is not readable..");
+    }
+    let tabviewgroup = JSON.parse(w['extData']['tabview-group']);
+    for (let i in tabviewgroup) {
+      let g = tabviewgroup[i];
+      if (g !== undefined) {
+        tmp_groups.push(new GroupManager.Group(-1,
+          g.title || "", [],
+        ));
+        cross_ref[g.id] = index;
+        index++;
+      }
+    }
+
+    if (!w.hasOwnProperty('tabs')) {
+      throw Error("TabGroups importation: Content file is not readable...");
+    }
+
+    for (t of w['tabs']) {
+      if (!t.hasOwnProperty('extData') ||
+        !t['extData'].hasOwnProperty('tabview-tab') ||
+        !JSON.parse(t['extData']['tabview-tab']).hasOwnProperty('groupID') ||
+        !t.hasOwnProperty('entries') ||
+        !t['entries'][0].hasOwnProperty('title') ||
+        !t['entries'][0].hasOwnProperty('url')) {
+        continue;
+      }
+      let i = cross_ref[JSON.parse(t['extData']['tabview-tab'])['groupID']];
+
+      tmp_groups[i].tabs.push({
+        title: t['entries'][0]['title'],
+        url: t['entries'][0]['url'],
+        pinned: false,
+        active: false,
+      });
+    }
+
+    for (g of tmp_groups) {
+      groups.push(g);
+    }
+  }
+
+
+
+
 
   return groups;
 }
