@@ -159,9 +159,16 @@ li {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: calc(100% - 64px);
   padding: 5px 5px 1px;
   margin-bottom: 1px;
+}
+
+.tab .tab-title {
+  max-width: calc(100% - 24px);
+}
+
+.tab:hover .tab-title {
+  max-width: calc(100% - 64px);
 }
 
 .tab-icon {
@@ -194,8 +201,15 @@ li {
   font-size: 120%;
   opacity: 0.7;
   position: absolute;
-  right: 15px;
   top: -2px;
+}
+
+.group-controls {
+  right: 10px;
+}
+
+.tab-controls {
+  right: 5px;
 }
 
 .group.editing .group-controls, .group.editing .tab-controls {
@@ -239,5 +253,13 @@ li {
 }
 
 .group:hover .group-controls .group-close, .group:hover .group-controls .group-edit {
+  display: inline-block;
+}
+
+.tab .tab-controls .tab-edit {
+  display: none;
+}
+
+.tab:hover .tab-controls .tab-edit {
   display: inline-block;
 }
