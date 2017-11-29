@@ -24,6 +24,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+body {
+  overflow-x: hidden;
+}
+
+#content {
+  width: 400px;
+}
+
 ul, li {
   display: block;
   margin: 0;
@@ -33,6 +41,7 @@ ul, li {
 li {
   list-style-type: none;
   cursor: move;
+  overflow: hidden;
 }
 
 .mainbar {
@@ -60,7 +69,7 @@ li {
   font-size: 120%;
   opacity: 0.7;
   position: absolute;
-  right: 0px;
+  right: 10px;
   vertical-align: middle;
   height: 100%;
 }
@@ -181,7 +190,7 @@ li {
   font-size: 120%;
   opacity: 0.7;
   position: absolute;
-  right: 5px;
+  right: 15px;
   top: 4px;
 }
 
