@@ -86,6 +86,10 @@ li {
   min-width: 300px;
 }
 
+.group:not([hidden]) ~ .mainbar {
+    margin-top: 1px;
+}
+
 .group-title {
   display: block;
   overflow: hidden;
@@ -191,11 +195,30 @@ li {
   opacity: 0.7;
   position: absolute;
   right: 15px;
-  top: 4px;
+  top: -2px;
 }
 
 .group.editing .group-controls, .group.editing .tab-controls {
   top: 6px;
+}
+
+.group-controls i, .tab-controls i {
+  width: 26px;
+  background-color: none;
+}
+
+.group-controls i:hover, .tab-controls i:hover {
+  background-color: #ccc;
+}
+
+.group-controls i {
+  height: 32px;
+  line-height: 32px;
+}
+
+.tab-controls i {
+  height: 34px;
+  line-height: 34px;
 }
 
 .group.closing .group-controls .group-close, .group.closing:hover .group-controls .group-close, .group.closing .group-controls .group-edit {
