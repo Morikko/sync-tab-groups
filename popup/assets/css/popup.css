@@ -102,7 +102,8 @@ li {
   padding-right: 16px;
 }
 
-.group.active .group-title, .tab.active {
+/* Group in window and active tab */
+.focusGroup .group-title, .tab.active .tab-title {
   font-weight: bold;
 }
 
@@ -130,9 +131,14 @@ li {
   padding: 0;
 }
 
-.group:hover, .tab:hover, .focusGroup {
-  background-color: rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 0, 0, 0.12);
+.group.active {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.group:hover, .tab:hover {
+  background-color: rgba(0, 0, 0, 0.10);
+  border-color: rgba(0, 0, 0, 0.14);
 }
 
 .group.dragSourceGroup {
