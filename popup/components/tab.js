@@ -58,6 +58,7 @@ const Tab = React.createClass({
         favicon,
         React.DOM.span({
             className: "tab-title",
+            title: this.props.tab.title,
           },
           this.props.tab.title,
           React.createElement(
