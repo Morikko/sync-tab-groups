@@ -40,7 +40,7 @@ const MainBar = React.createClass({
   handleClickPref: function(event) {
     event.stopPropagation();
     this.props.onClickPref();
-    //window.close();
+    window.close();
   },
 
   handleCheckChange: function(id, value) {

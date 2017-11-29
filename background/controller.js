@@ -286,8 +286,23 @@ Controller.prototype = {
     try {
       let groups = StorageManager.File.importGroups(params.content_file);
       GroupManager.addGroups(groups);
+
+      browser.notifications.create({
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+        "title": "Import Groups succeeded",
+        "message": groups.length + " groups imported.",
+        "eventTime": 4000,
+      });
     } catch (e) {
       console.error(e);
+      browser.notifications.create({
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+        "title": "Import Groups failed",
+        "message": e.message,
+        "eventTime": 4000,
+      });
     }
   },
 
