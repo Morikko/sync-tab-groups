@@ -80,6 +80,7 @@ const Tab = React.createClass({
       group.id,
       this.props.tabIndex
     );
+    window.close();
   },
 
   handleOpenTabClick: function(event) {
