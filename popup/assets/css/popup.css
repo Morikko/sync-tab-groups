@@ -240,7 +240,7 @@ li {
 }
 
 .group.closing .group-title, .group.removing .group-title {
-  color: #ccc;
+  color: #b3b3b3;
   text-decoration: line-through;
 }
 
