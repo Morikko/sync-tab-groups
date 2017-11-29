@@ -15,12 +15,14 @@ Sync Tab Groups are an easy way to organize your current tabs depending on a top
 ## Menu
 
 ### From toolbar
-- Open a group in a new window to switch between them more easily
-- Click on a group already opened to focus the dedicated window
+- Open a group 
+  - In your current window
+  - In a new window directly
+- Click on a group/tab already opened to focus it in your screen
 - Move tabs between groups by drag and dropping (Create new group included)
 - Change name of your groups
-- Select a tab in any groups by clicking on it
 - Undo for closing and removing groups, don't regret easy click ;)
+- Close/Open tabs from the UI
 
 ## Private Windows
  - Synchronization: (either) (See extension settings)
@@ -36,6 +38,9 @@ Sync Tab Groups are an easy way to organize your current tabs depending on a top
 ## Save
 - Groups are saved on your computer, you find them back after restarting Firefox
 - A backup of your groups is done in "Other Bookmarks/SyncTabGroups"
+- Import/Export groups from
+  - Sync Tab Groups extension
+  - Tab Groups extension (Import only)
 
 ## Important limitations
 Due to the API, I won't be able to add hide/show tabs or keep tabs unloaded:
