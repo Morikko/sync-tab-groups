@@ -65,5 +65,3 @@ TestManager.import_export = function() {
 
   }
 }
-
-TestManager.FileManager.push(TestManager.import_export);

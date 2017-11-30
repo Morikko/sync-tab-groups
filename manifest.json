@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "version": "0.2.2",
+  "version": "0.2.3",
 
   "name": "Sync Tab Groups",
   "description": "Sync Tab Groups are an easy way to organize your current tabs depending on a topic. Each open group is synchronized with a window so that all tabs change are saved. Hence, you can close a current tabs-flow while opening another one.",
@@ -22,18 +22,30 @@
   ],
 
   "background": {
-    "scripts": ["background/utils/utils.js",
+    "scripts": [
+      "background/utils/utils.js",
       "background/utils/delayedtaskmanager.js",
       "background/utils/repeatedtaskmanager.js",
       "background/utils/eventlistener.js",
-      "background/storage/bookmarkstorage.js", "background/storage/localstorage.js", "background/storage/filestorage.js",
-      "background/optionmanager.js", "background/groupmanager.js",
-      "background/windowmanager.js", "background/tabmanager.js",
+      "background/storage/bookmarkstorage.js",
+      "background/storage/localstorage.js",
+      "background/storage/filestorage.js",
+      "background/optionmanager.js",
+      "background/groupmanager.js",
+      "background/windowmanager.js",
+      "background/tabmanager.js",
       "background/contextmenus.js",
       "background/controller.js",
-      "background/tests/comparator.js", "background/examples/tabGroups.js", "background/tests/group_example.js",
-      "background/tests/testmanager.js", "background/tests/test_taskmanager.js",
-      "background/tests/test_switchgroup.js", "background/tests/test_filemanager.js"
+      "background/tests/comparator.js",
+      "background/examples/tabGroups.js",
+      "background/examples/move_tabs.js",
+      "background/tests/group_example.js",
+      "background/tests/test_utils.js",
+      "background/tests/test_taskmanager.js",
+      "background/tests/test_switchgroup.js",
+      "background/tests/test_filemanager.js",
+      "background/tests/test_movetab.js",
+      "background/tests/testmanager.js"
     ]
   },
 

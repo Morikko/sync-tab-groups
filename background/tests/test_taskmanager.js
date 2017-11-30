@@ -172,6 +172,3 @@ TestManager.repeatedtask = function() {
     }
   }
 }
-
-TestManager.allTests.push(TestManager.delayedtask);
-TestManager.allTests.push(TestManager.repeatedtask);

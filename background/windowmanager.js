@@ -292,7 +292,7 @@ WindowManager.removeGroup = async function(groupID) {
 /**
  * Open a group in a new window directly
  * @param {Number} groupID
- * @return {Promise}
+ * @return {Promise} with window_id
  */
 WindowManager.openGroupInNewWindow = async function(groupID) {
   try {
@@ -310,7 +310,7 @@ WindowManager.openGroupInNewWindow = async function(groupID) {
 
     // Remove first new tab open with window
     await browser.tabs.remove([w.tabs[0].id]);
-    return "WindowManager.openGroupInNewWindow done!";
+    return w.id;
 
   } catch (e) {
     let msg = "WindowManager.openGroupInNewWindow failed; " + e;
@@ -446,12 +446,16 @@ WindowManager.keepOneWindowOpen = async function() {
 /**
  * Close all windows and open a new one with only a new tab
  */
-WindowManager.OnlyOneNewWindow = async function() {
+WindowManager.OnlyOneNewWindow = async function(sync_window=true) {
   try {
+    OptionManager.options.groups.syncNewWindow = sync_window;
     const windows = await browser.windows.getAll();
 
     const w = await browser.windows.create();
-    await WindowManager.integrateWindow(w.id);
+
+    if ( sync_window ) {
+      await WindowManager.integrateWindow(w.id);
+    }
 
     for (let i = 0; i < windows.length; i++) {
       await browser.windows.remove(windows[i].id);

@@ -55,6 +55,3 @@ TestManager.switchgroup_pinnedsync = function() {
     GroupManager.removeUnopenGroups();
   }
 }
-
-TestManager.allTests.push(TestManager.switchgroup_pinnedsync);
-TestManager.currentTests.push(TestManager.switchgroup_pinnedsync);
