@@ -33,6 +33,7 @@ const Tab = React.createClass({
     opened: React.PropTypes.bool,
     onCloseTab: React.PropTypes.func,
     onOpenTab: React.PropTypes.func,
+    searchTabResult: React.PropTypes.string,
   },
 
   render: function() {
@@ -44,7 +45,8 @@ const Tab = React.createClass({
 
     let tabClasses = classNames({
       active: this.props.tab.active,
-      tab: true
+      tab: true,
+      hiddenBySearch: !this.props.searchTabResult,
     });
 
     return (

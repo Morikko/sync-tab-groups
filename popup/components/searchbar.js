@@ -44,5 +44,6 @@ const SearchBar = React.createClass({
     this.setState({
       value: ''
     });
+    this.props.onSearchChange('');
   },
 });

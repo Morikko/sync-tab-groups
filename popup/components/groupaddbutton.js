@@ -26,7 +26,8 @@ SOFTWARE.
 const GroupAddButton = React.createClass({
   propTypes: {
     onClick: React.PropTypes.func,
-    onDrop: React.PropTypes.func
+    onDrop: React.PropTypes.func,
+    currentlySearching: React.PropTypes.bool,
   },
 
   getInitialState: function() {
@@ -38,7 +39,9 @@ const GroupAddButton = React.createClass({
   render: function() {
     let buttonClasses = classNames({
       draggingOver: this.state.draggingOverCounter !== 0,
-      group: true
+      group: true,
+      hiddenBySearch: this.props.currentlySearching,
+      addButton: true
     });
 
     return (

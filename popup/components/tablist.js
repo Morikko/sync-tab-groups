@@ -32,6 +32,7 @@ const TabList = React.createClass({
     opened: React.PropTypes.bool.isRequired,
     onCloseTab: React.PropTypes.func,
     onOpenTab: React.PropTypes.func,
+    searchTabsResults: React.PropTypes.object,
   },
 
   render: function() {
@@ -51,6 +52,7 @@ const TabList = React.createClass({
             opened: this.props.opened,
             onCloseTab: this.props.onCloseTab,
             onOpenTab: this.props.onOpenTab,
+            searchTabResult: this.props.searchTabsResults[index],
           });
         })
       )

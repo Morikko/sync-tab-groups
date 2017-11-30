@@ -53,6 +53,23 @@ StorageManager.File.readJsonFile = async function(file) {
 }
 
 /**
+ * Search the keywords in title. Keywords are separated with space
+ * Not case sensitive
+ * Return true if all keywords are in title
+ * @param {String} title
+ * @param {String} keywords
+ * @return {boolean}
+ */
+Utils.search = function(title, keywords) {
+
+  let has = true;
+  keywords.split(' ').map((word)=>{
+    has = has && title.toLowerCase().includes(word.toLowerCase());
+  })
+  return has;
+}
+
+/**
  * Promise is resolved after time ms
  * @param {Number} time - in ms
  */

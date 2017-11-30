@@ -40,6 +40,8 @@ const Group = React.createClass({
     onOpenInNewWindowClick: React.PropTypes.func,
     onCloseTab: React.PropTypes.func,
     onOpenTab: React.PropTypes.func,
+    searchGroupResult: React.PropTypes.object,
+    currentlySearching: React.PropTypes.bool,
   },
 
   getInitialState: function() {
@@ -48,7 +50,7 @@ const Group = React.createClass({
       closing: this.props.currentlyClosing && !this.props.currentlyRemoving,
       removing: this.props.currentlyRemoving,
       editing: false,
-      expanded: false,
+      expanded: this.props.currentlySearching,
       opened: this.props.group.windowId !== browser.windows.WINDOW_ID_NONE,
       draggingOverCounter: 0,
       dragSourceGroup: false,
@@ -62,6 +64,7 @@ const Group = React.createClass({
           closing: nextProps.currentlyClosing && !nextProps.currentlyRemoving,
           removing: nextProps.currentlyRemoving,
           opened: nextProps.group.windowId !== browser.windows.WINDOW_ID_NONE,
+          expanded: nextProps.currentlySearching,
         })
     },
 
@@ -99,7 +102,8 @@ const Group = React.createClass({
       dragSourceGroup: this.state.dragSourceGroup,
       expanded: this.state.expanded,
       focusGroup: this.props.currentWindowId === this.props.group.windowId,
-      group: true
+      group: true,
+      hiddenBySearch: !this.props.searchGroupResult.atLeastOneResult,
     });
 
     return (
@@ -144,6 +148,7 @@ const Group = React.createClass({
             opened: this.state.opened,
             onCloseTab: this.props.onCloseTab,
             onOpenTab: this.props.onOpenTab,
+            searchTabsResults: this.props.searchGroupResult.searchTabsResults,
           }
         )
       )

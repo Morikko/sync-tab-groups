@@ -26,6 +26,7 @@ SOFTWARE.
 
 
 /**** Search Bar ***/
+
 .cancel-search {
   right: 12px;
   display: inline-block;
@@ -42,8 +43,19 @@ SOFTWARE.
 }
 
 .searchbar input {
-  width:100%
+  width: 100%
 }
+
+.hiddenBySearch {
+  display: none;
+}
+
+.no-search-result {
+  padding: 5px;
+  position: relative;
+}
+
+
 /*** Search End ***/
 
 body {
@@ -101,8 +113,8 @@ li {
   line-height: 40px;
 }
 
-.mainbar + li {
-    margin-top: 3px;
+.mainbar+li, .searchbar+li {
+  margin-top: 3px;
 }
 
 .group {
@@ -121,7 +133,9 @@ li {
   padding-right: 16px;
 }
 
+
 /* Group in window and active tab */
+
 .focusGroup .group-title, .tab.active .tab-title {
   font-weight: bold;
 }
@@ -287,4 +301,8 @@ li {
 
 .tab:hover .tab-controls .tab-edit {
   display: inline-block;
+}
+
+.addButton {
+  border-top: #ccc solid 2px;
 }

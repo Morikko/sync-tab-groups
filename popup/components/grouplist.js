@@ -44,6 +44,12 @@ const GroupList = (() => {
       onOpenTab: React.PropTypes.func,
     },
 
+    getInitialState: function() {
+      return {
+        searchfilter: '',
+      };
+    },
+
     isCurrently: function(action, groupId) {
       if (this.props.delayedTasks[action] !== undefined) {
         return this.props.delayedTasks[action].delayedTasks[groupId] !== undefined;
@@ -54,9 +60,31 @@ const GroupList = (() => {
 
     render: function() {
       let isWindowSync = false;
-      for (g of this.props.groups) {
-        if (g.windowId === this.props.currentWindowId) {
+      let searchGroupsResults = [];
+      let atLeastOneResult = this.state.searchfilter.length === 0;
+
+      // Apply search
+      for (let i = 0; i < this.props.groups.length; i++) {
+        if (this.props.groups[i].windowId === this.props.currentWindowId) {
           isWindowSync = true;
+        }
+        searchGroupsResults[i] = {
+          atLeastOneResult: false,
+          searchTabsResults: [],
+        };
+        // Search in group title
+        if (Utils.search(this.props.groups[i].title, this.state.searchfilter)) {
+          searchGroupsResults[i].atLeastOneResult = true;
+          atLeastOneResult = true;
+        }
+
+        for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
+          // Search in tab title
+          if (Utils.search(this.props.groups[i].tabs[j].title, this.state.searchfilter)) {
+            searchGroupsResults[i].atLeastOneResult = true;
+            searchGroupsResults[i].searchTabsResults[j] = true;
+            atLeastOneResult = true;
+          }
         }
       }
 
@@ -72,7 +100,7 @@ const GroupList = (() => {
         React.createElement(SearchBar, {
           onSearchChange: this.onSearchChange,
         }),
-        this.props.groups.map((group) => {
+        this.props.groups.map((group, index) => {
           return React.createElement(Group, {
             key: group.id,
             group: group,
@@ -90,19 +118,28 @@ const GroupList = (() => {
             onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
             onCloseTab: this.props.onCloseTab,
             onOpenTab: this.props.onOpenTab,
+            searchGroupResult: searchGroupsResults[index],
+            currentlySearching: this.state.searchfilter.length>0,
           });
         }),
         React.createElement(
           GroupAddButton, {
             onClick: this.props.onGroupAddClick,
-            onDrop: this.props.onGroupAddDrop
+            onDrop: this.props.onGroupAddDrop,
+            currentlySearching: this.state.searchfilter.length>0,
           }
-        )
+        ),
+        React.DOM.li({
+          className: "no-search-result" + (!atLeastOneResult?"":" hiddenBySearch")
+        },
+        'No search result for "'+ this.state.searchfilter+'".')
       );
     },
 
     onSearchChange: function(searchValue) {
-      console.log(searchValue);
+      this.setState({
+        searchfilter: searchValue
+      });
     }
   });
 
