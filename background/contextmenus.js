@@ -6,6 +6,8 @@ ContextMenu.SpecialActionMenu_ID = "stg-special-actions-";
 ContextMenu.MoveTabMenuIds = [];
 ContextMenu.SpecialActionMenuIds = [];
 
+ContextMenu.repeatedtask = new TaskManager.RepeatedTask(800);
+
 ContextMenu.createMoveTabMenu = async function() {
 
   for (let id of ContextMenu.MoveTabMenuIds) {
@@ -17,7 +19,7 @@ ContextMenu.createMoveTabMenu = async function() {
 
   let parentId = ContextMenu.MoveTabMenu_ID + "title";
   ContextMenu.MoveTabMenuIds.push(parentId);
-  browser.contextMenus.create({
+  await browser.contextMenus.create({
     id: parentId,
     title: browser.i18n.getMessage("move_tab_group"),
     contexts: contexts,
@@ -28,26 +30,30 @@ ContextMenu.createMoveTabMenu = async function() {
   });
 
   ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-1");
-  browser.contextMenus.create({
+  await browser.contextMenus.create({
     id: ContextMenu.MoveTabMenu_ID + "separator-1",
     type: "separator",
     contexts: contexts,
     parentId: parentId
   });
 
+  let currentWindow = await browser.windows.getLastFocused({
+    windowTypes: ['normal']
+  });
   let groups = GroupManager.getCopy();
   for (let i = 0; i < groups.length; i++) {
     ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
-    browser.contextMenus.create({
+    await browser.contextMenus.create({
       id: ContextMenu.MoveTabMenu_ID + groups[i].id,
       title: Utils.getGroupTitle(groups[i]),
       contexts: contexts,
-      parentId: parentId
+      parentId: parentId,
+      enabled: currentWindow.id !== groups[i].windowId
     });
   }
 
   ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-2");
-  browser.contextMenus.create({
+  await browser.contextMenus.create({
     id: ContextMenu.MoveTabMenu_ID + "separator-2",
     type: "separator",
     contexts: contexts,
@@ -55,7 +61,7 @@ ContextMenu.createMoveTabMenu = async function() {
   });
 
   ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "new");
-  browser.contextMenus.create({
+  await browser.contextMenus.create({
     id: ContextMenu.MoveTabMenu_ID + "new",
     title: browser.i18n.getMessage("add_group"),
     contexts: contexts,
@@ -98,9 +104,24 @@ ContextMenu.createSpecialActionMenu = function() {
 ContextMenu.MoveTabMenuListener = function(info, tab) {
   if (info.menuItemId.includes(ContextMenu.MoveTabMenu_ID)) {
     let order = info.menuItemId.substring(ContextMenu.MoveTabMenu_ID.length, info.menuItemId.length);
-    console.log(order);
-    console.log(tab);
+    let groupId = parseInt(order);
 
+    try { // From synchronized window
+      if (groupId > 0) {
+        TabManager.moveTabToGroup(
+          params.sourceGroupID,
+          params.tabIndex,
+          groupId
+        );
+      } else if (order === "new") {
+        TabManager.moveTabToNewGroup(
+          params.sourceGroupID,
+          params.tabIndex
+        );
+      }
+    } catch (e) { // From unsynchronized window
+
+    }
   }
 };
 
@@ -109,6 +130,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
     let order = info.menuItemId.substring(ContextMenu.MoveTabMenu_ID.length, info.menuItemId.length);
     console.log(order);
     console.log(tab);
+    // TODO
   }
 };
 
@@ -116,7 +138,11 @@ browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
 browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
 GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
   () => {
-    ContextMenu.createMoveTabMenu();
+    ContextMenu.repeatedtask.add(
+      () => {
+        ContextMenu.createMoveTabMenu();
+      }
+    )
   });
 
 ContextMenu.createSpecialActionMenu();
