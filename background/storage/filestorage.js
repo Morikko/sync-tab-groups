@@ -83,7 +83,7 @@ StorageManager.File.importSyncTabGroups = function(content_file) {
 StorageManager.File.importTabGroups = function(content_file) {
   if (!content_file.hasOwnProperty('version') ||
     (content_file['version'][0] !== "tabGroups" &&
-    content_file['version'][0] !== "sessionrestore") || !content_file.hasOwnProperty('windows')) {
+      content_file['version'][0] !== "sessionrestore") || !content_file.hasOwnProperty('windows')) {
     throw Error("TabGroups importation: Content file is not readable.");
   }
   let groups = [];

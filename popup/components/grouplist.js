@@ -69,6 +69,9 @@ const GroupList = (() => {
           isSync: isWindowSync,
           currentWindowId: this.props.currentWindowId,
         }),
+        React.createElement(SearchBar, {
+          onSearchChange: this.onSearchChange,
+        }),
         this.props.groups.map((group) => {
           return React.createElement(Group, {
             key: group.id,
@@ -96,6 +99,10 @@ const GroupList = (() => {
           }
         )
       );
+    },
+
+    onSearchChange: function(searchValue) {
+      console.log(searchValue);
     }
   });
 

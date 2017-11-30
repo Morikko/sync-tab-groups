@@ -1,5 +1,7 @@
 /*** Button ***/
-/* Source input file: https://www.creativejuiz.fr/blog/tutoriels/input-file-personnalise-css-js */
+/* Source input file:
+  * https://www.creativejuiz.fr/blog/tutoriels/input-file-personnalise-css-js
+  */
 
 .button-file {
   position: relative;
@@ -43,7 +45,9 @@
     font-size: 18px;
 }
 
-/*** Checkbox: https://kyusuf.com/post/completely-css-custom-checkbox-radio-buttons-and-select-boxes*****/
+/*** Checkbox:
+ * https://kyusuf.com/post/completely-css-custom-checkbox-radio-buttons-and-select-boxes
+ */
 .control {
 	position: relative;
 	display: block;

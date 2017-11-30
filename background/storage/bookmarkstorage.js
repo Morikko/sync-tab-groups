@@ -84,8 +84,7 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
 }
 
 /**
- * Clean the old back up bookmarks in Other bookmarks / StorageManager.Bookmark.ROOT /
- * Delete: StorageManager.Bookmark.BACKUP_OLD
+ * Delete the previous bookmarks backup folder in StorageManager.Bookmark.ROOT
  */
 StorageManager.Bookmark.cleanGroups = async function(title = StorageManager.Bookmark.BACKUP_OLD) {
   try {

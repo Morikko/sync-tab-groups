@@ -24,6 +24,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+
+/**** Search Bar ***/
+.cancel-search {
+  right: 12px;
+  display: inline-block;
+  opacity: 0.7;
+  position: absolute;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.searchbar, .mainbar {
+  padding-left: 5px;
+  padding-right: 5px;
+  position: relative;
+}
+
+.searchbar input {
+  width:100%
+}
+/*** Search End ***/
+
 body {
   overflow-x: hidden;
 }
@@ -45,11 +67,8 @@ li {
 }
 
 .mainbar {
-  padding-left: 5px;
-  min-height: 40px;
+  /*min-height: 40px;*/
   border-bottom: #ccc solid 2px;
-  display: block;
-  position: relative;
 }
 
 .mainbar .window-synchronized {
@@ -82,12 +101,12 @@ li {
   line-height: 40px;
 }
 
-.group {
-  min-width: 300px;
+.mainbar + li {
+    margin-top: 3px;
 }
 
-.group:not([hidden]) ~ .mainbar {
-    margin-top: 1px;
+.group {
+  min-width: 300px;
 }
 
 .group-title {
@@ -222,7 +241,7 @@ li {
   top: 6px;
 }
 
-.group-controls i, .tab-controls i {
+.group-controls i, .tab-controls i, .cancel-search {
   width: 26px;
   background-color: none;
 }
@@ -231,7 +250,7 @@ li {
   background-color: #ccc;
 }
 
-.group-controls i {
+.group-controls i, .cancel-search {
   height: 32px;
   line-height: 32px;
 }
