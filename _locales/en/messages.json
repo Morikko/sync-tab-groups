@@ -52,5 +52,25 @@
   "open": {
     "message": "Open",
     "description": "Hover help for open button"
+  },
+
+  "move_tab_group": {
+    "message": "Move to another Groups",
+    "description": "Name of the menu in the context (right click on tab)"
+  },
+
+  "export_groups": {
+    "message": "Export your Groups",
+    "description": "Name of the menu"
+  },
+
+  "import_groups": {
+    "message": "Import some Groups",
+    "description": "Name of the menu"
+  },
+
+  "save_bookmarks_groups": {
+    "message": "Save Groups in bookmarks",
+    "description": "Name of the menu"
   }
 }

@@ -18,7 +18,7 @@
   },
 
   "permissions": [
-    "bookmarks", "tabs", "storage", "sessions", "downloads", "notifications"
+    "bookmarks", "tabs", "storage", "sessions", "downloads", "notifications", "contextMenus"
   ],
 
   "background": {
@@ -28,7 +28,9 @@
       "background/utils/eventlistener.js",
       "background/storage/bookmarkstorage.js", "background/storage/localstorage.js", "background/storage/filestorage.js",
       "background/optionmanager.js", "background/groupmanager.js",
-      "background/windowmanager.js", "background/tabmanager.js", "background/controller.js",
+      "background/windowmanager.js", "background/tabmanager.js",
+      "background/contextmenus.js",
+      "background/controller.js",
       "background/tests/comparator.js", "background/examples/tabGroups.js", "background/tests/group_example.js",
       "background/tests/testmanager.js", "background/tests/test_taskmanager.js",
       "background/tests/test_switchgroup.js", "background/tests/test_filemanager.js"
