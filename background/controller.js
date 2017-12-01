@@ -221,7 +221,7 @@ Controller.prototype = {
   },
 
   onMoveTabToGroup: function(params) {
-    TabManager.moveTabToGroup(
+    TabManager.moveTabBetweenGroups(
       params.sourceGroupID,
       params.tabIndex,
       params.targetGroupID
@@ -441,5 +441,6 @@ browser.windows.onRemoved.addListener((windowId) => {
   GroupManager.detachWindow(windowId);
 });
 browser.windows.onFocusChanged.addListener((windowId) => {
+  ContextMenu.createMoveTabMenu();
   controller.refreshUi();
 });

@@ -109,8 +109,7 @@ ContextMenu.MoveTabMenuListener = function(info, tab) {
     try { // From synchronized window
       if (groupId > 0) {
         TabManager.moveTabToGroup(
-          params.sourceGroupID,
-          params.tabIndex,
+          tab.id,
           groupId
         );
       } else if (order === "new") {

@@ -79,7 +79,7 @@ GroupManager.getGroupIdFromTabId = function(tabId, error = false) {
   for (let i = 0; i < GroupManager.groups.length; i++) {
     for (let j = 0; j < GroupManager.groups[i].tabs.length; j++) {
       if (GroupManager.groups[i].tabs[j].id === tabId)
-        return i;
+        return GroupManager.groups[i].id;
     }
   }
 
