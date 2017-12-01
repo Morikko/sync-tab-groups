@@ -110,7 +110,7 @@ li {
   cursor: pointer;
   vertical-align: middle;
   text-align: center;
-  line-height: 40px;
+  line-height: 34px;
 }
 
 .mainbar+li, .searchbar+li {
@@ -153,7 +153,6 @@ li {
 }
 
 .group, .tab {
-  border-radius: 3px;
   border: 1px solid transparent;
   cursor: pointer;
   padding: 5px;
@@ -261,7 +260,7 @@ li {
 }
 
 .group-controls i:hover, .tab-controls i:hover {
-  background-color: #ccc;
+  background-color: #b3b3b3;
 }
 
 .group-controls i, .cancel-search {

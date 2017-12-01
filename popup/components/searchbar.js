@@ -24,7 +24,7 @@ const SearchBar = React.createClass({
       }, [
         this.searchbar,
         React.DOM.i({
-          className: "cancel-search fa fa-fw fa-times-circle",
+          className: "cancel-search fa fa-fw fa-times-circle" + (this.state.value.length>0?"":"  hiddenBySearch"),
           onClick: this.clearSearchBar
         })
       ])
