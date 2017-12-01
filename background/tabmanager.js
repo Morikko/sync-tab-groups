@@ -274,7 +274,21 @@ TabManager.moveTabToNewGroup = async function(sourceGroupID, tabIndex) {
     let msg = "TabManager.moveTabToNewGroup failed; " + e;
     console.error(msg);
     return msg;
-    s
+  }
+}
+
+TabManager.moveUnSyncTabToNewGroup = async function(tabId) {
+  try {
+    const tab = await browser.tabs.get(tabId);
+
+    GroupManager.addGroupWithTab([tab]);
+    await browser.tabs.remove(tabId);
+
+    return "TabManager.moveTabToNewGroup done!";
+  } catch (e) {
+    let msg = "TabManager.moveTabToNewGroup failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 

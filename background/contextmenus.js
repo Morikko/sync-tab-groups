@@ -113,10 +113,7 @@ ContextMenu.MoveTabMenuListener = function(info, tab) {
           groupId
         );
       } else if (order === "new") {
-        TabManager.moveTabToNewGroup(
-          params.sourceGroupID,
-          params.tabIndex
-        );
+        TabManager.moveUnSyncTabToNewGroup(tab.id);
       }
     } catch (e) { // From unsynchronized window
 
