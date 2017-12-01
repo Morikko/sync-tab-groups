@@ -70,6 +70,47 @@ GroupManager.getGroupIndexFromWindowId = function(windowId) {
 }
 
 /**
+ * Return the group id for a specific tab
+ * If no id found return -1/ Error
+ * @param {Number} - tab id
+ * @returns {Number} - group id
+ */
+GroupManager.getGroupIdFromTabId = function(tabId, error = false) {
+  for (let i = 0; i < GroupManager.groups.length; i++) {
+    for (let j = 0; j < GroupManager.groups[i].tabs.length; j++) {
+      if (GroupManager.groups[i].tabs[j].id === tabId)
+        return i;
+    }
+  }
+
+  if (error) {
+    throw Error("GroupManager.getGroupIdFromTabId: Failed to find group id for tab id:  " + tabId);
+  } else {
+    return -1;
+  }
+}
+
+/**
+ * Return the tab index for a specific tab in a group
+ * If no id found return -1
+ * @param {Number} - tab id
+ * @param {Number} - groupe index
+ * @returns {Number} - group id
+ */
+GroupManager.getTabIndexFromTabId = function(tabId, groupIndex, error = false) {
+  for (let j = 0; j < GroupManager.groups[groupIndex].tabs.length; j++) {
+    if (GroupManager.groups[groupIndex].tabs[j].id === tabId)
+      return j;
+  }
+
+  if (error) {
+    throw Error("GroupManager.getTabIndexFromTabId: Failed to find tab index for tab id:  " + tabId + " in group id " + GroupManager.groups[groupIndex].id);
+  } else {
+    return -1;
+  }
+}
+
+/**
  * Return the windowId for a specific group
  * If no window opened: throw Error
  * @param {Number} - group id

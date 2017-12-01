@@ -21,6 +21,7 @@ TestManager.movetabs = function() {
   this.groups = GroupManager.groups;
   this.window_unsync = browser.windows.WINDOW_ID_NONE;
   this.window_sync = browser.windows.WINDOW_ID_NONE;
+  this.window_sync_2 = browser.windows.WINDOW_ID_NONE;
 
   this.return_result = function(code, msg = "") {
     return TestManager.Results(
@@ -32,22 +33,26 @@ TestManager.movetabs = function() {
     )
   };
 
+
   this.test = async function() {
     try {
       await this.set();
 
       /*
-      let group_ref = TestManager.GroupWithoutPinned_1();
-      GroupManager.groups.push(TestManager.GroupWithoutPinned_1());
-      await WindowManager.selectGroup(group_ref.id);
-      await Utils.wait(2000);
+      await TabManager.moveTabToGroup(
+        GroupManager.groups(this.groupId_open).tabs[
+            GroupManager.groups(this.groupId_open).tabs.length-1
+        ],
+        this.groupId_close
+     );
+     await Utils.wait(500);
 
-      if ( ! (await TestManager.isWindowWithGoodTabs(this.windowId,
-        (TestManager.GroupWithoutPinned_1()).tabs))
-      ) {
-        return this.return_result(TestManager.ERROR, "Can't swith: Normal -> Normal");
-      }
-      */
+     if ( ! (await TestManager.isWindowWithGoodTabs(this.windowId,
+       (TestManager.GroupWithoutPinned_1()).tabs))
+     ) {
+       return this.return_result(TestManager.ERROR, "Can't swith: Normal -> Normal");
+     }
+     */
 
       return this.return_result(TestManager.DONE);
     } catch (e) {
@@ -61,6 +66,11 @@ TestManager.movetabs = function() {
     this.window_unsync = await WindowManager.OnlyOneNewWindow(false);
     GroupManager.removeUnopenGroups();
     GroupManager.addGroups(Examples.move_tab_group);
+    GroupManager.addGroups(Examples.move_tab_group);
+    this.groupId_close = GroupManager.groups[1].id;
+    this.groupId_open = GroupManager.groups[0].id;
+    this.groupId_close_2 = GroupManager.groups[3].id;
+    this.groupId_open_2 = GroupManager.groups[2].id;
     this.window_sync = await WindowManager.openGroupInNewWindow(GroupManager.groups[0].id);
     await TabManager.openListOfTabs(
       [

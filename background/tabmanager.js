@@ -153,6 +153,26 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
 }
 
 /**
+ * Move a tab opened between two open windows
+ * The tab is put at the last position for pinned and normal tabs
+ * in the targeted window.
+ * @param {Tab} tab
+ * @param {Number} windowId
+ */
+TabManager.moveOpenTabToGroup = async function(tab, windowId) {
+  const pinned_tabs = await browser.tabs.query({
+    windowId: windowId,
+    pinned: true
+  });
+  await browser.tabs.move(
+    tab.id, {
+      index: tab.pinned ? pinned_tabs.length : -1,
+      windowId: GroupManager.groups[targetGroupIndex].windowId
+    }
+  );
+}
+
+/**
  * Move tab beetwen groups already created (closed or opened)
  * @param {Number} sourceGroupID
  * @param {Number} tabIndex
