@@ -47,6 +47,7 @@ const GroupList = (() => {
     getInitialState: function() {
       return {
         searchfilter: '',
+        maximized: false,
       };
     },
 
@@ -88,14 +89,22 @@ const GroupList = (() => {
         }
       }
 
+      let mainClasses = classNames({
+        "group-list": true,
+        "menu-maximized": this.state.maximized,
+        "menu-minimized": !this.state.maximized,
+      });
+
       return React.DOM.ul({
-          className: "group-list"
+          className: mainClasses
         },
         React.createElement(MainBar, {
           onChangeWindowSync: this.props.onChangeWindowSync,
           onClickPref: this.props.onClickPref,
           isSync: isWindowSync,
           currentWindowId: this.props.currentWindowId,
+          maximized: this.state.maximized,
+          onClickMaximize: this.onClickMaximize,
         }),
         React.createElement(SearchBar, {
           onSearchChange: this.onSearchChange,
@@ -119,26 +128,32 @@ const GroupList = (() => {
             onCloseTab: this.props.onCloseTab,
             onOpenTab: this.props.onOpenTab,
             searchGroupResult: searchGroupsResults[index],
-            currentlySearching: this.state.searchfilter.length>0,
+            currentlySearching: this.state.searchfilter.length > 0,
           });
         }),
         React.createElement(
           GroupAddButton, {
             onClick: this.props.onGroupAddClick,
             onDrop: this.props.onGroupAddDrop,
-            currentlySearching: this.state.searchfilter.length>0,
+            currentlySearching: this.state.searchfilter.length > 0,
           }
         ),
         React.DOM.li({
-          className: "no-search-result" + (!atLeastOneResult?"":" hiddenBySearch")
-        },
-        'No search result for "'+ this.state.searchfilter+'".')
+            className: "no-search-result" + (!atLeastOneResult ? "" : " hiddenBySearch")
+          },
+          'No search result for "' + this.state.searchfilter + '".')
       );
     },
 
     onSearchChange: function(searchValue) {
       this.setState({
         searchfilter: searchValue
+      });
+    },
+
+    onClickMaximize: function() {
+      this.setState({
+        maximized: !this.state.maximized,
       });
     }
   });

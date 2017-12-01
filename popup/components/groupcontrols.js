@@ -101,7 +101,7 @@ const GroupControls = React.createClass({
       && !this.props.removing ) {
       openedControls.push(
         React.DOM.i({
-          className: "group-edit fa fa-fw fa-plus",
+          className: "group-edit fa fa-fw fa-window-maximize",
           title: browser.i18n.getMessage("open_window_group"),
           onClick: this.props.onOpenInNewWindow
         })

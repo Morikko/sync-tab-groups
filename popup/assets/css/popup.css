@@ -62,8 +62,12 @@ body {
   overflow-x: hidden;
 }
 
-#content {
+.menu-minimized {
   width: 400px;
+}
+
+.menu-maximized {
+  width: 800px;
 }
 
 ul, li {
@@ -95,7 +99,16 @@ li {
   cursor: pointer;
 }
 
-.mainbar .main-actions {
+.mainbar .left-actions {
+  display: inline-block;
+  font-size: 120%;
+  opacity: 0.7;
+  position: relative;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.mainbar .right-actions {
   display: inline-block;
   font-size: 120%;
   opacity: 0.7;
@@ -105,9 +118,10 @@ li {
   height: 100%;
 }
 
-.mainbar .main-actions i {
+.mainbar i {
   font-size: 25px;
   cursor: pointer;
+  min-width: 32px;
   vertical-align: middle;
   text-align: center;
   line-height: 34px;
@@ -259,7 +273,8 @@ li {
   background-color: none;
 }
 
-.group-controls i:hover, .tab-controls i:hover {
+.group-controls i:hover, .tab-controls i:hover,
+.left-actions i:hover, .right-actions i:hover {
   background-color: #b3b3b3;
 }
 
@@ -280,6 +295,10 @@ li {
 .group.closing .group-title, .group.removing .group-title {
   color: #b3b3b3;
   text-decoration: line-through;
+}
+
+.group.closing i:hover, .group.removing i:hover {
+  color: #222426;
 }
 
 .group:hover .group-title {
@@ -304,4 +323,12 @@ li {
 
 .addButton {
   border-top: #ccc solid 2px;
+}
+
+.icon-minimized {
+  font-size: 9px !important;
+}
+
+.icon-maximized {
+  font-size: 15px !important;
 }
