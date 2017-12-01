@@ -50,7 +50,8 @@ const Group = React.createClass({
       closing: this.props.currentlyClosing && !this.props.currentlyRemoving,
       removing: this.props.currentlyRemoving,
       editing: false,
-      expanded: this.props.currentlySearching,
+      currentlySearching: this.props.currentlySearching,
+      expanded: false,
       opened: this.props.group.windowId !== browser.windows.WINDOW_ID_NONE,
       draggingOverCounter: 0,
       dragSourceGroup: false,
@@ -58,15 +59,29 @@ const Group = React.createClass({
     };
   },
 
+  findExpandedState: function(current_state, previous_searching, current_searching) {
+    if (previous_searching !== current_searching) {
+      return current_searching;
+    } else {
+      return current_state;
+    }
+  },
+
   // When a component got new props, use this to update
   componentWillReceiveProps: function(nextProps) {
-        this.setState({
-          closing: nextProps.currentlyClosing && !nextProps.currentlyRemoving,
-          removing: nextProps.currentlyRemoving,
-          opened: nextProps.group.windowId !== browser.windows.WINDOW_ID_NONE,
-          expanded: nextProps.currentlySearching,
-        })
-    },
+    let expanded_state = this.findExpandedState(
+      this.state.expanded,
+      this.state.currentlySearching,
+      nextProps.currentlySearching
+    );
+    this.setState({
+      closing: nextProps.currentlyClosing && !nextProps.currentlyRemoving,
+      removing: nextProps.currentlyRemoving,
+      opened: nextProps.group.windowId !== browser.windows.WINDOW_ID_NONE,
+      expanded: expanded_state,
+      currentlySearching: nextProps.currentlySearching,
+    })
+  },
 
   render: function() {
 
@@ -168,12 +183,12 @@ const Group = React.createClass({
     });
 
     // Already click once, do it now
-    if ( this.state.removing ) {
+    if (this.state.removing) {
       this.setState({
         removing: false
       });
       this.props.onGroupRemoveClick(TaskManager.FORCE, this.props.group.id);
-    // Delayed close
+      // Delayed close
     } else {
       this.setState({
         removing: true
@@ -191,12 +206,12 @@ const Group = React.createClass({
     });
 
     // Already click once, do it now
-    if ( this.state.closing ) {
+    if (this.state.closing) {
       this.setState({
         closing: false
       });
       this.props.onGroupCloseClick(TaskManager.FORCE, this.props.group.id);
-    // Delayed close
+      // Delayed close
     } else {
       this.setState({
         closing: true
@@ -220,7 +235,7 @@ const Group = React.createClass({
 
   handleGroupClick: function(event) {
     event.stopPropagation();
-    if ( this.props.currentWindowId !== this.props.group.windowId )
+    if (this.props.currentWindowId !== this.props.group.windowId)
       this.props.onGroupClick(this.props.group.id);
     window.close();
   },
@@ -254,7 +269,7 @@ const Group = React.createClass({
     });
   },
 
-  handleGroupTitleInputKey: function(event){
+  handleGroupTitleInputKey: function(event) {
     event.stopPropagation();
     if (event.keyCode === 13) { // Enter key
       this.setState({
