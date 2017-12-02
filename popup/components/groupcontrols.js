@@ -143,7 +143,7 @@ const GroupControls = React.createClass({
       );
     }
 
-
+    let expand_title = this.props.expanded?browser.i18n.getMessage("hide_tabs"):browser.i18n.getMessage("show_tabs");
     return React.DOM.span({
         className: "group-controls"
       },
@@ -151,7 +151,8 @@ const GroupControls = React.createClass({
       openedControls,
       React.DOM.i({
         className: expanderClasses,
-        onClick: this.props.onExpand
+        onClick: this.props.onExpand,
+        title: expand_title,
       })
     );
   }

@@ -12,7 +12,7 @@ const SearchBar = React.createClass({
   render: function() {
     this.searchbar = React.DOM.input({
       type: "search",
-      placeholder: "Search...",
+      placeholder: browser.i18n.getMessage("search"),
       onChange: this.handleSearchChange,
       value: this.state.value,
       id: "search-input",
@@ -24,6 +24,7 @@ const SearchBar = React.createClass({
       }, [
         this.searchbar,
         React.DOM.i({
+          title: browser.i18n.getMessage("clear_search"),
           className: "cancel-search fa fa-fw fa-times-circle" + (this.state.value.length>0?"":"  hiddenBySearch"),
           onClick: this.clearSearchBar
         })

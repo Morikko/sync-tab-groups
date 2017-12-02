@@ -4,9 +4,39 @@
     "description": "Create new group button text"
   },
 
+  "search": {
+    "message": "Search...",
+    "description": "Place holder in search input"
+  },
+
+  "clear_search": {
+    "message": "Clear Search",
+    "description": "Clear search help button"
+  },
+
   "unnamed_group": {
     "message": "Unnamed Group",
     "description": "Default name for unnamed group"
+  },
+
+  "synchronized_window": {
+    "message": "Window Synchronized",
+    "description": "Label for synchronizing window in popup"
+  },
+
+  "open_preferences": {
+    "message": "Open Preferences",
+    "description": "Open Preferences"
+  },
+
+  "expand_menu": {
+    "message": "Expand Menu",
+    "description": "Expand Menu hover button"
+  },
+
+  "reduce_menu": {
+    "message": "Reduce Menu",
+    "description": "Reduce Menu hover button"
   },
 
   "close_group": {
@@ -15,7 +45,7 @@
   },
 
   "remove_group": {
-    "message": "Remove Proup",
+    "message": "Remove Group",
     "description": "Hover help for remove button"
   },
 
@@ -27,6 +57,16 @@
   "rename_group": {
     "message": "Rename",
     "description": "Hover help for rename button"
+  },
+
+  "show_tabs": {
+    "message": "Show Tabs in group",
+    "description": "Hover help for show tabs in group button"
+  },
+
+  "hide_tabs": {
+    "message": "Hide Tabs in group",
+    "description": "Hover help for hide tabs in group button"
   },
 
   "undo_removing": {
@@ -49,9 +89,14 @@
     "description": "Hover help for force closing button"
   },
 
-  "open": {
-    "message": "Open",
-    "description": "Hover help for open button"
+  "open_tab": {
+    "message": "Open Tab in current window",
+    "description": "Hover help for open tab button"
+  },
+
+  "close_tab": {
+    "message": "Remove Tab and close if opened",
+    "description": "Hover help for open tab button"
   },
 
   "move_tab_group": {
@@ -70,7 +115,7 @@
   },
 
   "save_bookmarks_groups": {
-    "message": "Save Groups in bookmarks",
+    "message": "Save your Groups in bookmarks",
     "description": "Name of the menu"
   }
 }

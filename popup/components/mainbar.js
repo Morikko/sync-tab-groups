@@ -26,6 +26,8 @@ const MainBar = React.createClass({
       "fa-fw": true,
     });
 
+    let title_expand = this.props.maximized? browser.i18n.getMessage("reduce_menu"):browser.i18n.getMessage("expand_menu");
+
     return (
       React.DOM.li({
           className: "mainbar",
@@ -36,7 +38,7 @@ const MainBar = React.createClass({
           React.createElement(
             NiceCheckbox, {
               id: id,
-              label: "Window synchronized",
+              label: browser.i18n.getMessage("synchronized_window"),
               checked: this.props.isSync,
               onCheckChange: this.handleCheckChange,
             }
@@ -47,12 +49,12 @@ const MainBar = React.createClass({
         }, [
           React.DOM.i({
             className: "app-pref fa fa-fw fa-gear",
-            title: "Open Preferences",
+            title: browser.i18n.getMessage("open_preferences"),
             onClick: this.handleClickPref
           }),
           React.DOM.i({
             className: maximizerClasses,
-            title: "Expand Menu",
+            title: title_expand,
             onClick: this.props.onClickMaximize
           }),
         ]),
