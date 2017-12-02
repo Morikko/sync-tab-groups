@@ -222,15 +222,5 @@
   "import_export_help_support": {
     "message": "Import supports: Sync Tab Groups and Tab Groups json file.",
     "description": ""
-  },
-
-  "export_groups": {
-    "message": "Export Groups",
-    "description": ""
-  },
-
-  "import_groups": {
-    "message": "Import Groups",
-    "description": ""
   }
 }
