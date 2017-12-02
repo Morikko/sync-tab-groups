@@ -1,11 +1,51 @@
 {
   "add_group": {
     "message": "Neue Gruppe anlegen",
-    "description": "Neue Gruppe anlegen"
+    "description": "Eine neue Gruppe anlegen"
   },
 
   "unnamed_group": {
     "message": "Unbenannte Gruppe",
-    "description": "Unbenannte Gruppe"
+    "description": "Standardname für unbenannte Gruppe"
+  },
+
+  "close_group": {
+    "message": "Schließen",
+    "description": "Hover help for close button"
+  },
+
+  "remove_group": {
+    "message": "Entfernen",
+    "description": "Hover help for remove button"
+  },
+
+  "open_window_group": {
+    "message": "In neuem Fenster öffnen",
+    "description": "Hover help for open in new window button"
+  },
+
+  "rename_group": {
+    "message": "Umbenennen",
+    "description": "Hover help for rename button"
+  },
+
+  "undo_removing": {
+    "message": "Entfernen rückgängig",
+    "description": "Hover help for undo removing button"
+  },
+
+  "undo_closing": {
+    "message": "Schließen rückgängig",
+    "description": "Hover help for undo closing button"
+  },
+
+  "force_removing": {
+    "message": "Entfernen erzwingen",
+    "description": "Hover help for force removing button"
+  },
+
+  "force_closing": {
+    "message": "Schließen erzwingen",
+    "description": "Hover help for force closing button"
   }
 }
