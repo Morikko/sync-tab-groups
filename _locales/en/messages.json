@@ -1,4 +1,9 @@
 {
+  "extension_description": {
+    "message": "Sync Tab Groups are an easy way to organize your current tabs depending on a topic. Each open group is synchronized with a window so that all tabs change are saved. Hence, you can close a current tabs-flow while opening another one.",
+    "description": "Description of the extension"
+  },
+
   "add_group": {
     "message": "Create new group",
     "description": "Create new group button text"
@@ -100,7 +105,7 @@
   },
 
   "move_tab_group": {
-    "message": "Move to another Groups",
+    "message": "Move to another Group",
     "description": "Name of the menu in the context (right click on tab)"
   },
 

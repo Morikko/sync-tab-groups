@@ -1,52 +1,236 @@
 {
+  "extension_description": {
+    "message": "Sync Tab Groups permet d'organiser vos onglets par groupe. Un groupe ouvert est visible dans une fenêtre. Vous pouvez fermer puis rouvrir vos groupes d'onglets plus tard. Un menu vous permet de trouver et trier facilement les onglets dans les groupe.",
+    "description": "Description of the extension"
+  },
+
   "add_group": {
-    "message": "Ajouter un groupe",
-    "description": "Ajouter un groupe"
+    "message": "Créer un nouveau groupe",
+    "description": "Create new group button text"
+  },
+
+  "search": {
+    "message": "Recherche...",
+    "description": "Place holder in search input"
+  },
+
+  "clear_search": {
+    "message": "Annuler la recherche",
+    "description": "Clear search help button"
   },
 
   "unnamed_group": {
-    "message": "Groupe sans nom",
-    "description": "Groupe sans nom"
+    "message": "Groupe Sans Nom",
+    "description": "Default name for unnamed group"
+  },
+
+  "synchronized_window": {
+    "message": "Fenêtre Synchronisée",
+    "description": "Label for synchronizing window in popup"
+  },
+
+  "open_preferences": {
+    "message": "Ouvrir les Préférences",
+    "description": "Open Preferences"
+  },
+
+  "expand_menu": {
+    "message": "Agrandir le Menu",
+    "description": "Expand Menu hover button"
+  },
+
+  "reduce_menu": {
+    "message": "Réduire le Menu",
+    "description": "Reduce Menu hover button"
   },
 
   "close_group": {
-    "message": "Fermer",
-    "description": "Aide pour le bouton fermer le groupe"
+    "message": "Fermer la Fenêtre du Groupe",
+    "description": "Hover help for close button"
   },
 
   "remove_group": {
-    "message": "Supprimer",
-    "description": "Aide pour le bouton supprimer le groupe"
+    "message": "Supprimer le Groupe",
+    "description": "Hover help for remove button"
   },
 
   "open_window_group": {
     "message": "Ouvrir dans une nouvelle fenêtre",
-    "description": "Aide pour le bouton ouvrir dans une nouvelle fenêtre"
+    "description": "Hover help for open in new window button"
   },
 
   "rename_group": {
     "message": "Renommer",
-    "description": "Aide pour le bouton Renommer le groupe"
+    "description": "Hover help for rename button"
+  },
+
+  "show_tabs": {
+    "message": "Voir les onglets du groupe",
+    "description": "Hover help for show tabs in group button"
+  },
+
+  "hide_tabs": {
+    "message": "Cacher les onglets du groupe",
+    "description": "Hover help for hide tabs in group button"
   },
 
   "undo_removing": {
     "message": "Annuler la suppression",
-    "description": "Aide pour le bouton Annuler la suppression"
+    "description": "Hover help for undo removing button"
   },
 
   "undo_closing": {
     "message": "Annuler la fermeture",
-    "description": "Aide pour le bouton Annuler la fermeture"
+    "description": "Hover help for undo closing button"
   },
 
   "force_removing": {
-    "message": "Supprimer maintenant",
-    "description": "Aide pour le bouton Supprimer maintenant"
+    "message": "Forcer la suppression",
+    "description": "Hover help for force removing button"
   },
 
   "force_closing": {
-    "message": "Fermer maintenant",
-    "description": "Aide pour le bouton Fermer maintenant"
-  }
+    "message": "Forcer la fermeture",
+    "description": "Hover help for force closing button"
+  },
 
+  "open_tab": {
+    "message": "Ouvrir l'onglet dans la fenêtre courante",
+    "description": "Hover help for open tab button"
+  },
+
+  "close_tab": {
+    "message": "Supprimer l'onglet et le fermer s'il est ouvert",
+    "description": "Hover help for open tab button"
+  },
+
+  "move_tab_group": {
+    "message": "Déplacer vers un autre Groupe",
+    "description": "Name of the menu in the context (right click on tab)"
+  },
+
+  "export_groups": {
+    "message": "Exporter les Groupes",
+    "description": "Name of the menu"
+  },
+
+  "import_groups": {
+    "message": "Importer les Groupes",
+    "description": "Name of the menu"
+  },
+
+  "save_bookmarks_groups": {
+    "message": "Sauvegarder les Groupes dans les Favoris",
+    "description": "Name of the menu"
+  },
+
+  "group_title": {
+    "message": "Groupe",
+    "description": "Option section title"
+  },
+
+  "new_window": {
+    "message": "Une nouvelle fenêtre crée un nouveau groupe automatiquement.",
+    "description": "Label new window"
+  },
+
+  "remove_empty_groups": {
+    "message": "Supprimer les groupes sans onglet automatiquement",
+    "description": "Label remove empty groups"
+  },
+
+  "private_window_title": {
+    "message": "Fenêtre Privée",
+    "description": "Option section title"
+  },
+
+  "new_private_window": {
+    "message": "Une nouvelle fenêtre Privée crée un nouveau groupe automatiquement.",
+    "description": "Label new private window"
+  },
+
+  "close_private_window": {
+    "message": "Supprimer le groupe dans une fenêtre privée, lorsque celle ci est fermée.",
+    "description": "Label close private window"
+  },
+
+  "pinned_tabs_title": {
+    "message": "Onglets Marqués",
+    "description": "Option section title"
+  },
+
+  "sync_pinned_tabs": {
+    "message": "Ajouter les onglets marqués dans les groupes (Sinon: ils ne seront pas fermés lorsque vous changerez de groupe).",
+    "description": "Label sync pinned tabs"
+  },
+
+  "bookmarks_title": {
+    "message": "Favoris",
+    "description": "Option section title"
+  },
+
+  "bookmark_help_folder": {
+    "message": "Les Favoris sont sauvegardés dans: Autres marque-pages/SyncTabGroups par défault.",
+    "description": ""
+  },
+
+  "bookmark_help_moving": {
+    "message": "Pour changer la location, déplacer le dossier SyncTabGroups n'import où dans vos favoris.",
+    "description": ""
+  },
+
+  "bookmark_help_session": {
+    "message": "Le nom de la Session est le sous-dossier dans lequel vos groupes sont sauvegardés en tant que favoris.",
+    "description": ""
+  },
+
+  "bookmark_help_precaution": {
+    "message": "N'ayez pas d'autre dossier: SyncTabGroups.",
+    "description": ""
+  },
+
+  "name_session": {
+    "message": "Nom de la Session: ",
+    "description": ""
+  },
+
+  "examples_session": {
+    "message": "Exemple: Ordinateur 1, Portable...",
+    "description": ""
+  },
+
+  "save_bookmarks_automatically": {
+    "message": "Sauvergarder les Groupes automatiquement (Toutes les 30s)",
+    "description": ""
+  },
+
+  "save_now": {
+    "message": "Sauvegarder Maintenant",
+    "description": ""
+  },
+
+  "import_export_title": {
+    "message": "Importer/Exporter les Groupes",
+    "description": "Option section title"
+  },
+
+  "import_export_help_added": {
+    "message": "Les groupes importés sont ajoutés en tant que groupes fermés",
+    "description": ""
+  },
+
+  "import_export_help_support": {
+    "message": "L'importation accepte les fichiers JSON des extensions: Sync Tab Groups et Tab Groups.",
+    "description": ""
+  },
+
+  "export_groups": {
+    "message": "Exporter les Groupes",
+    "description": ""
+  },
+
+  "import_groups": {
+    "message": "Importer les Groupes",
+    "description": ""
+  }
 }

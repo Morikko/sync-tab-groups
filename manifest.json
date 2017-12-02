@@ -3,7 +3,7 @@
   "version": "0.2.3",
 
   "name": "Sync Tab Groups",
-  "description": "Sync Tab Groups are an easy way to organize your current tabs depending on a topic. Each open group is synchronized with a window so that all tabs change are saved. Hence, you can close a current tabs-flow while opening another one.",
+  "description": "__MSG_extension_description__",
   "homepage_url": "https://github.com/Morikko/sync-tab-groups",
   "icons": {
     "64": "icons/tabspace-active-64.png",
