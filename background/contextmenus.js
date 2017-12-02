@@ -98,6 +98,16 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "icons/star-32.png"
     },
   });
+
+  browser.contextMenus.create({
+    id: ContextMenu.SpecialActionMenu_ID + "open_preferences",
+    title: browser.i18n.getMessage("open_preferences"),
+    contexts: ['browser_action'],
+    icons: {
+      "64": "icons/gear-64.png",
+      "32": "icons/gear-32.png"
+    },
+  });
 }
 
 ContextMenu.MoveTabMenuListener = function(info, tab) {
@@ -127,8 +137,8 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         fileInput.type = 'file';
         fileInput.accept = '.json';
         fileInput.acceptCharset = 'utf-8';
-        fileInput.onchange = () =>{
-          StorageManager.File.readJsonFile(fileInput.files[0]).then((jsonContent)=>{
+        fileInput.onchange = () => {
+          StorageManager.File.readJsonFile(fileInput.files[0]).then((jsonContent) => {
             controller.onImportGroups({
               content_file: jsonContent
             });
@@ -138,6 +148,9 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         break;
       case "save_bookmarks_groups":
         controller.onBookmarkSave();
+        break;
+      case "open_preferences":
+        browser.runtime.openOptionsPage();
         break;
     }
   }
