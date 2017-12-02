@@ -19,7 +19,7 @@ Sync Tab Groups are an easy way to organize your current tabs depending on a top
  - See all your groups and tabs
  - Manage them and switch to them
  - Many settings to make the extension behaves like you want it
- - Usage guide (coming soon)
+ - Usage guide: [see the screenshots](https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/)
 
 
 # Limitations (Important for not losing data)
