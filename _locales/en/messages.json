@@ -10,12 +10,12 @@
   },
 
   "close_group": {
-    "message": "Close",
+    "message": "Close Window",
     "description": "Hover help for close button"
   },
 
   "remove_group": {
-    "message": "Remove",
+    "message": "Remove Proup",
     "description": "Hover help for remove button"
   },
 

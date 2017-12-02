@@ -70,32 +70,32 @@ ContextMenu.createMoveTabMenu = async function() {
 
 ContextMenu.createSpecialActionMenu = function() {
   browser.contextMenus.create({
-    id: ContextMenu.MoveTabMenu_ID + "export_groups",
+    id: ContextMenu.SpecialActionMenu_ID + "export_groups",
     title: browser.i18n.getMessage("export_groups"),
     contexts: ['browser_action'],
     icons: {
-      "64": "icons/tabspace-active-64.png",
-      "32": "icons/tabspace-active-32.png"
+      "64": "icons/upload-64.png",
+      "32": "icons/upload-32.png"
     },
   });
-
+  /* TODO: not working can't ask file
   browser.contextMenus.create({
-    id: ContextMenu.MoveTabMenu_ID + "import_groups",
+    id: ContextMenu.SpecialActionMenu_ID + "import_groups",
     title: browser.i18n.getMessage("import_groups"),
     contexts: ['browser_action'],
     icons: {
-      "64": "icons/tabspace-active-64.png",
-      "32": "icons/tabspace-active-32.png"
+      "64": "icons/download-64.png",
+      "32": "icons/download-32.png"
     },
   });
-
+  */
   browser.contextMenus.create({
-    id: ContextMenu.MoveTabMenu_ID + "save_bookmarks_groups",
+    id: ContextMenu.SpecialActionMenu_ID + "save_bookmarks_groups",
     title: browser.i18n.getMessage("save_bookmarks_groups"),
     contexts: ['browser_action'],
     icons: {
-      "64": "icons/tabspace-active-64.png",
-      "32": "icons/tabspace-active-32.png"
+      "64": "icons/star-64.png",
+      "32": "icons/star-32.png"
     },
   });
 }
@@ -117,15 +117,33 @@ ContextMenu.MoveTabMenuListener = function(info, tab) {
 
 ContextMenu.SpecialActionMenuListener = function(info, tab) {
   if (info.menuItemId.includes(ContextMenu.SpecialActionMenu_ID)) {
-    let order = info.menuItemId.substring(ContextMenu.MoveTabMenu_ID.length, info.menuItemId.length);
-    console.log(order);
-    console.log(tab);
-    // TODO
+    let order = info.menuItemId.substring(ContextMenu.SpecialActionMenu_ID.length, info.menuItemId.length);
+    switch (order) {
+      case "export_groups":
+        controller.onExportGroups();
+        break;
+      case "import_groups":
+        let fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.json';
+        fileInput.acceptCharset = 'utf-8';
+        fileInput.onchange = () =>{
+          StorageManager.File.readJsonFile(fileInput.files[0]).then((jsonContent)=>{
+            controller.onImportGroups({
+              content_file: jsonContent
+            });
+          });
+        };
+        fileInput.click();
+        break;
+      case "save_bookmarks_groups":
+        controller.onBookmarkSave();
+        break;
+    }
   }
 };
-
-browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
 browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
+browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
 GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
   () => {
     ContextMenu.repeatedtask.add(
@@ -135,4 +153,4 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     )
   });
 
-//ContextMenu.createSpecialActionMenu();
+ContextMenu.createSpecialActionMenu();

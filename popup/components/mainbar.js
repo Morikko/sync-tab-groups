@@ -19,10 +19,11 @@ const MainBar = React.createClass({
     let maximizerClasses = classNames({
       "icon-maximized": !this.props.maximized,
       "icon-minimized": this.props.maximized,
+      "fa-expand": !this.props.maximized,
+      "fa-compress": this.props.maximized,
       "app-maximize": true,
       "fa": true,
       "fa-fw": true,
-      "fa-window-maximize": true,
     });
 
     return (

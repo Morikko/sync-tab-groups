@@ -324,11 +324,3 @@ li {
 .addButton {
   border-top: #ccc solid 2px;
 }
-
-.icon-minimized {
-  font-size: 9px !important;
-}
-
-.icon-maximized {
-  font-size: 15px !important;
-}
