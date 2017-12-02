@@ -4,71 +4,52 @@ Sync Tab Groups are an easy way to organize your current tabs depending on a top
 
 ![Sync Tab Groups example](assets/v0_2_3_in_browser.png)
 
-# Usage
+# Organize your browsing
 
-## Groups
-- Tabs are synchronized in your groups as they are in your windows 
-- Close a group of tabs and keep it saved (for opening it again later)
-- Use your groups among all your windows
-- Tabs in closed group are REALLY close (See limitations)
+ - Close or open groups of tabs for lightening your desktop or saving memory
+ - Work with any windows in your browser
+ - Share your groups with other people or devices
+ - Private window can have a specific behavior
+ - Pinned tabs can be included in groups or not
+ - Save your groups as bookmarks for sharing them among all your devices
 
-## Menu
 
-### From toolbar
-- Open a group 
-  - In your current window
-  - In a new window directly
-- Click on a group/tab already opened to focus it in your screen
-- Move tabs between groups by drag and dropping (Create new group included)
-- Change name of your groups
-- Undo for closing and removing groups, don't regret easy click ;)
-- Close/Open tabs from the UI
+# A simple and powerful interface
 
-## Private Windows
- - Synchronization: (either) (See extension settings)
-   - Like any windows (default)
-   - Invisible in groups 
- - Option: Remove a group automatically when closed (See extension settings)
+ - See all your groups and tabs
+ - Manage them and switch to them
+ - Many settings to make the extension behaves like you want it
+ - Usage guide (coming soon)
 
-## Pinned Tabs
- - Synchronization: (either) (See extension settings)
-   - Like any tabs (default)
-   - Keep in the window and not part of a group (Tab Groups behavior)
 
-## Save
-- Groups are saved on your computer, you find them back after restarting Firefox
-- A backup of your groups is done in "Other Bookmarks/SyncTabGroups"
-- Import/Export groups from
-  - Sync Tab Groups extension
-  - Tab Groups extension (Import only)
+# Limitations (Important for not losing data)
 
-## Important limitations
-Due to the API, I won't be able to add hide/show tabs or keep tabs unloaded:
- - Switching can be slow (overall with lots of tabs)
+ - Tabs in closed group are REALLY closed
+ - Switching to a group, close all the current tabs in the window
  - Previous sessions (back button) are lost when closing a group
  - Temporary data like forms are lost when closing a group
  - All tabs are loaded when a group is opened (Will be fixed with Firefox 58 on January) ([More info](https://github.com/Morikko/sync-tab-groups/issues/5#issuecomment-344753295))
+ - Local files opened in tabs can't be reopen by the extension due to a Firefox API restriction for security reasons.
+
+
+# Notes
+This extension is really young (2 weeks) and often changes. I am developing it actively at the moment. Many features are coming.
 
 # About other Tabs Groups addon
 
-Sync Tab Groups (STG) differs from [Tab Groups](https://addons.mozilla.org/en-US/firefox/addon/tab-groups-panorama/) and [Simplified Tab Groups](https://addons.mozilla.org/en-US/firefox/addon/tab-groups/) (TGs).
+Sync Tab Groups (STG) is not related to [Tab Groups](https://addons.mozilla.org/en-US/firefox/addon/tab-groups-panorama/).
 
-- Groups are not shared with the other extension: before switching 
-- STG uses the new Firefox API whereas TGs use the previous and deprecated one
-- STG closes the tabs and is synchronized over all windows
-- TGs hide/show tabs and is related to a specific window
-
-# Future Features
-- Keybinding
-- Move tabs from menu on right click on tab page
-[And many more...](https://github.com/Morikko/sync-tab-groups/issues)
+STG is not able to hide tabs, instead tabs are closed. However, if this doesn't stop you, STG accepts importing groups from tab Groups extension.
 
 # Languages
-English and French. 
+ - English
+ - French
+ - German (coming soon) 
+
 I would gladly accept other translations. Add it in `_locales/`, while following the en (English) file. Change message and description parts only.
 
 # Bugs
-If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-groups/issues) or send me an email.
+If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-groups/issues).
 
 # Thanks
 Thank you all of you for helping me improving and fixing the extension :)
