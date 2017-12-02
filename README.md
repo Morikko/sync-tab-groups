@@ -2,7 +2,7 @@
 
 Sync Tab Groups are an easy way to organize your current tabs depending on a topic. Each open group is synchronized with a window so that all tabs change are saved. Hence, you can close a current tabs-flow while opening another one. 
 
-![Sync Tab Groups example](assets/markdown-img-paste-20171111155549715.png)
+![Sync Tab Groups example](assets/v0_2_3_in_browser.png)
 
 # Usage
 
