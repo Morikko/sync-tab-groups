@@ -9,13 +9,12 @@ ContextMenu.SpecialActionMenuIds = [];
 ContextMenu.repeatedtask = new TaskManager.RepeatedTask(800);
 
 ContextMenu.createMoveTabMenu = async function() {
-
   for (let id of ContextMenu.MoveTabMenuIds) {
     await browser.contextMenus.remove(id);
   }
   ContextMenu.MoveTabMenuIds = [];
 
-  let contexts = ["page", "tab"];
+  let contexts = ["tab"];
 
   let parentId = ContextMenu.MoveTabMenu_ID + "title";
   ContextMenu.MoveTabMenuIds.push(parentId);
@@ -105,18 +104,13 @@ ContextMenu.MoveTabMenuListener = function(info, tab) {
   if (info.menuItemId.includes(ContextMenu.MoveTabMenu_ID)) {
     let order = info.menuItemId.substring(ContextMenu.MoveTabMenu_ID.length, info.menuItemId.length);
     let groupId = parseInt(order);
-
-    try { // From synchronized window
-      if (groupId > 0) {
-        TabManager.moveTabToGroup(
-          tab.id,
-          groupId
-        );
-      } else if (order === "new") {
-        TabManager.moveUnSyncTabToNewGroup(tab.id);
-      }
-    } catch (e) { // From unsynchronized window
-
+    if (groupId >= 0) {
+      TabManager.moveTabToGroup(
+        tab.id,
+        groupId
+      );
+    } else if (order === "new") {
+      TabManager.moveUnSyncTabToNewGroup(tab.id);
     }
   }
 };
@@ -141,4 +135,4 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     )
   });
 
-ContextMenu.createSpecialActionMenu();
+//ContextMenu.createSpecialActionMenu();

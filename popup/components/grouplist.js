@@ -42,13 +42,21 @@ const GroupList = (() => {
       onClickPref: React.PropTypes.func,
       onCloseTab: React.PropTypes.func,
       onOpenTab: React.PropTypes.func,
+      onOptionChange: React.PropTypes.func,
     },
 
     getInitialState: function() {
       return {
         searchfilter: '',
-        maximized: false,
+        maximized: this.props.options.popup.maximized,
       };
+    },
+
+    // When a component got new props, use this to update
+    componentWillReceiveProps: function(nextProps) {
+      this.setState({
+        maximized: nextProps.options.popup.maximized,
+      });
     },
 
     isCurrently: function(action, groupId) {
@@ -152,6 +160,7 @@ const GroupList = (() => {
     },
 
     onClickMaximize: function() {
+      this.props.onOptionChange("popup-maximized", !this.state.maximized);
       this.setState({
         maximized: !this.state.maximized,
       });
@@ -162,7 +171,8 @@ const GroupList = (() => {
     return {
       groups: state.get("tabgroups"),
       currentWindowId: state.get("currentWindowId"),
-      delayedTasks: state.get("delayedTasks")
+      delayedTasks: state.get("delayedTasks"),
+      options: state.get("options")
     };
   }, ActionCreators)(GroupListStandalone);
 })();

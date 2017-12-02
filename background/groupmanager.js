@@ -41,17 +41,21 @@ GroupManager.getGroupIdInWindow = function(windowId) {
 
 /**
  * Return the group index for a specific group
- * If no index found: throw Error
+ * If no index found: throw Error or -1
  * @param {Number} - group id
  * @returns {Number} - group index
  */
-GroupManager.getGroupIndexFromGroupId = function(groupId) {
+GroupManager.getGroupIndexFromGroupId = function(groupId, error = true) {
   for (let i = 0; i < GroupManager.groups.length; i++) {
     if (GroupManager.groups[i].id === groupId)
       return i;
   }
+  if (error) {
+    throw Error("GroupManager.getGroupIndexFromGroupId: Failed to find group index for id:  " + groupId);
+  } else {
+    return -1;
+  }
 
-  throw Error("GroupManager.getGroupIndexFromGroupId: Failed to find group index for id:  " + groupId);
 }
 
 /**

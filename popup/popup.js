@@ -104,7 +104,14 @@ const Actions = {
     Utils.sendMessage("Tab:Open", {
       tab: tab
     });
-  }
+  },
+
+  onOptionChange: function(name, value) {
+    Utils.sendMessage("Option:Change", {
+      optionName: name,
+      optionValue: value
+    });
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -129,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onClickPref: Actions.openSettings,
         onCloseTab: Actions.onCloseTab,
         onOpenTab: Actions.onOpenTab,
+        onOptionChange: Actions.onOptionChange,
       })
     ),
     document.getElementById("content")
@@ -145,6 +153,9 @@ var popupMessenger = function(message) {
       }).then((w) => {
         store.dispatch(ActionCreators.setCurrentWindowId(w.id));
       });
+      break;
+    case "Option:Changed":
+      store.dispatch(ActionCreators.setOptions(message.params.options));
       break;
   }
 }

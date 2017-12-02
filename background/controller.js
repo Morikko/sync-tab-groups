@@ -344,6 +344,7 @@ var popupMessenger = function(message) {
       break;
     case "Data:Ask":
       controller.refreshUi();
+      controller.refreshOptionsUI();
       break;
     case "App:OpenSettings":
       controller.onOpenSettings();
@@ -440,7 +441,30 @@ browser.windows.onCreated.addListener((window) => {
 browser.windows.onRemoved.addListener((windowId) => {
   GroupManager.detachWindow(windowId);
 });
-browser.windows.onFocusChanged.addListener((windowId) => {
-  ContextMenu.createMoveTabMenu();
+/* TODO: doenst update context menu well if right click on a tab from another window
+*/
+browser.windows.onFocusChanged.addListener(async(windowId) => {
   controller.refreshUi();
+
+  try {
+    const w = await browser.windows.getLastFocused({
+      windowTypes: ['normal'],
+    });
+    ContextMenu.MoveTabMenuIds.map((id) => {
+      let order = id.substring(ContextMenu.MoveTabMenu_ID.length, id.length);
+      let groupId = parseInt(order);
+      if (groupId >= 0) {
+        let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, false);
+        browser.contextMenus.update(
+          id, {
+            enabled: w.id !== GroupManager.groups[groupIndex].windowId
+          });
+      }
+    });
+
+  } catch ( e ) {
+    let msg = "onFocusChanged.listener failed; " + e;
+    console.error(msg);
+    return msg;
+  }
 });

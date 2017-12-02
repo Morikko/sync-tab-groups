@@ -43,5 +43,12 @@ const ActionCreators = {
       type: "DELAYED_TASKS_RECEIVE",
       delayedTasks: delayedTasks
     };
+  },
+
+  setOptions: function(options) {
+    return {
+      type: "OPTIONS_RECEIVE",
+      options: options
+    };
   }
 };

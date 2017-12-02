@@ -28,6 +28,9 @@ OptionManager.TEMPLATE = function() {
     groups: {
       syncNewWindow: true,
       removeEmptyGroup: false,
+    },
+    popup: {
+      maximized: false,
     }
   };
 };
