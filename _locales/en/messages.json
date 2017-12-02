@@ -105,17 +105,127 @@
   },
 
   "export_groups": {
-    "message": "Export your Groups",
+    "message": "Export Groups",
     "description": "Name of the menu"
   },
 
   "import_groups": {
-    "message": "Import some Groups",
+    "message": "Import Groups",
     "description": "Name of the menu"
   },
 
   "save_bookmarks_groups": {
     "message": "Save your Groups in bookmarks",
     "description": "Name of the menu"
+  },
+
+  "group_title": {
+    "message": "Group",
+    "description": "Option section title"
+  },
+
+  "new_window": {
+    "message": "A new opened window creates a new group automatically.",
+    "description": "Label new window"
+  },
+
+  "remove_empty_groups": {
+    "message": "Remove the groups with no tabs automatically.",
+    "description": "Label remove empty groups"
+  },
+
+  "private_window_title": {
+    "message": "Private Window",
+    "description": "Option section title"
+  },
+
+  "new_private_window": {
+    "message": "A new opened Private window creates a new group automatically.",
+    "description": "Label new private window"
+  },
+
+  "close_private_window": {
+    "message": "Remove the group in a private window, when this window is closed.",
+    "description": "Label close private window"
+  },
+
+  "pinned_tabs_title": {
+    "message": "Pinned Tabs",
+    "description": "Option section title"
+  },
+
+  "sync_pinned_tabs": {
+    "message": "Add pinned tabs inside the groups (If no, they won't be closed when you switch group)",
+    "description": "Label sync pinned tabs"
+  },
+
+  "bookmarks_title": {
+    "message": "Bookmarks",
+    "description": "Option section title"
+  },
+
+  "bookmark_help_folder": {
+    "message": "Bookmarks are saved in OtherBookmarks/SyncTabGroups by default.",
+    "description": ""
+  },
+
+  "bookmark_help_moving": {
+    "message": "For changing the root location, move the SyncTabGroups folder anywhere in your bookmarks.",
+    "description": ""
+  },
+
+  "bookmark_help_session": {
+    "message": "Session name is the subfolder name where bookmarks are saved for this computer.",
+    "description": ""
+  },
+
+  "bookmark_help_precaution": {
+    "message": "Do not have another SyncTabGroups folder.",
+    "description": ""
+  },
+
+  "name_session": {
+    "message": "Name of the session: ",
+    "description": ""
+  },
+
+  "examples_session": {
+    "message": "Example: Computer 1, laptop...",
+    "description": ""
+  },
+
+  "save_bookmarks_automatically": {
+    "message": "Save groups in bookmarks automatically (Every 30s)",
+    "description": ""
+  },
+
+  "save_now": {
+    "message": "Save Now",
+    "description": ""
+  },
+
+  "import_export_title": {
+    "message": "Import/Export groups",
+    "description": "Option section title"
+  },
+
+  "import_export_help_added": {
+    "message": "Imported groups are added as closed groups",
+    "description": ""
+  },
+
+  "import_export_help_support": {
+    "message": "Import supports: Sync Tab Groups and Tab Groups json file.",
+    "description": ""
+  },
+
+  "export_groups": {
+    "message": "Export Groups",
+    "description": ""
+  },
+
+  "import_groups": {
+    "message": "Import Groups",
+    "description": ""
   }
 }

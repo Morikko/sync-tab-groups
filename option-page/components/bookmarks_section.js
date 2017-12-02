@@ -12,30 +12,30 @@ const BookmarkSection = React.createClass({
       className: "option-section"
     }, [
       React.createElement(SectionTitle, {
-        title: 'Bookmarks'
+        title: browser.i18n.getMessage("bookmarks_title")
       }),
       React.DOM.span({},
         React.DOM.ul({},[
-          React.DOM.li({},"Bookmarks are saved in OtherBookmarks/SyncTabGroups by default."),
-          React.DOM.li({},"For changing the root location, move the SyncTabGroups folder anywhere in your bookmarks."),
-          React.DOM.li({},"Session name is the subfolder name where bookmarks are saved for this computer."),
-          React.DOM.li({},"Do not have another SyncTabGroups folder."),
+          React.DOM.li({},browser.i18n.getMessage("bookmark_help_folder")),
+          React.DOM.li({},browser.i18n.getMessage("bookmark_help_moving")),
+          React.DOM.li({},browser.i18n.getMessage("bookmark_help_session")),
+          React.DOM.li({},browser.i18n.getMessage("bookmark_help_precaution")),
       ])),
       React.createElement(OptionInput, {
-        label: "Name of the session: ",
-        help: "Example: Computer 1, laptop...",
+        label: browser.i18n.getMessage("name_session"),
+        help: browser.i18n.getMessage("examples_session"),
         name: this.props.options.folder,
         onChange: this.props.onOptionChange,
         id: this.prefix + "-folder",
       }),
       React.createElement(NiceCheckbox, {
         checked: this.props.options.sync,
-        label: "Save groups in bookmarks automatically (Every 30s)",
+        label: browser.i18n.getMessage("save_bookmarks_automatically"),
         onCheckChange: this.props.onOptionChange,
         id: this.prefix + "-sync",
       }),
       React.createElement(OptionButton, {
-        title: "Save now",
+        title: browser.i18n.getMessage("save_now"),
         onClick: this.props.onBackUpClick
       }),
     ]);

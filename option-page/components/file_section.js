@@ -13,19 +13,19 @@ const FileSection = React.createClass({
       className: "option-section"
     }, [
       React.createElement(SectionTitle, {
-        title: 'Import/Export groups'
+        title: browser.i18n.getMessage("import_export_title")
       }),
       React.DOM.span({},
         React.DOM.ul({}, [
-          React.DOM.li({}, "Imported groups are added as closed groups"),
-          React.DOM.li({}, "Import supports: Sync Tab Groups and Tab Groups json file."),
+          React.DOM.li({}, browser.i18n.getMessage("import_export_help_added")),
+          React.DOM.li({}, browser.i18n.getMessage("import_export_help_support")),
         ])),
       React.createElement(OptionButton, {
-        title: "Export Groups",
+        title: browser.i18n.getMessage("export_groups"),
         onClick: this.props.onExportClick
       }),
       React.createElement(ButtonFile, {
-        title: "Import Groups",
+        title: browser.i18n.getMessage("import_groups"),
         id: "import-groups",
         onFileSelected: this.props.onImportClick
       }),

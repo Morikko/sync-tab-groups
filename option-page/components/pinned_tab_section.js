@@ -11,11 +11,11 @@ const PinnedTabSection = React.createClass({
       className: "option-section"
     }, [
       React.createElement(SectionTitle, {
-        title: 'Pinned Tab'
+        title: browser.i18n.getMessage("pinned_tabs_title")
       }),
       React.createElement(NiceCheckbox, {
         checked: this.props.options.sync,
-        label: "Synchronize the pinned tabs in groups.",
+        label: browser.i18n.getMessage("sync_pinned_tabs"),
         onCheckChange: this.props.onOptionChange,
         id: this.prefix + "-sync",
       }),
