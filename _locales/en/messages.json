@@ -222,5 +222,56 @@
   "import_export_help_support": {
     "message": "Import supports: Sync Tab Groups and Tab Groups json file.",
     "description": ""
+  },
+
+  "tab_information": {
+    "message": "Current Tab Information",
+    "description": ""
+  },
+
+  "tab_title": {
+    "message": "Title",
+    "description": ""
+  },
+
+  "tab_address": {
+    "message": "URL",
+    "description": ""
+  },
+
+  "copy_url": {
+    "message": "Copy URL in the clipboard",
+    "description": ""
+  },
+
+  "privileged_url": {
+    "message": "About Priviledged URLs",
+    "description": ""
+  },
+
+  "privileged_url_help_reason": {
+    "message": "Sync Tab Groups can't open directly privileged URLs for security reason:",
+    "description": ""
+  },
+
+  "open_url_help_method": {
+    "message": "But you can open it:",
+    "description": ""
+  },
+
+  "open_url_help_method_part_1": {
+    "message": "Click on the button",
+    "description": ""
+  },
+
+  "open_url_help_method_part_2": {
+    "message": "Paste the URL in the address bar",
+    "description": ""
+  },
+
+  "open_url_help_method_part_3": {
+    "message": "Press Enter",
+    "description": ""
   }
+
 }

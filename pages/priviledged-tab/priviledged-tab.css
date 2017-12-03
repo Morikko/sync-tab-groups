@@ -1,0 +1,38 @@
+body {
+  background-color: #f9f9fa;
+  color: #444;
+  font-size: 1.1em;
+}
+
+#content {
+  max-width: 800px;
+  margin: auto;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: 2.5em;
+  height:64px;
+}
+
+.title span {
+    line-height: 64px;
+  vertical-align: middle;
+}
+
+.title img {
+  margin-right: 20px;
+  vertical-align: middle;
+}
+
+h1 {
+  margin-top: 60px;
+  margin-bottom: 30px;
+  font-size: 1.6em;
+  border-bottom: #2aa1c0 solid 2px;
+}
+
+button {
+  margin: auto;
+}

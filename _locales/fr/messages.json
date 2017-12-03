@@ -222,5 +222,55 @@
   "import_export_help_support": {
     "message": "L'importation accepte les fichiers JSON des extensions: Sync Tab Groups et Tab Groups.",
     "description": ""
+  },
+
+  "tab_information": {
+    "message": "Information sur l'Onglet",
+    "description": ""
+  },
+
+  "tab_title": {
+    "message": "Titre",
+    "description": ""
+  },
+
+  "tab_address": {
+    "message": "URL",
+    "description": ""
+  },
+
+  "copy_url": {
+    "message": "Copier l'URL dans le presse-papier",
+    "description": ""
+  },
+
+  "privileged_url": {
+    "message": "A propos des URLs protégées",
+    "description": ""
+  },
+
+  "privileged_url_help_reason": {
+    "message": "Sync Tab Groups ne peut pas ouvrir directement les URLs protégées pour des raisons de sécurité.",
+    "description": ""
+  },
+
+  "open_url_help_method": {
+    "message": "Ouverture manuelle:",
+    "description": ""
+  },
+
+  "open_url_help_method_part_1": {
+    "message": "Clique sur le bouton",
+    "description": ""
+  },
+
+  "open_url_help_method_part_2": {
+    "message": "Colle l'addresse dans la barre en haut",
+    "description": ""
+  },
+
+  "open_url_help_method_part_3": {
+    "message": "Appuie sur Entrée",
+    "description": ""
   }
 }
