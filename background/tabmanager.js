@@ -77,6 +77,7 @@ TabManager.openListOfTabs = async function(
     }
 
     let createdTabs = [];
+    let tabIdsCrossRef = {};
 
     // Always open in last pos
     let indexTabOffset = 0,
@@ -103,13 +104,25 @@ TabManager.openListOfTabs = async function(
       tab.url = (tab.url === "about:privatebrowsing") ? "about:newtab" : tab.url;
       if (!Utils.isPrivilegedURL(tab.url)) {
         // Create a tab to tab.url or to newtab
-        createdTabs[index] = await browser.tabs.create({
+        let tabCreationProperties = {
           url: (tab.url === "about:newtab") ? null : tab.url,
           active: tab.active,
           pinned: tab.pinned,
           index: (tab.pinned) ? indexPinnedOffset : indexTabOffset,
           windowId: windowId
-        });
+        };
+        // Update parentId
+        if ( tab.hasOwnProperty("openerTabId")) {
+          // Check tab is still present -> was not removed when group was closed
+          // Parent tab has to be opened before children else it will be lost
+          if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
+            let tabParentId = tabIdsCrossRef[tab.openerTabId];
+            tabCreationProperties["openerTabId"] = tabParentId;
+          }
+        }
+        createdTabs[index] = await browser.tabs.create(tabCreationProperties);
+        tabIdsCrossRef[tab.id] = createdTabs[index].id;
+
         if (tab.pinned) {
           indexPinnedOffset++;
         }

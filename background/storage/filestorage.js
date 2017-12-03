@@ -9,7 +9,9 @@ StorageManager.File.exportGroups = function(groups) {
   // Clean tabs
   for (let g of groups) {
     for (let it = 0; it < g.tabs.length; it++) {
-      g.tabs[it] = {
+      // Filter values to export
+      let tab = {
+        id: g.tabs[it].id || -1,
         title: g.tabs[it].title || "New Tab",
         url: g.tabs[it].url || "about:newtab",
         pinned: g.tabs[it].pinned || false,
@@ -17,6 +19,10 @@ StorageManager.File.exportGroups = function(groups) {
         discarded: g.tabs[it].discarded || false,
         favIconUrl: g.tabs[it].favIconUrl || "chrome://branding/content/icon32.png",
       };
+      if ( g.tabs[it].hasOwnProperty("openerTabId") ) {
+        tab["openerTabId"] = g.tabs[it]["openerTabId"];
+      }
+      g.tabs[it] = tab;
     }
   }
 
