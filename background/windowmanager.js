@@ -7,66 +7,165 @@
 
 var WindowManager = WindowManager || {};
 
-WindowManager.WINDOW_GROUPID = "GROUPID";
+WindowManager.WINDOW_GROUPID = "groupId";
 
 /**
  * Close all the current tabs and open the tabs from the selected group
  * in the window with windowId
- * The active tab will be the last one active
- * TODO: Split function close/open And allowed switch from not followed window
- * @param {Number} oldGroupId - the group id opened
+ * The active tab will be the last one active in the opened group
  * @param {Number} newGroupId - the group id to open
- * @returns {Promise} - the remove tabs promise (last)
+ * @param {Number} windowId - the window id where to do it
+ * @returns {Promise}
  */
-WindowManager.changeGroupInWindow = async function(oldGroupId, newGroupId) {
+WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
   try {
     let newGroupIndex = GroupManager.getGroupIndexFromGroupId(
       newGroupId
     );
-    let oldGroupIndex = GroupManager.getGroupIndexFromGroupId(
-      oldGroupId
+
+    const blank_tab = await WindowManager.removeTabsInWindow(windowId, false);
+
+    await TabManager.openListOfTabs(
+      GroupManager.groups[newGroupIndex].tabs, windowId, false, true);
+
+    await browser.tabs.remove([blank_tab.id]);
+
+    await GroupManager.attachWindowWithGroupId(newGroupId, windowId);
+
+    return "WindowManager.openGroupInWindow done!";
+
+  } catch (e) {
+    let msg = "WindowManager.openGroupInWindow failed; " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+/**
+ * Close an open window and detach the group from it
+ * @param {Number} groupId
+ * @return {Promise}
+ */
+WindowManager.closeWindowFromGroupId = async function(groupId) {
+  try {
+    let windowId = GroupManager.getWindowIdFromGroupId(
+      groupId
+    );
+
+    try {
+      await browser.windows.remove(windowId);
+    } finally {
+      await GroupManager.detachWindow(windowId);
+      return "WindowManager.closeWindowFromGroupId done on groupId " + groupId;
+    }
+
+  } catch (e) {
+    let msg = "TabManager.closeWindowFromGroupId failed; " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+/**
+ * Closes a group and all attached tabs.
+ * Close Window false - Let a new tab and the pinned tabs if not synchronized
+ * Close Window true - Move the pinned tabs if not synchronized before closing
+ * @param {Number} groupId
+ * @return {Promise}
+ */
+WindowManager.closeGroup = async function(groupId, close_window = false) {
+  try {
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId
     );
     let windowId = GroupManager.getWindowIdFromGroupId(
-      oldGroupId
+      groupId
     );
+    const currentWindow = await browser.windows.getCurrent();
+    close_window = close_window || currentWindow.id !== windowId;
 
-    await TabManager.removeTabsWithUnallowedURL(oldGroupId);
-    await TabManager.updateTabsInGroup(windowId);
+    if (close_window) {
+      // Move pinned from windowId to currentWindow.id
+      if (!OptionManager.options.pinnedTab.sync) {
+        const currentWindow = await browser.windows.getCurrent();
+        let pinnedTabsIds = [];
+        const tabs = await browser.tabs.query({
+          windowId: windowId,
+          pinned: true
+        });
+        tabs.forEach((tab) => {
+          pinnedTabsIds.push(tab.id);
+        });
+        // Start at 0, don't take risk
+        await browser.tabs.move(pinnedTabsIds, {
+          windowId: currentWindow.id,
+          index: 0
+        });
+      }
+      await WindowManager.closeWindowFromGroupId(groupId);
+    } else {
+      await GroupManager.detachWindowFromGroupId(groupId);
+      await WindowManager.removeTabsInWindow(windowId)
+    }
 
+    return "WindowManager.closeGroup done!";
+
+  } catch (e) {
+    let msg = "WindowManager.closeGroup failed; " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+/**
+ * Remove all the tabs in the windowId
+ * Pinned are avoided except if there are synchronized or the option to force is set
+ * @param {Number} groupId
+ * @return {Promise} - the blank tab created
+ */
+WindowManager.removeTabsInWindow = async function(windowId, remove_pinned = false) {
+  try {
     const tabs = await browser.tabs.query({
       windowId: windowId
     });
 
-    // 1. Prepare tabs to open and remove
+    // 1. Create blank tab: letting window open
+    const blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
+
+    // 2. Remove previous tabs in window
     var tabsToRemove = [];
     tabs.map((tab) => {
       if ((OptionManager.options.pinnedTab.sync && tab.pinned) ||
-        !tab.pinned) {
+        !tab.pinned ||
+        !remove_pinned) {
         tabsToRemove.push(tab.id);
       }
     });
-
-    var tabsToOpen = GroupManager.groups[newGroupIndex].tabs;
-    // Switch window associated
-    await GroupManager.detachWindowFromGroupId(oldGroupId);
-    await GroupManager.attachWindowWithGroupId(newGroupId, windowId);
-
-    // Create tmp blank tab
-    const blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
-
-    // Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
     await browser.tabs.remove(tabsToRemove);
 
-    // Open new group tabs
-    await TabManager.openListOfTabs(tabsToOpen, windowId, false, true);
-
-    // Remove tmp blank tab
-    await browser.tabs.remove([blank_tab[0].id]);
-
-    return "WindowManager.changeGroupInWindow done!";
-
+    return blank_tab[0];
   } catch (e) {
-    let msg = "WindowManager.changeGroupInWindow failed; " + e;
+    let msg = "WindowManager.removeTabsInWindow failed; " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+WindowManager.switchGroup = async function(newGroupId) {
+  try {
+    // So that the user can change the window without disturbing
+    const currentWindow = await browser.windows.getCurrent();
+
+    if (GroupManager.isWindowAlreadyRegistered(currentWindow.id)) { // From sync window
+      let currentGroupId = GroupManager.getGroupIdInWindow(
+        currentWindow.id
+      );
+      await WindowManager.closeGroup(currentGroupId, false);
+    }
+    await WindowManager.openGroupInWindow(newGroupId, currentWindow.id);
+    return "WindowManager.switchGroup done!";
+  } catch (e) {
+    let msg = "WindowManager.switchGroup failed: " + e;
     console.error(msg);
     return msg;
   }
@@ -92,55 +191,12 @@ WindowManager.selectGroup = async function(newGroupId) {
         GroupManager.groups[newGroupIndex].windowId, {
           focused: true
         });
-      return "WindowManager.selectGroup done!";
     }
     // Case 2: switch group
     else {
-      // So that the user can change the window without disturbing
-      const currentWindow = await browser.windows.getCurrent();
-      try {
-        let currentGroupId = GroupManager.getGroupIdInWindow(
-          currentWindow.id
-        );
-        await WindowManager.changeGroupInWindow(currentGroupId, newGroupId);
-
-        // TODO: organize it better
-        // From non synchronized window
-      } catch (e) {
-        let windowId = currentWindow.id;
-
-        const tabs = await browser.tabs.query({
-          windowId: windowId
-        });
-
-        // 1. Prepare tabs to open and remove
-        var tabsToRemove = [];
-        tabs.map((tab) => {
-          if ((OptionManager.options.pinnedTab.sync && tab.pinned) ||
-            !tab.pinned) {
-            tabsToRemove.push(tab.id);
-          }
-        });
-
-        var tabsToOpen = GroupManager.groups[newGroupIndex].tabs;
-
-        // Create tmp blank tab
-        const blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
-
-        // Remove old ones (Wait first tab to be loaded in order to avoid the window to close)
-        await browser.tabs.remove(tabsToRemove);
-
-        // Open new group tabs
-        await TabManager.openListOfTabs(tabsToOpen, windowId, false, true);
-
-        await GroupManager.attachWindowWithGroupId(newGroupId, windowId);
-
-        // Remove tmp blank tab
-        await browser.tabs.remove([blank_tab[0].id]);
-      } finally {
-        return "WindowManager.selectGroup done!";
-      }
+      await WindowManager.switchGroup(newGroupId);
     }
+    return "WindowManager.selectGroup done!";
   } catch (e) {
     let msg = "WindowManager.selectGroup failed: " + e;
     console.error(msg);
@@ -176,7 +232,7 @@ WindowManager.selectNextGroup = async function(sourceGroupId) {
       nextGroupId = GroupManager.addGroup();
     }
 
-    await WindowManager.changeGroupInWindow(sourceGroupId, nextGroupId);
+    await WindowManager.switchGroup(nextGroupId);
 
     return "WindowManager.selectNextGroup done!";
   } catch (e) {
@@ -187,100 +243,23 @@ WindowManager.selectNextGroup = async function(sourceGroupId) {
 }
 
 /**
- * Close an open window and detach the group from it
- * @param {Number} groupID
- * @return {Promise}
- */
-WindowManager.closeWindowFromGroupId = async function(groupID) {
-  try {
-    let windowId = GroupManager.getWindowIdFromGroupId(
-      groupID
-    );
-
-    // Clean windowId in success or fail
-    try {
-      await browser.windows.remove(windowId);
-    } finally {
-      await GroupManager.detachWindow(windowId);
-      return "WindowManager.closeWindowFromGroupId done on groupId " + groupID;
-    }
-
-  } catch (e) {
-    let msg = "TabManager.closeWindowFromGroupId failed; " + e;
-    console.error(msg);
-    return msg;
-  }
-}
-
-
-/**
- * Closes a group and all attached tabs.
- * If group is in current window, open the next available group (WindowManager.selectNextGroup).
- * If group is in another window, close the window.
- * @param {Number} groupID
- * @return {Promise}
- */
-WindowManager.closeGroup = async function(groupID) {
-  try {
-    let groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupID
-    );
-    let windowId = GroupManager.getWindowIdFromGroupId(
-      groupID
-    );
-
-    const currentWindow = await browser.windows.getCurrent();
-    if (currentWindow.id === windowId)
-      await WindowManager.selectNextGroup(groupID);
-    else {
-      // Move pinned from windowId to currentWindow.id
-      if (!OptionManager.options.pinnedTab.sync) {
-        let pinnedTabsIds = [];
-        const tabs = await browser.tabs.query({
-          windowId: windowId
-        });
-        tabs.forEach((tab) => {
-          if (tab.pinned)
-            pinnedTabsIds.push(tab.id);
-        });
-        // Start at 0, don't take risk
-        await browser.tabs.move(pinnedTabsIds, {
-          windowId: currentWindow.id,
-          index: 0
-        });
-      }
-      await WindowManager.closeWindowFromGroupId(groupID);
-    }
-    return "WindowManager.closeGroup done!";
-
-  } catch (e) {
-    let msg = "WindowManager.closeGroup failed; " + e;
-    console.error(msg);
-    return msg;
-  }
-}
-
-/**
  * Remove a group
  * If group is opened, close it (WindowManager.closeGroup)
- * @param {Number} groupID
+ * @param {Number} groupId
  * @return {Promise}
  */
-WindowManager.removeGroup = async function(groupID) {
+WindowManager.removeGroup = async function(groupId) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupID
+      groupId
     );
 
     // Is open
     if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
-      await WindowManager.closeGroup(groupID);
-      GroupManager.removeGroupFromId(groupID);
-      // Is close
-    } else {
-      GroupManager.removeGroupFromId(groupID);
+      await WindowManager.closeGroup(groupId);
     }
-    return "WindowManager.removeGroup done on groupId " + groupID;
+    GroupManager.removeGroupFromId(groupId);
+    return "WindowManager.removeGroup done on groupId " + groupId;
 
   } catch (e) {
     let msg = "WindowManager.removeGroup failed; " + e;
@@ -291,25 +270,20 @@ WindowManager.removeGroup = async function(groupID) {
 
 /**
  * Open a group in a new window directly
- * @param {Number} groupID
+ * @param {Number} groupId
  * @return {Promise} with window_id
  */
-WindowManager.openGroupInNewWindow = async function(groupID) {
+WindowManager.openGroupInNewWindow = async function(groupId) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupID
+      groupId
     );
 
     const w = await browser.windows.create({
       state: "maximized",
     });
 
-    await GroupManager.attachWindowWithGroupId(groupID, w.id);
-
-    await TabManager.openListOfTabs(GroupManager.groups[groupIndex].tabs, w.id, false, true);
-
-    // Remove first new tab open with window
-    await browser.tabs.remove([w.tabs[0].id]);
+    await WindowManager.openGroupInWindow(groupId, w.id);
     return w.id;
 
   } catch (e) {
@@ -320,7 +294,7 @@ WindowManager.openGroupInNewWindow = async function(groupID) {
 }
 
 /**
- * Use sessions tools to associate the groupid to window.
+ * Use sessions tools to associate the groupId to window.
  * If window is restored, even if windowId change, the value is still associated with the window.
  * @param {Number} windowId
  * @param {Number} groupId
@@ -335,7 +309,7 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
 }
 
 /**
- * Remove groupid stored with the window
+ * Remove groupId stored with the window
  * @param {Number} windowId
  * @return {Promise}
  */
@@ -353,12 +327,13 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
  */
 WindowManager.addGroupFromWindow = async function(windowId) {
   try {
-    // TODO: take all tabs: should look pinned one
-    const tabs = await browser.tabs.query({
+    let selector = {
       windowId: windowId
-    });
-
-    console.log(tabs);
+    };
+    if (!OptionManager.options.pinnedTab.sync) {
+      selector["pinned"] = false;
+    }
+    const tabs = await browser.tabs.query(selector);
 
     var newGroupId = GroupManager.addGroupWithTab(tabs, windowId);
     await WindowManager.associateGroupIdToWindow(
@@ -392,8 +367,7 @@ WindowManager.integrateWindow = async function(windowId,
 
     // Private Window sync
     if (!OptionManager.options.privateWindow.sync &&
-      window.incognito &&
-      !even_new_one) {
+      window.incognito ) {
       return "WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized";
     }
 
@@ -401,22 +375,15 @@ WindowManager.integrateWindow = async function(windowId,
       windowId, // integer
       WindowManager.WINDOW_GROUPID // string
     );
-    // New Window
-    if (key === undefined) {
-      if (even_new_one) {
+
+    if (key === undefined || GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), false) === -1) { // New Window
+      if (even_new_one ||
+      (OptionManager.options.privateWindow.sync &&
+        window.incognito) ) {
         await WindowManager.addGroupFromWindow(windowId);
       }
-      // Update Group
-    } else {
-      try {
-        await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
-      } catch (e) {
-        // Has a key but a wrong, start from 0
-        if (even_new_one) {
-          await WindowManager.addGroupFromWindow(windowId);
-        }
-        return "WindowManager.integrateWindow done for windowId " + windowId;
-      }
+    } else { // Update Group
+      await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
     }
     return "WindowManager.integrateWindow done for windowId " + windowId;
   } catch (e) {
@@ -446,14 +413,14 @@ WindowManager.keepOneWindowOpen = async function() {
 /**
  * Close all windows and open a new one with only a new tab
  */
-WindowManager.OnlyOneNewWindow = async function(sync_window=true) {
+WindowManager.OnlyOneNewWindow = async function(sync_window = true) {
   try {
     OptionManager.options.groups.syncNewWindow = sync_window;
     const windows = await browser.windows.getAll();
 
     const w = await browser.windows.create();
 
-    if ( sync_window ) {
+    if (sync_window) {
       await WindowManager.integrateWindow(w.id);
     }
 

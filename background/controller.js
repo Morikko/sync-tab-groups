@@ -173,10 +173,18 @@ Controller.prototype = {
   },
 
   onGroupClose: function(params) {
-    var delayedFunction = () => {
-      WindowManager.closeGroup(
-        params.groupID
-      );
+    var delayedFunction = async() => {
+      try {
+        await WindowManager.closeGroup(
+          params.groupID,
+          false
+        );
+        return "Controller.onGroupClose done!";
+      } catch (e) {
+        let msg = "Controller.onGroupClose failed; " + e;
+        console.error(msg);
+        return msg;
+      }
     };
 
     TaskManager.fromUI[TaskManager.CLOSE_REFERENCE].manage(
@@ -442,7 +450,7 @@ browser.windows.onRemoved.addListener((windowId) => {
   GroupManager.detachWindow(windowId);
 });
 /* TODO: doenst update context menu well if right click on a tab from another window
-*/
+ */
 browser.windows.onFocusChanged.addListener(async(windowId) => {
   controller.refreshUi();
 
@@ -462,7 +470,7 @@ browser.windows.onFocusChanged.addListener(async(windowId) => {
       }
     });
 
-  } catch ( e ) {
+  } catch (e) {
     let msg = "onFocusChanged.listener failed; " + e;
     console.error(msg);
     return msg;

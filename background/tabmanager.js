@@ -22,11 +22,27 @@ TabManager.removedPinnedTabs = function(tabs) {
  */
 TabManager.updateTabsInGroup = async function(windowId) {
   try {
-    const window = await browser.windows.get(windowId);
+    const allWindows = await browser.windows.getAll();
+
+    let window;
+    for ( let w of allWindows ) {
+      if ( w.id === windowId ) {
+        window = w;
+        break;
+      }
+    }
+    if ( window === undefined ) {
+      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window has been closed";
+    }
+
     // Private Window sync
     if (!OptionManager.options.privateWindow.sync &&
       window.incognito) {
-      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because private window are not synchronized";
+      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because private windows are not synchronized";
+    }
+
+    if ( !GroupManager.isWindowAlreadyRegistered(window.id) ){
+      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window is not synchronized";
     }
 
     var groupId = GroupManager.getGroupIdInWindow(windowId);

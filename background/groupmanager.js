@@ -64,13 +64,18 @@ GroupManager.getGroupIndexFromGroupId = function(groupId, error = true) {
  * @param {Number} - window id
  * @returns {Number} - group index
  */
-GroupManager.getGroupIndexFromWindowId = function(windowId) {
+GroupManager.getGroupIndexFromWindowId = function(windowId, error = true) {
   for (let i = 0; i < GroupManager.groups.length; i++) {
     if (GroupManager.groups[i].windowId === windowId)
       return i;
   }
 
-  throw Error("GroupManager.getGroupIndexFromWindowId: Failed to find group index for id:  " + windowId);
+  if (error) {
+    throw Error("GroupManager.getGroupIndexFromWindowId: Failed to find group index for id:  " + windowId);
+  } else {
+    return -1;
+  }
+
 }
 
 /**
@@ -221,8 +226,13 @@ GroupManager.detachWindow = async function(windowId) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromWindowId(
-      windowId
+      windowId,
+      false
     );
+
+    if (groupIndex === -1) {
+      return "GroupManager.detachWindow done because no group was in window: " + windowId;
+    }
 
     GroupManager.groups[groupIndex].windowId = browser.windows.WINDOW_ID_NONE;
     // Remove group from private window if set
@@ -559,33 +569,6 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
       }
     )
   });
-
-// TODO: Currently Not implemented
-GroupManager.setGroups = async function(groups, opened, focus) {
-  return "Currently Not implemented";
-  // 1. Close all window except one
-  const windows = await browser.windows.getAll();
-  for (let i = 1; i < windows.length; i++) {
-    await browser.windows.close(windows[i].id);
-  }
-
-  let initial_size = GroupManager.groups.length;
-
-  // 2. Add groups
-  for (g of groups) {
-    GroupManager.groups.push(g);
-  }
-
-  // 3. Switch one group
-  WindowManager.selectGroup(
-    params.opened[0]
-  );
-
-  // 4. Open new ones
-
-  // 5. Focus desire
-
-}
 
 /**
  * Sort the groups to be in alphabetical order
