@@ -16,7 +16,6 @@ const OptionsPanel = (() => {
         React.createElement(PrivateWindowSection, {
           options: this.props.options.privateWindow,
           onOptionChange: this.props.onOptionChange,
-          isSync: this.props.options.groups.syncNewWindow,
         }),
         React.createElement(PinnedTabSection, {
           options: this.props.options.pinnedTab,

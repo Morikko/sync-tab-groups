@@ -2,7 +2,6 @@ const PrivateWindowSection = React.createClass({
   propTypes: {
     options: React.PropTypes.object.isRequired,
     onOptionChange: React.PropTypes.func,
-    isSync: React.PropTypes.bool,
   },
 
   prefix: "privateWindow",
@@ -20,7 +19,6 @@ const PrivateWindowSection = React.createClass({
         title: browser.i18n.getMessage("private_window_title")
       }),
       React.createElement(NiceCheckbox, {
-        disabled: !this.props.isSync,
         checked: this.props.options.sync,
         label: browser.i18n.getMessage("new_private_window"),
         onCheckChange: this.props.onOptionChange,

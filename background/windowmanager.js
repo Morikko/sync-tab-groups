@@ -141,7 +141,7 @@ WindowManager.removeTabsInWindow = async function(windowId, remove_pinned = fals
     tabs.map((tab) => {
       if ((OptionManager.options.pinnedTab.sync && tab.pinned) ||
         !tab.pinned ||
-        !remove_pinned) {
+        remove_pinned) {
         tabsToRemove.push(tab.id);
       }
     });

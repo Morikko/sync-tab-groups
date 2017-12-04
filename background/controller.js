@@ -1,6 +1,5 @@
 // Portage help from SDK/XUL to Web extension
 // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Comparison_with_the_Add-on_SDK
-// hotkeys -> commands
 
 TaskManager.fromUI = {
   [TaskManager.CLOSE_REFERENCE]: new TaskManager.DelayedTask(),
@@ -11,10 +10,6 @@ TaskManager.fromUI = {
  * Only read groups data, never write directly
  */
 function Controller() {
-  this._hotkeyOpen = null;
-  this._hotkeyNextGroup = null;
-  this._hotkeyPrevGroup = null;
-
   this.init();
 }
 
@@ -23,122 +18,6 @@ Controller.prototype = {
     await OptionManager.init();
     await GroupManager.init();
   },
-
-  /* TODO DO I still need the binding
-  bindEvents: function() {
-    this.bindHotkeyPreference();
-    this.bindGroupPreference();
-    this.bindPanelButtonEvents();
-    this.bindPanelEvents();
-    this.bindTabEvents();
-  },
-  */
-
-  /* TODO adapt pref and hotkey
-  createOpenHotkey: function() {
-    if (!Prefs.prefs.bindPanoramaShortcut) {
-      return;
-    }
-
-    /**
-     * Note: since this is intended to be released after 1222490 has landed,
-     * it is perfectly save to assume accel-shift-e is not used by anything
-     * else.
-     *
-    this._hotkeyOpen = Hotkey({
-      combo: "accel-shift-e",
-      onPress: () => {
-        if (this._groupsPanel.isShowing) {
-          this._groupsPanel.hide();
-        } else {
-          this._groupsPanel.show({position: this._panelButton});
-          this._panelButton.state("window", {checked: true});
-        }
-      }
-    });
-  },
-  */
-
-  /* TODO adapt pref and hotkey
-  createNavigationHotkey: function() {
-    if (!Prefs.prefs.bindNavigationShortcut) {
-      return;
-    }
-
-    this._hotkeyNextGroup = Hotkey({
-      combo: "accel-`",
-      onPress: () => {
-        WindowManager.selectNextPrevGroup(
-          this._getWindow(),
-          this._getTabBrowser(),
-          1
-        );
-      }
-    });
-    this._hotkeyPrevGroup = Hotkey({
-      combo: "accel-shift-`",
-      onPress: () => {
-        WindowManager.selectNextPrevGroup(
-          this._getWindow(),
-          this._getTabBrowser(),
-          -1
-        );
-      }
-    });
-  },
-  */
-
-  /* TODO adapt pref and hotkey
-  bindHotkeyPreference: function() {
-    if (Prefs.prefs.bindPanoramaShortcut) {
-      this.createOpenHotkey();
-    }
-
-    if (Prefs.prefs.bindNavigationShortcut) {
-      this.createNavigationHotkey();
-    }
-
-    Prefs.on("bindPanoramaShortcut", () => {
-      if (Prefs.prefs.bindPanoramaShortcut) {
-        if (!this._hotkeyOpen) {
-          this.createOpenHotkey();
-        }
-      } else if (this._hotkeyOpen) {
-        this._hotkeyOpen.destroy();
-        this._hotkeyOpen = null;
-      }
-    });
-
-    Prefs.on("bindNavigationShortcut", () => {
-      if (Prefs.prefs.bindNavigationShortcut) {
-        if (!this._hotkeyNextGroup) {
-          this.createNavigationHotkey();
-        }
-      } else {
-        if (this._hotkeyNextGroup) {
-          this._hotkeyNextGroup.destroy();
-          this._hotkeyNextGroup = null;
-        }
-        if (this._hotkeyPrevGroup) {
-          this._hotkeyPrevGroup.destroy();
-          this._hotkeyPrevGroup = null;
-        }
-      }
-    });
-  },
-  */
-
-  /* TODO To study
-  bindGroupPreference: function() {
-    let emitCloseTimeoutChange = () => {
-      this._groupsPanel.port.emit("Groups:CloseTimeoutChanged", Prefs.prefs.groupCloseTimeout);
-    };
-
-    Prefs.on("groupCloseTimeout", emitCloseTimeoutChange);
-
-    emitCloseTimeoutChange();
-  },
-  */
 
   refreshOptionsUI: function() {
     Utils.sendMessage("Option:Changed", {
