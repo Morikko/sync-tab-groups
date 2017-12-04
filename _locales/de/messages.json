@@ -1,11 +1,226 @@
 {
+  "extension_description": {
+    "message": "Sync Tab Groups sind eine einfache Möglichkeit, Ihre aktuellen Tabs nach Themen zu organisieren. Jede geöffnete Gruppe wird mit einem Fenster synchronisiert, so dass alle Änderungen an den Registerkarten gespeichert werden. Somit können Sie einen aktuellen Tabs-Flow schließen, während Sie einen anderen Tabs-Flow öffnen.",
+    "description": "Description of the extension"
+  },
+
   "add_group": {
     "message": "Neue Gruppe anlegen",
-    "description": "Neue Gruppe anlegen"
+    "description": "Create new group button text"
+  },
+
+  "search": {
+    "message": "Suchen...",
+    "description": "Place holder in search input"
+  },
+
+  "clear_search": {
+    "message": "Suche löschen",
+    "description": "Clear search help button"
   },
 
   "unnamed_group": {
     "message": "Unbenannte Gruppe",
-    "description": "Unbenannte Gruppe"
+    "description": "Default name for unnamed group"
+  },
+
+  "synchronized_window": {
+    "message": "Fenster synchronisiert",
+    "description": "Label for synchronizing window in popup"
+  },
+
+  "open_preferences": {
+    "message": "Einstellungen öffnen",
+    "description": "Open Preferences"
+  },
+
+  "expand_menu": {
+    "message": "Menü erweitern",
+    "description": "Expand Menu hover button"
+  },
+
+  "reduce_menu": {
+    "message": "Menü verkleinern",
+    "description": "Reduce Menu hover button"
+  },
+
+  "close_group": {
+    "message": "Schließen",
+    "description": "Hover help for close button"
+  },
+
+  "remove_group": {
+    "message": "Entfernen",
+    "description": "Hover help for remove button"
+  },
+
+  "open_window_group": {
+    "message": "In neuem Fenster öffnen",
+    "description": "Hover help for open in new window button"
+  },
+
+  "rename_group": {
+    "message": "Umbenennen",
+    "description": "Hover help for rename button"
+  },
+
+  "show_tabs": {
+    "message": "Tabs in Gruppe anzeigen",
+    "description": "Hover help for show tabs in group button"
+  },
+
+  "hide_tabs": {
+    "message": "Tabs in Gruppe verbergen",
+    "description": "Hover help for hide tabs in group button"
+  },
+
+  "undo_removing": {
+    "message": "Entfernen rückgängig",
+    "description": "Hover help for undo removing button"
+  },
+
+  "undo_closing": {
+    "message": "Schließen rückgängig",
+    "description": "Hover help for undo closing button"
+  },
+
+  "force_removing": {
+    "message": "Entfernen erzwingen",
+    "description": "Hover help for force removing button"
+  },
+
+  "force_closing": {
+    "message": "Schließen erzwingen",
+    "description": "Hover help for force closing button"
+  },
+
+  "open_tab": {
+    "message": "Tab in aktuellem Fenster öffnen",
+    "description": "Hover help for open tab button"
+  },
+
+  "close_tab": {
+    "message": "Tab entfernen und schließen wenn geöffnet",
+    "description": "Hover help for open tab button"
+  },
+
+  "move_tab_group": {
+    "message": "In andere Gruppe verschieben",
+    "description": "Name of the menu in the context (right click on tab)"
+  },
+
+  "export_groups": {
+    "message": "Gruppen exportieren",
+    "description": "Name of the menu"
+  },
+
+  "import_groups": {
+    "message": "Gruppen importieren",
+    "description": "Name of the menu"
+  },
+
+  "save_bookmarks_groups": {
+    "message": "Gruppen in Lesezeichen speichern",
+    "description": "Name of the menu"
+  },
+
+  "group_title": {
+    "message": "Gruppe",
+    "description": "Option section title"
+  },
+
+  "new_window": {
+    "message": "Ein neues Fenster erzeugt automatisch eine neue Gruppe.",
+    "description": "Label new window"
+  },
+
+  "remove_empty_groups": {
+    "message": "Gruppen ohne Tabs automatisch entfernen.",
+    "description": "Label remove empty groups"
+  },
+
+  "private_window_title": {
+    "message": "Privates Fenster",
+    "description": "Option section title"
+  },
+
+  "new_private_window": {
+    "message": "Ein neues privates Fenster erzeugt automatisch eine neue Gruppe.",
+	"description": "Label new private window"
+  },
+
+  "close_private_window": {
+    "message": "Gruppe in einem privaten Fenster entfernen, wenn das Fenster geschlossen wird.",
+    "description": "Label close private window"
+  },
+
+  "pinned_tabs_title": {
+    "message": "Angeheftete Tabs",
+    "description": "Option section title"
+  },
+
+  "sync_pinned_tabs": {
+    "message": "Angeheftete Tabs zu Gruppen hinzufügen (Wenn inaktiv, werden diese beim Wechsel einer Gruppe geschlossen)",
+    "description": "Label sync pinned tabs"
+  },
+
+  "bookmarks_title": {
+    "message": "Lesezeichen",
+    "description": "Option section title"
+  },
+
+  "bookmark_help_folder": {
+    "message": "Lesezeichen werden standardmäßig in WeitereLesezeichen/SyncTabGroups gespeichert.",
+    "description": ""
+  },
+
+  "bookmark_help_moving": {
+    "message": "Um das Stammverzeichnis zu ändern, einfach den SyncTabGroups Ordner innerhalb der Lesezeichen verschieben.",
+    "description": ""
+  },
+
+  "bookmark_help_session": {
+    "message": "Der Sessionname ist das Unterverzeichnis der Lesezeichen auf diesem Computer.",
+    "description": ""
+  },
+
+  "bookmark_help_precaution": {
+    "message": "Kein anderes SyncTabGroups Verzeichnis vorhanden.",
+    "description": ""
+  },
+
+  "name_session": {
+    "message": "Name der Session: ",
+    "description": ""
+  },
+
+  "examples_session": {
+    "message": "Beispiel: Computer 1, Laptop...",
+    "description": ""
+  },
+
+  "save_bookmarks_automatically": {
+    "message": "Gruppen automatisch in Lesezeichen speichern (Alle 30s)",
+    "description": ""
+  },
+
+  "save_now": {
+    "message": "Jetzt speichern",
+    "description": ""
+  },
+
+  "import_export_title": {
+    "message": "Gruppen importieren/exportieren",
+    "description": "Option section title"
+  },
+
+  "import_export_help_added": {
+    "message": "Gruppen werden als geschlossene Gruppen importiert",
+    "description": ""
+  },
+
+  "import_export_help_support": {
+    "message": "Import unterstützt Sync Tab Gruppen und Tab Groups json Dateien.",
+    "description": ""
   }
 }
