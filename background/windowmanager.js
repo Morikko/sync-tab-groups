@@ -384,6 +384,18 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
  * @return {Promise}
  */
 WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
+  let group = GroupManager.groups[
+    GroupManager.getGroupIndexFromGroupId(
+      groupId, false
+    )
+  ];
+  browser.windows.update(
+    windowId, {
+      titlePreface: "[" +
+        Utils.getGroupTitle(group) +
+        "] "
+    }
+  );
   return browser.sessions.setWindowValue(
     windowId, // integer
     WindowManager.WINDOW_GROUPID, // string
@@ -397,6 +409,11 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
  * @return {Promise}
  */
 WindowManager.desassociateGroupIdToWindow = async function(windowId) {
+  browser.windows.update(
+    windowId, {
+      titlePreface: " "
+    }
+  );
   return browser.sessions.removeWindowValue(
     windowId, // integer
     WindowManager.WINDOW_GROUPID, // string
