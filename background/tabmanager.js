@@ -6,14 +6,6 @@
  */
 var TabManager = TabManager || {};
 
-TabManager.removedPinnedTabs = function(tabs) {
-  for (let i = tabs.length - 1; i >= 0; i--) {
-    if (tabs[i].pinned) {
-      tabs.splice(i, 1);
-    }
-  }
-}
-
 /**
  * Take the current tabs on the desire window and set it as the tabs
  * for the group
@@ -25,13 +17,13 @@ TabManager.updateTabsInGroup = async function(windowId) {
     const allWindows = await browser.windows.getAll();
 
     let window;
-    for ( let w of allWindows ) {
-      if ( w.id === windowId ) {
+    for (let w of allWindows) {
+      if (w.id === windowId) {
         window = w;
         break;
       }
     }
-    if ( window === undefined ) {
+    if (window === undefined) {
       return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window has been closed";
     }
 

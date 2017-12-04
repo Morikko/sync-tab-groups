@@ -9,6 +9,10 @@ var WindowManager = WindowManager || {};
 
 WindowManager.WINDOW_GROUPID = "groupId";
 
+WindowManager.WINDOW_CURRENTLY_SWITCHING = {
+
+};
+
 /**
  * Close all the current tabs and open the tabs from the selected group
  * in the window with windowId
@@ -151,10 +155,28 @@ WindowManager.removeTabsInWindow = async function(windowId, remove_pinned = fals
   }
 }
 
+/**
+ * Open newGroupId in current window, close the previous group if has
+ * Secure: don't switch a window if it is already switching
+ * @param {Number} newGroupId
+ */
 WindowManager.switchGroup = async function(newGroupId) {
+  let currentWindow;
   try {
-    // So that the user can change the window without disturbing
-    const currentWindow = await browser.windows.getCurrent();
+    currentWindow = await browser.windows.getCurrent();
+    if ( WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
+      currentWindow.id
+    )) {
+      browser.notifications.create({
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+        "title": "Can't change Group now",
+        "message": "Reason: the current window has not finished to switch to a group.",
+        "eventTime": 4000,
+      });
+      return "WindowManager.openGroupInWindow not done because the current window has not finished to switch to a group.";
+    }
+    WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id] = true;
 
     if (GroupManager.isWindowAlreadyRegistered(currentWindow.id)) { // From sync window
       let currentGroupId = GroupManager.getGroupIdInWindow(
@@ -168,6 +190,13 @@ WindowManager.switchGroup = async function(newGroupId) {
     let msg = "WindowManager.switchGroup failed: " + e;
     console.error(msg);
     return msg;
+  } finally {
+    if ( WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
+      currentWindow.id
+    )) {
+      const currentWindow = await browser.windows.getCurrent();
+      delete WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id];
+    }
   }
 }
 
@@ -206,22 +235,48 @@ WindowManager.selectGroup = async function(newGroupId) {
 
 /**
  * Open the next group in the list that is not opened.
+ * If direction = 1 -> Next
+ * If direction = -1 -> Previous
  * If no group available, create an empty one.
- * @param {Number} sourceGroupId -- group id ref
+ * @param {Number} refGroupId -- group id ref
+ * @param {Number} direction -- default:1
  * @return {Promise}
  */
-WindowManager.selectNextGroup = async function(sourceGroupId) {
+WindowManager.selectNextGroup = async function(direction = 1, open=false, refGroupId = -1) {
   try {
     let nextGroupId = -1;
-    let sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
-      sourceGroupId
-    );
+    let sourceGroupIndex;
+
+    if (refGroupId === -1) { // Current window
+      const currentWindow = await browser.windows.getCurrent();
+
+      if (GroupManager.isWindowAlreadyRegistered(currentWindow.id)) {
+        refGroupId = GroupManager.getGroupIdInWindow(currentWindow.id);
+        sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
+          refGroupId
+        );
+      } else { // Unsync window
+        sourceGroupIndex = direction>0?-1:0;
+      }
+    } else {
+      sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
+        refGroupId
+      );
+    }
+
 
     // Search next unopened group
-    for (let i = sourceGroupIndex; i < sourceGroupIndex + GroupManager.groups.length; i++) {
-      let targetGroupIndex = (i) % GroupManager.groups.length;
+    let targetGroupIndex = sourceGroupIndex;
+    for (let i = 0; i < GroupManager.groups.length - 1; i++) {
+      targetGroupIndex = (targetGroupIndex + GroupManager.groups.length + direction) % GroupManager.groups.length;
 
-      if (GroupManager.groups[targetGroupIndex].windowId === browser.windows.WINDOW_ID_NONE) {
+      if (GroupManager.groups[targetGroupIndex].windowId === browser.windows.WINDOW_ID_NONE
+        && !open) {
+        nextGroupId = GroupManager.groups[targetGroupIndex].id;
+        break;
+      }
+      if (GroupManager.groups[targetGroupIndex].windowId !== browser.windows.WINDOW_ID_NONE
+        && open) {
         nextGroupId = GroupManager.groups[targetGroupIndex].id;
         break;
       }
@@ -229,27 +284,55 @@ WindowManager.selectNextGroup = async function(sourceGroupId) {
 
     // No group found, create one
     if (nextGroupId === -1) {
-      nextGroupId = GroupManager.addGroup();
+      let title = "Can't " + (open>0?"focus":"switch") + " to "+ (direction>0?"next":"previous") + " Group";
+      let msg = "Reason: there is no other "+ (open>0?"opened":"closed") + " groups";
+      browser.notifications.create({
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+        "title": title,
+        "message": msg,
+        "eventTime": 4000,
+      });
+      return "WindowManager.selectNextGroup not done because " + msg;
     }
 
-    await WindowManager.switchGroup(nextGroupId);
+    await WindowManager.selectGroup(nextGroupId);
 
-    return "WindowManager.selectNextGroup done!";
+    return nextGroupId;
   } catch (e) {
     let msg = "WindowManager.selectNextGroup failed; " + e;
     console.error(msg);
-    return msg;
+    return -1;
   }
 }
 
 /**
  * Remove a group
  * If group is opened, close it (WindowManager.closeGroup)
- * @param {Number} groupId
+ * If group id is -1, remove the group in the current window
+ * @param {Number} groupId (deafault=-1)
  * @return {Promise}
  */
-WindowManager.removeGroup = async function(groupId) {
+WindowManager.removeGroup = async function(groupId = -1) {
   try {
+    if (groupId === -1) {
+      const currentWindow = await browser.windows.getCurrent();
+
+      if (!GroupManager.isWindowAlreadyRegistered(currentWindow.id)) { // From sync window
+        browser.notifications.create({
+          "type": "basic",
+          "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+          "title": "No group removed.",
+          "message": "Reason: there is no group in your current window",
+          "eventTime": 4000,
+        });
+        return "WindowManager.removeGroup done because there is no group in current window.";
+      }
+      groupId = GroupManager.getGroupIdInWindow(
+        currentWindow.id
+      );
+    }
+
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
       groupId
     );
@@ -367,7 +450,7 @@ WindowManager.integrateWindow = async function(windowId,
 
     // Private Window sync
     if (!OptionManager.options.privateWindow.sync &&
-      window.incognito ) {
+      window.incognito) {
       return "WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized";
     }
 
@@ -378,8 +461,8 @@ WindowManager.integrateWindow = async function(windowId,
 
     if (key === undefined || GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), false) === -1) { // New Window
       if (even_new_one ||
-      (OptionManager.options.privateWindow.sync &&
-        window.incognito) ) {
+        (OptionManager.options.privateWindow.sync &&
+          window.incognito)) {
         await WindowManager.addGroupFromWindow(windowId);
       }
     } else { // Update Group
