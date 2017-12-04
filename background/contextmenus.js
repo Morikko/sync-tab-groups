@@ -108,6 +108,16 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "icons/gear-32.png"
     },
   });
+
+  browser.contextMenus.create({
+    id: ContextMenu.SpecialActionMenu_ID + "open_shortcut_list",
+    title: browser.i18n.getMessage("open_shortcut_list"),
+    contexts: ['browser_action'],
+    icons: {
+      "64": "icons/keyboard-64.png",
+      "32": "icons/keyboard-32.png"
+    },
+  });
 }
 
 ContextMenu.MoveTabMenuListener = function(info, tab) {
@@ -151,6 +161,12 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         break;
       case "open_preferences":
         browser.runtime.openOptionsPage();
+        break;
+      case "open_shortcut_list":
+        browser.tabs.create({
+          url: "/pages/shortcut-help/shortcut-help.html",
+          active: true,
+        });
         break;
     }
   }

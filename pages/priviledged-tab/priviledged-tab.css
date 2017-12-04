@@ -13,11 +13,11 @@ body {
   width: 100%;
   text-align: center;
   font-size: 2.5em;
-  height:64px;
+  height: 64px;
 }
 
 .title span {
-    line-height: 64px;
+  line-height: 64px;
   vertical-align: middle;
 }
 
@@ -35,4 +35,25 @@ h1 {
 
 button {
   margin: auto;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+tr>th {
+  padding-bottom: 10px;
+}
+
+tr>td {
+  padding-bottom: 5px;
+}
+
+.command_shortcuts {
+  padding-right: 15px;
+}
+
+.command_description {
+  padding-left: 15px;
+  border-left: 1px solid black;
 }

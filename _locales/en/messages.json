@@ -277,6 +277,61 @@
   "privileged_url_help_warning": {
     "message": "Warning: those URLs are closed automatically by Firefox when the extension is updated or disabled.",
     "description": ""
+  },
+
+  "shortcut_list": {
+    "message": "Shortcuts List",
+    "description": ""
+  },
+
+  "command_description_swtich-next-group": {
+    "message": "Switch to next closed group.",
+    "description": ""
+  },
+
+  "command_description_swtich-previous-group": {
+    "message": "Switch to previous closed group.",
+    "description": ""
+  },
+
+  "command_description_create-group-swtich": {
+    "message": "Create a new group and switch to it.",
+    "description": ""
+  },
+
+  "command_description_focus-next-group": {
+    "message": "Focus window with next group opened.",
+    "description": ""
+  },
+
+  "command_description_focus-previous-group": {
+    "message": "Focus window with previous group opened.",
+    "description": ""
+  },
+
+  "command_description_remove-group-swtich": {
+    "message": "Close the current menu in window and switch to next one.",
+    "description": ""
+  },
+
+  "command_description__execute_browser_action": {
+    "message": "Open Sync Tab Group Menu.",
+    "description": ""
+  },
+
+  "open_shortcut_list": {
+    "message": "Open Shortcuts List",
+    "description": ""
+  },
+
+  "command_shortcuts": {
+    "message": "Shortcut",
+    "description": ""
+  },
+
+  "command_description": {
+    "message": "Description",
+    "description": ""
   }
 
 }
