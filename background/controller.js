@@ -58,6 +58,7 @@ Controller.prototype = {
           params.groupID,
           false
         );
+        controller.refreshUi();
         return "Controller.onGroupClose done!";
       } catch (e) {
         let msg = "Controller.onGroupClose failed; " + e;

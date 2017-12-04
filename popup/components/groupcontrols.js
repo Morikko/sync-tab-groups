@@ -63,27 +63,24 @@ const GroupControls = React.createClass({
 
   getClosingControls: function() {
     let overHelp;
-    if ( this.props.closing) {
+    if (this.props.closing) {
       overHelp = browser.i18n.getMessage("undo_closing");
-    }
-    else if ( this.props.removing ) {
+    } else if (this.props.removing) {
       overHelp = browser.i18n.getMessage("undo_removing");
     }
     return [
       React.DOM.i({
         title: overHelp,
-        className: "group-close-undo fa fa-fw fa-undo",
+        className: "group-edit group-close-undo fa fa-fw fa-undo",
         onClick: this.props.onUndoCloseClick
       })
     ];
   },
 
   render: function() {
-    let groupControls;
-    if (this.props.closing || this.props.removing) {
-      groupControls = this.getClosingControls();
-    } else {
-      groupControls = this.getEditControls();
+    let editControls = [];
+    if (!(this.props.closing || this.props.removing)) {
+      editControls = this.getEditControls();
     }
 
     let expanderClasses = classNames({
@@ -96,9 +93,9 @@ const GroupControls = React.createClass({
 
     let openedControls = [];
     // Open in new window button
-    if ( !this.props.opened
-      && !this.props.closing
-      && !this.props.removing ) {
+    if (!this.props.opened &&
+      !this.props.closing &&
+      !this.props.removing) {
       openedControls.push(
         React.DOM.i({
           className: "group-edit fa fa-fw fa-window-maximize",
@@ -108,13 +105,17 @@ const GroupControls = React.createClass({
       );
     }
 
+    // Before closing
+    if (this.props.closing) {
+      openedControls.push(this.getClosingControls());
+    }
+
     // Close button
-    if (this.props.opened &&  !this.props.removing  ) {
+    if (this.props.opened && !this.props.removing) {
       let overHelp;
-      if ( this.props.closing) {
+      if (this.props.closing) {
         overHelp = browser.i18n.getMessage("force_closing");
-      }
-      else {
+      } else {
         overHelp = browser.i18n.getMessage("close_group");
       }
       openedControls.push(
@@ -126,12 +127,11 @@ const GroupControls = React.createClass({
       );
     }
 
-    if ( !this.props.closing  ) {
+    if (!this.props.closing) {
       let overHelp;
-      if ( this.props.removing) {
+      if (this.props.removing) {
         overHelp = browser.i18n.getMessage("force_removing");
-      }
-      else {
+      } else {
         overHelp = browser.i18n.getMessage("remove_group");
       }
       openedControls.push(
@@ -143,11 +143,15 @@ const GroupControls = React.createClass({
       );
     }
 
-    let expand_title = this.props.expanded?browser.i18n.getMessage("hide_tabs"):browser.i18n.getMessage("show_tabs");
+    if (this.props.removing) {
+      openedControls.push(this.getClosingControls());
+    }
+
+    let expand_title = this.props.expanded ? browser.i18n.getMessage("hide_tabs") : browser.i18n.getMessage("show_tabs");
     return React.DOM.span({
         className: "group-controls"
       },
-      groupControls,
+      editControls,
       openedControls,
       React.DOM.i({
         className: expanderClasses,
