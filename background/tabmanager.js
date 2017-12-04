@@ -41,19 +41,27 @@ TabManager.updateTabsInGroup = async function(windowId) {
       return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because private windows are not synchronized";
     }
 
-    if ( !GroupManager.isWindowAlreadyRegistered(window.id) ){
+    if (!GroupManager.isWindowAlreadyRegistered(window.id)) {
       return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window is not synchronized";
     }
 
     var groupId = GroupManager.getGroupIdInWindow(windowId);
-    const tabs = await browser.tabs.query({
+    let selector = {
       windowId: windowId
-    });
-
+    };
     // Pinned tab
     if (!OptionManager.options.pinnedTab.sync) {
-      TabManager.removedPinnedTabs(tabs);
+      selector["pinned"] = false;
     }
+    const tabs = await browser.tabs.query(selector);
+
+    // Remove fancy pages
+    for ( let tab of tabs ) {
+      if ( tab.url.includes("priviledged-tab.html") ) {
+        tab.url = Utils.getParameterByName('url', tab.url)
+      }
+    }
+
 
     GroupManager.setTabsInGroupId(groupId, tabs);
     return "TabManager.updateTabsInGroup done on window id " + windowId;
@@ -117,34 +125,40 @@ TabManager.openListOfTabs = async function(
     }
     let index = 0;
     for (let tab of tabsToOpen) {
-      tab.url = (tab.url === "about:privatebrowsing") ? "about:newtab" : tab.url;
-      if (!Utils.isPrivilegedURL(tab.url)) {
-        // Create a tab to tab.url or to newtab
-        let tabCreationProperties = {
-          url: (tab.url === "about:newtab") ? null : tab.url,
-          active: tab.active,
-          pinned: tab.pinned,
-          index: (tab.pinned) ? indexPinnedOffset : indexTabOffset,
-          windowId: windowId
-        };
-        // Update parentId
-        if ( tab.hasOwnProperty("openerTabId")) {
-          // Check tab is still present -> was not removed when group was closed
-          // Parent tab has to be opened before children else it will be lost
-          if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
-            let tabParentId = tabIdsCrossRef[tab.openerTabId];
-            tabCreationProperties["openerTabId"] = tabParentId;
-          }
-        }
-        createdTabs[index] = await browser.tabs.create(tabCreationProperties);
-        tabIdsCrossRef[tab.id] = createdTabs[index].id;
-
-        if (tab.pinned) {
-          indexPinnedOffset++;
-        }
-        indexTabOffset++;
-        index++;
+      let url = tab.url;
+      url = (url === "about:privatebrowsing") ? "about:newtab" : url;
+      if (Utils.isPrivilegedURL(url)) {
+        url = "/pages/priviledged-tab/priviledged-tab.html?" +
+          "title=" + tab.title.replace(' ', '+') +
+          "&url=" + tab.url +
+          "&favIconUrl=" + tab.favIconUrl;
       }
+      // Create a tab to tab.url or to newtab
+      let tabCreationProperties = {
+        url: (url === "about:newtab") ? null : url,
+        active: tab.active,
+        pinned: tab.pinned,
+        index: (tab.pinned) ? indexPinnedOffset : indexTabOffset,
+        windowId: windowId
+      };
+      // Update parentId
+      if (tab.hasOwnProperty("openerTabId")) {
+        // Check tab is still present -> was not removed when group was closed
+        // Parent tab has to be opened before children else it will be lost
+        if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
+          let tabParentId = tabIdsCrossRef[tab.openerTabId];
+          tabCreationProperties["openerTabId"] = tabParentId;
+        }
+      }
+      createdTabs[index] = await browser.tabs.create(tabCreationProperties);
+      tabIdsCrossRef[tab.id] = createdTabs[index].id;
+
+      if (tab.pinned) {
+        indexPinnedOffset++;
+      }
+      indexTabOffset++;
+      index++;
+
     }
 
     return (createdTabs);

@@ -56,6 +56,47 @@ StorageManager.File.readJsonFile = async function(file) {
 }
 
 /**
+ * Parse the get parameters from the URL, return the value of name
+ * @param {String} name - the value to return
+ * @param {String} url - string to analyse, if not given, take the one from the web page
+ */
+Utils.getParameterByName = function(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+/**
+ * Set webpage icon, works only in web page
+ * @param {String} icon_url
+ */
+Utils.setIcon = function(icon_url) {
+  var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+  link.type = 'image/x-icon';
+  link.rel = 'shortcut icon';
+  link.href = icon_url;
+  document.getElementsByTagName('head')[0].appendChild(link);
+};
+
+/**
+ * Set text in the clipboard, works only in web page
+ * @param {String} text
+ */
+Utils.copyToTheClipBoard = function(text) {
+  let input = document.createElement('input');
+  input.value = text;
+
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand("Copy");
+  document.body.removeChild(input);
+}
+
+/**
  * Search the keywords in title. Keywords are separated with space
  * Not case sensitive
  * Return true if all keywords are in title
@@ -92,7 +133,7 @@ Utils.wait = async function(time) {
  * @returns {boolean}
  */
 Utils.isPrivilegedURL = function(url) {
-  if (url === "about:newtab")
+  if (url === "about:newtab" || url === "about:blank" )
     return false;
   if (url.startsWith("chrome:") ||
     url.startsWith("javascript:") ||

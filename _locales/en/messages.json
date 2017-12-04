@@ -272,6 +272,11 @@
   "open_url_help_method_part_3": {
     "message": "Press Enter",
     "description": ""
+  },
+
+  "privileged_url_help_warning": {
+    "message": "Warning: those URLs are closed automatically by Firefox when the extension is updated or disabled.",
+    "description": ""
   }
 
 }

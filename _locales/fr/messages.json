@@ -272,5 +272,10 @@
   "open_url_help_method_part_3": {
     "message": "Appuie sur Entrée",
     "description": ""
+  },
+
+  "privileged_url_help_warning": {
+    "message": "Attention: ces onglets sont fermés automatiquement par Firefox lorsque l'extension est mise à jour ou Désactiver.",
+    "description": ""
   }
 }
