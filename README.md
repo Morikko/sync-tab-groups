@@ -20,6 +20,7 @@ Sync Tab Groups are an easy way to organize your current tabs depending on a top
  - Manage them and switch to them
  - Many settings to make the extension behaves like you want it
  - Usage guide: [see the screenshots](https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/)
+ - Many shortcuts
 
 
 # Limitations (Important for not losing data)
@@ -29,7 +30,6 @@ Sync Tab Groups are an easy way to organize your current tabs depending on a top
  - Previous sessions (back button) are lost when closing a group
  - Temporary data like forms are lost when closing a group
  - All tabs are loaded when a group is opened (Will be fixed with Firefox 58 on January) ([More info](https://github.com/Morikko/sync-tab-groups/issues/5#issuecomment-344753295))
- - Local files opened in tabs can't be reopen by the extension due to a Firefox API restriction for security reasons.
 
 
 # Notes
@@ -44,7 +44,7 @@ STG is not able to hide tabs, instead tabs are closed. However, if this doesn't 
 # Languages
  - English
  - French
- - German (coming soon) 
+ - German (thanks @bitkleberAST) 
 
 I would gladly accept other translations. Add it in `_locales/`, while following the en (English) file. Change message and description parts only.
 
