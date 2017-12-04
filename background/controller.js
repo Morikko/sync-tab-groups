@@ -478,4 +478,35 @@ browser.windows.onFocusChanged.addListener(async(windowId) => {
 });
 
 
-// Context Menu
+// Commands
+browser.commands.onCommand.addListener(async function(command) {
+  try {
+    switch (command) {
+      case "swtich-next-group":
+        WindowManager.selectNextGroup(1, false);
+        break;
+      case "swtich-previous-group":
+        WindowManager.selectNextGroup(-1, false);
+        break;
+      case "create-group-swtich":
+        let newGroupId = GroupManager.addGroup();
+        WindowManager.selectGroup(newGroupId);
+        break;
+      case "focus-next-group":
+        WindowManager.selectNextGroup(1, true);
+        break;
+      case "focus-previous-group":
+        WindowManager.selectNextGroup(-1, true);
+        break;
+      case "remove-group-swtich":
+        await WindowManager.removeGroup();
+        WindowManager.selectNextGroup(1, false);
+        break;
+      default:
+    }
+  } catch (e) {
+    let msg = "Commands.listener failed on " + command + " " + e;
+    console.error(msg);
+    return msg;
+  }
+});

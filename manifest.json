@@ -17,6 +17,50 @@
     }
   },
 
+  "commands": {
+    "swtich-next-group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Right"
+      }
+    },
+
+    "swtich-previous-group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Left"
+      }
+    },
+
+    "create-group-swtich": {
+      "suggested_key": {
+        "default": "Alt+Shift+Insert"
+      }
+    },
+
+    "focus-next-group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Up"
+      }
+    },
+
+    "focus-previous-group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Down"
+      }
+    },
+
+    "remove-group-swtich": {
+      "suggested_key": {
+        "default": "Alt+Shift+Delete"
+      }
+    },
+
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+Space"
+      }
+    }
+  },
+
   "permissions": [
     "bookmarks", "tabs", "storage", "sessions", "downloads", "notifications", "contextMenus"
   ],
