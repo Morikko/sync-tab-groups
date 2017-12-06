@@ -17,6 +17,8 @@ Controller.prototype = {
   init: async function() {
     await OptionManager.init();
     await GroupManager.init();
+
+    Utils.setBrowserActionIcon(OptionManager.options.popup.whiteTheme);
   },
 
   refreshOptionsUI: function() {

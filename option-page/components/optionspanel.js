@@ -32,6 +32,10 @@ const OptionsPanel = (() => {
           onImportClick: this.props.onImportClick,
           onExportClick: this.props.onExportClick
         }),
+        React.createElement(PopupSection, {
+          options: this.props.options.popup,
+          onOptionChange: this.props.onOptionChange,
+        }),
       ]);
     }
   });

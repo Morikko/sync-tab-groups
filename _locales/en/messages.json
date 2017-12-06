@@ -332,6 +332,16 @@
   "command_description": {
     "message": "Description",
     "description": ""
+  },
+
+  "toolbar_menu": {
+    "message": "Toolbar Menu",
+    "description": ""
+  },
+
+  "icon_option": {
+    "message": "Use white icon instead of black",
+    "description": ""
   }
 
 }

@@ -31,9 +31,35 @@ OptionManager.TEMPLATE = function() {
     },
     popup: {
       maximized: false,
+      whiteTheme: false,
     }
   };
 };
+
+/**
+ * Change the popup icon (Black or White)
+ * @param {boolean} icon_type
+ * White: true
+ * Black: false
+ */
+Utils.setBrowserActionIcon = function(icon_type) {
+  if (icon_type === true ) { // White
+    browser.browserAction.setIcon({
+      path: {
+        16: "icons/tabspace-light-16.png",
+        32: "icons/tabspace-light-32.png"
+      }
+    });
+  } else if ( icon_type === false ) { // Black
+    browser.browserAction.setIcon({
+      path: {
+        16: "icons/tabspace-16.png",
+        32: "icons/tabspace-32.png"
+      }
+    });
+  }
+}
+
 
 var StorageManager = StorageManager || {};
 StorageManager.File = StorageManager.File || {};
@@ -107,7 +133,7 @@ Utils.copyToTheClipBoard = function(text) {
 Utils.search = function(title, keywords) {
 
   let has = true;
-  keywords.split(' ').map((word)=>{
+  keywords.split(' ').map((word) => {
     has = has && title.toLowerCase().includes(word.toLowerCase());
   })
   return has;
@@ -133,7 +159,7 @@ Utils.wait = async function(time) {
  * @returns {boolean}
  */
 Utils.isPrivilegedURL = function(url) {
-  if (url === "about:newtab" || url === "about:blank" )
+  if (url === "about:newtab" || url === "about:blank")
     return false;
   if (url.startsWith("chrome:") ||
     url.startsWith("javascript:") ||

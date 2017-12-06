@@ -37,7 +37,18 @@ OptionManager.updateOption = function ( optionName, optionValue){
     case "groups-removeEmptyGroup":
       OptionManager.onRemoveEmptyGroupChange( );
       break;
+    case "popup-whiteTheme":
+      OptionManager.onPopupThemeChange(optionValue);
+      break;
   }
+}
+
+/**
+ * Change the popup icon according to the preferences
+ * @param {boolean} theme - color to apply
+ */
+OptionManager.onPopupThemeChange = function( theme ) {
+  Utils.setBrowserActionIcon(theme);
 }
 
 /**

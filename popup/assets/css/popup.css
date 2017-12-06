@@ -26,6 +26,9 @@ SOFTWARE.
 
 
 /**** Search Bar ***/
+body {
+  background-color: #fff;
+}
 
 .cancel-search {
   right: 12px;
