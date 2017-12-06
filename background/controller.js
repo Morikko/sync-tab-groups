@@ -364,23 +364,23 @@ browser.windows.onFocusChanged.addListener(async(windowId) => {
 browser.commands.onCommand.addListener(async function(command) {
   try {
     switch (command) {
-      case "swtich-next-group":
+      case "swtich_next_group":
         WindowManager.selectNextGroup(1, false);
         break;
-      case "swtich-previous-group":
+      case "swtich_previous_group":
         WindowManager.selectNextGroup(-1, false);
         break;
-      case "create-group-swtich":
+      case "create_group_swtich":
         let newGroupId = GroupManager.addGroup();
         WindowManager.selectGroup(newGroupId);
         break;
-      case "focus-next-group":
+      case "focus_next_group":
         WindowManager.selectNextGroup(1, true);
         break;
-      case "focus-previous-group":
+      case "focus_previous_group":
         WindowManager.selectNextGroup(-1, true);
         break;
-      case "remove-group-swtich":
+      case "remove_group_swtich":
         await WindowManager.removeGroup();
         WindowManager.selectNextGroup(1, false);
         break;

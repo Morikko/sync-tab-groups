@@ -18,37 +18,37 @@
   },
 
   "commands": {
-    "swtich-next-group": {
+    "swtich_next_group": {
       "suggested_key": {
         "default": "Alt+Shift+Right"
       }
     },
 
-    "swtich-previous-group": {
+    "swtich_previous_group": {
       "suggested_key": {
         "default": "Alt+Shift+Left"
       }
     },
 
-    "create-group-swtich": {
+    "create_group_swtich": {
       "suggested_key": {
         "default": "Alt+Shift+Insert"
       }
     },
 
-    "focus-next-group": {
+    "focus_next_group": {
       "suggested_key": {
         "default": "Alt+Shift+Up"
       }
     },
 
-    "focus-previous-group": {
+    "focus_previous_group": {
       "suggested_key": {
         "default": "Alt+Shift+Down"
       }
     },
 
-    "remove-group-swtich": {
+    "remove_group_swtich": {
       "suggested_key": {
         "default": "Alt+Shift+Delete"
       }

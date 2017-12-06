@@ -22,7 +22,7 @@ OptionManager.TEMPLATE = function() {
       sync: true
     },
     bookmarks: {
-      sync: true,
+      sync: false,
       folder: "Default"
     },
     groups: {

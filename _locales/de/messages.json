@@ -160,7 +160,7 @@
   },
 
   "sync_pinned_tabs": {
-    "message": "Angeheftete Tabs zu Gruppen hinzufügen (Wenn inaktiv, werden diese beim Wechsel einer Gruppe geschlossen)",
+    "message": "Angeheftete Tabs zu Gruppen hinzufügen (Wenn inaktiv, werden diese beim Wechsel einer Gruppe nicht geschlossen)",
     "description": "Label sync pinned tabs"
   },
 

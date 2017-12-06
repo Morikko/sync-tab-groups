@@ -284,32 +284,32 @@
     "description": ""
   },
 
-  "command_description_swtich-next-group": {
+  "command_description_swtich_next_group": {
     "message": "Switch to next closed group.",
     "description": ""
   },
 
-  "command_description_swtich-previous-group": {
+  "command_description_swtich_previous_group": {
     "message": "Switch to previous closed group.",
     "description": ""
   },
 
-  "command_description_create-group-swtich": {
+  "command_description_create_group_swtich": {
     "message": "Create a new group and switch to it.",
     "description": ""
   },
 
-  "command_description_focus-next-group": {
+  "command_description_focus_next_group": {
     "message": "Focus window with next group opened.",
     "description": ""
   },
 
-  "command_description_focus-previous-group": {
+  "command_description_focus_previous_group": {
     "message": "Focus window with previous group opened.",
     "description": ""
   },
 
-  "command_description_remove-group-swtich": {
+  "command_description_remove_group_swtich": {
     "message": "Close the current menu in window and switch to next one.",
     "description": ""
   },
