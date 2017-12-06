@@ -377,6 +377,27 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
 }
 
 /**
+ * Change the prefix of the window with the group title
+ * @param {Number} windowId
+ * @param {Group} group
+ */
+WindowManager.setWindowPrefixGroupTitle = async function (windowId, group ) {
+  try {
+    await browser.windows.update(
+      windowId, {
+        titlePreface: "[" +
+          Utils.getGroupTitle(group) +
+          "] "
+      }
+    );
+  } catch ( e ) {
+    let msg = "WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e;
+    console.error(msg);
+    return msg;
+  }
+};
+
+/**
  * Use sessions tools to associate the groupId to window.
  * If window is restored, even if windowId change, the value is still associated with the window.
  * @param {Number} windowId
@@ -389,13 +410,7 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
       groupId, false
     )
   ];
-  browser.windows.update(
-    windowId, {
-      titlePreface: "[" +
-        Utils.getGroupTitle(group) +
-        "] "
-    }
-  );
+  WindowManager.setWindowPrefixGroupTitle(windowId, group);
   return browser.sessions.setWindowValue(
     windowId, // integer
     WindowManager.WINDOW_GROUPID, // string

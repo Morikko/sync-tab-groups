@@ -377,6 +377,13 @@ GroupManager.updateAllOpenedGroups = async function() {
  */
 GroupManager.renameGroup = function(groupIndex, title) {
   GroupManager.groups[groupIndex].title = title;
+
+  if ( GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE ) {
+    WindowManager.setWindowPrefixGroupTitle(
+      GroupManager.groups[groupIndex].windowId,
+      GroupManager.groups[groupIndex]);
+  }
+
   GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
