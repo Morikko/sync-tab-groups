@@ -32,6 +32,8 @@ OptionManager.TEMPLATE = function() {
     popup: {
       maximized: false,
       whiteTheme: false,
+      showTabsNumber: true,
+      showSearchBar: true,
     }
   };
 };

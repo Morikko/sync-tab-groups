@@ -342,6 +342,16 @@
   "icon_option": {
     "message": "Use white icon instead of black",
     "description": ""
+  },
+
+  "show_tabs_number": {
+    "message": "Show Tabs number in brackets after the Group title",
+    "description": ""
+  },
+
+  "show_search_bar": {
+    "message": "Shwo search bar",
+    "description": ""
   }
 
 }
