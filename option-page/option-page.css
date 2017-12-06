@@ -4,30 +4,11 @@
     border-top: 1px solid rgba(12, 12, 13, 0.15);
 }
 
-.option-checkbox label {
-    cursor: pointer;
-}
-
-.option-checkbox span {
-    color: #333333;
-    margin-left: 5px;
-    vertical-align: middle;
-}
-
 li, div span {
     font-size: 18px;
-}
-
-.option-checkbox input {
-    vertical-align: middle;
 }
 
 .option-button, .option-input-text {
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.option-input-text-help {
-    margin-left: 10px;
-    color: #ccc;
 }

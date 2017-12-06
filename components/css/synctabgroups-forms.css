@@ -48,6 +48,7 @@
 /*** Checkbox:
  * https://kyusuf.com/post/completely-css-custom-checkbox-radio-buttons-and-select-boxes
  */
+
 .control {
 	position: relative;
 	display: block;
@@ -143,3 +144,11 @@
 	background: #7b7b7b;
 }
 /*** End Checkbox *****/
+
+
+/**** Input text *****/
+.option-input-text-help {
+    margin-left: 10px;
+    color: #ccc;
+}
+/**** End Input text *****/
