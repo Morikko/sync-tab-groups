@@ -19,7 +19,7 @@ StorageManager.File.exportGroups = function(groups) {
         discarded: g.tabs[it].discarded || false,
         favIconUrl: g.tabs[it].favIconUrl || "chrome://branding/content/icon32.png",
       };
-      if ( g.tabs[it].hasOwnProperty("openerTabId") ) {
+      if (g.tabs[it].hasOwnProperty("openerTabId")) {
         tab["openerTabId"] = g.tabs[it]["openerTabId"];
       }
       g.tabs[it] = tab;
@@ -94,6 +94,8 @@ StorageManager.File.importTabGroups = function(content_file) {
   }
   let groups = [];
 
+  let pinnedTabs = [];
+
   for (let w of content_file['windows']) {
     let cross_ref = {},
       index = 0,
@@ -123,25 +125,45 @@ StorageManager.File.importTabGroups = function(content_file) {
     for (let t of w['tabs']) {
       if (!t.hasOwnProperty('extData') ||
         !t['extData'].hasOwnProperty('tabview-tab') ||
-        !JSON.parse(t['extData']['tabview-tab']).hasOwnProperty('groupID') ||
+        (JSON.parse(t['extData']['tabview-tab']) &&
+          !JSON.parse(t['extData']['tabview-tab']).hasOwnProperty('groupID')) ||
+        (!JSON.parse(t['extData']['tabview-tab']) &&
+          !t.hasOwnProperty('pinned')) ||
         !t.hasOwnProperty('entries') ||
         !t['entries'][0].hasOwnProperty('title') ||
         !t['entries'][0].hasOwnProperty('url')) {
         continue;
       }
-      let i = cross_ref[JSON.parse(t['extData']['tabview-tab'])['groupID']];
 
-      tmp_groups[i].tabs.push({
+      let tab = {
         title: t['entries'][0]['title'],
         url: t['entries'][0]['url'],
         pinned: false,
         active: false,
-      });
+      };
+      if (t.hasOwnProperty('image')) {
+        tab["favIconUrl"] = t['image'];
+      }
+
+      if (JSON.parse(t['extData']['tabview-tab'])) { // Normal tab
+        let i = cross_ref[JSON.parse(t['extData']['tabview-tab'])['groupID']];
+        tmp_groups[i].tabs.push(tab);
+      } else { // Pinned tabs
+        tab.pinned = true;
+        pinnedTabs.push(tab);
+      }
     }
 
     for (let g of tmp_groups) {
       groups.push(g);
     }
+  }
+
+  // Add all pinned tabs in one group
+  if (pinnedTabs.length > 0) {
+    groups.push(new GroupManager.Group(-1,
+      "Imported Pinned Tabs", pinnedTabs,
+    ));
   }
 
   return groups;
