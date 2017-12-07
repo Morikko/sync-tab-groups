@@ -48,8 +48,8 @@ TabManager.updateTabsInGroup = async function(windowId) {
     const tabs = await browser.tabs.query(selector);
 
     // Remove fancy pages
-    for ( let tab of tabs ) {
-      if ( tab.url.includes("priviledged-tab.html") ) {
+    for (let tab of tabs) {
+      if (tab.url.includes("priviledged-tab.html")) {
         tab.url = Utils.getParameterByName('url', tab.url)
       }
     }
@@ -294,13 +294,16 @@ TabManager.moveTabToGroup = async function(tabId, targetGroupId) {
  * @param {Number} tabIndex
  * @return {Promise}
  */
-TabManager.moveTabToNewGroup = async function(sourceGroupID, tabIndex) {
+TabManager.moveTabToNewGroup = async function(title = "", sourceGroupID, tabIndex) {
   try {
     var sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
       sourceGroupID);
 
     let tab = GroupManager.groups[sourceGroupIndex].tabs[tabIndex];
-    GroupManager.addGroupWithTab([tab]);
+    GroupManager.addGroupWithTab(
+      [tab],
+      browser.windows.WINDOW_ID_NONE,
+      title);
 
     await GroupManager.removeTabFromIndexInGroupId(sourceGroupID, tabIndex);
 

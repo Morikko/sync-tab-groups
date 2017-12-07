@@ -1,13 +1,16 @@
 const store = Redux.createStore(Reducer);
 
 const Actions = {
-  addGroup: function() {
-    Utils.sendMessage("Group:Add", {});
+  addGroup: function(title="") {
+    Utils.sendMessage("Group:Add", {
+      title: title
+    });
   },
 
   // Drag & Drop tab on create button
-  addGroupWithTab: function(sourceGroupID, tabIndex) {
+  addGroupWithTab: function(title, sourceGroupID, tabIndex) {
     Utils.sendMessage("Group:AddWithTab", {
+      title: title,
       sourceGroupID: sourceGroupID,
       tabIndex: tabIndex
     });

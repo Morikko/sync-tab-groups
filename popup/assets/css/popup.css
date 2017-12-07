@@ -1,31 +1,12 @@
 /*
-I might have modified some parts of the code.
 Copyright (c) 2017 Eric Masseran
 
 From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 */
 
-
 /**** Search Bar ***/
+
 body {
   background-color: #fff;
 }
@@ -57,7 +38,6 @@ body {
   padding: 5px;
   position: relative;
 }
-
 
 /*** Search End ***/
 
@@ -150,8 +130,13 @@ li {
   padding-right: 16px;
 }
 
-
 /* Group in window and active tab */
+.group, .tab, .addButton {
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 5px;
+  position: relative;
+}
 
 .focusGroup .group-title, .tab.active .tab-title {
   font-weight: bold;
@@ -166,14 +151,18 @@ li {
   border: 1px solid rgba(0, 0, 0, 0.12);
   margin: 0;
   padding: 1px;
+}
+
+.group .group-title input {
   width: calc(100% - 25px);
 }
 
-.group, .tab {
-  border: 1px solid transparent;
-  cursor: pointer;
-  padding: 5px;
-  position: relative;
+.group .group-title:hover input {
+  width: 100%;
+}
+
+.addButton .group-title input {
+  width: calc(100% - 80px);
 }
 
 .tab {
@@ -190,6 +179,16 @@ li {
   border-color: rgba(0, 0, 0, 0.14);
 }
 
+.addButton:hover {
+  background-color: rgba(0, 0, 0, 0.10);
+  border-color: rgba(0, 0, 0, 0.14);
+  /*
+  background-color: #82d0e3;
+  border-color: #2aa1c0;
+  color: #000;
+  */
+}
+
 .group.dragSourceGroup {
   border: inherit;
   background-color: inherit;
@@ -197,7 +196,17 @@ li {
 
 .group.draggingOver, .draggingOver {
   border: 1px dashed #ccc;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(0, 0, 0, 0.14);
+}
+
+.addButton.dragSourceGroup {
+  border: inherit;
+  background-color: inherit;
+}
+
+.addButton.draggingOver, .draggingOver {
+  border: 1px dashed #ccc;
+  background-color: rgba(0, 0, 0, 0.14);
 }
 
 .tab-list {
@@ -251,7 +260,7 @@ li {
   padding-bottom: 5px;
 }
 
-.group-controls, .tab-controls {
+.group-controls, .tab-controls, .groupadd-controls {
   display: inline-block;
   font-size: 120%;
   opacity: 0.7;
@@ -263,21 +272,32 @@ li {
   right: 10px;
 }
 
+.groupadd-controls {
+  right: 10px;
+}
+
 .tab-controls {
   right: 5px;
 }
 
-.group.editing .group-controls, .group.editing .tab-controls {
-  top: 6px;
+.group.editing .group-controls i {
+  height: 36px;
+  line-height: 36px;
 }
 
-.group-controls i, .tab-controls i, .cancel-search {
+.groupadd-controls i {
+  height: 36px;
+  line-height: 36px;
+}
+
+.group-controls i, .tab-controls i, .cancel-search, .groupadd-controls i {
   width: 26px;
   background-color: none;
 }
 
 .group-controls i:hover, .tab-controls i:hover,
-.left-actions i:hover, .right-actions i:hover {
+.left-actions i:hover, .right-actions i:hover,
+.groupadd-controls i:hover{
   background-color: #b3b3b3;
 }
 

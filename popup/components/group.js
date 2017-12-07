@@ -26,9 +26,9 @@ const Group = React.createClass({
     showTabsNumber: React.PropTypes.bool,
   },
 
-  getClosingState: function( openWindow, props ) {
+  getClosingState: function(openWindow, props) {
     let closingState;
-    if ( openWindow ) {
+    if (openWindow) {
       closingState = props.currentlyClosing && !props.currentlyRemoving;
     } else {
       closingState = false;
@@ -83,6 +83,7 @@ const Group = React.createClass({
     let titleElement;
     if (this.state.editing) {
       titleElement = React.DOM.input({
+        autoFocus: true,
         type: "text",
         defaultValue: Utils.getGroupTitle(this.props.group),
         onChange: (event) => {
@@ -92,6 +93,9 @@ const Group = React.createClass({
         },
         onClick: (event) => {
           event.stopPropagation();
+        },
+        onFocus: (e) => {
+          e.target.select();
         },
         onKeyUp: this.handleGroupTitleInputKey
       });

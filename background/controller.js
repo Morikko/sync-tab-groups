@@ -38,9 +38,9 @@ Controller.prototype = {
     WindowManager.openGroupInNewWindow(params.groupID);
   },
 
-  onGroupAdd: function() {
+  onGroupAdd: function(params) {
     try {
-      GroupManager.addGroup();
+      GroupManager.addGroup(params.title||'');
     } catch (e) {
       console.error("Controller - onGroupAdd failed: " + e);
     }
@@ -48,6 +48,7 @@ Controller.prototype = {
 
   onGroupAddWithTab: function(params) {
     TabManager.moveTabToNewGroup(
+      params.title,
       params.sourceGroupID,
       params.tabIndex
     );
@@ -206,7 +207,7 @@ var popupMessenger = function(message) {
   console.log(message);
   switch (message.task) {
     case "Group:Add":
-      controller.onGroupAdd();
+      controller.onGroupAdd(message.params);
       break;
     case "Group:AddWithTab":
       controller.onGroupAddWithTab(message.params);
