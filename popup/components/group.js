@@ -26,15 +26,26 @@ const Group = React.createClass({
     showTabsNumber: React.PropTypes.bool,
   },
 
+  getClosingState: function( openWindow, props ) {
+    let closingState;
+    if ( openWindow ) {
+      closingState = props.currentlyClosing && !props.currentlyRemoving;
+    } else {
+      closingState = false;
+    }
+    return closingState;
+  },
+
   getInitialState: function() {
+    let openWindow = this.props.group.windowId !== browser.windows.WINDOW_ID_NONE;
     return {
       // Removing is more priority
-      closing: this.props.currentlyClosing && !this.props.currentlyRemoving,
+      closing: this.getClosingState(openWindow, this.props),
       removing: this.props.currentlyRemoving,
       editing: false,
       currentlySearching: this.props.currentlySearching,
       expanded: false,
-      opened: this.props.group.windowId !== browser.windows.WINDOW_ID_NONE,
+      opened: openWindow,
       draggingOverCounter: 0,
       dragSourceGroup: false,
       newTitle: Utils.getGroupTitle(this.props.group)
@@ -51,15 +62,17 @@ const Group = React.createClass({
 
   // When a component got new props, use this to update
   componentWillReceiveProps: function(nextProps) {
+    let openWindow = nextProps.group.windowId !== browser.windows.WINDOW_ID_NONE;
     let expanded_state = this.findExpandedState(
       this.state.expanded,
       this.state.currentlySearching,
       nextProps.currentlySearching
     );
+
     this.setState({
-      closing: nextProps.currentlyClosing && !nextProps.currentlyRemoving,
+      closing: this.getClosingState(openWindow, nextProps),
       removing: nextProps.currentlyRemoving,
-      opened: nextProps.group.windowId !== browser.windows.WINDOW_ID_NONE,
+      opened: openWindow,
       expanded: expanded_state,
       currentlySearching: nextProps.currentlySearching,
     })
