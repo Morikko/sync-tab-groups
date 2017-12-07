@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ReactRedux.Provider, {
         store: store
       },
-      React.createElement(App, {
+      React.createElement(PopupMenu, {
         onGroupAddClick: Actions.addGroup,
         onGroupAddDrop: Actions.addGroupWithTab,
         onGroupClick: Actions.selectGroup,
