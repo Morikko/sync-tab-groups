@@ -45,6 +45,7 @@ STG is not able to hide tabs, instead tabs are closed. However, if this doesn't 
  - English
  - French
  - German (thanks @bitkleberAST) 
+ - Russian (thanks Александр) 
 
 I would gladly accept other translations. Add it in `_locales/`, while following the en (English) file. Change message and description parts only.
 
