@@ -12,6 +12,7 @@ const GroupList = React.createClass({
     delayedTasks: React.PropTypes.object,
     onGroupAddClick: React.PropTypes.func,
     onGroupAddDrop: React.PropTypes.func,
+    onMoveTabToNewGroup: React.PropTypes.func,
     onGroupClick: React.PropTypes.func,
     onGroupDrop: React.PropTypes.func,
     onGroupCloseClick: React.PropTypes.func,
@@ -53,6 +54,7 @@ const GroupList = React.createClass({
           currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, group.id),
           onGroupClick: this.props.onGroupClick,
           onGroupDrop: this.props.onGroupDrop,
+          onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
           onGroupCloseClick: this.props.onGroupCloseClick,
           onGroupRemoveClick: this.props.onGroupRemoveClick,
           onGroupTitleChange: this.props.onGroupTitleChange,
@@ -65,6 +67,7 @@ const GroupList = React.createClass({
           searchGroupResult: this.props.searchGroupsResults[index]||[], // For init
           currentlySearching: this.props.currentlySearching,
           showTabsNumber: this.props.options.popup.showTabsNumber,
+          groups: this.props.groups,
         });
       })
     );

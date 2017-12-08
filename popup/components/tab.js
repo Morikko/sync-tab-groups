@@ -4,36 +4,22 @@ Copyright (c) 2017 Eric Masseran
 
 From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 */
 const Tab = React.createClass({
   propTypes: {
     onTabClick: React.PropTypes.func,
     onTabDrag: React.PropTypes.func,
     onTabDragStart: React.PropTypes.func,
+    onGroupDrop: React.PropTypes.func,
+    onMoveTabToNewGroup: React.PropTypes.func,
+    group: React.PropTypes.object,
     tab: React.PropTypes.object.isRequired,
     tabIndex: React.PropTypes.number,
     opened: React.PropTypes.bool,
     onCloseTab: React.PropTypes.func,
     onOpenTab: React.PropTypes.func,
     searchTabResult: React.PropTypes.string,
+    groups: React.PropTypes.object,
   },
 
   render: function() {
@@ -49,14 +35,41 @@ const Tab = React.createClass({
       hiddenBySearch: !this.props.searchTabResult,
     });
 
+    let subMenusMoveTab = [];
+    for (let g of this.props.groups) {
+      subMenusMoveTab.push(React.DOM.menuitem({
+        disabled: g.id === this.props.group.id,
+        className: "?groupId=" + g.id,
+        onClick: this.handleOnMoveTabMenuClick
+      }, Utils.getGroupTitle(g)));
+    }
+
+    subMenusMoveTab.push(React.DOM.hr({}));
+
+    subMenusMoveTab.push(React.DOM.menuitem({
+      onClick: this.handleOnMoveTabNewMenuClick
+    }, browser.i18n.getMessage("add_group")));
+
+    let menuMoveTab = React.DOM.menu({
+      type: "context",
+      id: "moveTabSubMenu" + this.props.tab.id,
+    }, React.DOM.menu({
+      label: browser.i18n.getMessage("move_tab_group"),
+      icon: "/icons/tabspace-active-32.png" // doesn't work
+    }, subMenusMoveTab));
+
     return (
       React.DOM.li({
           className: tabClasses,
           onDrag: this.handleTabDrag,
           onDragStart: this.handleTabDragStart,
           onClick: this.handleTabClick,
-          draggable: true
+          draggable: true,
+          onMouseEnter: this.addMenuItem,
+          onMouseLeave: this.removeMenuItem,
+          contextMenu: "moveTabSubMenu" + this.props.tab.id,
         },
+        menuMoveTab,
         favicon,
         React.DOM.span({
             className: "tab-title",
@@ -72,6 +85,33 @@ const Tab = React.createClass({
           )),
       )
     );
+  },
+
+  handleOnMoveTabNewMenuClick: function(event) {
+    event.stopPropagation();
+
+    console.log("add");
+
+    this.props.onMoveTabToNewGroup(
+      '',
+      this.props.group.id,
+      this.props.tabIndex,
+    );
+  },
+
+  handleOnMoveTabMenuClick: function(event) {
+    event.stopPropagation();
+
+    let targetGroupId = parseInt(Utils.getParameterByName("groupId", event.target.className), 10);
+    console.log(targetGroupId);
+
+    if (targetGroupId >= 0) {
+      this.props.onGroupDrop(
+        this.props.group.id,
+        this.props.tabIndex,
+        targetGroupId,
+      );
+    }
   },
 
   handleTabClick: function(event) {

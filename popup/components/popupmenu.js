@@ -88,6 +88,7 @@ const PopupMenu = (() => {
           delayedTasks: this.props.delayedTasks,
           onGroupClick: this.props.onGroupClick,
           onGroupDrop: this.props.onGroupDrop,
+          onMoveTabToNewGroup: this.props.onGroupAddDrop,
           onGroupCloseClick: this.props.onGroupCloseClick,
           onGroupRemoveClick: this.props.onGroupRemoveClick,
           onGroupTitleChange: this.props.onGroupTitleChange,

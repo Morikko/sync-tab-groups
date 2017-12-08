@@ -24,6 +24,7 @@ const Group = React.createClass({
     searchGroupResult: React.PropTypes.object,
     currentlySearching: React.PropTypes.bool,
     showTabsNumber: React.PropTypes.bool,
+    groups: React.PropTypes.object,
   },
 
   getClosingState: function(openWindow, props) {
@@ -163,10 +164,13 @@ const Group = React.createClass({
             onTabDrag: this.props.onTabDrag,
             onTabDragStart: this.props.onTabDragStart,
             onTabDragEnd: this.props.onTabDragEnd,
+            onGroupDrop: this.props.onGroupDrop,
+            onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
             opened: this.state.opened,
             onCloseTab: this.props.onCloseTab,
             onOpenTab: this.props.onOpenTab,
             searchTabsResults: this.props.searchGroupResult.searchTabsResults,
+            groups: this.props.groups,
           }
         )
       )

@@ -4,24 +4,6 @@ Copyright (c) 2017 Eric Masseran
 
 From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 */
 const TabList = React.createClass({
   propTypes: {
@@ -32,7 +14,10 @@ const TabList = React.createClass({
     opened: React.PropTypes.bool.isRequired,
     onCloseTab: React.PropTypes.func,
     onOpenTab: React.PropTypes.func,
+    onGroupDrop: React.PropTypes.func,
+    onMoveTabToNewGroup: React.PropTypes.func,
     searchTabsResults: React.PropTypes.object,
+    groups: React.PropTypes.object,
   },
 
   render: function() {
@@ -49,10 +34,13 @@ const TabList = React.createClass({
             onTabClick: this.props.onTabClick,
             onTabDrag: this.props.onTabDrag,
             onTabDragStart: this.props.onTabDragStart,
+            onGroupDrop: this.props.onGroupDrop,
+            onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
             opened: this.props.opened,
             onCloseTab: this.props.onCloseTab,
             onOpenTab: this.props.onOpenTab,
             searchTabResult: this.props.searchTabsResults[index]||[],
+            groups: this.props.groups,
           });
         })
       )
