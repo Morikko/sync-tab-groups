@@ -372,5 +372,10 @@
   "group_name": {
     "message": "Name",
     "description": ""
+  },
+
+  "bookmarks_weak_help": {
+    "message": "Bookmarks auto-save can be very problematic. I would recommend to not use it until I have fixed it",
+    "description": ""
   }
 }

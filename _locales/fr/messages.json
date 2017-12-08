@@ -372,5 +372,10 @@
   "group_name": {
     "message": "Nom",
     "description": ""
+  },
+
+  "bookmarks_weak_help": {
+    "message": "La sauvegarde automatique dans les favoris est instable. Je recommende de ne pas l'utiliser tant que je ne l'aurais pas corrigé",
+    "description": ""
   }
 }

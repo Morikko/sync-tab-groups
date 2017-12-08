@@ -16,6 +16,7 @@ const BookmarkSection = React.createClass({
       }),
       React.DOM.span({},
         React.DOM.ul({},[
+          React.DOM.li({},browser.i18n.getMessage("bookmarks_weak_help")),
           React.DOM.li({},browser.i18n.getMessage("bookmark_help_folder")),
           React.DOM.li({},browser.i18n.getMessage("bookmark_help_moving")),
           React.DOM.li({},browser.i18n.getMessage("bookmark_help_session")),
