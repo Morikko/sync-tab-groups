@@ -42,16 +42,16 @@ const GroupList = React.createClass({
       "group-list": true,
     });
 
-    return React.DOM.ul({
-        className: groupListClasses
-      },
-      this.props.groups.map((group, index) => {
-        return React.createElement(Group, {
-          key: group.id,
-          group: group,
+    let groups = [];
+    let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
+    for (let index of sortedIndex) {
+      groups.push(
+        React.createElement(Group, {
+          key: this.props.groups[index].id,
+          group: this.props.groups[index],
           currentWindowId: this.props.currentWindowId,
-          currentlyClosing: this.isCurrently(TaskManager.CLOSE_REFERENCE, group.id),
-          currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, group.id),
+          currentlyClosing: this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id),
+          currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id),
           onGroupClick: this.props.onGroupClick,
           onGroupDrop: this.props.onGroupDrop,
           onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
@@ -64,12 +64,17 @@ const GroupList = React.createClass({
           onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
           onCloseTab: this.props.onCloseTab,
           onOpenTab: this.props.onOpenTab,
-          searchGroupResult: this.props.searchGroupsResults[index]||[], // For init
+          searchGroupResult: this.props.searchGroupsResults[index] || [], // For init
           currentlySearching: this.props.currentlySearching,
           showTabsNumber: this.props.options.popup.showTabsNumber,
           groups: this.props.groups,
-        });
-      })
+        }));
+    }
+
+    return React.DOM.ul({
+        className: groupListClasses
+      },
+      groups
     );
   },
 });

@@ -24,6 +24,7 @@ GroupManager.Group = function(id,
   this.id = id; // Unique in all group
   this.windowId = windowId;
   this.index = -1; // Position of this Group in an Array
+  this.position = -1; // Position of this Group when displaying
 }
 
 GroupManager.groups = [];
@@ -164,7 +165,29 @@ GroupManager.getCopy = function() {
 }
 
 /******** SETTER *********/
+/**
+ * Set the UI position variable for each group in groups
+ * @param {Array[Group]} groups - (default: global groups)
+ * @param {Number} sortingType - (default: the one set in option)
+ */
+GroupManager.setPosition = function(groups = GroupManager.groups, sortingType = OptionManager.options.groups.sortingType) {
+  // Default: OptionManager.SORT_OLD_RECENT
+  let positions = [...Array(groups.length).keys()];
 
+  if (sortingType === OptionManager.SORT_RECENT_OLD) {
+    positions = [...Array(groups.length).keys()].reverse()
+  }
+
+  for (let i = 0; i < groups.length; i++) {
+    groups[i].position = positions[i];
+  }
+  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+}
+
+/**
+ * Set the index variable for each group in groups
+ * @param {Array[Group]} groups - (default: global groups)
+ */
 GroupManager.setIndex = function(groups = GroupManager.groups) {
   let i = 0;
   for (let g of groups) {
@@ -616,7 +639,7 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
 GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
   () => {
     GroupManager.setIndex(GroupManager.groups);
-    //GroupManager.setPosition();
+    GroupManager.setPosition(GroupManager.groups);
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   });
 

@@ -10,8 +10,10 @@ TaskManager.FORCE = "FORCE";
 TaskManager.CLOSE_REFERENCE = "close";
 TaskManager.REMOVE_REFERENCE = "remove";
 
-
 var OptionManager = OptionManager || {};
+OptionManager.SORT_OLD_RECENT = 0;
+OptionManager.SORT_RECENT_OLD = 1;
+OptionManager.SORT_ALPHABETICAL = 2;
 OptionManager.TEMPLATE = function() {
   return {
     version: 0.1,
@@ -30,6 +32,7 @@ OptionManager.TEMPLATE = function() {
       syncNewWindow: true,
       removeEmptyGroup: false,
       showGroupTitleInWindow: false,
+      sortingType: OptionManager.SORT_OLD_RECENT,
     },
     popup: {
       maximized: false,
@@ -41,6 +44,26 @@ OptionManager.TEMPLATE = function() {
       allowGlobal: false,
     }
   };
+};
+
+var GroupManager = GroupManager || {};
+
+/**
+ * Return the index of the groups sorted by the display position
+ * TODO: handle case if position = -1
+ * @param {Array[Group]} groups
+ * @return {Array[Number]} sortedIndex
+ */
+GroupManager.getIndexSortByPosition = function(groups) {
+  let sortedIndex = [];
+  for (let pos = 0; pos < groups.length; pos++) {
+    for (let i = 0; i < groups.length; i++) {
+      if (groups[i].position === pos) {
+        sortedIndex.push(groups[i].index);
+      }
+    }
+  }
+  return sortedIndex;
 };
 
 /**
@@ -76,14 +99,14 @@ Utils.getCopy = function(obj) {
  * Black: false
  */
 Utils.setBrowserActionIcon = function(icon_type) {
-  if (icon_type === true ) { // White
+  if (icon_type === true) { // White
     browser.browserAction.setIcon({
       path: {
         16: "icons/tabspace-light-16.png",
         32: "icons/tabspace-light-32.png"
       }
     });
-  } else if ( icon_type === false ) { // Black
+  } else if (icon_type === false) { // Black
     browser.browserAction.setIcon({
       path: {
         16: "icons/tabspace-16.png",
