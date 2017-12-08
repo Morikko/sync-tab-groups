@@ -134,17 +134,6 @@ OptionManager.init = async function() {
   }
 }
 
-OptionManager.mergeOptions = function(ref_options, options) {
-  for (let pro in ref_options) {
-    if (!options.hasOwnProperty(pro)) {
-      options[pro] = ref_options[pro];
-    }
-    if ("object" === typeof ref_options[pro]) {
-      OptionManager.mergeOptions(ref_options[pro], options[pro]);
-    }
-  }
-}
-
 /**
  * Check that options object has all the good propreties
  * @param {Object} options
@@ -152,7 +141,7 @@ OptionManager.mergeOptions = function(ref_options, options) {
  */
 OptionManager.check_integrity = function(options) {
   var ref_options = OptionManager.TEMPLATE();
-  OptionManager.mergeOptions(ref_options, options);
+  Utils.mergeObject(options, ref_options);
   return options;
 }
 

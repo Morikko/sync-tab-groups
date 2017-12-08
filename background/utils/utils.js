@@ -44,6 +44,32 @@ OptionManager.TEMPLATE = function() {
 };
 
 /**
+ * Modify object to have all the fields of ref_object
+ * TODO: extra field from object should be removed
+ * Already present fields keep the initial value in object
+ * @param {Object} object
+ * @param {Object} ref_object
+ */
+Utils.mergeObject = function(object, ref_object) {
+  for (let pro in ref_object) {
+    if (!object.hasOwnProperty(pro)) {
+      object[pro] = ref_object[pro];
+    }
+    if ("object" === typeof ref_object[pro]) {
+      Utils.mergeObject(object[pro], ref_object[pro]);
+    }
+  }
+}
+
+/**
+ * Return a deep copy object of obj
+ * @return {Array[Group]}
+ */
+Utils.getCopy = function(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+/**
  * Change the popup icon (Black or White)
  * @param {boolean} icon_type
  * White: true
