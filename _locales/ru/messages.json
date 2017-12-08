@@ -1,0 +1,337 @@
+{
+  "extension_description": {
+    "message": "Группы вкладок синхронизации - это простой способ организовать ваши текущие вкладки в зависимости от темы. Каждая открытая группа синхронизируется с окном, так что все изменения вкладок сохраняются. Следовательно, вы можете закрыть текущий вкладки при открытии другого.",
+    "description": "Description of the extension"
+  },
+
+  "add_group": {
+    "message": "Создать новую группу",
+    "description": "Create new group button text"
+  },
+
+  "search": {
+    "message": "Поиск...",
+    "description": "Place holder in search input"
+  },
+
+  "clear_search": {
+    "message": "Очистить поиск",
+    "description": "Clear search help button"
+  },
+
+  "unnamed_group": {
+    "message": "Без имени",
+    "description": "Default name for unnamed group"
+  },
+
+  "synchronized_window": {
+    "message": "Синхронизировать окно",
+    "description": "Label for synchronizing window in popup"
+  },
+
+  "open_preferences": {
+    "message": "Настройки",
+    "description": "Open Preferences"
+  },
+
+  "expand_menu": {
+    "message": "Развернуть меню",
+    "description": "Expand Menu hover button"
+  },
+
+  "reduce_menu": {
+    "message": "Уменьшить меню",
+    "description": "Reduce Menu hover button"
+  },
+
+  "close_group": {
+    "message": "Закрыть окно",
+    "description": "Hover help for close button"
+  },
+
+  "remove_group": {
+    "message": "Удалить группу",
+    "description": "Hover help for remove button"
+  },
+
+  "open_window_group": {
+    "message": "Открыть в новом окне",
+    "description": "Hover help for open in new window button"
+  },
+
+  "rename_group": {
+    "message": "Переименовать",
+    "description": "Hover help for rename button"
+  },
+
+  "show_tabs": {
+    "message": "Показать вкладки в группе",
+    "description": "Hover help for show tabs in group button"
+  },
+
+  "hide_tabs": {
+    "message": "Скрыть вкладки в группе",
+    "description": "Hover help for hide tabs in group button"
+  },
+
+  "undo_removing": {
+    "message": "Восстановить удаленные",
+    "description": "Hover help for undo removing button"
+  },
+
+  "undo_closing": {
+    "message": "Восстановить закрытые",
+    "description": "Hover help for undo closing button"
+  },
+
+  "force_removing": {
+    "message": "Быстро удалить",
+    "description": "Hover help for force removing button"
+  },
+
+  "force_closing": {
+    "message": "Быстро закрыть",
+    "description": "Hover help for force closing button"
+  },
+
+  "open_tab": {
+    "message": "Открыть вкладку в текущем окне",
+    "description": "Hover help for open tab button"
+  },
+
+  "close_tab": {
+    "message": "Удалить вкладку и закрыть, если открыта",
+    "description": "Hover help for open tab button"
+  },
+
+  "move_tab_group": {
+    "message": "Переместить в другую группу",
+    "description": "Name of the menu in the context (right click on tab)"
+  },
+
+  "export_groups": {
+    "message": "Экспорт группы",
+    "description": "Name of the menu"
+  },
+
+  "import_groups": {
+    "message": "Импорт Группы",
+    "description": "Name of the menu"
+  },
+
+  "save_bookmarks_groups": {
+    "message": "Сохранить группу в Закладки",
+    "description": "Name of the menu"
+  },
+
+  "group_title": {
+    "message": "Группа",
+    "description": "Option section title"
+  },
+
+  "new_window": {
+    "message": "Новое открытое окно автоматически создает новую группу.",
+    "description": "Label new window"
+  },
+
+  "remove_empty_groups": {
+    "message": "Удалить группу без вкладок автоматически.",
+    "description": "Label remove empty groups"
+  },
+
+  "private_window_title": {
+    "message": "Частное окно",
+    "description": "Option section title"
+  },
+
+  "new_private_window": {
+    "message": "Новое открытое приватное окно автоматически создает новую группу.",
+    "description": "Label new private window"
+  },
+
+  "close_private_window": {
+    "message": "Удалите группу в приватном окне, когда это окно будет закрыто.",
+    "description": "Label close private window"
+  },
+
+  "pinned_tabs_title": {
+    "message": "Прикрепленные вкладки",
+    "description": "Option section title"
+  },
+
+  "sync_pinned_tabs": {
+    "message": "Добавьте прикрепленные вкладки внутри групп (если нет, они не будут закрыты при переключении группы)",
+    "description": "Label sync pinned tabs"
+  },
+
+  "bookmarks_title": {
+    "message": "Закладки",
+    "description": "Option section title"
+  },
+
+  "bookmark_help_folder": {
+    "message": "Закладки сохраняются в ПрочиеЗакладки/SyncTabGroups по умолчанию.",
+    "description": ""
+  },
+
+  "bookmark_help_moving": {
+    "message": "Чтобы изменить местоположение корня, переместите папку SyncTabGroups в любом месте ваших закладок.",
+    "description": ""
+  },
+
+  "bookmark_help_session": {
+    "message": "Имя сеанса - это имя подпапки, где закладки сохраняются для этого компьютера.",
+    "description": ""
+  },
+
+  "bookmark_help_precaution": {
+    "message": "У вас нет другой папки SyncTabGroups.",
+    "description": ""
+  },
+
+  "name_session": {
+    "message": "Название сеанса: ",
+    "description": ""
+  },
+
+  "examples_session": {
+    "message": "Пример: компьютер 1, ноутбук...",
+    "description": ""
+  },
+
+  "save_bookmarks_automatically": {
+    "message": "Автосохранение групп в закладок (каждые 30 сек.)",
+    "description": ""
+  },
+
+  "save_now": {
+    "message": "Сохранить новое",
+    "description": ""
+  },
+
+  "import_export_title": {
+    "message": "Импорт/Экспорт группы",
+    "description": "Option section title"
+  },
+
+  "import_export_help_added": {
+    "message": "Импортированные группы добавляются как закрытые группы",
+    "description": ""
+  },
+
+  "import_export_help_support": {
+    "message": "Поддержка импорта: SyncTabGroups и TabGroups json файлы.",
+    "description": ""
+  },
+
+  "tab_information": {
+    "message": "Информация о текущей вкладке",
+    "description": ""
+  },
+
+  "tab_title": {
+    "message": "Название",
+    "description": ""
+  },
+
+  "tab_address": {
+    "message": "URL",
+    "description": ""
+  },
+
+  "copy_url": {
+    "message": "Скопировать URL-адрес в буфер обмена",
+    "description": ""
+  },
+
+  "privileged_url": {
+    "message": "О привилегированных URL-адресах",
+    "description": ""
+  },
+
+  "privileged_url_help_reason": {
+    "message": "ЗАЩИТА: SyncTabGroups не может открыть напрямую привилегированные URL-адреса:",
+    "description": ""
+  },
+
+  "open_url_help_method": {
+    "message": "Вы можете открыть его:",
+    "description": ""
+  },
+
+  "open_url_help_method_part_1": {
+    "message": "Нажмите на кнопку",
+    "description": ""
+  },
+
+  "open_url_help_method_part_2": {
+    "message": "Вставить URL-адрес в адресную строку",
+    "description": ""
+  },
+
+  "open_url_help_method_part_3": {
+    "message": "нажмите Enter",
+    "description": ""
+  },
+
+  "privileged_url_help_warning": {
+    "message": "ВНИМАНИЕ: эти URL-адреса автоматически закрываются Firefox, когда расширение обновляется или отключается.",
+    "description": ""
+  },
+
+  "shortcut_list": {
+    "message": "Список ярлыков",
+    "description": ""
+  },
+
+  "command_description_swtich-next-group": {
+    "message": "Переключиться на следующую закрытую группу.",
+    "description": ""
+  },
+
+  "command_description_swtich-previous-group": {
+    "message": "Перейти к предыдущей закрытой группе.",
+    "description": ""
+  },
+
+  "command_description_create-group-swtich": {
+    "message": "Создать и переключитесь на новую группу.",
+    "description": ""
+  },
+
+  "command_description_focus-next-group": {
+    "message": "Фокус на Окно со следующей открытой группой.",
+    "description": ""
+  },
+
+  "command_description_focus-previous-group": {
+    "message": "Фокус на Окно с предыдущей открытой группой.",
+    "description": ""
+  },
+
+  "command_description_remove-group-swtich": {
+    "message": "Закройте и удалите текущую группу в окне и переключитесь на следующую.",
+    "description": ""
+  },
+
+  "command_description__execute_browser_action": {
+    "message": "Открыть SyncTabGroup меню.",
+    "description": ""
+  },
+
+  "open_shortcut_list": {
+    "message": "Открыть список ярлыков",
+    "description": ""
+  },
+
+  "command_shortcuts": {
+    "message": "Ярлыки",
+    "description": ""
+  },
+
+  "command_description": {
+    "message": "Описание",
+    "description": ""
+  }
+
+}
