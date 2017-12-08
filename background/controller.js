@@ -364,6 +364,9 @@ browser.windows.onFocusChanged.addListener(async(windowId) => {
 // Commands
 browser.commands.onCommand.addListener(async function(command) {
   try {
+    if ( !OptionManager.options.shortcuts.allowGlobal ) { // disable by user
+      return "";
+    }
     switch (command) {
       case "swtich_next_group":
         WindowManager.selectNextGroup(1, false);

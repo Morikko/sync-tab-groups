@@ -19,27 +19,50 @@ OptionManager.repeatedtask = new TaskManager.RepeatedTask(1000);
  * @param {String} state - each part is separated with '-'
  * @param {Object} optionValue - the value to set
  */
-OptionManager.updateOption = function ( optionName, optionValue){
-  optionName.split('-').reduce((a,b, index, array)=>{
-    if ( index === array.length-1 )
+OptionManager.updateOption = function(optionName, optionValue) {
+  optionName.split('-').reduce((a, b, index, array) => {
+    if (index === array.length - 1)
       a[b] = optionValue;
     return a[b];
   }, OptionManager.options);
-  OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
+  OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
 
-  switch( optionName ) {
+  switch (optionName) {
     case "privateWindow-sync":
-      OptionManager.onPrivateWindowSyncChange( optionValue );
+      OptionManager.onPrivateWindowSyncChange(optionValue);
       break;
     case "pinnedTab-sync":
-      OptionManager.onPinnedTabSyncChange( );
+      OptionManager.onPinnedTabSyncChange();
       break;
     case "groups-removeEmptyGroup":
-      OptionManager.onRemoveEmptyGroupChange( );
+      OptionManager.onRemoveEmptyGroupChange();
       break;
     case "popup-whiteTheme":
       OptionManager.onPopupThemeChange(optionValue);
       break;
+    case "groups-showGroupTitleInWindow":
+      OptionManager.onShowGroupTitleInWindowChange(optionValue);
+      break;
+  }
+}
+
+/**
+ * Add/Remove title prefix in window
+ * @param {boolean} addTitle
+ */
+OptionManager.onShowGroupTitleInWindowChange = function ( addTitle ) {
+  for ( let g of GroupManager.groups ) {
+    if ( g.windowId !== browser.windows.WINDOW_ID_NONE) {
+      if ( addTitle ){
+        WindowManager.setWindowPrefixGroupTitle(g.windowId, g);
+      }else {
+        browser.windows.update(
+          g.windowId, {
+            titlePreface: " "
+          }
+        );
+      }
+    }
   }
 }
 
@@ -47,7 +70,7 @@ OptionManager.updateOption = function ( optionName, optionValue){
  * Change the popup icon according to the preferences
  * @param {boolean} theme - color to apply
  */
-OptionManager.onPopupThemeChange = function( theme ) {
+OptionManager.onPopupThemeChange = function(theme) {
   Utils.setBrowserActionIcon(theme);
 }
 
@@ -57,15 +80,15 @@ OptionManager.onPopupThemeChange = function( theme ) {
  * state: false -> remove groups in private window open
  * @param {boolean} state
  */
-OptionManager.onPrivateWindowSyncChange = async function ( state ) {
+OptionManager.onPrivateWindowSyncChange = async function(state) {
   try {
-    if ( state ) {
+    if (state) {
       await GroupManager.integrateAllOpenedWindows();
     } else {
       await GroupManager.removeGroupsInPrivateWindow();
     }
     return "OptionManager.onPrivateWindowSyncChange done!";
-  } catch ( e ) {
+  } catch (e) {
     let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;
     console.error(msg);
     return msg;
@@ -76,19 +99,19 @@ OptionManager.onPrivateWindowSyncChange = async function ( state ) {
  * Refresh opened groups to add/remove pinned tabs
  * Pinned tabs in closed groups are not removed
  */
-OptionManager.onPinnedTabSyncChange = async function ( ) {
+OptionManager.onPinnedTabSyncChange = async function() {
   try {
     await GroupManager.updateAllOpenedGroups();
     return "OptionManager.onPrivateWindowSyncChange done!";
-  } catch ( e ) {
+  } catch (e) {
     let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;
     console.error(msg);
     return msg;
   }
 }
 
-OptionManager.onRemoveEmptyGroupChange = function ( ) {
-  if ( OptionManager.options.groups.removeEmptyGroup ) {
+OptionManager.onRemoveEmptyGroupChange = function() {
+  if (OptionManager.options.groups.removeEmptyGroup) {
     GroupManager.removeEmptyGroup();
   }
 }
@@ -100,9 +123,9 @@ OptionManager.onRemoveEmptyGroupChange = function ( ) {
  */
 OptionManager.init = async function() {
   try {
-    let options = await StorageManager.Local.loadOptions( );
+    let options = await StorageManager.Local.loadOptions();
     OptionManager.options = OptionManager.check_integrity(options);
-    OptionManager.eventlistener.fire( OptionManager.EVENT_CHANGE );
+    OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
     return "OptionManager.init done";
   } catch (e) {
     let msg = "OptionManager.init failed: " + e;
@@ -111,12 +134,12 @@ OptionManager.init = async function() {
   }
 }
 
-OptionManager.mergeOptions = function (ref_options, options) {
-  for ( let pro in ref_options ) {
-    if ( !options.hasOwnProperty(pro) ) {
+OptionManager.mergeOptions = function(ref_options, options) {
+  for (let pro in ref_options) {
+    if (!options.hasOwnProperty(pro)) {
       options[pro] = ref_options[pro];
     }
-    if ( "object" === typeof ref_options[pro] ) {
+    if ("object" === typeof ref_options[pro]) {
       OptionManager.mergeOptions(ref_options[pro], options[pro]);
     }
   }
@@ -127,7 +150,7 @@ OptionManager.mergeOptions = function (ref_options, options) {
  * @param {Object} options
  * @return {Object} options - verified
  */
-OptionManager.check_integrity = function( options ) {
+OptionManager.check_integrity = function(options) {
   var ref_options = OptionManager.TEMPLATE();
   OptionManager.mergeOptions(ref_options, options);
   return options;
@@ -140,13 +163,13 @@ OptionManager.check_integrity = function( options ) {
  * @return {Promise}
  */
 OptionManager.store = function() {
-  return StorageManager.Local.saveOptions( OptionManager.options );
+  return StorageManager.Local.saveOptions(OptionManager.options);
 }
 
 OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
   () => {
     OptionManager.repeatedtask.add(
-      ()=>{
+      () => {
         OptionManager.store();
       }
     )

@@ -164,9 +164,9 @@ WindowManager.switchGroup = async function(newGroupId) {
   let currentWindow;
   try {
     currentWindow = await browser.windows.getCurrent();
-    if ( WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
-      currentWindow.id
-    )) {
+    if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
+        currentWindow.id
+      )) {
       browser.notifications.create({
         "type": "basic",
         "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
@@ -191,9 +191,9 @@ WindowManager.switchGroup = async function(newGroupId) {
     console.error(msg);
     return msg;
   } finally {
-    if ( WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
-      currentWindow.id
-    )) {
+    if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
+        currentWindow.id
+      )) {
       const currentWindow = await browser.windows.getCurrent();
       delete WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id];
     }
@@ -242,7 +242,7 @@ WindowManager.selectGroup = async function(newGroupId) {
  * @param {Number} direction -- default:1
  * @return {Promise}
  */
-WindowManager.selectNextGroup = async function(direction = 1, open=false, refGroupId = -1) {
+WindowManager.selectNextGroup = async function(direction = 1, open = false, refGroupId = -1) {
   try {
     let nextGroupId = -1;
     let sourceGroupIndex;
@@ -256,7 +256,7 @@ WindowManager.selectNextGroup = async function(direction = 1, open=false, refGro
           refGroupId
         );
       } else { // Unsync window
-        sourceGroupIndex = direction>0?-1:0;
+        sourceGroupIndex = direction > 0 ? -1 : 0;
       }
     } else {
       sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(
@@ -270,13 +270,13 @@ WindowManager.selectNextGroup = async function(direction = 1, open=false, refGro
     for (let i = 0; i < GroupManager.groups.length - 1; i++) {
       targetGroupIndex = (targetGroupIndex + GroupManager.groups.length + direction) % GroupManager.groups.length;
 
-      if (GroupManager.groups[targetGroupIndex].windowId === browser.windows.WINDOW_ID_NONE
-        && !open) {
+      if (GroupManager.groups[targetGroupIndex].windowId === browser.windows.WINDOW_ID_NONE &&
+        !open) {
         nextGroupId = GroupManager.groups[targetGroupIndex].id;
         break;
       }
-      if (GroupManager.groups[targetGroupIndex].windowId !== browser.windows.WINDOW_ID_NONE
-        && open) {
+      if (GroupManager.groups[targetGroupIndex].windowId !== browser.windows.WINDOW_ID_NONE &&
+        open) {
         nextGroupId = GroupManager.groups[targetGroupIndex].id;
         break;
       }
@@ -284,8 +284,8 @@ WindowManager.selectNextGroup = async function(direction = 1, open=false, refGro
 
     // No group found, create one
     if (nextGroupId === -1) {
-      let title = "Can't " + (open>0?"focus":"switch") + " to "+ (direction>0?"next":"previous") + " Group";
-      let msg = "Reason: there is no other "+ (open>0?"opened":"closed") + " groups";
+      let title = "Can't " + (open > 0 ? "focus" : "switch") + " to " + (direction > 0 ? "next" : "previous") + " Group";
+      let msg = "Reason: there is no other " + (open > 0 ? "opened" : "closed") + " groups";
       browser.notifications.create({
         "type": "basic",
         "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
@@ -381,7 +381,7 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
  * @param {Number} windowId
  * @param {Group} group
  */
-WindowManager.setWindowPrefixGroupTitle = async function (windowId, group ) {
+WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
   try {
     await browser.windows.update(
       windowId, {
@@ -390,7 +390,7 @@ WindowManager.setWindowPrefixGroupTitle = async function (windowId, group ) {
           "] "
       }
     );
-  } catch ( e ) {
+  } catch (e) {
     let msg = "WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e;
     console.error(msg);
     return msg;
@@ -405,12 +405,14 @@ WindowManager.setWindowPrefixGroupTitle = async function (windowId, group ) {
  * @return {Promise}
  */
 WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
-  let group = GroupManager.groups[
-    GroupManager.getGroupIndexFromGroupId(
-      groupId, false
-    )
-  ];
-  WindowManager.setWindowPrefixGroupTitle(windowId, group);
+  if (OptionManager.options.groups.showGroupTitleInWindow) {
+    let group = GroupManager.groups[
+      GroupManager.getGroupIndexFromGroupId(
+        groupId, false
+      )
+    ];
+    WindowManager.setWindowPrefixGroupTitle(windowId, group);
+  }
   return browser.sessions.setWindowValue(
     windowId, // integer
     WindowManager.WINDOW_GROUPID, // string
@@ -424,11 +426,13 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
  * @return {Promise}
  */
 WindowManager.desassociateGroupIdToWindow = async function(windowId) {
-  browser.windows.update(
-    windowId, {
-      titlePreface: " "
-    }
-  );
+  if (OptionManager.options.groups.showGroupTitleInWindow) {
+    browser.windows.update(
+      windowId, {
+        titlePreface: " "
+      }
+    );
+  }
   return browser.sessions.removeWindowValue(
     windowId, // integer
     WindowManager.WINDOW_GROUPID, // string

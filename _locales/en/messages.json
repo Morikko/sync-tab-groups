@@ -350,8 +350,27 @@
   },
 
   "show_search_bar": {
-    "message": "Shwo search bar",
+    "message": "Show search bar",
+    "description": ""
+  },
+
+  "shortcuts": {
+    "message": "Shortcuts",
+    "description": ""
+  },
+
+  "allow_global_shortcuts": {
+    "message": "Allow extension shortcuts from anywhere in the browser",
+    "description": ""
+  },
+
+  "show_title_window": {
+    "message": "Display the Group Name as a title prefix in all the windows",
+    "description": ""
+  },
+
+  "group_name": {
+    "message": "Name",
     "description": ""
   }
-
 }

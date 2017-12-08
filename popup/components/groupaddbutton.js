@@ -31,7 +31,7 @@ const GroupAddButton = React.createClass({
 
     let button = [];
     if (this.state.editing) {
-      button.push('Title: ');
+      button.push( browser.i18n.getMessage("group_name") + ': ');
       button.push(React.DOM.input({
         autoFocus: true,
         type: "text",

@@ -30,6 +30,12 @@ const GroupSection = React.createClass({
         onCheckChange: this.props.onOptionChange,
         id: this.prefix + "-removeEmptyGroup",
       }),
+      React.createElement(NiceCheckbox, {
+        checked: this.props.options.showGroupTitleInWindow,
+        label: browser.i18n.getMessage("show_title_window"),
+        onCheckChange: this.props.onOptionChange,
+        id: this.prefix + "-showGroupTitleInWindow",
+      }),
     ]);
   },
 

@@ -36,6 +36,10 @@ const OptionsPanel = (() => {
           options: this.props.options.popup,
           onOptionChange: this.props.onOptionChange,
         }),
+        React.createElement(ShortcutsSection, {
+          options: this.props.options.shortcuts,
+          onOptionChange: this.props.onOptionChange,
+        }),
       ]);
     }
   });

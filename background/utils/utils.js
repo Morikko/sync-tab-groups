@@ -14,6 +14,7 @@ TaskManager.REMOVE_REFERENCE = "remove";
 var OptionManager = OptionManager || {};
 OptionManager.TEMPLATE = function() {
   return {
+    version: 0.1,
     privateWindow: {
       sync: true,
       removeOnClose: false,
@@ -28,12 +29,16 @@ OptionManager.TEMPLATE = function() {
     groups: {
       syncNewWindow: true,
       removeEmptyGroup: false,
+      showGroupTitleInWindow: false,
     },
     popup: {
       maximized: false,
       whiteTheme: false,
       showTabsNumber: true,
       showSearchBar: true,
+    },
+    shortcuts: {
+      allowGlobal: false,
     }
   };
 };
