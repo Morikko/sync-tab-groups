@@ -277,5 +277,100 @@
   "privileged_url_help_warning": {
     "message": "Attention: ces onglets sont fermés automatiquement par Firefox lorsque l'extension est mise à jour ou Désactiver.",
     "description": ""
+  },
+
+  "shortcut_list": {
+    "message": "Liste des Raccourcis",
+    "description": ""
+  },
+
+  "command_description_swtich_next_group": {
+    "message": "Changer vers le prochain groupe fermé",
+    "description": ""
+  },
+
+  "command_description_swtich_previous_group": {
+    "message": "Change vers le groupe précédent fermé",
+    "description": ""
+  },
+
+  "command_description_create_group_swtich": {
+    "message": "Créer un nouveau groupe et changer vers celui-ci",
+    "description": ""
+  },
+
+  "command_description_focus_next_group": {
+    "message": "Aller à la fenêtre avec le prochain groupe ouvert",
+    "description": ""
+  },
+
+  "command_description_focus_previous_group": {
+    "message": "Aller à la fenêtre avec le précédent groupe ouvert",
+    "description": ""
+  },
+
+  "command_description_remove_group_swtich": {
+    "message": "Ferme et supprime le groupe ouvert dans la fenêtre et change vers le prochain groupe fermé.",
+    "description": ""
+  },
+
+  "command_description__execute_browser_action": {
+    "message": "Ouvir le menu dans la barre d'outil",
+    "description": ""
+  },
+
+  "open_shortcut_list": {
+    "message": "Voir la liste des Raccourcis",
+    "description": ""
+  },
+
+  "command_shortcuts": {
+    "message": "Raccourcis",
+    "description": ""
+  },
+
+  "command_description": {
+    "message": "Description",
+    "description": ""
+  },
+
+  "toolbar_menu": {
+    "message": "Menu dans la barre d'outil",
+    "description": ""
+  },
+
+  "icon_option": {
+    "message": "Utiliser une icone blanche à la place de la noire",
+    "description": ""
+  },
+
+  "show_tabs_number": {
+    "message": "Montrer le nombre d'onglets dans le groupe (entre parenthèses)",
+    "description": ""
+  },
+
+  "show_search_bar": {
+    "message": "Montrer la barre de recherche",
+    "description": ""
+  },
+
+  "shortcuts": {
+    "message": "Raccourcis",
+    "description": ""
+  },
+
+  "allow_global_shortcuts": {
+    "message": "Autoriser les raccourcis dans le navigateur",
+    "description": ""
+  },
+
+  "show_title_window": {
+    "message": "Afficher le nom du groupe en tant que préfixe de la fenêtre",
+    "description": ""
+  },
+
+  "group_name": {
+    "message": "Nom",
+    "description": ""
   }
 }

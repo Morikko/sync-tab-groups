@@ -310,7 +310,7 @@
   },
 
   "command_description_remove_group_swtich": {
-    "message": "Close the current menu in window and switch to next one.",
+    "message": "Close and remove the current group in window and switch to next one.",
     "description": ""
   },
 
