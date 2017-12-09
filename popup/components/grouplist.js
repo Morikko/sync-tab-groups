@@ -68,6 +68,7 @@ const GroupList = React.createClass({
           currentlySearching: this.props.currentlySearching,
           showTabsNumber: this.props.options.popup.showTabsNumber,
           groups: this.props.groups,
+          groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
         }));
     }
 

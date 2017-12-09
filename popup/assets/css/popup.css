@@ -131,6 +131,7 @@ li {
 }
 
 /* Group in window and active tab */
+
 .group, .tab, .addButton {
   border: 1px solid transparent;
   cursor: pointer;
@@ -187,6 +188,14 @@ li {
   border-color: #2aa1c0;
   color: #000;
   */
+}
+
+.dragTopBorder {
+  border-top: 2px solid #2aa1c0;
+}
+
+.dragBottomBorder {
+  border-bottom: 2px solid #2aa1c0;
 }
 
 .group.dragSourceGroup {
@@ -295,9 +304,7 @@ li {
   background-color: none;
 }
 
-.group-controls i:hover, .tab-controls i:hover,
-.left-actions i:hover, .right-actions i:hover,
-.groupadd-controls i:hover{
+.group-controls i:hover, .tab-controls i:hover, .left-actions i:hover, .right-actions i:hover, .groupadd-controls i:hover {
   background-color: #b3b3b3;
 }
 

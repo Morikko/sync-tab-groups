@@ -49,6 +49,8 @@ const Group = React.createClass({
       opened: openWindow,
       draggingOverCounter: 0,
       dragSourceGroup: false,
+      dragOnTop: false,
+      dragOnBottom: false,
       newTitle: Utils.getGroupTitle(this.props.group)
     };
   },
@@ -119,6 +121,8 @@ const Group = React.createClass({
       removing: this.state.removing,
       draggingOver: this.state.draggingOverCounter !== 0,
       dragSourceGroup: this.state.dragSourceGroup,
+      dragTopBorder: this.state.dragOnTop,
+      dragBottomBorder: this.state.dragOnBottom,
       expanded: this.state.expanded,
       focusGroup: this.props.currentWindowId === this.props.group.windowId,
       group: true,
@@ -129,9 +133,12 @@ const Group = React.createClass({
       React.DOM.li({
           className: groupClasses,
           onClick: this.handleGroupClick,
+          draggable: this.props.groupDraggable,
           onDragOver: this.handleGroupDragOver,
           onDragEnter: this.handleGroupDragEnter,
           onDragLeave: this.handleGroupDragLeave,
+          //onDrag: this.handleTabDrag,
+          onDragStart: this.handleTabDragStart,
           onDrop: this.handleGroupDrop
         },
         React.DOM.span({
@@ -242,6 +249,8 @@ const Group = React.createClass({
 
   handleGroupClick: function(event) {
     event.stopPropagation();
+    // TODO
+    return;
     if (this.props.currentWindowId !== this.props.group.windowId)
       this.props.onGroupClick(this.props.group.id);
     window.close();
@@ -290,9 +299,12 @@ const Group = React.createClass({
     event.stopPropagation();
 
     this.setState({
-      draggingOverCounter: 0
+      dragOnTop: false,
+      dragOnBottom: false,
+      draggingOverCounter: 0,
     });
-
+    // TODO
+    return;
     // -0 to get
     let sourceGroup = parseInt(event.dataTransfer.getData("tab/group"), 10);
     let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
@@ -307,39 +319,81 @@ const Group = React.createClass({
   handleGroupDragOver: function(event) {
     event.stopPropagation();
     event.preventDefault();
-    return false;
+    if (event.dataTransfer.getData("type") === "group") {
+      let pos = event.clientY - event.currentTarget.offsetTop;
+      let height = event.currentTarget.offsetHeight;
+      // Bottom
+      if (pos > height / 2 && pos <= height) {
+        if (this.state.dragOnTop || !this.state.dragOnBottom) {
+          this.setState({
+            dragOnTop: false,
+            dragOnBottom: true,
+          });
+        }
+      } else if (pos <= height / 2 && pos > 0) {
+        if (!this.state.dragOnTop || this.state.dragOnBottom) {
+          this.setState({
+            dragOnTop: true,
+            dragOnBottom: false,
+          });
+        }
+      } else {
+        if (this.state.dragOnTop || this.state.dragOnBottom) {
+          this.setState({
+            dragOnTop: false,
+            dragOnBottom: false,
+          });
+        }
+      }
+    }
   },
 
   handleGroupDragEnter: function(event) {
     event.stopPropagation();
     event.preventDefault();
+    //console.log(this.props.group.index + ".enter");
+    if (event.dataTransfer.getData("type") === "tab") {
+      let sourceGroupId = event.dataTransfer.getData("tab/group");
+      let isSourceGroup = sourceGroupId == this.props.group.id;
+      this.setState({
+        dragSourceGroup: isSourceGroup
+      });
 
-    let sourceGroupId = event.dataTransfer.getData("tab/group");
-    let isSourceGroup = sourceGroupId == this.props.group.id;
-    this.setState({
-      dragSourceGroup: isSourceGroup
-    });
+      this.setState({
+        draggingOverCounter: (this.state.draggingOverCounter == 1) ? 2 : 1
+      });
 
-    let draggingCounterValue = (this.state.draggingOverCounter == 1) ? 2 : 1;
-    this.setState({
-      draggingOverCounter: draggingCounterValue
-    });
+    }
   },
 
   handleGroupDragLeave: function(event) {
     event.stopPropagation();
     event.preventDefault();
+    //console.log(this.props.group.index + ".leave");
 
-    if (this.state.draggingOverCounter == 2) {
-      this.setState({
-        draggingOverCounter: 1
-      });
-    } else if (this.state.draggingOverCounter == 1) {
-      this.setState({
-        draggingOverCounter: 0
-      });
-    }
-
-    return false;
+    this.setState({
+      dragOnTop: false,
+      dragOnBottom: false,
+      draggingOverCounter: this.state.draggingOverCounter == 2 ? 1 : 0
+    });
   },
+
+  handleTabDragStart: function(event) {
+    event.stopPropagation();
+    // TODO prepare group transfer
+    event.dataTransfer.setData("type", "group");
+    event.dataTransfer.setData("group/id", this.props.group.id);
+    return;
+    /*
+    let group = this.props.group;
+    let tab = this.props.tab;
+    event.dataTransfer.setData("tab/index", this.props.tabIndex);
+    event.dataTransfer.setData("tab/group", group.id);
+
+    this.props.onTabDragStart(
+      group.id,
+      tab.index
+    );
+    */
+  }
 });

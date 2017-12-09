@@ -61,7 +61,7 @@ const Tab = React.createClass({
     return (
       React.DOM.li({
           className: tabClasses,
-          onDrag: this.handleTabDrag,
+          //onDrag: this.handleTabDrag,
           onDragStart: this.handleTabDragStart,
           onClick: this.handleTabClick,
           draggable: true,
@@ -146,10 +146,10 @@ const Tab = React.createClass({
       this.props.tabIndex
     );
   },
-
+  /* TODO to keep ?
   handleTabDrag: function(event) {
     event.stopPropagation();
-    /* TODO to keep ?
+
     let group = this.props.group;
     let tab = this.props.tab;
     event.dataTransfer.setData("tab/index", tab.index);
@@ -159,20 +159,23 @@ const Tab = React.createClass({
       group.id,
       tab.index
     );
-    */
-  },
 
+  },
+  */
   handleTabDragStart: function(event) {
     event.stopPropagation();
 
     let group = this.props.group;
     let tab = this.props.tab;
+    event.dataTransfer.setData("type", "tab");
     event.dataTransfer.setData("tab/index", this.props.tabIndex);
     event.dataTransfer.setData("tab/group", group.id);
 
+    /*
     this.props.onTabDragStart(
       group.id,
       tab.index
     );
+    */
   }
 });
