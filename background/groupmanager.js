@@ -175,7 +175,10 @@ GroupManager.setPosition = function(groups = GroupManager.groups, sortingType = 
   let positions = [...Array(groups.length).keys()];
 
   if (sortingType === OptionManager.SORT_RECENT_OLD) {
-    positions = [...Array(groups.length).keys()].reverse()
+    positions = [...Array(groups.length).keys()].reverse();
+  }
+  if (sortingType === OptionManager.SORT_ALPHABETICAL) {
+    positions = GroupManager.sortGroupsAlphabetically(groups);
   }
 
   for (let i = 0; i < groups.length; i++) {
@@ -438,7 +441,7 @@ GroupManager.renameGroup = function(groupIndex, title) {
       GroupManager.groups[groupIndex]);
   }
 
-  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
 /**
@@ -646,22 +649,35 @@ GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
 /**
  * Sort the groups to be in alphabetical order
  * Change the groups var directly
- * TODO
  */
-GroupManager.sortGroups = function() {
-  console.log("sortGroups not implemented: WONT WORK");
-  return;
-  /*
-  if (sort) {
-    retGroups.sort((a, b) => {
-      if (a.title.toLowerCase() == b.title.toLowerCase()) {
-        return 0;
-      }
+GroupManager.sortGroupsAlphabetically = function(groups) {
 
-      return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
+  let positions = [];
+  let toSort = [];
+  groups.map((group)=>{
+    toSort.push({
+      title: group.title,
+      id: group.id,
+      index:group.index,
     });
-  }
+  });
 
-  return retGroups;
-  */
+  toSort.sort((a, b) => {
+    if (a.title === "" && b.title === "") {
+      return a.id < b.id ? -1 : 1;
+    }
+    if (a.title === "") return 1;
+    if (b.title === "") return -1;
+    if (a.title.toLowerCase() == b.title.toLowerCase()) {
+      return 0;
+    }
+
+    return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
+  });
+
+  toSort.map((sorted, index)=>{
+    positions[sorted.index] = index;
+  });
+
+  return positions;
 }
