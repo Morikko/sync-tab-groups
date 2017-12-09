@@ -413,6 +413,7 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
     ];
     WindowManager.setWindowPrefixGroupTitle(windowId, group);
   }
+  GroupManager.setLastAccessed(groupId, Date.now());
   return browser.sessions.setWindowValue(
     windowId, // integer
     WindowManager.WINDOW_GROUPID, // string

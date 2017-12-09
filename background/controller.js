@@ -40,7 +40,7 @@ Controller.prototype = {
 
   onGroupAdd: function(params) {
     try {
-      GroupManager.addGroup(params.title||'');
+      GroupManager.addGroup(params.title || '');
     } catch (e) {
       console.error("Controller - onGroupAdd failed: " + e);
     }
@@ -55,7 +55,7 @@ Controller.prototype = {
   },
 
   onGroupClose: function(params) {
-    var delayedFunction = async() => {
+    var delayedFunction = async () => {
       try {
         await WindowManager.closeGroup(
           params.groupID,
@@ -334,7 +334,7 @@ browser.windows.onRemoved.addListener((windowId) => {
 });
 /* TODO: doenst update context menu well if right click on a tab from another window
  */
-browser.windows.onFocusChanged.addListener(async(windowId) => {
+browser.windows.onFocusChanged.addListener(async (windowId) => {
   controller.refreshUi();
 
   try {
@@ -353,6 +353,10 @@ browser.windows.onFocusChanged.addListener(async(windowId) => {
       }
     });
 
+    let groupId = GroupManager.getGroupIdInWindow(windowId, false);
+    if (groupId >= 0) { // Only grouped window
+      GroupManager.setLastAccessed(groupId, Date.now());
+    }
   } catch (e) {
     let msg = "onFocusChanged.listener failed; " + e;
     console.error(msg);
@@ -364,7 +368,7 @@ browser.windows.onFocusChanged.addListener(async(windowId) => {
 // Commands
 browser.commands.onCommand.addListener(async function(command) {
   try {
-    if ( !OptionManager.options.shortcuts.allowGlobal ) { // disable by user
+    if (!OptionManager.options.shortcuts.allowGlobal) { // disable by user
       return "";
     }
     switch (command) {

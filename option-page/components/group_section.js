@@ -54,6 +54,10 @@ const GroupSection = React.createClass({
             value: OptionManager.SORT_ALPHABETICAL,
             label: "Alphabetical",
           },
+          {
+            value: OptionManager.SORT_LAST_ACCESSED,
+            label: "Last Accessed",
+          },
         ]
       }),
     ]);

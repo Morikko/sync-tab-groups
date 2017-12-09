@@ -25,6 +25,7 @@ GroupManager.Group = function(id,
   this.windowId = windowId;
   this.index = -1; // Position of this Group in an Array
   this.position = -1; // Position of this Group when displaying
+  this.lastAccessed = 0;
 }
 
 GroupManager.groups = [];
@@ -35,13 +36,20 @@ GroupManager.groups = [];
  * @param {Number} - windowId
  * @returns {Number} - group id
  */
-GroupManager.getGroupIdInWindow = function(windowId) {
-  for (group of GroupManager.groups) {
-    if (group.windowId === windowId)
-      return group.id;
+GroupManager.getGroupIdInWindow = function(windowId, error = true) {
+  if (windowId !== browser.windows.WINDOW_ID_NONE) {
+    for (let group of GroupManager.groups) {
+      if (group.windowId === windowId)
+        return group.id;
+    }
   }
 
-  throw Error("getGroupIdInWindow: Failed to find group in window " + windowId);
+  if (error) {
+    throw Error("getGroupIdInWindow: Failed to find group in window " + windowId);
+  } else {
+    return -1;
+  }
+
 }
 
 /**
@@ -149,7 +157,7 @@ GroupManager.getWindowIdFromGroupId = function(groupId) {
 GroupManager.isWindowAlreadyRegistered = function(windowId) {
   if (windowId === browser.windows.WINDOW_ID_NONE)
     return false;
-  for (g of GroupManager.groups) {
+  for (let g of GroupManager.groups) {
     if (g.windowId === windowId)
       return true;
   }
@@ -180,11 +188,49 @@ GroupManager.setPosition = function(groups = GroupManager.groups, sortingType = 
   if (sortingType === OptionManager.SORT_ALPHABETICAL) {
     positions = GroupManager.sortGroupsAlphabetically(groups);
   }
+  if (sortingType === OptionManager.SORT_LAST_ACCESSED) {
+    positions = GroupManager.sortGroupsLastAccessed(groups);
+  }
 
   for (let i = 0; i < groups.length; i++) {
     groups[i].position = positions[i];
   }
-  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+}
+
+/**
+ * Set time to lastAccessed in group groupId
+ * @param {Number} groupId
+ * @param {Number} time
+ */
+GroupManager.setLastAccessed = function(groupId, time, groups = GroupManager.groups) {
+  try {
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId,
+      true,
+      groups,
+    );
+    groups[groupIndex].lastAccessed = time;
+    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  } catch (e) {
+    let msg = "GroupManager.setLastAccessed failed; " + e.message;
+    console.error(msg);
+  }
+}
+
+/**
+ * Set the bigger last Accessed from the tab to the group
+ * @param {Array[Group]} groups - (default: global groups)
+ */
+GroupManager.updateLastAccessed = function(groups = GroupManager.groups) {
+  for (let g of groups) {
+    let lastAccessed = g.lastAccessed;
+    for (let tab of g.tabs) { // If no tab, keep the old value
+      if (tab.lastAccessed > lastAccessed) {
+        lastAccessed = tab.lastAccessed;
+      }
+    }
+    g.lastAccessed = lastAccessed;
+  }
 }
 
 /**
@@ -197,7 +243,6 @@ GroupManager.setIndex = function(groups = GroupManager.groups) {
     g.index = i;
     i++;
   }
-  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 }
 
 /**
@@ -611,7 +656,7 @@ GroupManager.integrateAllOpenedWindows = async function() {
   const windowInfoArray = await browser.windows.getAll({
     windowTypes: ['normal']
   });
-  for (windowInfo of windowInfoArray) {
+  for (let windowInfo of windowInfoArray) {
     await WindowManager.integrateWindow(windowInfo.id);
   }
 }
@@ -642,40 +687,77 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
 GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
   () => {
     GroupManager.setIndex(GroupManager.groups);
+    //GroupManager.updateLastAccessed(GroupManager.groups);
     GroupManager.setPosition(GroupManager.groups, OptionManager.options.groups.sortingType);
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   });
 
+
+/**
+ * Sort the groups so the last accessed group first
+ * @param {Array[Group]} - groups
+ * @return {Array[number]} - array with the positions sort by groups index
+ */
+GroupManager.sortGroupsLastAccessed = function(groups) {
+
+  let positions = [];
+  let toSort = [];
+  groups.map((group) => {
+    toSort.push({
+      lastAccessed: group.lastAccessed,
+      id: group.id,
+      title: group.title,
+      index: group.index,
+    });
+  });
+
+  toSort.sort((a, b) => {
+    if (a.lastAccessed === b.lastAccessed) { // Same time; sort alphabetically
+      if (a.title === "" && b.title === "") return a.id < b.id ? -1 : 1;
+      if (a.title === b.title) return a.id < b.id ? -1 : 1;
+      if (a.title === "") return 1;
+      if (b.title === "") return -1;
+
+      return a.title < b.title ? -1 : 1;
+    }
+
+    return a.lastAccessed < b.lastAccessed ? 1 : -1;
+  });
+  toSort.map((sorted, index) => {
+    positions[sorted.index] = index;
+  });
+
+  return positions;
+}
+
+
 /**
  * Sort the groups to be in alphabetical order
- * Change the groups var directly
+ * @param {Array[Group]} - groups
+ * @return {Array[number]} - array with the positions sort by groups index
  */
 GroupManager.sortGroupsAlphabetically = function(groups) {
 
   let positions = [];
   let toSort = [];
-  groups.map((group)=>{
+  groups.map((group) => {
     toSort.push({
       title: group.title,
       id: group.id,
-      index:group.index,
+      index: group.index,
     });
   });
 
   toSort.sort((a, b) => {
-    if (a.title === "" && b.title === "") {
-      return a.id < b.id ? -1 : 1;
-    }
+    if (a.title === "" && b.title === "") return a.id < b.id ? -1 : 1;
+    if (a.title === b.title) return a.id < b.id ? -1 : 1;
     if (a.title === "") return 1;
     if (b.title === "") return -1;
-    if (a.title.toLowerCase() == b.title.toLowerCase()) {
-      return 0;
-    }
 
-    return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
+    return a.title < b.title ? -1 : 1;
   });
 
-  toSort.map((sorted, index)=>{
+  toSort.map((sorted, index) => {
     positions[sorted.index] = index;
   });
 
