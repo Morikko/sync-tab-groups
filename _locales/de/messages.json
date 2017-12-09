@@ -25,7 +25,7 @@
   },
 
   "synchronized_window": {
-    "message": "Fenster synchronisiert",
+    "message": "Fenster synchronisieren",
     "description": "Label for synchronizing window in popup"
   },
 
@@ -170,7 +170,7 @@
   },
 
   "bookmark_help_folder": {
-    "message": "Lesezeichen werden standardmäßig in WeitereLesezeichen/SyncTabGroups gespeichert.",
+    "message": "Lesezeichen werden standardmäßig in \"Weitere Lesezeichen\"/SyncTabGroups gespeichert.",
     "description": ""
   },
 
@@ -220,17 +220,17 @@
   },
 
   "import_export_help_support": {
-    "message": "Import unterstützt Sync Tab Gruppen und Tab Groups json Dateien.",
+    "message": "Import unterstützt Sync Tab Gruppen und Tab Groups JSON Dateien.",
     "description": ""
   },
 
   "tab_information": {
-    "message": "Current Tab Information",
+    "message": "Information über aktuellen Tab",
     "description": ""
   },
 
   "tab_title": {
-    "message": "Title",
+    "message": "Titel",
     "description": ""
   },
 
@@ -240,87 +240,87 @@
   },
 
   "copy_url": {
-    "message": "Copy URL in the clipboard",
+    "message": "URL in Zwischenablage kopieren",
     "description": ""
   },
 
   "privileged_url": {
-    "message": "About Priviledged URLs",
+    "message": "Über privilegierte URLs",
     "description": ""
   },
 
   "privileged_url_help_reason": {
-    "message": "Sync Tab Groups can't open directly privileged URLs for security reason:",
+    "message": "Sync Tab Groups kann privilegierte URLs aus Sicherheitsgründen nicht direkt öffnen:",
     "description": ""
   },
 
   "open_url_help_method": {
-    "message": "But you can open it:",
+    "message": "Stattdessen können Sie diese öffnen:",
     "description": ""
   },
 
   "open_url_help_method_part_1": {
-    "message": "Click on the button",
+    "message": "Klicke auf die Schaltfläche",
     "description": ""
   },
 
   "open_url_help_method_part_2": {
-    "message": "Paste the URL in the address bar",
+    "message": "Füge die URL in die Adressleiste ein",
     "description": ""
   },
 
   "open_url_help_method_part_3": {
-    "message": "Press Enter",
+    "message": "Drücke Enter",
     "description": ""
   },
 
   "privileged_url_help_warning": {
-    "message": "Warning: those URLs are closed automatically by Firefox when the extension is updated or disabled.",
+    "message": "Warnung: Diese Adressen werden von Firefox automatisch geschlossen, wenn die Erweiterung aktualisiert oder deaktiviert wird.",
     "description": ""
   },
 
   "shortcut_list": {
-    "message": "Shortcuts List",
+    "message": "Shortcut Liste",
     "description": ""
   },
 
   "command_description_swtich_next_group": {
-    "message": "Switch to next closed group.",
+    "message": "Zur nächsten Gruppe wechseln.",
     "description": ""
   },
 
   "command_description_swtich_previous_group": {
-    "message": "Switch to previous closed group.",
+    "message": "Zur vorherigen Gruppe wechseln.",
     "description": ""
   },
 
   "command_description_create_group_swtich": {
-    "message": "Create a new group and switch to it.",
+    "message": "Eine neue Gruppe erzeugen und dorthin wechseln.",
     "description": ""
   },
 
   "command_description_focus_next_group": {
-    "message": "Focus window with next group opened.",
+    "message": "Fenster bei öffnen der nächsten Gruppe aktivieren.",
     "description": ""
   },
 
   "command_description_focus_previous_group": {
-    "message": "Focus window with previous group opened.",
+    "message": "Fenster bei öffnen der vorherigen Gruppe aktivieren.",
     "description": ""
   },
 
   "command_description_remove_group_swtich": {
-    "message": "Close and remove the current group in window and switch to next one.",
+    "message": "Aktuelle Gruppe im Fenster schließen, entfernen und zur nächsten Gruppe wechseln.",
     "description": ""
   },
 
   "command_description__execute_browser_action": {
-    "message": "Open Sync Tab Group Menu.",
+    "message": "Öffne Sync Tab Groups Menü.",
     "description": ""
   },
 
   "open_shortcut_list": {
-    "message": "Open Shortcuts List",
+    "message": "Öffne Shortcut Liste",
     "description": ""
   },
 
@@ -330,27 +330,27 @@
   },
 
   "command_description": {
-    "message": "Description",
+    "message": "Beschreibung",
     "description": ""
   },
 
   "toolbar_menu": {
-    "message": "Toolbar Menu",
+    "message": "Toolbar Menü",
     "description": ""
   },
 
   "icon_option": {
-    "message": "Use white icon instead of black",
+    "message": "Verwende weiße statt schwarzer Symbole",
     "description": ""
   },
 
   "show_tabs_number": {
-    "message": "Show Tabs number in brackets after the Group title",
+    "message": "Hinter dem Gruppentitel die Anzahl der Tabs anzeigen",
     "description": ""
   },
 
   "show_search_bar": {
-    "message": "Show search bar",
+    "message": "Suchleiste anzeigen",
     "description": ""
   },
 
@@ -360,12 +360,12 @@
   },
 
   "allow_global_shortcuts": {
-    "message": "Allow extension shortcuts from anywhere in the browser",
+    "message": "Erlaube Shortcuts der Erweiterung überall im Browser",
     "description": ""
   },
 
   "show_title_window": {
-    "message": "Display the Group Name as a title prefix in all the windows",
+    "message": "Name der Gruppe in allen Fenstern als Präfix des Titels anzeigen",
     "description": ""
   },
 
@@ -375,7 +375,7 @@
   },
 
   "bookmarks_weak_help": {
-    "message": "Bookmarks auto-save can be very problematic. I would recommend to not use it until I have fixed it",
+    "message": "Automatisches Speichern von Lesezeichen kann Probleme verursachen. Bis zur Problembehebung würde ich nicht empfehlen dieses zu verwenden.",
     "description": ""
   }
 }
