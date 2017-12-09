@@ -38,25 +38,29 @@ const GroupSection = React.createClass({
       }),
       React.createElement(OptionSelect, {
         selected: this.props.options.sortingType,
-        label: "Select sorting option for the groups",
+        label: browser.i18n.getMessage("label_select_sorting_type"),
         onValueChange: this.props.onOptionChange,
         id: this.prefix + "-sortingType",
         choices: [
           {
-            value: OptionManager.SORT_OLD_RECENT,
-            label: "Older First",
-          },
-          {
-            value: OptionManager.SORT_RECENT_OLD,
-            label: "Recent First",
+            value: OptionManager.SORT_CUSTOM,
+            label: browser.i18n.getMessage("label_sort_custom"),
           },
           {
             value: OptionManager.SORT_ALPHABETICAL,
-            label: "Alphabetical",
+            label: browser.i18n.getMessage("label_sort_alphabetical"),
           },
           {
             value: OptionManager.SORT_LAST_ACCESSED,
-            label: "Last Accessed",
+            label: browser.i18n.getMessage("label_sort_accessed"),
+          },
+          {
+            value: OptionManager.SORT_OLD_RECENT,
+            label: browser.i18n.getMessage("label_sort_old"),
+          },
+          {
+            value: OptionManager.SORT_RECENT_OLD,
+            label: browser.i18n.getMessage("label_sort_recent"),
           },
         ]
       }),

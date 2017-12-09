@@ -179,9 +179,17 @@ GroupManager.getCopy = function() {
  * @param {Number} sortingType - (default: the one set in option)
  */
 GroupManager.setPosition = function(groups = GroupManager.groups, sortingType = OptionManager.options.groups.sortingType) {
-  // Default: OptionManager.SORT_OLD_RECENT
-  let positions = [...Array(groups.length).keys()];
+  // Set a position to every groups and remove doublon
+  GroupManager.fillPositions(groups);
 
+  if (sortingType === OptionManager.SORT_CUSTOM) {
+    return;
+  }
+
+  let positions = [];
+  if (sortingType === OptionManager.SORT_OLD_RECENT) {
+    positions = [...Array(groups.length).keys()];
+  }
   if (sortingType === OptionManager.SORT_RECENT_OLD) {
     positions = [...Array(groups.length).keys()].reverse();
   }
@@ -687,7 +695,6 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
 GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
   () => {
     GroupManager.setIndex(GroupManager.groups);
-    //GroupManager.updateLastAccessed(GroupManager.groups);
     GroupManager.setPosition(GroupManager.groups, OptionManager.options.groups.sortingType);
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   });
@@ -762,4 +769,55 @@ GroupManager.sortGroupsAlphabetically = function(groups) {
   });
 
   return positions;
+}
+
+/**
+ * Keep the current position of the groups and replace unknown group position, with the next position available in the order of groups index
+ * Remove doublon as well
+ * Change directly on groups
+ * @param {Array[Group]} - groups
+ */
+GroupManager.fillPositions = function(groups) {
+  let alreadyPositioned = [];
+
+  // Detect Gap: groups removed
+  for (let pos of [...Array(groups.length).keys()]) {
+    let hasPos = false;
+    for (let group of groups) { // check pos is present
+      if (group.position === pos) {
+        hasPos = true;
+        break;
+      }
+    }
+    if(!hasPos){ // pos missing, decrease all > pos
+      for (let group of groups) { // check pos is present
+        if (group.position > pos) {
+          group.position--;
+        }
+      }
+    }
+  }
+
+  // Check used position
+  groups.map((group) => {
+    if (group.position >= 0) {
+      if (!alreadyPositioned[group.position]) {
+        alreadyPositioned[group.position] = true;
+      } else { // Doublon
+        group.position = -1;
+      }
+    }
+  });
+
+  // Fill unused position
+  for (let pos of [...Array(groups.length).keys()]) {
+    if (!alreadyPositioned[pos]) {
+      for (let group of groups) {
+        if (group.position === -1) { // Update first unkown positioned group
+          group.position = pos;
+          break;
+        }
+      }
+    }
+  }
 }

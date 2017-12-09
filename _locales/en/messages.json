@@ -377,5 +377,35 @@
   "bookmarks_weak_help": {
     "message": "Bookmarks auto-save can be very problematic. I would recommend to not use it until I have fixed it",
     "description": ""
+  },
+
+  "label_select_sorting_type": {
+    "message": "Select sorting option for the groups",
+    "description": ""
+  },
+
+  "label_sort_custom": {
+    "message": "Custom",
+    "description": ""
+  },
+
+  "label_sort_old": {
+    "message": "Old Created First",
+    "description": ""
+  },
+
+  "label_sort_recent": {
+    "message": "Recent Created First",
+    "description": ""
+  },
+
+  "label_sort_alphabetical": {
+    "message": "Alphabetical",
+    "description": ""
+  },
+
+  "label_sort_accessed": {
+    "message": "Last Accessed",
+    "description": ""
   }
 }

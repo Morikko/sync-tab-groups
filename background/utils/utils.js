@@ -15,6 +15,7 @@ OptionManager.SORT_OLD_RECENT = 0;
 OptionManager.SORT_RECENT_OLD = 1;
 OptionManager.SORT_ALPHABETICAL = 2;
 OptionManager.SORT_LAST_ACCESSED = 3;
+OptionManager.SORT_CUSTOM = 4;
 OptionManager.TEMPLATE = function() {
   return {
     version: 0.1,

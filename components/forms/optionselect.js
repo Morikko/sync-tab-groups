@@ -6,21 +6,7 @@ const OptionSelect = React.createClass({
     label: React.PropTypes.string,
     choices: React.PropTypes.object, // [{value, label}]
   },
-  /*
-  getInitialState: function() {
-    return {
-      checked: this.props.checked,
-      disabled: this.props.disabled||false,
-    };
-  },
 
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({
-      checked: nextProps.checked,
-      disabled: nextProps.disabled||false,
-    })
-  },
-  */
   render: function() {
     return React.DOM.div({
       className: "select",
@@ -49,9 +35,6 @@ const OptionSelect = React.createClass({
     let selectedValue = parseInt(event.target.options[event.target.selectedIndex].value, 10)
 
     this.props.onValueChange(this.props.id, selectedValue);
-    /*
-    this.setState({
-      checked: !this.state.checked
-    });*/
+
   },
 });
