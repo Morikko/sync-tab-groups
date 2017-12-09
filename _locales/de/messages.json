@@ -222,5 +222,160 @@
   "import_export_help_support": {
     "message": "Import unterstützt Sync Tab Gruppen und Tab Groups json Dateien.",
     "description": ""
+  },
+
+  "tab_information": {
+    "message": "Current Tab Information",
+    "description": ""
+  },
+
+  "tab_title": {
+    "message": "Title",
+    "description": ""
+  },
+
+  "tab_address": {
+    "message": "URL",
+    "description": ""
+  },
+
+  "copy_url": {
+    "message": "Copy URL in the clipboard",
+    "description": ""
+  },
+
+  "privileged_url": {
+    "message": "About Priviledged URLs",
+    "description": ""
+  },
+
+  "privileged_url_help_reason": {
+    "message": "Sync Tab Groups can't open directly privileged URLs for security reason:",
+    "description": ""
+  },
+
+  "open_url_help_method": {
+    "message": "But you can open it:",
+    "description": ""
+  },
+
+  "open_url_help_method_part_1": {
+    "message": "Click on the button",
+    "description": ""
+  },
+
+  "open_url_help_method_part_2": {
+    "message": "Paste the URL in the address bar",
+    "description": ""
+  },
+
+  "open_url_help_method_part_3": {
+    "message": "Press Enter",
+    "description": ""
+  },
+
+  "privileged_url_help_warning": {
+    "message": "Warning: those URLs are closed automatically by Firefox when the extension is updated or disabled.",
+    "description": ""
+  },
+
+  "shortcut_list": {
+    "message": "Shortcuts List",
+    "description": ""
+  },
+
+  "command_description_swtich_next_group": {
+    "message": "Switch to next closed group.",
+    "description": ""
+  },
+
+  "command_description_swtich_previous_group": {
+    "message": "Switch to previous closed group.",
+    "description": ""
+  },
+
+  "command_description_create_group_swtich": {
+    "message": "Create a new group and switch to it.",
+    "description": ""
+  },
+
+  "command_description_focus_next_group": {
+    "message": "Focus window with next group opened.",
+    "description": ""
+  },
+
+  "command_description_focus_previous_group": {
+    "message": "Focus window with previous group opened.",
+    "description": ""
+  },
+
+  "command_description_remove_group_swtich": {
+    "message": "Close and remove the current group in window and switch to next one.",
+    "description": ""
+  },
+
+  "command_description__execute_browser_action": {
+    "message": "Open Sync Tab Group Menu.",
+    "description": ""
+  },
+
+  "open_shortcut_list": {
+    "message": "Open Shortcuts List",
+    "description": ""
+  },
+
+  "command_shortcuts": {
+    "message": "Shortcut",
+    "description": ""
+  },
+
+  "command_description": {
+    "message": "Description",
+    "description": ""
+  },
+
+  "toolbar_menu": {
+    "message": "Toolbar Menu",
+    "description": ""
+  },
+
+  "icon_option": {
+    "message": "Use white icon instead of black",
+    "description": ""
+  },
+
+  "show_tabs_number": {
+    "message": "Show Tabs number in brackets after the Group title",
+    "description": ""
+  },
+
+  "show_search_bar": {
+    "message": "Show search bar",
+    "description": ""
+  },
+
+  "shortcuts": {
+    "message": "Shortcuts",
+    "description": ""
+  },
+
+  "allow_global_shortcuts": {
+    "message": "Allow extension shortcuts from anywhere in the browser",
+    "description": ""
+  },
+
+  "show_title_window": {
+    "message": "Display the Group Name as a title prefix in all the windows",
+    "description": ""
+  },
+
+  "group_name": {
+    "message": "Name",
+    "description": ""
+  },
+
+  "bookmarks_weak_help": {
+    "message": "Bookmarks auto-save can be very problematic. I would recommend to not use it until I have fixed it",
+    "description": ""
   }
 }
