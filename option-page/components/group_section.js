@@ -36,6 +36,26 @@ const GroupSection = React.createClass({
         onCheckChange: this.props.onOptionChange,
         id: this.prefix + "-showGroupTitleInWindow",
       }),
+      React.createElement(OptionSelect, {
+        selected: this.props.options.sortingType,
+        label: "Select sorting option for the groups",
+        onValueChange: this.props.onOptionChange,
+        id: this.prefix + "-sortingType",
+        choices: [
+          {
+            value: OptionManager.SORT_OLD_RECENT,
+            label: "Older First",
+          },
+          {
+            value: OptionManager.SORT_RECENT_OLD,
+            label: "Recent First",
+          },
+          {
+            value: OptionManager.SORT_ALPHABETICAL,
+            label: "Alphabetical",
+          },
+        ]
+      }),
     ]);
   },
 

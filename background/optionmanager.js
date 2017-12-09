@@ -43,6 +43,9 @@ OptionManager.updateOption = function(optionName, optionValue) {
     case "groups-showGroupTitleInWindow":
       OptionManager.onShowGroupTitleInWindowChange(optionValue);
       break;
+    case "groups-sortingType":
+      GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+      break;
   }
 }
 
@@ -50,12 +53,12 @@ OptionManager.updateOption = function(optionName, optionValue) {
  * Add/Remove title prefix in window
  * @param {boolean} addTitle
  */
-OptionManager.onShowGroupTitleInWindowChange = function ( addTitle ) {
-  for ( let g of GroupManager.groups ) {
-    if ( g.windowId !== browser.windows.WINDOW_ID_NONE) {
-      if ( addTitle ){
+OptionManager.onShowGroupTitleInWindowChange = function(addTitle) {
+  for (let g of GroupManager.groups) {
+    if (g.windowId !== browser.windows.WINDOW_ID_NONE) {
+      if (addTitle) {
         WindowManager.setWindowPrefixGroupTitle(g.windowId, g);
-      }else {
+      } else {
         browser.windows.update(
           g.windowId, {
             titlePreface: " "

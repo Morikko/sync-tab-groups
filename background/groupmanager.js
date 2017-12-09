@@ -639,7 +639,7 @@ GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
 GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
   () => {
     GroupManager.setIndex(GroupManager.groups);
-    GroupManager.setPosition(GroupManager.groups);
+    GroupManager.setPosition(GroupManager.groups, OptionManager.options.groups.sortingType);
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   });
 
