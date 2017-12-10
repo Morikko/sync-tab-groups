@@ -8,8 +8,6 @@ Copyright (c) 2015 Dennis Schubert
 const Tab = React.createClass({
   propTypes: {
     onTabClick: React.PropTypes.func,
-    onTabDrag: React.PropTypes.func,
-    onTabDragStart: React.PropTypes.func,
     onGroupDrop: React.PropTypes.func,
     onMoveTabToNewGroup: React.PropTypes.func,
     group: React.PropTypes.object,

@@ -16,14 +16,13 @@ const PopupMenu = (() => {
       onGroupRemoveClick: React.PropTypes.func,
       onGroupTitleChange: React.PropTypes.func,
       onTabClick: React.PropTypes.func,
-      onTabDrag: React.PropTypes.func,
-      onTabDragStart: React.PropTypes.func,
       onOpenInNewWindowClick: React.PropTypes.func,
       onChangeWindowSync: React.PropTypes.func,
       onClickPref: React.PropTypes.func,
       onCloseTab: React.PropTypes.func,
       onOpenTab: React.PropTypes.func,
       onOptionChange: React.PropTypes.func,
+      onGroupChangePosition: React.PropTypes.func,
     },
 
     getInitialState: function() {
@@ -93,13 +92,12 @@ const PopupMenu = (() => {
           onGroupRemoveClick: this.props.onGroupRemoveClick,
           onGroupTitleChange: this.props.onGroupTitleChange,
           onTabClick: this.props.onTabClick,
-          onTabDrag: this.props.onTabDrag,
-          onTabDragStart: this.props.onTabDragStart,
           onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
           onCloseTab: this.props.onCloseTab,
           onOpenTab: this.props.onOpenTab,
           searchGroupsResults: this.state.searchGroupsResults,
           currentlySearching: this.state.searchfilter.length > 0,
+          onGroupChangePosition: this.props.onGroupChangePosition,
         }),
         React.createElement(
           GroupAddButton, {

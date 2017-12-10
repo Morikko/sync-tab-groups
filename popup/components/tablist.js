@@ -8,8 +8,6 @@ Copyright (c) 2015 Dennis Schubert
 const TabList = React.createClass({
   propTypes: {
     onTabClick: React.PropTypes.func,
-    onTabDrag: React.PropTypes.func,
-    onTabDragStart: React.PropTypes.func,
     tabs: React.PropTypes.array.isRequired,
     opened: React.PropTypes.bool.isRequired,
     onCloseTab: React.PropTypes.func,
@@ -32,8 +30,6 @@ const TabList = React.createClass({
             tabIndex: index,
             tab: tab,
             onTabClick: this.props.onTabClick,
-            onTabDrag: this.props.onTabDrag,
-            onTabDragStart: this.props.onTabDragStart,
             onGroupDrop: this.props.onGroupDrop,
             onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
             opened: this.props.opened,

@@ -16,8 +16,6 @@ const Group = React.createClass({
     onGroupRemoveClick: React.PropTypes.func,
     onGroupTitleChange: React.PropTypes.func,
     onTabClick: React.PropTypes.func,
-    onTabDrag: React.PropTypes.func,
-    onTabDragStart: React.PropTypes.func,
     onOpenInNewWindowClick: React.PropTypes.func,
     onCloseTab: React.PropTypes.func,
     onOpenTab: React.PropTypes.func,
@@ -25,6 +23,7 @@ const Group = React.createClass({
     currentlySearching: React.PropTypes.bool,
     showTabsNumber: React.PropTypes.bool,
     groups: React.PropTypes.object,
+    onGroupChangePosition: React.PropTypes.func,
   },
 
   getClosingState: function(openWindow, props) {
@@ -179,9 +178,6 @@ const Group = React.createClass({
             tabs: this.props.group.tabs,
             group: this.props.group,
             onTabClick: this.props.onTabClick,
-            onTabDrag: this.props.onTabDrag,
-            onTabDragStart: this.props.onTabDragStart,
-            onTabDragEnd: this.props.onTabDragEnd,
             onGroupDrop: this.props.onGroupDrop,
             onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
             opened: this.state.opened,
@@ -260,8 +256,6 @@ const Group = React.createClass({
 
   handleGroupClick: function(event) {
     event.stopPropagation();
-    // TODO
-    return;
     if (this.props.currentWindowId !== this.props.group.windowId)
       this.props.onGroupClick(this.props.group.id);
     window.close();
@@ -331,7 +325,20 @@ const Group = React.createClass({
       );
     }
 
+    if (event.dataTransfer.getData("type") === "group") {
+      let position = -1;
+      if (this.state.dragOnTop) {
+        position = this.props.group.position;
+      }
+      if (this.state.dragOnBottom) {
+        position = this.props.group.position+1;
+      }
 
+      this.props.onGroupChangePosition(
+        parseInt(event.dataTransfer.getData("group/id"), 10),
+        position,
+      );
+    }
   },
 
   handleGroupDragOver: function(event) {
@@ -404,20 +411,8 @@ const Group = React.createClass({
 
   handleGroupDragStart: function(event) {
     event.stopPropagation();
-    // TODO prepare group transfer
+
     event.dataTransfer.setData("type", "group");
     event.dataTransfer.setData("group/id", this.props.group.id);
-    return;
-    /*
-    let group = this.props.group;
-    let tab = this.props.tab;
-    event.dataTransfer.setData("tab/index", this.props.tabIndex);
-    event.dataTransfer.setData("tab/group", group.id);
-
-    this.props.onTabDragStart(
-      group.id,
-      tab.index
-    );
-    */
   }
 });

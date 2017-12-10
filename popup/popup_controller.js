@@ -72,22 +72,6 @@ const Actions = {
     });
   },
 
-  // TODO Unused
-  dragTab: function(groupId, tabIndex) {
-    Utils.sendMessage("Tab:Drag", {
-      groupId: groupId,
-      tabIndex: tabIndex
-    });
-  },
-
-  // TODO Unused
-  dragTabStart: function(groupId, tabIndex) {
-    Utils.sendMessage("Tab:DragStart", {
-      groupId: groupId,
-      tabIndex: tabIndex
-    });
-  },
-
   askData: function() {
     Utils.sendMessage("Data:Ask", {});
   },
@@ -140,14 +124,13 @@ document.addEventListener("DOMContentLoaded", () => {
         onGroupRemoveClick: Actions.removeGroup,
         onGroupTitleChange: Actions.renameGroup,
         onTabClick: Actions.selectTab,
-        onTabDrag: Actions.dragTab,
-        onTabDragStart: Actions.dragTabStart,
         onOpenInNewWindowClick: Actions.OpenGroupInNewWindow,
         onChangeWindowSync: Actions.onChangeWindowSync,
         onClickPref: Actions.openSettings,
         onCloseTab: Actions.onCloseTab,
         onOpenTab: Actions.onOpenTab,
         onOptionChange: Actions.onOptionChange,
+        onGroupChangePosition: Actions.changeGroupPosition,
       })
     ),
     document.getElementById("content")

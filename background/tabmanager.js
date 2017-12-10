@@ -271,7 +271,7 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex,
     let isSourceGroupOpen = GroupManager.isGroupIndexInOpenWindow(sourceGroupIndex);
     let isTargetGroupOpen = GroupManager.isGroupIndexInOpenWindow(targetGroupIndex);
 
-    // Case 1: same group TODO TEST
+    // Case 1: same group
     if (sourceGroupId === targetGroupId && // Same group
       (sourceTabIndex === targetTabIndex || // Same index
         targetTabIndex === sourceTabIndex+1 || // After removing source, target are in the same place
@@ -282,14 +282,12 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex,
 
     // Case 5: Open Group -> Open Group (Even the same)
     if ((isSourceGroupOpen && isTargetGroupOpen)) {
-      //TODO: Update tab index -TEST
       TabManager.moveOpenTabToGroup(tab, GroupManager.groups[targetGroupIndex].windowId, targetTabIndex);
     }
     // Case 2: Closed Group -> Closed Group
     // Case 3: Open Group -> Closed Groups
     // Case 4: Closed Group -> Open Group
     else {
-      //TODO: Update tab index
       if ( sourceGroupId === targetGroupId  ) { // Update index because tabs will change
         if (targetTabIndex< sourceTabIndex) sourceTabIndex++;
       }

@@ -19,13 +19,12 @@ const GroupList = React.createClass({
     onGroupRemoveClick: React.PropTypes.func,
     onGroupTitleChange: React.PropTypes.func,
     onTabClick: React.PropTypes.func,
-    onTabDrag: React.PropTypes.func,
-    onTabDragStart: React.PropTypes.func,
     onOpenInNewWindowClick: React.PropTypes.func,
     onCloseTab: React.PropTypes.func,
     onOpenTab: React.PropTypes.func,
     currentlySearching: React.PropTypes.bool,
     searchGroupResult: React.PropTypes.object,
+    onGroupChangePosition: React.PropTypes.func,
   },
 
   // Return if an action (close/remove) is pending on groupId
@@ -59,8 +58,6 @@ const GroupList = React.createClass({
           onGroupRemoveClick: this.props.onGroupRemoveClick,
           onGroupTitleChange: this.props.onGroupTitleChange,
           onTabClick: this.props.onTabClick,
-          onTabDrag: this.props.onTabDrag,
-          onTabDragStart: this.props.onTabDragStart,
           onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
           onCloseTab: this.props.onCloseTab,
           onOpenTab: this.props.onOpenTab,
@@ -69,6 +66,7 @@ const GroupList = React.createClass({
           showTabsNumber: this.props.options.popup.showTabsNumber,
           groups: this.props.groups,
           groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
+          onGroupChangePosition: this.props.onGroupChangePosition,
         }));
     }
 

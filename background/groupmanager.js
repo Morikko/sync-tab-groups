@@ -173,6 +173,38 @@ GroupManager.getCopy = function() {
 }
 
 /******** SETTER *********/
+
+GroupManager.changeGroupPosition = function(groupId, position, groups = GroupManager.groups) {
+  try {
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, true, groups);
+
+    let oldPosition = groups[groupIndex].position;
+    if (oldPosition === position ||
+      position === oldPosition + 1) { // Move useless, same position
+      return;
+    } else if (oldPosition > position) {
+      for (let g of groups) {
+        if (g.position >= position && g.position < oldPosition) {
+          g.position++;
+        }
+      }
+    } else if (position > oldPosition) {
+      position--; // Group was before the next position
+      for (let g of groups) {
+        if (g.position > oldPosition && g.position <= position) {
+          g.position--;
+        }
+      }
+    }
+    groups[groupIndex].position = position;
+
+    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  } catch (e) {
+    let msg = "GroupManager.changeGroupPosition failed; " + e.message;
+    console.error(msg);
+  }
+}
+
 /**
  * Set the UI position variable for each group in groups
  * @param {Array[Group]} groups - (default: global groups)

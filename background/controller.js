@@ -201,6 +201,13 @@ Controller.prototype = {
   onExportGroups: function() {
     StorageManager.File.exportGroups(GroupManager.getCopy());
   },
+
+  onGroupChangePosition: function(params) {
+    GroupManager.changeGroupPosition(
+      params.groupId,
+      params.position
+    );
+  },
 };
 
 // Event from: popup
@@ -215,6 +222,9 @@ var popupMessenger = function(message) {
       break;
     case "Group:Close":
       controller.onGroupClose(message.params);
+      break;
+    case "Group:ChangePosition":
+      controller.onGroupChangePosition(message.params);
       break;
     case "Group:Remove":
       controller.onGroupRemove(message.params);
