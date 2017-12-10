@@ -39,7 +39,7 @@ TestManager.movetabs = function() {
       await this.set();
 
       /*
-      await TabManager.moveTabToGroup(
+      await TabManager.moveUnFollowedTabToGroup(
         GroupManager.groups(this.groupId_open).tabs[
             GroupManager.groups(this.groupId_open).tabs.length-1
         ],

@@ -8,74 +8,82 @@ const Actions = {
   },
 
   // Drag & Drop tab on create button
-  addGroupWithTab: function(title, sourceGroupID, tabIndex) {
+  addGroupWithTab: function(title="", sourceGroupId, tabIndex) {
     Utils.sendMessage("Group:AddWithTab", {
       title: title,
-      sourceGroupID: sourceGroupID,
+      sourceGroupId: sourceGroupId,
       tabIndex: tabIndex
     });
   },
 
-  OpenGroupInNewWindow: function(groupID) {
+  OpenGroupInNewWindow: function(groupId) {
     Utils.sendMessage("Group:OpenGroupInNewWindow", {
-      groupID: groupID,
+      groupId: groupId,
     });
   },
 
-  closeGroup: function(taskRef, groupID) {
+  closeGroup: function(taskRef, groupId) {
     Utils.sendMessage("Group:Close", {
       taskRef: taskRef,
-      groupID: groupID
+      groupId: groupId
     });
   },
 
-  removeGroup: function(taskRef, groupID) {
+  removeGroup: function(taskRef, groupId) {
     Utils.sendMessage("Group:Remove", {
       taskRef: taskRef,
-      groupID: groupID
+      groupId: groupId
     });
   },
 
-  renameGroup: function(groupID, title) {
+  renameGroup: function(groupId, title) {
     Utils.sendMessage("Group:Rename", {
-      groupID: groupID,
+      groupId: groupId,
       title: title
     });
   },
 
-  selectGroup: function(groupID) {
+  selectGroup: function(groupId) {
     Utils.sendMessage("Group:Select", {
-      groupID: groupID
+      groupId: groupId
     });
   },
 
-  moveTabToGroup: function(sourceGroupID, tabIndex, targetGroupID) {
+  changeGroupPosition: function(groupId, position) {
+    Utils.sendMessage("Group:ChangePosition", {
+      groupId: groupId,
+      position: position,
+    });
+  },
+
+  moveTabToGroup: function(sourceGroupId, sourceTabIndex, targetGroupId, targetTabIndex=-1) {
     Utils.sendMessage("Group:MoveTab", {
-      sourceGroupID: sourceGroupID,
-      tabIndex: tabIndex,
-      targetGroupID: targetGroupID
+      sourceGroupId: sourceGroupId,
+      sourceTabIndex: sourceTabIndex,
+      targetGroupId: targetGroupId,
+      targetTabIndex: targetTabIndex,
     });
   },
 
-  selectTab: function(groupID, tabIndex) {
+  selectTab: function(groupId, tabIndex) {
     Utils.sendMessage("Tab:Select", {
-      groupID: groupID,
+      groupId: groupId,
       tabIndex: tabIndex
     });
   },
 
   // TODO Unused
-  dragTab: function(groupID, tabIndex) {
+  dragTab: function(groupId, tabIndex) {
     Utils.sendMessage("Tab:Drag", {
-      groupID: groupID,
+      groupId: groupId,
       tabIndex: tabIndex
     });
   },
 
   // TODO Unused
-  dragTabStart: function(groupID, tabIndex) {
+  dragTabStart: function(groupId, tabIndex) {
     Utils.sendMessage("Tab:DragStart", {
-      groupID: groupID,
+      groupId: groupId,
       tabIndex: tabIndex
     });
   },

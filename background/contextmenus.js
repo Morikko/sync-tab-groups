@@ -125,12 +125,12 @@ ContextMenu.MoveTabMenuListener = function(info, tab) {
     let order = info.menuItemId.substring(ContextMenu.MoveTabMenu_ID.length, info.menuItemId.length);
     let groupId = parseInt(order);
     if (groupId >= 0) {
-      TabManager.moveTabToGroup(
+      TabManager.moveUnFollowedTabToGroup(
         tab.id,
         groupId
       );
     } else if (order === "new") {
-      TabManager.moveUnSyncTabToNewGroup(tab.id);
+      TabManager.moveUnFollowedTabToNewGroup(tab.id);
     }
   }
 };

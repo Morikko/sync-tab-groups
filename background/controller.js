@@ -35,7 +35,7 @@ Controller.prototype = {
   },
 
   onOpenGroupInNewWindow: function(params) {
-    WindowManager.openGroupInNewWindow(params.groupID);
+    WindowManager.openGroupInNewWindow(params.groupId);
   },
 
   onGroupAdd: function(params) {
@@ -48,8 +48,8 @@ Controller.prototype = {
 
   onGroupAddWithTab: function(params) {
     TabManager.moveTabToNewGroup(
-      params.title,
-      params.sourceGroupID,
+      params.title || '',
+      params.sourceGroupId,
       params.tabIndex
     );
   },
@@ -58,7 +58,7 @@ Controller.prototype = {
     var delayedFunction = async () => {
       try {
         await WindowManager.closeGroup(
-          params.groupID,
+          params.groupId,
           false
         );
         controller.refreshUi();
@@ -73,49 +73,50 @@ Controller.prototype = {
     TaskManager.fromUI[TaskManager.CLOSE_REFERENCE].manage(
       params.taskRef,
       delayedFunction,
-      params.groupID,
+      params.groupId,
     );
   },
 
   onGroupRemove: function(params) {
     var delayedFunction = () => {
       WindowManager.removeGroup(
-        params.groupID
+        params.groupId
       );
     };
 
     TaskManager.fromUI[TaskManager.REMOVE_REFERENCE].manage(
       params.taskRef,
       delayedFunction,
-      params.groupID,
+      params.groupId,
     );
   },
 
   onGroupRename: function(params) {
     GroupManager.renameGroup(
-      GroupManager.getGroupIndexFromGroupId(params.groupID),
+      GroupManager.getGroupIndexFromGroupId(params.groupId),
       params.title
     );
   },
 
   onGroupSelect: function(params) {
     WindowManager.selectGroup(
-      params.groupID
+      params.groupId
     );
   },
 
   onTabSelect: function(params) {
     TabManager.selectTab(
       params.tabIndex,
-      params.groupID
+      params.groupId
     );
   },
 
   onMoveTabToGroup: function(params) {
     TabManager.moveTabBetweenGroups(
-      params.sourceGroupID,
-      params.tabIndex,
-      params.targetGroupID
+      params.sourceGroupId,
+      params.sourceTabIndex,
+      params.targetGroupId,
+      params.targetTabIndex,
     );
   },
 

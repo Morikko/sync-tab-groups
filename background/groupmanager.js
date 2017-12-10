@@ -442,29 +442,36 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, cha
 
 }
 
-GroupManager.addTabInGroupId = async function(groupId, tab, changeBrowser = true) {
+GroupManager.addTabInGroupId = async function(groupId, tab, targetIndex = -1) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromGroupId(
       groupId
     );
 
-    if (GroupManager.isGroupIndexInOpenWindow(groupIndex) && changeBrowser) {
-      await TabManager.openListOfTabs(
+    if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
+      const openedTabs = await TabManager.openListOfTabs(
         [tab],
         GroupManager.groups[groupIndex].windowId,
         true,
         false);
+      await TabManager.moveOpenTabToGroup(
+        openedTabs[0],
+        GroupManager.groups[groupIndex].windowId,
+        targetIndex,
+      );
     } else {
-      GroupManager.groups[groupIndex].tabs.push(tab);
+      let realIndex = TabManager.secureIndex(targetIndex, tab,
+        GroupManager.groups[groupIndex].tabs);
+      GroupManager.groups[groupIndex].tabs.splice(realIndex, 0, tab);
     }
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
-    return "GroupManager.addTabFromIndexInGroupId done!";
+    return "GroupManager.addTabInGroupId done!";
 
   } catch (e) {
-    let msg = "GroupManager.addTabFromIndexInGroupId done because group " + groupId + " doesn't exist.";
+    let msg = "GroupManager.addTabInGroupId failed on group " + groupId + " because " + e;
     console.error(msg);
     return msg;
   }
@@ -789,7 +796,7 @@ GroupManager.fillPositions = function(groups) {
         break;
       }
     }
-    if(!hasPos){ // pos missing, decrease all > pos
+    if (!hasPos) { // pos missing, decrease all > pos
       for (let group of groups) { // check pos is present
         if (group.position > pos) {
           group.position--;
