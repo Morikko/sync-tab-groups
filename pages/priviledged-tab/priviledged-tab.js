@@ -61,9 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
           React.DOM.li({
             className: "help_2"
           }, browser.i18n.getMessage("open_url_help_method")),
-          React.DOM.li({
-            className: "help_2"
-          }, browser.i18n.getMessage("open_url_help_method")),
           React.DOM.ol({}, [
             React.DOM.li({}, browser.i18n.getMessage("open_url_help_method_part_1")),
             React.DOM.li({}, browser.i18n.getMessage("open_url_help_method_part_2")),
