@@ -44,10 +44,14 @@ const Tab = React.createClass({
       dragBottomBorder: this.state.dragOnBottom,
     });
 
+    let offsetReduceSize = 25; // Icon
+    offsetReduceSize += this.props.tab.pinned?20:0; // Pinned
+
+    let offsetHoverReduceSize = offsetReduceSize + (this.props.opened?20:40); // Tab controls
+
     return (
       React.DOM.li({
           className: tabClasses,
-          //onDrag: this.handleTabDrag,
           onDragStart: this.handleTabDragStart,
           onDragOver: this.handleTabDragOver,
           onDragLeave: this.handleTabDragLeave,
@@ -59,9 +63,12 @@ const Tab = React.createClass({
           contextMenu: "moveTabSubMenu" + this.props.tab.id,
         },
         this.createMenuMoveTab(),
+        this.props.tab.pinned && React.DOM.i({
+          className: "pinned-icon fa fa-fw fa-thumb-tack",
+        }),
         favicon,
         React.DOM.span({
-            className: "tab-title",
+            className: "tab-title " + "max-width-" + offsetReduceSize + " max-width-hover-" + offsetHoverReduceSize,
             title: this.props.tab.title,
           },
           this.props.tab.title,
@@ -162,22 +169,6 @@ const Tab = React.createClass({
       this.props.tabIndex
     );
   },
-  /* TODO to keep ?
-  handleTabDrag: function(event) {
-    event.stopPropagation();
-
-    let group = this.props.group;
-    let tab = this.props.tab;
-    event.dataTransfer.setData("tab/index", tab.index);
-    event.dataTransfer.setData("tab/group", group.id);
-
-    this.props.onTabDrag(
-      group.id,
-      tab.index
-    );
-
-  },
-  */
 
   handleTabDrop: function(event) {
     this.setState({
@@ -187,24 +178,30 @@ const Tab = React.createClass({
 
     if (event.dataTransfer.getData("type") === "tab") {
       event.stopPropagation();
-    }
-    // TODO
-    return;
-    // -0 to get
-    let sourceGroup = parseInt(event.dataTransfer.getData("tab/group"), 10);
-    let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
 
-    this.props.onGroupDrop(
-      sourceGroup,
-      tabIndex,
-      this.props.group.id
-    );
+      let sourceGroup = parseInt(event.dataTransfer.getData("tab/group"), 10);
+      let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
+
+      let targetTabIndex = -1;
+      if (this.state.dragOnTop) {
+        targetTabIndex = this.props.tabIndex;
+      }
+      if (this.state.dragOnBottom) {
+        targetTabIndex = this.props.tabIndex+1;
+      }
+
+      this.props.onGroupDrop(
+        sourceGroup,
+        tabIndex,
+        this.props.group.id,
+        targetTabIndex,
+      );
+    }
   },
 
   handleTabDragLeave: function(event) {
     event.stopPropagation();
     event.preventDefault();
-    //console.log(this.props.group.index + ".leave");
 
     this.setState({
       dragOnTop: false,
@@ -255,12 +252,5 @@ const Tab = React.createClass({
     event.dataTransfer.setData("type", "tab");
     event.dataTransfer.setData("tab/index", this.props.tabIndex);
     event.dataTransfer.setData("tab/group", group.id);
-
-    /*
-    this.props.onTabDragStart(
-      group.id,
-      tab.index
-    );
-    */
   }
 });

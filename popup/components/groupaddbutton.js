@@ -33,6 +33,7 @@ const GroupAddButton = React.createClass({
     if (this.state.editing) {
       button.push(browser.i18n.getMessage("group_name") + ': ');
       button.push(React.DOM.input({
+        className: "max-width-115",
         autoFocus: true,
         type: "text",
         onChange: (event) => {
@@ -65,7 +66,6 @@ const GroupAddButton = React.createClass({
     } else {
       button.push(
         React.DOM.span({
-
           },
           browser.i18n.getMessage("add_group"))
       );
@@ -163,11 +163,6 @@ const GroupAddButton = React.createClass({
   handleDragLeave: function(event) {
     event.stopPropagation();
     event.preventDefault();
-    /*
-    if (this.state.draggingOverCounter === 1) {
-      event.dataTransfer.dropEffect = "move";
-    }
-    */
     this.setState({
       draggingOverCounter: this.state.draggingOverCounter == 2 ? 1 : 0
     });
@@ -179,9 +174,6 @@ const GroupAddButton = React.createClass({
     this.setState({
       draggingOverCounter: 0,
     });
-
-    //TODO:
-    return;
 
     this.setState({
       draggingOverCounter: 0,

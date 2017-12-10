@@ -120,13 +120,8 @@ li {
 .group-title {
   display: block;
   overflow: hidden;
-  padding-right: 16px;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.group-title-text {
-  padding-right: 16px;
 }
 
 /* Group in window and active tab */
@@ -142,10 +137,6 @@ li {
   font-weight: bold;
 }
 
-.group:hover .group-title {
-  padding-right: 15px;
-}
-
 .group-title input {
   background: transparent;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -153,16 +144,8 @@ li {
   padding: 1px;
 }
 
-.group .group-title input {
-  width: calc(100% - 25px);
-}
-
 .group .group-title:hover input {
   width: 100%;
-}
-
-.addButton .group-title input {
-  width: calc(100% - 85px);
 }
 
 .tab {
@@ -230,20 +213,24 @@ li {
   margin-bottom: 1px;
 }
 
-.tab .tab-title {
-  max-width: calc(100% - 24px);
-}
-
-.tab:hover .tab-title {
-  max-width: calc(100% - 64px);
+.pinned-icon {
+  position: relative;
+  top: -6px;
+  opacity: 0.7;
+  height: 16px;
+  width: 16px;
+  margin-right: 1px;
+  margin-left: 4px;
 }
 
 .tab-icon {
   height: 16px;
   width: 16px;
   margin-right: 1px;
-  margin-bottom: 1px;
+  /*margin-bottom: 1px;*/
   margin-left: 4px;
+  position: relative;
+  top: -4px;
 }
 
 .tab-icon:-moz-broken {
@@ -258,9 +245,9 @@ li {
   }
 }
 
-.expanded .group-title {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  padding-bottom: 5px;
+.tab-list {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding-top: 5px;
 }
 
 .group-controls, .tab-controls, .groupadd-controls {
@@ -325,10 +312,6 @@ li {
   color: #222426;
 }
 
-.group:hover .group-title {
-  padding-right: 90px;
-}
-
 .group .group-controls .group-close, .group .group-controls .group-edit {
   display: none;
 }
@@ -347,4 +330,48 @@ li {
 
 .addButton {
   border-top: #ccc solid 2px;
+}
+
+.max-width-25 {
+  max-width: calc(100% - 25px);
+}
+
+.max-width-35 {
+  max-width: calc(100% - 35px);
+}
+
+.max-width-45 {
+  max-width: calc(100% - 45px);
+}
+
+.max-width-65 {
+  max-width: calc(100% - 65px);
+}
+
+.max-width-85 {
+  max-width: calc(100% - 85px);
+}
+
+.max-width-115 {
+  max-width: calc(100% - 115px);
+}
+
+li:hover > .max-width-hover-45 {
+  max-width: calc(100% - 45px);
+}
+
+li:hover > .max-width-hover-65 {
+  max-width: calc(100% - 65px);
+}
+
+li:hover > .max-width-hover-85 {
+  max-width: calc(100% - 85px);
+}
+
+li:hover > .max-width-hover-115 {
+  max-width: calc(100% - 115px);
+}
+
+.group-title input {
+  width: 100%;
 }

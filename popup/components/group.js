@@ -85,23 +85,25 @@ const Group = React.createClass({
 
     let titleElement;
     if (this.state.editing) {
-      titleElement = React.DOM.input({
-        autoFocus: true,
-        type: "text",
-        defaultValue: Utils.getGroupTitle(this.props.group),
-        onChange: (event) => {
-          this.setState({
-            newTitle: event.target.value
-          });
-        },
-        onClick: (event) => {
-          event.stopPropagation();
-        },
-        onFocus: (e) => {
-          e.target.select();
-        },
-        onKeyUp: this.handleGroupTitleInputKey
-      });
+      let offsetReduceSize =
+        titleElement = React.DOM.input({
+          className: "max-width-25 max-width-hover-85",
+          autoFocus: true,
+          type: "text",
+          defaultValue: Utils.getGroupTitle(this.props.group),
+          onChange: (event) => {
+            this.setState({
+              newTitle: event.target.value
+            });
+          },
+          onClick: (event) => {
+            event.stopPropagation();
+          },
+          onFocus: (e) => {
+            e.target.select();
+          },
+          onKeyUp: this.handleGroupTitleInputKey
+        });
     } else {
       let title = Utils.getGroupTitle(this.props.group);
       if (this.props.showTabsNumber) {
@@ -129,6 +131,13 @@ const Group = React.createClass({
       hiddenBySearch: !this.props.searchGroupResult.atLeastOneResult,
     });
 
+    let offsetSizeReduceHover = 115;
+    if (this.state.editing ||
+      this.state.removing ||
+      this.state.closing) {
+      offsetSizeReduceHover = 85;
+    }
+
     return (
       React.DOM.li({
           className: groupClasses,
@@ -142,7 +151,9 @@ const Group = React.createClass({
           onDrop: this.handleGroupDrop
         },
         React.DOM.span({
-            className: "group-title"
+            className: "group-title " +
+              "max-width-35" +
+              " max-width-hover-" + offsetSizeReduceHover,
           },
           titleElement,
           React.createElement(
@@ -307,17 +318,20 @@ const Group = React.createClass({
       clearTimeout(this.expandedTimeOut);
     }
 
-    // TODO
-    return;
-    // -0 to get
-    let sourceGroup = parseInt(event.dataTransfer.getData("tab/group"), 10);
-    let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
+    if (event.dataTransfer.getData("type") === "tab") {
 
-    this.props.onGroupDrop(
-      sourceGroup,
-      tabIndex,
-      this.props.group.id
-    );
+      let sourceGroup = parseInt(event.dataTransfer.getData("tab/group"), 10);
+      let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
+
+      // Push at the end of the group
+      this.props.onGroupDrop(
+        sourceGroup,
+        tabIndex,
+        this.props.group.id
+      );
+    }
+
+
   },
 
   handleGroupDragOver: function(event) {
