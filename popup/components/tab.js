@@ -33,7 +33,7 @@ const Tab = React.createClass({
     let favicon = React.DOM.img({
       alt: "",
       className: "tab-icon",
-      src: this.props.tab.favIconUrl
+      src: (Utils.isPrivilegedURL(this.props.tab.favIconUrl||"")?"":this.props.tab.favIconUrl)||""
     });
 
     let tabClasses = classNames({

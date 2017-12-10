@@ -233,18 +233,6 @@ li {
   top: -4px;
 }
 
-.tab-icon:-moz-broken {
-  background: url("chrome://mozapps/skin/places/defaultFavicon.png");
-  background-size: contain;
-  display: inline-block;
-}
-
-@media (min-resolution: 1.1dppx) {
-  .tab-icon:-moz-broken {
-    background-image: url("chrome://mozapps/skin/places/defaultFavicon@2x.png");
-  }
-}
-
 .tab-list {
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   padding-top: 5px;
