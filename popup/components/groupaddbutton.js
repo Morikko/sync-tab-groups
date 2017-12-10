@@ -31,7 +31,7 @@ const GroupAddButton = React.createClass({
 
     let button = [];
     if (this.state.editing) {
-      button.push( browser.i18n.getMessage("group_name") + ': ');
+      button.push(browser.i18n.getMessage("group_name") + ': ');
       button.push(React.DOM.input({
         autoFocus: true,
         type: "text",
@@ -143,35 +143,45 @@ const GroupAddButton = React.createClass({
   handleGroupDragOver: function(event) {
     event.stopPropagation();
     event.preventDefault();
+    if (event.dataTransfer.getData("type") === "group") {
+      event.dataTransfer.dropEffect = "none"
+    }
   },
 
   handleDragEnter: function(event) {
     event.stopPropagation();
     event.preventDefault();
-
-    let draggingCounterValue = (this.state.draggingOverCounter == 1) ? 2 : 1;
-    this.setState({
-      draggingOverCounter: draggingCounterValue
-    });
+    if (event.dataTransfer.getData("type") === "tab") {
+      this.setState({
+        draggingOverCounter: (this.state.draggingOverCounter == 1) ? 2 : 1
+      });
+    } else {
+      event.dataTransfer.dropEffect = "none"
+    }
   },
 
   handleDragLeave: function(event) {
     event.stopPropagation();
     event.preventDefault();
-
-    if (this.state.draggingOverCounter == 2) {
-      this.setState({
-        draggingOverCounter: 1
-      });
-    } else if (this.state.draggingOverCounter == 1) {
-      this.setState({
-        draggingOverCounter: 0
-      });
+    /*
+    if (this.state.draggingOverCounter === 1) {
+      event.dataTransfer.dropEffect = "move";
     }
+    */
+    this.setState({
+      draggingOverCounter: this.state.draggingOverCounter == 2 ? 1 : 0
+    });
   },
 
   handleDrop: function(event) {
     event.stopPropagation();
+
+    this.setState({
+      draggingOverCounter: 0,
+    });
+
+    //TODO:
+    return;
 
     this.setState({
       draggingOverCounter: 0,

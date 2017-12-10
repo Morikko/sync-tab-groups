@@ -1,14 +1,18 @@
-.option-section:not([hidden]) ~ .option-section {
-    margin-top: 32px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(12, 12, 13, 0.15);
+.option-section:not([hidden])~.option-section {
+  margin-top: 32px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(12, 12, 13, 0.15);
 }
 
 li, div span {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .option-button, .option-input-text {
-    margin-top: 10px;
-    margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.control {
+  margin-bottom: 5px;
 }

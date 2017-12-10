@@ -66,7 +66,6 @@ li {
 }
 
 .mainbar {
-  /*min-height: 40px;*/
   border-bottom: #ccc solid 2px;
 }
 
@@ -110,8 +109,8 @@ li {
   line-height: 34px;
 }
 
-.mainbar+li, .searchbar+li {
-  margin-top: 3px;
+.mainbar, .searchbar {
+  margin-bottom: 3px;
 }
 
 .group {
@@ -191,21 +190,16 @@ li {
 }
 
 .dragTopBorder {
-  border-top: 2px solid #2aa1c0;
+  border-top: 3px solid #2aa1c0 !important;
 }
 
 .dragBottomBorder {
-  border-bottom: 2px solid #2aa1c0;
-}
-
-.group.dragSourceGroup {
-  border: inherit;
-  background-color: inherit;
+  border-bottom: 3px solid #2aa1c0 !important;
 }
 
 .group.draggingOver, .draggingOver {
   border: 1px dashed #ccc;
-  background-color: rgba(0, 0, 0, 0.14);
+  background-color: #c0e7f1;
 }
 
 .addButton.dragSourceGroup {
@@ -215,7 +209,7 @@ li {
 
 .addButton.draggingOver, .draggingOver {
   border: 1px dashed #ccc;
-  background-color: rgba(0, 0, 0, 0.14);
+  background-color: #c0e7f1;
 }
 
 .tab-list {

@@ -138,7 +138,7 @@ const Group = React.createClass({
           onDragEnter: this.handleGroupDragEnter,
           onDragLeave: this.handleGroupDragLeave,
           //onDrag: this.handleTabDrag,
-          onDragStart: this.handleTabDragStart,
+          onDragStart: this.handleGroupDragStart,
           onDrop: this.handleGroupDrop
         },
         React.DOM.span({
@@ -303,6 +303,10 @@ const Group = React.createClass({
       dragOnBottom: false,
       draggingOverCounter: 0,
     });
+    if (this.expandedTimeOut >= 0) {
+      clearTimeout(this.expandedTimeOut);
+    }
+
     // TODO
     return;
     // -0 to get
@@ -320,7 +324,7 @@ const Group = React.createClass({
     event.stopPropagation();
     event.preventDefault();
     if (event.dataTransfer.getData("type") === "group") {
-      let pos = event.clientY - event.currentTarget.offsetTop;
+      let pos = event.pageY - event.currentTarget.offsetTop;
       let height = event.currentTarget.offsetHeight;
       // Bottom
       if (pos > height / 2 && pos <= height) {
@@ -349,36 +353,42 @@ const Group = React.createClass({
   },
 
   handleGroupDragEnter: function(event) {
-    event.stopPropagation();
     event.preventDefault();
-    //console.log(this.props.group.index + ".enter");
-    if (event.dataTransfer.getData("type") === "tab") {
+
+    if (event.dataTransfer.getData("type") === "tab" &&
+      event.target.className.includes("group")) {
+      event.stopPropagation();
       let sourceGroupId = event.dataTransfer.getData("tab/group");
       let isSourceGroup = sourceGroupId == this.props.group.id;
       this.setState({
-        dragSourceGroup: isSourceGroup
+        dragSourceGroup: isSourceGroup,
+        draggingOverCounter: (this.state.draggingOverCounter == 1) ? 2 : 1,
       });
-
-      this.setState({
-        draggingOverCounter: (this.state.draggingOverCounter == 1) ? 2 : 1
-      });
-
+      if (this.state.draggingOverCounter === 0) {
+        this.expandedTimeOut = setTimeout(() => {
+          this.setState({
+            expanded: true,
+          });
+        }, 1500);
+      }
     }
   },
 
   handleGroupDragLeave: function(event) {
     event.stopPropagation();
     event.preventDefault();
-    //console.log(this.props.group.index + ".leave");
 
     this.setState({
       dragOnTop: false,
       dragOnBottom: false,
       draggingOverCounter: this.state.draggingOverCounter == 2 ? 1 : 0
     });
+    if (this.state.draggingOverCounter === 1 && this.expandedTimeOut >= 0) {
+      clearTimeout(this.expandedTimeOut);
+    }
   },
 
-  handleTabDragStart: function(event) {
+  handleGroupDragStart: function(event) {
     event.stopPropagation();
     // TODO prepare group transfer
     event.dataTransfer.setData("type", "group");

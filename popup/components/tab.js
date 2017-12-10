@@ -22,6 +22,13 @@ const Tab = React.createClass({
     groups: React.PropTypes.object,
   },
 
+  getInitialState: function() {
+    return {
+      dragOnTop: false,
+      dragOnBottom: false,
+    };
+  },
+
   render: function() {
     let favicon = React.DOM.img({
       alt: "",
@@ -33,8 +40,43 @@ const Tab = React.createClass({
       active: this.props.tab.active,
       tab: true,
       hiddenBySearch: !this.props.searchTabResult,
+      dragTopBorder: this.state.dragOnTop,
+      dragBottomBorder: this.state.dragOnBottom,
     });
 
+    return (
+      React.DOM.li({
+          className: tabClasses,
+          //onDrag: this.handleTabDrag,
+          onDragStart: this.handleTabDragStart,
+          onDragOver: this.handleTabDragOver,
+          onDragLeave: this.handleTabDragLeave,
+          onDrop: this.handleTabDrop,
+          onClick: this.handleTabClick,
+          draggable: true,
+          onMouseEnter: this.addMenuItem,
+          onMouseLeave: this.removeMenuItem,
+          contextMenu: "moveTabSubMenu" + this.props.tab.id,
+        },
+        this.createMenuMoveTab(),
+        favicon,
+        React.DOM.span({
+            className: "tab-title",
+            title: this.props.tab.title,
+          },
+          this.props.tab.title,
+          React.createElement(
+            TabControls, {
+              opened: this.props.opened,
+              onCloseTab: this.handleCloseTabClick,
+              onOpenTab: this.handleOpenTabClick,
+            }
+          )),
+      )
+    );
+  },
+
+  createMenuMoveTab: function() {
     let subMenusMoveTab = [];
     for (let g of this.props.groups) {
       subMenusMoveTab.push(React.DOM.menuitem({
@@ -58,33 +100,7 @@ const Tab = React.createClass({
       icon: "/icons/tabspace-active-32.png" // doesn't work
     }, subMenusMoveTab));
 
-    return (
-      React.DOM.li({
-          className: tabClasses,
-          //onDrag: this.handleTabDrag,
-          onDragStart: this.handleTabDragStart,
-          onClick: this.handleTabClick,
-          draggable: true,
-          onMouseEnter: this.addMenuItem,
-          onMouseLeave: this.removeMenuItem,
-          contextMenu: "moveTabSubMenu" + this.props.tab.id,
-        },
-        menuMoveTab,
-        favicon,
-        React.DOM.span({
-            className: "tab-title",
-            title: this.props.tab.title,
-          },
-          this.props.tab.title,
-          React.createElement(
-            TabControls, {
-              opened: this.props.opened,
-              onCloseTab: this.handleCloseTabClick,
-              onOpenTab: this.handleOpenTabClick,
-            }
-          )),
-      )
-    );
+    return menuMoveTab;
   },
 
   handleOnMoveTabNewMenuClick: function(event) {
@@ -162,6 +178,75 @@ const Tab = React.createClass({
 
   },
   */
+
+  handleTabDrop: function(event) {
+    this.setState({
+      dragOnTop: false,
+      dragOnBottom: false,
+    });
+
+    if (event.dataTransfer.getData("type") === "tab") {
+      event.stopPropagation();
+    }
+    // TODO
+    return;
+    // -0 to get
+    let sourceGroup = parseInt(event.dataTransfer.getData("tab/group"), 10);
+    let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
+
+    this.props.onGroupDrop(
+      sourceGroup,
+      tabIndex,
+      this.props.group.id
+    );
+  },
+
+  handleTabDragLeave: function(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    //console.log(this.props.group.index + ".leave");
+
+    this.setState({
+      dragOnTop: false,
+      dragOnBottom: false,
+    });
+  },
+
+  handleTabDragOver: function(event) {
+    event.preventDefault();
+
+    if (event.dataTransfer.getData("type") === "tab") {
+      event.stopPropagation();
+      let pos = event.pageY -
+        event.currentTarget.offsetParent.offsetTop - // Group li
+        event.currentTarget.offsetTop; // Tab li
+      let height = event.currentTarget.offsetHeight;
+      // Bottom
+      if (pos > height / 2 && pos <= height) {
+        if (this.state.dragOnTop || !this.state.dragOnBottom) {
+          this.setState({
+            dragOnTop: false,
+            dragOnBottom: true,
+          });
+        }
+      } else if (pos <= height / 2 && pos > 0) {
+        if (!this.state.dragOnTop || this.state.dragOnBottom) {
+          this.setState({
+            dragOnTop: true,
+            dragOnBottom: false,
+          });
+        }
+      } else {
+        if (this.state.dragOnTop || this.state.dragOnBottom) {
+          this.setState({
+            dragOnTop: false,
+            dragOnBottom: false,
+          });
+        }
+      }
+    }
+  },
+
   handleTabDragStart: function(event) {
     event.stopPropagation();
 
