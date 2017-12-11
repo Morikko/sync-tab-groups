@@ -47,8 +47,8 @@ const Group = React.createClass({
       currentlySearching: this.props.currentlySearching,
       expanded: false,
       opened: openWindow,
-      draggingOverCounter: 0,
-      dragSourceGroup: false,
+      draggingOverCounter: 0, // Many drag enter/leave are fired, know if it is a really entering
+      draggingOver: false,
       dragOnTop: false,
       dragOnBottom: false,
       newTitle: Utils.getGroupTitle(this.props.group)
@@ -121,8 +121,7 @@ const Group = React.createClass({
       editing: this.state.editing,
       closing: this.state.closing,
       removing: this.state.removing,
-      draggingOver: this.state.draggingOverCounter !== 0,
-      dragSourceGroup: this.state.dragSourceGroup,
+      draggingOver: this.state.draggingOver,
       dragTopBorder: this.state.dragOnTop,
       dragBottomBorder: this.state.dragOnBottom,
       expanded: this.state.expanded,
@@ -139,7 +138,7 @@ const Group = React.createClass({
     }
 
     let groupTitle;
-    if ( Utils.DEGUG_MODE ) {
+    if (Utils.DEGUG_MODE) {
       groupTitle = "Group Id: " + this.props.group.id + "\n";
       groupTitle += "Group Index: " + this.props.group.index + "\n";
       groupTitle += "Group Window: " + this.props.group.windowId + "\n";
@@ -318,6 +317,7 @@ const Group = React.createClass({
     this.setState({
       dragOnTop: false,
       dragOnBottom: false,
+      draggingOver: false,
       draggingOverCounter: 0,
     });
     if (this.expandedTimeOut >= 0) {
@@ -343,7 +343,7 @@ const Group = React.createClass({
         position = this.props.group.position;
       }
       if (this.state.dragOnBottom) {
-        position = this.props.group.position+1;
+        position = this.props.group.position + 1;
       }
 
       this.props.onGroupChangePosition(
@@ -383,6 +383,11 @@ const Group = React.createClass({
         }
       }
     }
+    if (event.dataTransfer.getData("type") === "tab") {
+      this.setState({
+        draggingOver: true,
+      });
+    }
   },
 
   handleGroupDragEnter: function(event) {
@@ -391,12 +396,11 @@ const Group = React.createClass({
     if (event.dataTransfer.getData("type") === "tab" &&
       event.target.className.includes("group")) {
       event.stopPropagation();
-      let sourceGroupId = event.dataTransfer.getData("tab/group");
-      let isSourceGroup = sourceGroupId == this.props.group.id;
+
       this.setState({
-        dragSourceGroup: isSourceGroup,
         draggingOverCounter: (this.state.draggingOverCounter == 1) ? 2 : 1,
       });
+
       if (this.state.draggingOverCounter === 0) {
         this.expandedTimeOut = setTimeout(() => {
           this.setState({
@@ -414,6 +418,7 @@ const Group = React.createClass({
     this.setState({
       dragOnTop: false,
       dragOnBottom: false,
+      draggingOver: false,
       draggingOverCounter: this.state.draggingOverCounter == 2 ? 1 : 0
     });
     if (this.state.draggingOverCounter === 1 && this.expandedTimeOut >= 0) {

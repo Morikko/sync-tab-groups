@@ -185,11 +185,6 @@ li {
   background-color: #c0e7f1;
 }
 
-.addButton.dragSourceGroup {
-  border: inherit;
-  background-color: inherit;
-}
-
 .addButton.draggingOver, .draggingOver {
   border: 1px dashed #ccc;
   background-color: #c0e7f1;
