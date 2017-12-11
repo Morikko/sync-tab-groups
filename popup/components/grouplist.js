@@ -25,6 +25,7 @@ const GroupList = React.createClass({
     currentlySearching: React.PropTypes.bool,
     searchGroupResult: React.PropTypes.object,
     onGroupChangePosition: React.PropTypes.func,
+    onChangePinState: React.PropTypes.func,
   },
 
   // Return if an action (close/remove) is pending on groupId
@@ -67,6 +68,7 @@ const GroupList = React.createClass({
           groups: this.props.groups,
           groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
           onGroupChangePosition: this.props.onGroupChangePosition,
+          onChangePinState: this.props.onChangePinState,
         }));
     }
 

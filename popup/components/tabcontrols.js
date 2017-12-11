@@ -10,16 +10,6 @@ const TabControls = React.createClass({
   render: function() {
     let controls = [];
 
-    if (!this.props.opened) {
-      controls.push(
-        React.DOM.i({
-          className: "tab-edit fa fa-fw fa-plus",
-          title: browser.i18n.getMessage("open_tab"),
-          onClick: this.props.onOpenTab
-        })
-      );
-    }
-
     controls.push(
       React.DOM.i({
         title: browser.i18n.getMessage("close_tab"),

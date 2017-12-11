@@ -16,6 +16,7 @@ const TabList = React.createClass({
     onMoveTabToNewGroup: React.PropTypes.func,
     searchTabsResults: React.PropTypes.object,
     groups: React.PropTypes.object,
+    onChangePinState: React.PropTypes.func,
   },
 
   render: function() {
@@ -37,6 +38,7 @@ const TabList = React.createClass({
             onOpenTab: this.props.onOpenTab,
             searchTabResult: this.props.searchTabsResults[index]||[],
             groups: this.props.groups,
+            onChangePinState: this.props.onChangePinState,
           });
         })
       )

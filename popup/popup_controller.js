@@ -107,6 +107,13 @@ const Actions = {
       optionValue: value
     });
   },
+
+  onChangePinState: function(groupId, tabIndex) {
+    Utils.sendMessage("Tab:ChangePin", {
+      groupId: groupId,
+      tabIndex: tabIndex
+    });
+  }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -131,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onOpenTab: Actions.onOpenTab,
         onOptionChange: Actions.onOptionChange,
         onGroupChangePosition: Actions.changeGroupPosition,
+        onChangePinState: Actions.onChangePinState,
       })
     ),
     document.getElementById("content")

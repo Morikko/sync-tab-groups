@@ -70,7 +70,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
  * @param {Array[Tab]} - tabs
  * @return {Number} - nbr of pinned tabs
  */
-TabManager.countPinnedTabs = function( tabs ) {
+TabManager.countPinnedTabs = function(tabs) {
   return tabs.reduce((count, tab) => {
     if (tab.pinned)
       count++;
@@ -189,9 +189,39 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
       }
     }
     return "TabManager.activeTabInWindow done!";
-
   } catch (e) {
-    return "TabManager.activeTabInWindow: tab " + tabIndex + " in window " + windowId + " not found. " + e;
+    let msg = "TabManager.activeTabInWindow: tab " + tabIndex + " in window " + windowId + " not found. " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+TabManager.changePinState = async function(groupId, tabIndex) {
+  try {
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId
+    );
+
+    let tab = GroupManager.groups[groupIndex].tabs[tabIndex];
+
+    if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) { // Open group
+      await browser.tabs.update(
+        tab.id, {
+          pinned: !tab.pinned,
+        }
+      );
+    } else { // Close group
+      tab.pinned = !tab.pinned;
+
+      await GroupManager.removeTabFromIndexInGroupId(groupId, tabIndex);
+      // Last position for pinned or first for normal
+      await GroupManager.addTabInGroupId(groupId, tab, tab.pinned ? -1 : 0);
+    }
+    return "TabManager.changePinState done!";
+  } catch (e) {
+    let msg = "TabManager.changePinState failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 
@@ -209,11 +239,11 @@ TabManager.secureIndex = function(index, tab, tabs) {
   let realIndex = index;
   let pinnedTabsCount = TabManager.countPinnedTabs(tabs);
   if (tab.pinned) { // Pinned tabs are in targeted position and at least just behind last pinned tab
-    realIndex = (realIndex>pinnedTabsCount||realIndex===-1)?pinnedTabsCount:realIndex;
+    realIndex = (realIndex > pinnedTabsCount || realIndex === -1) ? pinnedTabsCount : realIndex;
   } else { // Normal tabs are in targeted position and never before pinned tabs
-    realIndex = (realIndex<pinnedTabsCount&&realIndex>-1)?pinnedTabsCount:realIndex;
+    realIndex = (realIndex < pinnedTabsCount && realIndex > -1) ? pinnedTabsCount : realIndex;
   }
-  realIndex = (realIndex===-1)?tabs.length:realIndex;
+  realIndex = (realIndex === -1) ? tabs.length : realIndex;
   return realIndex;
 }
 
@@ -226,25 +256,32 @@ TabManager.secureIndex = function(index, tab, tabs) {
  * @param {Number} targetIndex
  */
 TabManager.moveOpenTabToGroup = async function(tab, windowId, targetIndex = -1) {
-  const tabs = await browser.tabs.query({
-    windowId: windowId
-  });
-  if(!OptionManager.options.pinnedTab.sync && targetIndex > -1) { // Add offset of unvisible unsync pinned tab
-    targetIndex += TabManager.countPinnedTabs(tabs);
-  }
-  let realIndex = TabManager.secureIndex(targetIndex, tab, tabs);
-
-  if ( tab.windowId === windowId &&
-  realIndex > tab.index) { // The move will first removed the tab before the next place it will appear
-    realIndex--;
-  }
-
-  await browser.tabs.move(
-    tab.id, {
-      index: realIndex,
+  try {
+    const tabs = await browser.tabs.query({
       windowId: windowId
+    });
+    if (!OptionManager.options.pinnedTab.sync && targetIndex > -1) { // Add offset of unvisible unsync pinned tab
+      targetIndex += TabManager.countPinnedTabs(tabs);
     }
-  );
+    let realIndex = TabManager.secureIndex(targetIndex, tab, tabs);
+
+    if (tab.windowId === windowId &&
+      realIndex > tab.index) { // The move will first removed the tab before the next place it will appear
+      realIndex--;
+    }
+
+    await browser.tabs.move(
+      tab.id, {
+        index: realIndex,
+        windowId: windowId
+      }
+    );
+    return "TabManager.moveOpenTabToGroup done!";
+  } catch (e) {
+    let msg = "TabManager.moveOpenTabToGroup failed; " + e;
+    console.error(msg);
+    return msg;
+  }
 }
 
 /**
@@ -274,8 +311,8 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex,
     // Case 1: same group
     if (sourceGroupId === targetGroupId && // Same group
       (sourceTabIndex === targetTabIndex || // Same index
-        targetTabIndex === sourceTabIndex+1 || // After removing source, target are in the same place
-        (sourceTabIndex === GroupManager.groups[sourceGroupIndex].tabs.length-1 && // Still same last index
+        targetTabIndex === sourceTabIndex + 1 || // After removing source, target are in the same place
+        (sourceTabIndex === GroupManager.groups[sourceGroupIndex].tabs.length - 1 && // Still same last index
           targetTabIndex === -1))) { // Nothing to do
       return "TabManager.moveTabBetweenGroups done!";
     }
@@ -288,8 +325,8 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex,
     // Case 3: Open Group -> Closed Groups
     // Case 4: Closed Group -> Open Group
     else {
-      if ( sourceGroupId === targetGroupId  ) { // Update index because tabs will change
-        if (targetTabIndex< sourceTabIndex) sourceTabIndex++;
+      if (sourceGroupId === targetGroupId) { // Update index because tabs will change
+        if (targetTabIndex < sourceTabIndex) sourceTabIndex++;
       }
       await GroupManager.addTabInGroupId(targetGroupId, tab, targetTabIndex);
       await GroupManager.removeTabFromIndexInGroupId(sourceGroupId, sourceTabIndex);

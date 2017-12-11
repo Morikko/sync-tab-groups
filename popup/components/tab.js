@@ -18,6 +18,7 @@ const Tab = React.createClass({
     onOpenTab: React.PropTypes.func,
     searchTabResult: React.PropTypes.string,
     groups: React.PropTypes.object,
+    onChangePinState: React.PropTypes.func,
   },
 
   getInitialState: function() {
@@ -31,7 +32,7 @@ const Tab = React.createClass({
     let favicon = React.DOM.img({
       alt: "",
       className: "tab-icon",
-      src: (Utils.isPrivilegedURL(this.props.tab.favIconUrl||"")?"":this.props.tab.favIconUrl)||""
+      src: (Utils.isPrivilegedURL(this.props.tab.favIconUrl || "") ? "" : this.props.tab.favIconUrl) || ""
     });
 
     let tabClasses = classNames({
@@ -43,9 +44,9 @@ const Tab = React.createClass({
     });
 
     let offsetReduceSize = 25; // Icon
-    offsetReduceSize += this.props.tab.pinned?20:0; // Pinned
-
-    let offsetHoverReduceSize = offsetReduceSize + (this.props.opened?20:40); // Tab controls
+    offsetReduceSize += this.props.tab.pinned ? 20 : 0; // Pinned
+    // Tab controls
+    let offsetHoverReduceSize = offsetReduceSize + 20;
 
     return (
       React.DOM.li({
@@ -60,7 +61,7 @@ const Tab = React.createClass({
           onMouseLeave: this.removeMenuItem,
           contextMenu: "moveTabSubMenu" + this.props.tab.id,
         },
-        this.createMenuMoveTab(),
+        this.createContextMenuTab(),
         this.props.tab.pinned && React.DOM.i({
           className: "pinned-icon fa fa-fw fa-thumb-tack",
         }),
@@ -81,7 +82,7 @@ const Tab = React.createClass({
     );
   },
 
-  createMenuMoveTab: function() {
+  createContextMenuTab: function() {
     let subMenusMoveTab = [];
     let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
     for (let i of sortedIndex) {
@@ -99,15 +100,28 @@ const Tab = React.createClass({
       onClick: this.handleOnMoveTabNewMenuClick
     }, browser.i18n.getMessage("add_group")));
 
-    let menuMoveTab = React.DOM.menu({
-      type: "context",
-      id: "moveTabSubMenu" + this.props.tab.id,
-    }, React.DOM.menu({
-      label: browser.i18n.getMessage("move_tab_group"),
-      icon: "/icons/tabspace-active-32.png" // doesn't work
-    }, subMenusMoveTab));
+    let contextMenuTab = React.DOM.menu({
+        type: "context",
+        id: "moveTabSubMenu" + this.props.tab.id,
+      },
+      React.DOM.menu({
+        label: browser.i18n.getMessage("move_tab_group"),
+        icon: "/icons/tabspace-active-32.png" // doesn't work on menu parent
+      }, subMenusMoveTab),
+      React.DOM.menuitem({
+        type: "context",
+        icon: "/icons/pin-32.png",
+        label: browser.i18n.getMessage(this.props.tab.pinned ? "unpin_tab" : "pin_tab"),
+        onClick: this.handleChangePin,
+      }),
+      React.DOM.menuitem({
+        type: "context",
+        icon: "/icons/plus-32.png",
+        onClick: this.handleOpenTabClick,
+        label: browser.i18n.getMessage("open_tab")
+      }));
 
-    return menuMoveTab;
+    return contextMenuTab;
   },
 
   handleOnMoveTabNewMenuClick: function(event) {
@@ -158,6 +172,16 @@ const Tab = React.createClass({
     );
   },
 
+  handleChangePin: function(event) {
+    event.stopPropagation();
+
+    let tab = this.props.tab;
+    this.props.onChangePinState(
+      this.props.group.id,
+      this.props.tabIndex,
+    );
+  },
+
   handleCloseTabClick: function(event) {
     event.stopPropagation();
 
@@ -187,7 +211,7 @@ const Tab = React.createClass({
         targetTabIndex = this.props.tabIndex;
       }
       if (this.state.dragOnBottom) {
-        targetTabIndex = this.props.tabIndex+1;
+        targetTabIndex = this.props.tabIndex + 1;
       }
 
       this.props.onGroupDrop(

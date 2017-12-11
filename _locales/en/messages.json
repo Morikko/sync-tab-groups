@@ -406,6 +406,21 @@
 
   "label_sort_accessed": {
     "message": "Last Accessed",
-    "description": ""
+    "description": "Name of sorting in select in option page"
+  },
+
+  "unpin_tab": {
+    "message": "Unpin this tab",
+    "description": "In context menu on tab in menu"
+  },
+
+  "pin_tab": {
+    "message": "Pin this tab",
+    "description": "In context menu on tab in menu"
+  },
+
+  "open_group": {
+    "message": "Switch to this group in the current window.",
+    "description": "Hover help for open group click"
   }
 }

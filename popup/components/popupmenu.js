@@ -23,6 +23,7 @@ const PopupMenu = (() => {
       onOpenTab: React.PropTypes.func,
       onOptionChange: React.PropTypes.func,
       onGroupChangePosition: React.PropTypes.func,
+      onChangePinState: React.PropTypes.func,
     },
 
     getInitialState: function() {
@@ -98,6 +99,7 @@ const PopupMenu = (() => {
           searchGroupsResults: this.state.searchGroupsResults,
           currentlySearching: this.state.searchfilter.length > 0,
           onGroupChangePosition: this.props.onGroupChangePosition,
+          onChangePinState: this.props.onChangePinState,
         }),
         React.createElement(
           GroupAddButton, {

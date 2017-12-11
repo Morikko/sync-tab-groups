@@ -24,6 +24,7 @@ const Group = React.createClass({
     showTabsNumber: React.PropTypes.bool,
     groups: React.PropTypes.object,
     onGroupChangePosition: React.PropTypes.func,
+    onChangePinState: React.PropTypes.func,
   },
 
   getClosingState: function(openWindow, props) {
@@ -137,6 +138,16 @@ const Group = React.createClass({
       offsetSizeReduceHover = 85;
     }
 
+    let groupTitle;
+    if ( Utils.DEGUG_MODE ) {
+      groupTitle = "Group Id: " + this.props.group.id + "\n";
+      groupTitle += "Group Index: " + this.props.group.index + "\n";
+      groupTitle += "Group Window: " + this.props.group.windowId + "\n";
+      groupTitle += "Group Position: " + this.props.group.position;
+    } else {
+      groupTitle = browser.i18n.getMessage("open_group");
+    }
+
     return (
       React.DOM.li({
           className: groupClasses,
@@ -145,9 +156,9 @@ const Group = React.createClass({
           onDragOver: this.handleGroupDragOver,
           onDragEnter: this.handleGroupDragEnter,
           onDragLeave: this.handleGroupDragLeave,
-          //onDrag: this.handleTabDrag,
           onDragStart: this.handleGroupDragStart,
-          onDrop: this.handleGroupDrop
+          onDrop: this.handleGroupDrop,
+          title: groupTitle,
         },
         React.DOM.span({
             className: "group-title " +
@@ -185,6 +196,7 @@ const Group = React.createClass({
             onOpenTab: this.props.onOpenTab,
             searchTabsResults: this.props.searchGroupResult.searchTabsResults,
             groups: this.props.groups,
+            onChangePinState: this.props.onChangePinState,
           }
         )
       )

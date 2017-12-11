@@ -2,7 +2,12 @@
  * Useful code shared in all the apps UI and background
  */
 var Utils = Utils || {};
-Utils.UTILS_SHOW_MESSAGES = false;
+/**
+ * Show GroupId, Index, WindowId, Position in as group hover in menu
+ * Show messages
+ */
+Utils.DEGUG_MODE = false;
+Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
 
 var TaskManager = TaskManager || {};
 TaskManager.ASK = "ASK";

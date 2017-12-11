@@ -208,6 +208,13 @@ Controller.prototype = {
       params.position
     );
   },
+
+  onTabChangePin: function(params) {
+    TabManager.changePinState(
+      params.groupId,
+      params.tabIndex,
+    );
+  },
 };
 
 // Event from: popup
@@ -261,6 +268,9 @@ var popupMessenger = function(message) {
       break;
     case "Tab:Close":
       controller.onTabClose(message.params);
+      break;
+    case "Tab:ChangePin":
+      controller.onTabChangePin(message.params);
       break;
   }
 }
