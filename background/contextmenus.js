@@ -40,7 +40,8 @@ ContextMenu.createMoveTabMenu = async function() {
     windowTypes: ['normal']
   });
   let groups = GroupManager.getCopy();
-  for (let i = 0; i < groups.length; i++) {
+  let sortedIndex = GroupManager.getIndexSortByPosition(groups);
+  for (let i of sortedIndex) {
     ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
     await browser.contextMenus.create({
       id: ContextMenu.MoveTabMenu_ID + groups[i].id,
@@ -78,7 +79,7 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "icons/upload-32.png"
     },
   });
-  /* TODO: not working can't ask file
+  /* TODO: not working can't ask file, wait select group in popup window with filter
   browser.contextMenus.create({
     id: ContextMenu.SpecialActionMenu_ID + "import_groups",
     title: browser.i18n.getMessage("import_groups"),

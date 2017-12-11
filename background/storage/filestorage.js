@@ -5,7 +5,6 @@ var StorageManager = StorageManager || {};
 StorageManager.File = StorageManager.File || {};
 
 StorageManager.File.exportGroups = function(groups) {
-  // TODO remove it in all app
   // Clean tabs
   for (let g of groups) {
     for (let it = 0; it < g.tabs.length; it++) {

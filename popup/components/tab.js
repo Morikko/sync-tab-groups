@@ -83,7 +83,9 @@ const Tab = React.createClass({
 
   createMenuMoveTab: function() {
     let subMenusMoveTab = [];
-    for (let g of this.props.groups) {
+    let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
+    for (let i of sortedIndex) {
+      let g = this.props.groups[i];
       subMenusMoveTab.push(React.DOM.menuitem({
         disabled: g.id === this.props.group.id,
         className: "?groupId=" + g.id,

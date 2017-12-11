@@ -2,6 +2,7 @@
  * Useful code shared in all the apps UI and background
  */
 var Utils = Utils || {};
+Utils.UTILS_SHOW_MESSAGES = false;
 
 var TaskManager = TaskManager || {};
 TaskManager.ASK = "ASK";
@@ -52,7 +53,6 @@ var GroupManager = GroupManager || {};
 
 /**
  * Return the index of the groups sorted by the display position
- * TODO: handle case if position = -1
  * @param {Array[Group]} groups
  * @return {Array[Number]} sortedIndex
  */
@@ -61,6 +61,14 @@ GroupManager.getIndexSortByPosition = function(groups) {
   for (let pos = 0; pos < groups.length; pos++) {
     for (let i = 0; i < groups.length; i++) {
       if (groups[i].position === pos) {
+        sortedIndex.push(groups[i].index);
+      }
+    }
+  }
+  // Add them in the order of the array at the end
+  if (sortedIndex.length < groups.length) { // Wrong position
+    for (let i = 0; i < groups.length; i++) {
+      if (!sortedIndex[groups[i].index]) {
         sortedIndex.push(groups[i].index);
       }
     }
@@ -252,26 +260,7 @@ Utils.sendMessage = function(_task, _params) {
  * @return {String} Group title
  */
 Utils.getGroupTitle = function(group) {
-    return group.title || (
-      browser.i18n.getMessage("unnamed_group") + " " + group.id
-    );
-  },
-
-  /* Since the current API doesn't provide an alternative, return always false.
-   * TODO: find workaround
-   */
-  Utils.isDarkTheme = function() {
-    return false;
-  }
-
-/**
- * TODO: Need to fix isDarkTheme first with new API
- * Doesn't work any more, always return dark
- * Used to switch stuff by the current design.
- *
- * @param {Object} object - object with .light and .dark
- * @returns {Object} input.dark if a dark theme is used, .light otherwise
- */
-Utils.themeSwitch = function(object) {
-  return Utils.isDarkTheme() ? object.dark : object.light;
+  return group.title || (
+    browser.i18n.getMessage("unnamed_group") + " " + group.id
+  );
 };

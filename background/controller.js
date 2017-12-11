@@ -212,7 +212,9 @@ Controller.prototype = {
 
 // Event from: popup
 var popupMessenger = function(message) {
-  console.log(message);
+  if (Utils.UTILS_SHOW_MESSAGES) {
+    console.log(message);
+  }
   switch (message.task) {
     case "Group:Add":
       controller.onGroupAdd(message.params);
@@ -265,7 +267,9 @@ var popupMessenger = function(message) {
 
 // Event from: option
 var optionMessenger = function(message) {
-  console.log(message);
+  if (Utils.UTILS_SHOW_MESSAGES) {
+    console.log(message);
+  }
   switch (message.task) {
     case "Option:Ask":
       controller.refreshOptionsUI();

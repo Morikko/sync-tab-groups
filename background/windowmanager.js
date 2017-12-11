@@ -266,9 +266,12 @@ WindowManager.selectNextGroup = async function(direction = 1, open = false, refG
 
 
     // Search next unopened group
-    let targetGroupIndex = sourceGroupIndex;
-    for (let i = 0; i < GroupManager.groups.length - 1; i++) {
-      targetGroupIndex = (targetGroupIndex + GroupManager.groups.length + direction) % GroupManager.groups.length;
+    let roundIndex = sourceGroupIndex;
+    let sortedIndex = GroupManager.getIndexSortByPosition(GroupManager.groups);
+    for (let i = 0; i < sortedIndex.length - 1; i++) {
+      roundIndex = (roundIndex + sortedIndex.length + direction) % sortedIndex.length;
+
+      let targetGroupIndex = sortedIndex[roundIndex];
 
       if (GroupManager.groups[targetGroupIndex].windowId === browser.windows.WINDOW_ID_NONE &&
         !open) {
