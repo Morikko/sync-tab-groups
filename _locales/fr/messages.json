@@ -377,5 +377,50 @@
   "bookmarks_weak_help": {
     "message": "La sauvegarde automatique dans les favoris est instable. Je recommende de ne pas l'utiliser tant que je ne l'aurais pas corrigé",
     "description": ""
+  },
+
+  "label_select_sorting_type": {
+    "message": "Choisir la façon de trier les groupes",
+    "description": ""
+  },
+
+  "label_sort_custom": {
+    "message": "Personaliser",
+    "description": ""
+  },
+
+  "label_sort_old": {
+    "message": "Plus vieux en premier",
+    "description": ""
+  },
+
+  "label_sort_recent": {
+    "message": "Plus récent en premier",
+    "description": ""
+  },
+
+  "label_sort_alphabetical": {
+    "message": "Alphabétique",
+    "description": ""
+  },
+
+  "label_sort_accessed": {
+    "message": "Dernier accès",
+    "description": "Name of sorting in select in option page"
+  },
+
+  "unpin_tab": {
+    "message": "Relacher cet onglet",
+    "description": "In context menu on tab in menu"
+  },
+
+  "pin_tab": {
+    "message": "Epingler cet onglet",
+    "description": "In context menu on tab in menu"
+  },
+
+  "open_group": {
+    "message": "Cliquer pour changer vers ce groupe dans la fenêtre courante.",
+    "description": "Hover help for open group click"
   }
 }

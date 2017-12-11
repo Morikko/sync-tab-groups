@@ -11,13 +11,14 @@ Sync Tab Groups are an easy way to organize your current tabs depending on a top
  - Share your groups with other people or devices
  - Private window can have a specific behavior
  - Pinned tabs can be included in groups or not
- - Save your groups as bookmarks for sharing them among all your devices
+ - Save your groups as bookmarks for sharing them among all your devices (The tool is deprecated because of the instability. I will work on it soon.)
 
 
 # A simple and powerful interface
 
  - See all your groups and tabs
  - Manage them and switch to them
+ - Sort your groups and tabs
  - Many settings to make the extension behaves like you want it
  - Usage guide: [see the screenshots](https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/)
  - Many shortcuts

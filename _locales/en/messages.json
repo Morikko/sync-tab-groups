@@ -420,7 +420,7 @@
   },
 
   "open_group": {
-    "message": "Switch to this group in the current window.",
+    "message": "Click to switch to this group in the current window.",
     "description": "Hover help for open group click"
   }
 }
