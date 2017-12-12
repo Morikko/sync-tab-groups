@@ -12,7 +12,6 @@ GroupManager.EVENT_PREPARE = 'groups-prepare';
 // Done after a group modification when groups are safe
 GroupManager.EVENT_CHANGE = 'groups-change';
 GroupManager.eventlistener = new EventListener();
-
 GroupManager.repeatedtask = new TaskManager.RepeatedTask(1000);
 
 GroupManager.Group = function(id,
@@ -28,7 +27,7 @@ GroupManager.Group = function(id,
   this.lastAccessed = 0;
 }
 
-GroupManager.groups = [];
+//GroupManager.groups = [];
 
 /**
  * Return the group id displayed in the window with windowId
@@ -685,11 +684,13 @@ GroupManager.init = async function() {
     // 1. Set the data
     const groups = await StorageManager.Local.loadGroups();
     GroupManager.groups = GroupManager.check_integrity(groups);
-    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
     GroupManager.resetAssociatedWindows();
 
     // 2. Integrate open windows
     await GroupManager.integrateAllOpenedWindows();
+
+    GroupManager.initEventListener();
+    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
     return "GroupManager.init done";
   } catch (e) {
     return "GroupManager.init failed: " + e;
@@ -715,29 +716,31 @@ GroupManager.integrateAllOpenedWindows = async function() {
  */
 GroupManager.store = function() {
   StorageManager.Local.saveGroups(GroupManager.getCopy());
+  /* TODO - end of bookmark auto-save
   if (OptionManager.options.bookmarks.sync) {
     StorageManager.Bookmark.backUp(GroupManager.getCopy());
   }
+  */
 }
 
-//
-GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
-  () => {
-    GroupManager.repeatedtask.add(
-      () => {
-        GroupManager.store();
-      }
-    )
-  });
+GroupManager.initEventListener = function () {
+  GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
+    () => {
+      GroupManager.repeatedtask.add(
+        () => {
+          GroupManager.store();
+        }
+      )
+    });
 
-// Done after a group modification to assure integrity
-GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
-  () => {
-    GroupManager.setIndex(GroupManager.groups);
-    GroupManager.setPosition(GroupManager.groups, OptionManager.options.groups.sortingType);
-    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
-  });
-
+  // Done after a group modification to assure integrity
+  GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
+    () => {
+      GroupManager.setIndex(GroupManager.groups);
+      GroupManager.setPosition(GroupManager.groups, OptionManager.options.groups.sortingType);
+      GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+    });
+};
 
 /**
  * Sort the groups so the last accessed group first

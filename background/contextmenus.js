@@ -90,6 +90,7 @@ ContextMenu.createSpecialActionMenu = function() {
     },
   });
   */
+  /*  TODO: end of bookmark auto-save
   browser.contextMenus.create({
     id: ContextMenu.SpecialActionMenu_ID + "save_bookmarks_groups",
     title: browser.i18n.getMessage("save_bookmarks_groups"),
@@ -99,7 +100,7 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "icons/star-32.png"
     },
   });
-
+  */
   browser.contextMenus.create({
     id: ContextMenu.SpecialActionMenu_ID + "open_preferences",
     title: browser.i18n.getMessage("open_preferences"),
@@ -141,7 +142,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
     let order = info.menuItemId.substring(ContextMenu.SpecialActionMenu_ID.length, info.menuItemId.length);
     switch (order) {
       case "export_groups":
-        controller.onExportGroups();
+        Controller.onExportGroups();
         break;
       case "import_groups":
         let fileInput = document.createElement('input');
@@ -150,7 +151,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         fileInput.acceptCharset = 'utf-8';
         fileInput.onchange = () => {
           StorageManager.File.readJsonFile(fileInput.files[0]).then((jsonContent) => {
-            controller.onImportGroups({
+            Controller.onImportGroups({
               content_file: jsonContent
             });
           });
@@ -158,7 +159,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         fileInput.click();
         break;
       case "save_bookmarks_groups":
-        controller.onBookmarkSave();
+        Controller.onBookmarkSave();
         break;
       case "open_preferences":
         browser.runtime.openOptionsPage();

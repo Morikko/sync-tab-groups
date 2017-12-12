@@ -9,7 +9,7 @@ var OptionManager = OptionManager || {};
 
 OptionManager.EVENT_CHANGE = 'options-change';
 
-OptionManager.options = OptionManager.TEMPLATE();
+//OptionManager.options = OptionManager.TEMPLATE();
 OptionManager.eventlistener = new EventListener();
 
 OptionManager.repeatedtask = new TaskManager.RepeatedTask(1000);

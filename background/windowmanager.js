@@ -394,7 +394,7 @@ WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
       }
     );
   } catch (e) {
-    let msg = "WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e;
+    let msg = "WindowManager.setWindowPrefixGroupTitle failed on New Window with window " + windowId + " and " + e;
     console.error(msg);
     return msg;
   }

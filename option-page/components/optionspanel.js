@@ -21,11 +21,13 @@ const OptionsPanel = (() => {
           options: this.props.options.pinnedTab,
           onOptionChange: this.props.onOptionChange,
         }),
+        /* TODO: end of bookmark auto-save
         React.createElement(BookmarkSection, {
           options: this.props.options.bookmarks,
           onOptionChange: this.props.onOptionChange,
           onBackUpClick: this.props.onBackUpClick
         }),
+        */
         React.createElement(FileSection, {
           options: this.props.options.bookmarks,
           onOptionChange: this.props.onOptionChange,
