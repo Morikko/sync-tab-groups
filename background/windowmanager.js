@@ -264,10 +264,9 @@ WindowManager.selectNextGroup = async function(direction = 1, open = false, refG
       );
     }
 
-
     // Search next unopened group
-    let roundIndex = sourceGroupIndex;
     let sortedIndex = GroupManager.getIndexSortByPosition(GroupManager.groups);
+    let roundIndex = sortedIndex.indexOf(sourceGroupIndex);
     for (let i = 0; i < sortedIndex.length - 1; i++) {
       roundIndex = (roundIndex + sortedIndex.length + direction) % sortedIndex.length;
 

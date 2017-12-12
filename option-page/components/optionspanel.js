@@ -9,6 +9,7 @@ const OptionsPanel = (() => {
 
     render: function() {
       return React.DOM.div({}, [
+        React.createElement(ReleaseNotesSection, {}),
         React.createElement(GroupSection, {
           options: this.props.options.groups,
           onOptionChange: this.props.onOptionChange,
