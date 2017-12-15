@@ -48,6 +48,17 @@ const Tab = React.createClass({
     // Tab controls
     let offsetHoverReduceSize = offsetReduceSize + 20;
 
+    let tabTitle;
+    if (Utils.DEGUG_MODE) {
+      tabTitle = "Tab Id: " + this.props.tab.id + "\n";
+      tabTitle += "Tab Url: " + this.props.tab.url + "\n";
+      tabTitle += "Tab Title: " + this.props.tab.title + "\n";
+      tabTitle += "Tab FavIconUrl: " + this.props.tab.favIconUrl + "\n";
+      tabTitle += "Tab Index: " + this.props.tab.index;
+    } else {
+      tabTitle = this.props.tab.title;
+    }
+
     return (
       React.DOM.li({
           className: tabClasses,
@@ -68,7 +79,7 @@ const Tab = React.createClass({
         favicon,
         React.DOM.span({
             className: "tab-title " + "max-width-" + offsetReduceSize + " max-width-hover-" + offsetHoverReduceSize,
-            title: this.props.tab.title,
+            title: tabTitle,
           },
           this.props.tab.title,
           React.createElement(
