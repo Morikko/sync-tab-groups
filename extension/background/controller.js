@@ -337,7 +337,16 @@ Controller.initDataEventListener = function() {
 
 /**** Event about tabs *****/
 Controller.initTabsEventListener = function() {
-  browser.tabs.onActivated.addListener((activeInfo) => {
+  browser.tabs.onActivated.addListener(async (activeInfo) => {
+    let tab = await browser.tabs.get(activeInfo.tabId);
+    if ( tab.url.includes("priviledged-tab.html") && tab.url.includes("&redirect=true") ) {
+      await browser.tabs.update(
+        tab.id,
+        {
+          url: decodeURIComponent(Utils.getParameterByName('url', tab.url))
+        }
+      );
+    }
     TabManager.updateTabsInGroup(activeInfo.windowId);
   });
   browser.tabs.onCreated.addListener((tab) => {
@@ -449,6 +458,20 @@ Controller.initCommandsEventListener = function() {
     }
   });
 };
+
+browser.runtime.onSuspend.addListener(async () => {
+  let tabs = await browser.tabs.query({});
+  for (let tab of tabs ) {
+    if ( tab.url.includes("priviledged-tab.html") && tab.url.includes("&redirect=true") ) {
+      await browser.tabs.update(
+        tab.id,
+        {
+          url: decodeURIComponent(Utils.getParameterByName('url', tab.url))
+        }
+      );
+    }
+  }
+});
 
 browser.runtime.onInstalled.addListener(() => {
   browser.notifications.create({

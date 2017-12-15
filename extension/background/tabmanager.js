@@ -146,6 +146,12 @@ TabManager.openListOfTabs = async function(
           "title=" + tab.title.replace(' ', '+') +
           "&url=" + tab.url +
           "&favIconUrl=" + tab.favIconUrl;
+      } else {
+        url = "/pages/priviledged-tab/priviledged-tab.html?" +
+          "title=" + encodeURIComponent(tab.title) +
+          "&url=" + encodeURIComponent(tab.url) +
+          "&favIconUrl=" + encodeURIComponent(tab.favIconUrl) +
+          "&redirect=true";
       }
       // Create a tab to tab.url or to newtab
       let tabCreationProperties = {
