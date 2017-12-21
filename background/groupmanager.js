@@ -316,6 +316,7 @@ GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
 
     GroupManager.groups[groupIndex].windowId = windowId;
     await WindowManager.associateGroupIdToWindow(windowId, groupId);
+    await TabManager.updateTabsInGroup(windowId);
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
@@ -682,7 +683,7 @@ GroupManager.createUniqueGroupId = function() {
 GroupManager.init = async function() {
   try {
     // 1. Set the data
-    const groups = await StorageManager.Local.loadGroups();
+    let groups = await StorageManager.Local.loadGroups();
     GroupManager.groups = GroupManager.check_integrity(groups);
     GroupManager.resetAssociatedWindows();
 
@@ -701,9 +702,7 @@ GroupManager.init = async function() {
  * Integrate all windows
  */
 GroupManager.integrateAllOpenedWindows = async function() {
-  const windowInfoArray = await browser.windows.getAll({
-    windowTypes: ['normal']
-  });
+  const windowInfoArray = await browser.windows.getAll();
   for (let windowInfo of windowInfoArray) {
     await WindowManager.integrateWindow(windowInfo.id);
   }

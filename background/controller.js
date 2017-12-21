@@ -448,7 +448,7 @@ browser.runtime.onInstalled.addListener(() => {
     "message":
       "  * Fix: More secure initialization of the extension\n" +
       "  * Remove: Bookmark auto-save until I will have fix it\n" +
-      "  * Notes: Exports manually your groups regularly from the preferences or with a right clik on the toolbar icon. So, you will keep a save.\n" +
+      "  * Notes: Exports manually your groups regularly from the preferences or with a right click on the toolbar icon. So, you will keep a save.\n" +
       "Thanks for your feedbacks :)",
     "eventTime": 10000000,
   });
