@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async() => {
 
   document.title = "Shortcuts List for Sync Tab Groups";
   // Set tab icon
-  Utils.setIcon("../../icons/tabspace-active-64.png");
+  Utils.setIcon("../../share/icons/tabspace-active-64.png");
 
   let list_commands = await browser.commands.getAll();
 
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async() => {
         className: "title"
       }, [
         React.DOM.img({
-          src: "../../icons/tabspace-active-64.png",
+          src: "../../share/icons/tabspace-active-64.png",
           alt: "Sync Tab Groups icon",
           width: "64",
           height: "64"

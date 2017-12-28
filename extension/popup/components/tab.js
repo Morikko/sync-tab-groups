@@ -117,17 +117,17 @@ const Tab = React.createClass({
       },
       React.DOM.menu({
         label: browser.i18n.getMessage("move_tab_group"),
-        icon: "/icons/tabspace-active-32.png" // doesn't work on menu parent
+        icon: "/share/icons/tabspace-active-32.png" // doesn't work on menu parent
       }, subMenusMoveTab),
       React.DOM.menuitem({
         type: "context",
-        icon: "/icons/pin-32.png",
+        icon: "/share/icons/pin-32.png",
         label: browser.i18n.getMessage(this.props.tab.pinned ? "unpin_tab" : "pin_tab"),
         onClick: this.handleChangePin,
       }),
       React.DOM.menuitem({
         type: "context",
-        icon: "/icons/plus-32.png",
+        icon: "/share/icons/plus-32.png",
         onClick: this.handleOpenTabClick,
         label: browser.i18n.getMessage("open_tab")
       }));

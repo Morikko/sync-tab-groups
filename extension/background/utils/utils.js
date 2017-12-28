@@ -6,7 +6,7 @@ var Utils = Utils || {};
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
  */
-Utils.DEGUG_MODE = false;
+Utils.DEGUG_MODE = true;
 Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
 
 var TaskManager = TaskManager || {};
@@ -117,15 +117,15 @@ Utils.setBrowserActionIcon = function(icon_type) {
   if (icon_type === true) { // White
     browser.browserAction.setIcon({
       path: {
-        16: "icons/tabspace-light-16.png",
-        32: "icons/tabspace-light-32.png"
+        16: "/share/icons/tabspace-light-16.png",
+        32: "/share/icons/tabspace-light-32.png"
       }
     });
   } else if (icon_type === false) { // Black
     browser.browserAction.setIcon({
       path: {
-        16: "icons/tabspace-16.png",
-        32: "icons/tabspace-32.png"
+        16: "/share/icons/tabspace-16.png",
+        32: "/share/icons/tabspace-32.png"
       }
     });
   }

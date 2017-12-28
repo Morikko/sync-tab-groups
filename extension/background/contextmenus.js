@@ -23,8 +23,8 @@ ContextMenu.createMoveTabMenu = async function() {
     title: browser.i18n.getMessage("move_tab_group"),
     contexts: contexts,
     icons: {
-      "64": "icons/tabspace-active-64.png",
-      "32": "icons/tabspace-active-32.png"
+      "64": "/share/icons/tabspace-active-64.png",
+      "32": "/share/icons/tabspace-active-32.png"
     },
   });
 
@@ -75,8 +75,8 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("export_groups"),
     contexts: ['browser_action'],
     icons: {
-      "64": "icons/upload-64.png",
-      "32": "icons/upload-32.png"
+      "64": "/share/icons/upload-64.png",
+      "32": "/share/icons/upload-32.png"
     },
   });
   /* TODO: not working can't ask file, wait select group in popup window with filter
@@ -85,8 +85,8 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("import_groups"),
     contexts: ['browser_action'],
     icons: {
-      "64": "icons/download-64.png",
-      "32": "icons/download-32.png"
+      "64": "/share/icons/download-64.png",
+      "32": "/share/icons/download-32.png"
     },
   });
   */
@@ -96,8 +96,8 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("save_bookmarks_groups"),
     contexts: ['browser_action'],
     icons: {
-      "64": "icons/star-64.png",
-      "32": "icons/star-32.png"
+      "64": "/share/icons/star-64.png",
+      "32": "/share/icons/star-32.png"
     },
   });
   */
@@ -106,8 +106,8 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("open_preferences"),
     contexts: ['browser_action'],
     icons: {
-      "64": "icons/gear-64.png",
-      "32": "icons/gear-32.png"
+      "64": "/share/icons/gear-64.png",
+      "32": "/share/icons/gear-32.png"
     },
   });
 
@@ -116,8 +116,8 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("open_shortcut_list"),
     contexts: ['browser_action'],
     icons: {
-      "64": "icons/keyboard-64.png",
-      "32": "icons/keyboard-32.png"
+      "64": "/share/icons/keyboard-64.png",
+      "32": "/share/icons/keyboard-32.png"
     },
   });
 }
@@ -166,7 +166,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         break;
       case "open_shortcut_list":
         browser.tabs.create({
-          url: "/pages/shortcut-help/shortcut-help.html",
+          url: "/tabpages/shortcut-help/shortcut-help.html",
           active: true,
         });
         break;

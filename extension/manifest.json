@@ -1,0 +1,104 @@
+{
+  "manifest_version": 2,
+  "version": "0.4.2",
+
+  "name": "Sync Tab Groups",
+  "description": "__MSG_extension_description__",
+  "homepage_url": "https://github.com/Morikko/sync-tab-groups",
+  "icons": {
+    "64": "/share/icons/tabspace-active-64.png",
+    "32": "/share/icons/tabspace-active-32.png"
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "sync-tab-groups@eric.masseran",
+      "strict_min_version": "57.0"
+    }
+  },
+
+  "permissions": [
+    "bookmarks", "tabs", "storage", "sessions", "downloads", "notifications", "contextMenus"
+  ],
+
+  "background": {
+    "scripts": [
+      "background/utils/utils.js",
+      "background/utils/delayedtaskmanager.js",
+      "background/utils/repeatedtaskmanager.js",
+      "background/utils/eventlistener.js",
+      "background/storage/bookmarkstorage.js",
+      "background/storage/localstorage.js",
+      "background/storage/filestorage.js",
+      "background/optionmanager.js",
+      "background/groupmanager.js",
+      "background/windowmanager.js",
+      "background/tabmanager.js",
+      "background/contextmenus.js",
+      "background/controller.js"
+    ]
+  },
+
+  "default_locale": "en",
+
+  "browser_action": {
+    "default_icon": "/share/icons/tabspace-32.png",
+    "default_title": "Sync Tab Groups",
+    "default_popup": "popup/popup.html",
+    "browser_style": true
+  },
+
+  "options_ui": {
+    "page": "/optionpages/option-page.html",
+    "browser_style": true
+  },
+
+  "developer": {
+    "name": "Eric Masseran",
+    "url": "https://github.com/Morikko"
+  },
+
+  "commands": {
+    "swtich_next_group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Right"
+      }
+    },
+
+    "swtich_previous_group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Left"
+      }
+    },
+
+    "create_group_swtich": {
+      "suggested_key": {
+        "default": "Alt+Shift+Insert"
+      }
+    },
+
+    "focus_next_group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Up"
+      }
+    },
+
+    "focus_previous_group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Down"
+      }
+    },
+
+    "remove_group_swtich": {
+      "suggested_key": {
+        "default": "Alt+Shift+Delete"
+      }
+    },
+
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+Space"
+      }
+    }
+  }
+}

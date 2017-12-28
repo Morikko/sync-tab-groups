@@ -169,7 +169,7 @@ WindowManager.switchGroup = async function(newGroupId) {
       )) {
       browser.notifications.create({
         "type": "basic",
-        "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+        "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
         "title": "Can't change Group now",
         "message": "Reason: the current window has not finished to switch to a group.",
         "eventTime": 4000,
@@ -290,7 +290,7 @@ WindowManager.selectNextGroup = async function(direction = 1, open = false, refG
       let msg = "Reason: there is no other " + (open > 0 ? "opened" : "closed") + " groups";
       browser.notifications.create({
         "type": "basic",
-        "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+        "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
         "title": title,
         "message": msg,
         "eventTime": 4000,
@@ -323,7 +323,7 @@ WindowManager.removeGroup = async function(groupId = -1) {
       if (!GroupManager.isWindowAlreadyRegistered(currentWindow.id)) { // From sync window
         browser.notifications.create({
           "type": "basic",
-          "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+          "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
           "title": "No group removed.",
           "message": "Reason: there is no group in your current window",
           "eventTime": 4000,

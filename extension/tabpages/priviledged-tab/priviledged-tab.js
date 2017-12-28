@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         className: "title"
       }, [
         React.DOM.img({
-          src: "../../icons/tabspace-active-64.png",
+          src: "../../share/icons/tabspace-active-64.png",
           alt: "Sync Tab Groups icon",
           width: "64",
           height: "64"

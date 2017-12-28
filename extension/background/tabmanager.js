@@ -128,7 +128,7 @@ TabManager.openListOfTabs = async function(
       let url = tab.url;
       url = (url === "about:privatebrowsing") ? "about:newtab" : url;
       if (Utils.isPrivilegedURL(url)) {
-        url = "/pages/priviledged-tab/priviledged-tab.html?" +
+        url = "/tabpages/priviledged-tab/priviledged-tab.html?" +
           "title=" + tab.title.replace(' ', '+') +
           "&url=" + tab.url +
           "&favIconUrl=" + tab.favIconUrl;

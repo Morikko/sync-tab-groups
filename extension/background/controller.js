@@ -186,7 +186,7 @@ Controller.onImportGroups = function(params) {
 
     browser.notifications.create({
       "type": "basic",
-      "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
       "title": "Import Groups succeeded",
       "message": groups.length + " groups imported.",
       "eventTime": 4000,
@@ -195,7 +195,7 @@ Controller.onImportGroups = function(params) {
     console.error(e);
     browser.notifications.create({
       "type": "basic",
-      "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
       "title": "Import Groups failed",
       "message": e.message,
       "eventTime": 4000,
@@ -443,7 +443,7 @@ Controller.initCommandsEventListener = function() {
 browser.runtime.onInstalled.addListener(() => {
   browser.notifications.create({
     "type": "basic",
-    "iconUrl": browser.extension.getURL("icons/tabspace-active-64.png"),
+    "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
     "title": "Sync Tab Groups 0.4.1 installed!",
     "message":
       "  * Fix: More secure initialization of the extension\n" +
