@@ -1,3 +1,7 @@
+html {
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+}
+
 .option-section:not([hidden])~.option-section {
   margin-top: 32px;
   padding-top: 15px;
@@ -16,3 +20,116 @@ li, div span {
 .control {
   margin-bottom: 5px;
 }
+
+#content {
+  height: 100%;
+}
+
+#menu {
+  display: block;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background-color: #424f5a;
+  width: 100%;
+  color: #c4cdd4;
+  z-index: 1;
+}
+
+.logo {
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 50px;
+  color: #2aa1c0;
+  cursor: pointer;
+}
+
+.logo span {
+  line-height: 50px;
+}
+
+.logo img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tabs {
+  display: inline-block;
+  float: left;
+}
+
+.tab {
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  padding-right: 10px;
+  line-height: 50px;
+  height: 50px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.selected {
+  border-top: solid #2aa1c0 5px;
+  box-sizing: border-box;
+  line-height: 40px;
+  padding-bottom: 5px;
+  background-color: #343f48;
+}
+
+.tab:hover {
+  background-color: #5e6972;
+}
+
+#panel {
+  display: inline-block;
+  position: absolute;
+  top: 50px;
+  color: #484848;
+}
+
+/** Button for responsive design **/
+.show-menu {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-decoration: none;
+    color: #fff;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    font-size: 1.5em;
+    display: none;
+    cursor: pointer;
+}
+
+input[type=checkbox]{
+    display: none;
+}
+/*Show menu when invisible checkbox is checked*/
+input[type=checkbox]:checked ~ .tabs{
+    display: block;
+}
+/** End Button for responsive design **/
+
+/*Responsive Styles*/
+@media screen and (max-width : 760px){
+    /*Make dropdown links appear inline*/
+    .tabs {
+        position: static;
+        display: none;
+    }
+    /*Create vertical spacing*/
+    .tab {
+        margin-bottom: 1px;
+    }
+    /*Make all menu links full width*/
+    .tab, .tabs {
+        width: 100%;
+    }
+    /*Display 'show menu' link*/
+    .show-menu {
+        display:block;
+    }
+}
+/*END Responsive Styles*/

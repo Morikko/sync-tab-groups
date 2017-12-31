@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ReactRedux.Provider, {
         store: store
       },
-      React.createElement(OptionsPanel, {
+      React.createElement(Options, {
         onOptionChange: Actions.onOptionChange,
         onBackUpClick: Actions.onBackUpAsk,
         onImportClick: Actions.onImportAsk,
