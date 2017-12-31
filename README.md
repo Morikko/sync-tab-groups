@@ -42,18 +42,19 @@ Sync Tab Groups (STG) is not related to [Tab Groups](https://addons.mozilla.org/
 
 STG is not able to hide tabs, instead tabs are closed. However, if this doesn't stop you, STG accepts importing groups from tab Groups extension.
 
-# Languages
- - English
- - French
- - German (thanks @bitkleberAST) 
- - Russian (thanks Александр) 
+# Contributing
 
 I would gladly accept other translations. Add it in `_locales/`, while following the en (English) file. Change message and description parts only.
 
 # Bugs
 If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-groups/issues).
 
-# Thanks
-Thank you all of you for helping me improving and fixing the extension :)
+# Release
+- Change Utils.DEGUG_MODE to false
 
-I thank [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups) for his UI code I reused as a base.
+# Thanks
+ - To [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups) for his UI code I reused as a base.
+ - @bitkleberAST for the German translation
+ - Александр for the Russian translation
+
+Thank you all of you for helping me improving and fixing the extension :)
