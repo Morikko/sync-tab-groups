@@ -7,29 +7,52 @@ Options = (() => {
       onExportClick: React.PropTypes.func
     },
 
+    getInitialState: function() {
+      return {
+        href: location.href.split('#')[1]||"about"
+      };
+    },
+
+    componentDidMount: function() {
+      window.addEventListener("hashchange", this.readHash);
+    },
+
+    componentWillUnmount: function() {
+      window.removeEventListener("hashchange", this.readHash);
+    },
+
     render: function() {
-      return (<div>
-        <div id="menu">
-          <a className="logo">
-            <span>
-              <img src="/share/icons/tabspace-active-64.png" alt="" height="32"/>
-            </span>
-          </a>
-          <label htmlFor="show-menu" className="show-menu">Show Menu</label>
-          <input type="checkbox" id="show-menu" role="button"/>
-          <nav className="tabs">
-            <a className="tab selected">Advanced Setup</a>
-            <a className="tab">Shortcuts</a>
-            <a className="tab">Save/Restore</a>
-            <a className="tab">Interface</a>
-            <a className="tab">About</a>
-            <a className="tab">Help</a>
-          </nav>
-        </div>
-        <div id="panel">
+
+      let tab = function(title, href) {
+        this.href = href;
+        this.title = title;
+      };
+      let tabs = [
+        new tab("Advanced Setup","advsettings"),
+        new tab("Shortcuts","shortcuts"),
+        new tab("Save/Restore","save"),
+        new tab("About","about"),
+        new tab("Help","help"),
+      ];
+      return (
+        <div>
+          <OptionsMenu tabs={tabs} selected={this.state.href}
+                        onClick={this.onNavClick}/>
           <OptionsPanel {...this.props}/>
-        </div>
       </div>);
+    },
+
+    onNavClick: function(event) {
+      event.stopPropagation();
+      this.setState({
+        href: event.target.href.split("#")[1]
+      });
+    },
+
+    readHash: function() {
+      this.setState({
+        href: location.href.split('#')[1]||"about"
+      });
     }
   });
   return ReactRedux.connect((state) => {

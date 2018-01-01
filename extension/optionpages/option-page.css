@@ -43,7 +43,6 @@ li, div span {
   padding-right: 10px;
   height: 50px;
   color: #2aa1c0;
-  cursor: pointer;
 }
 
 .logo span {
@@ -69,6 +68,7 @@ li, div span {
   height: 50px;
   cursor: pointer;
   text-decoration: none;
+  color: #c4cdd4;
 }
 
 .selected {
@@ -83,10 +83,16 @@ li, div span {
   background-color: #5e6972;
 }
 
+.tab:active {
+  outline: none;
+}
+
 #panel {
-  display: inline-block;
-  position: absolute;
+  display: block;
+  position: relative;
   top: 50px;
+  width: 95%;
+  margin: auto;
   color: #484848;
 }
 
@@ -94,11 +100,13 @@ li, div span {
 .show-menu {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-decoration: none;
+    float: right;
     color: #fff;
     text-align: center;
     height: 50px;
     line-height: 50px;
-    font-size: 1.5em;
+    width: 50px;
+    font-size: 2em;
     display: none;
     cursor: pointer;
 }
@@ -110,10 +118,13 @@ input[type=checkbox]{
 input[type=checkbox]:checked ~ .tabs{
     display: block;
 }
+input[type=checkbox]:checked ~ label{
+   transform : rotate(90deg);
+}
 /** End Button for responsive design **/
 
 /*Responsive Styles*/
-@media screen and (max-width : 760px){
+@media screen and (max-width : 550px){
     /*Make dropdown links appear inline*/
     .tabs {
         position: static;
