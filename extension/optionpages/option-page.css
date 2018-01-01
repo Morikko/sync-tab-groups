@@ -2,11 +2,13 @@ html {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
 }
 
+/*
 .option-section:not([hidden])~.option-section {
   margin-top: 32px;
   padding-top: 15px;
   border-top: 1px solid rgba(12, 12, 13, 0.15);
 }
+*/
 
 li, div span {
   font-size: 18px;
@@ -87,15 +89,6 @@ li, div span {
   outline: none;
 }
 
-#panel {
-  display: block;
-  position: relative;
-  top: 50px;
-  width: 95%;
-  margin: auto;
-  color: #484848;
-}
-
 /** Button for responsive design **/
 .show-menu {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -144,3 +137,25 @@ input[type=checkbox]:checked ~ label{
     }
 }
 /*END Responsive Styles*/
+
+
+#panel {
+  display: block;
+  position: relative;
+  top: 50px;
+  width: 95%;
+  margin: auto;
+  color: #484848;
+}
+
+.invisible {
+  display: none;
+}
+
+/** Sub panel -- section **/
+.section-title {
+  margin-bottom: 30px;
+  font-size: 2em;
+  border-bottom: #2aa1c0 solid 2px;
+}
+

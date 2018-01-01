@@ -1,7 +1,8 @@
-const GroupSection = React.createClass({
+const AdvSettingsSection = React.createClass({
   propTypes: {
     options: React.PropTypes.object.isRequired,
     onOptionChange: React.PropTypes.func,
+    selected: React.PropTypes.string,
   },
 
   prefix: "groups",
@@ -13,7 +14,8 @@ const GroupSection = React.createClass({
 
   render: function() {
     return React.DOM.div({
-      className: "option-section"
+      className: "option-section " + (this.props.selected==="advanced"?
+          "visible":"invisible")
     }, [
       React.createElement(SectionTitle, {
         title: browser.i18n.getMessage("group_title")
@@ -63,6 +65,30 @@ const GroupSection = React.createClass({
             label: browser.i18n.getMessage("label_sort_recent"),
           },
         ]
+      }),
+      React.createElement(SectionTitle, {
+        title: browser.i18n.getMessage("pinned_tabs_title")
+      }),
+      React.createElement(NiceCheckbox, {
+        checked: this.props.options.sync,
+        label: browser.i18n.getMessage("sync_pinned_tabs"),
+        onCheckChange: this.props.onOptionChange,
+        id: this.prefix + "-sync",
+      }),
+      React.createElement(SectionTitle, {
+        title: browser.i18n.getMessage("private_window_title")
+      }),
+      React.createElement(NiceCheckbox, {
+        checked: this.props.options.sync,
+        label: browser.i18n.getMessage("new_private_window"),
+        onCheckChange: this.props.onOptionChange,
+        id: this.prefix + "-sync",
+      }),
+      React.createElement(NiceCheckbox, {
+        checked: this.props.options.removeOnClose,
+        label: browser.i18n.getMessage("close_private_window"),
+        onCheckChange: this.props.onOptionChange,
+        id: this.prefix + "-removeOnClose",
       }),
     ]);
   },

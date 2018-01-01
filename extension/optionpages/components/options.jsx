@@ -9,7 +9,7 @@ Options = (() => {
 
     getInitialState: function() {
       return {
-        href: location.href.split('#')[1]||"about"
+        href: location.href.split('#')[1] || "about"
       };
     },
 
@@ -28,17 +28,19 @@ Options = (() => {
         this.title = title;
       };
       let tabs = [
-        new tab("Advanced Setup","advsettings"),
-        new tab("Shortcuts","shortcuts"),
-        new tab("Save/Restore","save"),
-        new tab("About","about"),
-        new tab("Help","help"),
+        new tab("Settings", "settings"),
+        new tab("Interface", "interface"),
+        new tab("Shortcuts", "shortcuts"),
+        new tab("Save/Restore", "save"),
+        //new tab("Advanced", "advanced"),
+        new tab("Guide", "help"),
+        new tab("About", "about"),
       ];
       return (
         <div>
           <OptionsMenu tabs={tabs} selected={this.state.href}
                         onClick={this.onNavClick}/>
-          <OptionsPanel {...this.props}/>
+          <OptionsPanel {...this.props} selected={this.state.href} />
       </div>);
     },
 
@@ -51,11 +53,13 @@ Options = (() => {
 
     readHash: function() {
       this.setState({
-        href: location.href.split('#')[1]||"about"
+        href: location.href.split('#')[1] || "about"
       });
     }
   });
   return ReactRedux.connect((state) => {
-    return {options: state.get("options")};
+    return {
+      options: state.get("options")
+    };
   }, ActionCreators)(OptionsStandalone);
 })();

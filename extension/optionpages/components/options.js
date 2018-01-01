@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 Options = (() => {
   const OptionsStandalone = React.createClass({
     propTypes: {
@@ -27,13 +29,15 @@ Options = (() => {
         this.href = href;
         this.title = title;
       };
-      let tabs = [new tab("Advanced Setup", "advsettings"), new tab("Shortcuts", "shortcuts"), new tab("Save/Restore", "save"), new tab("About", "about"), new tab("Help", "help")];
+      let tabs = [new tab("Settings", "settings"), new tab("Interface", "interface"), new tab("Shortcuts", "shortcuts"), new tab("Save/Restore", "save"),
+      //new tab("Advanced", "advanced"),
+      new tab("Guide", "help"), new tab("About", "about")];
       return React.createElement(
         "div",
         null,
         React.createElement(OptionsMenu, { tabs: tabs, selected: this.state.href,
           onClick: this.onNavClick }),
-        React.createElement(OptionsPanel, this.props)
+        React.createElement(OptionsPanel, _extends({}, this.props, { selected: this.state.href }))
       );
     },
 
@@ -51,6 +55,8 @@ Options = (() => {
     }
   });
   return ReactRedux.connect(state => {
-    return { options: state.get("options") };
+    return {
+      options: state.get("options")
+    };
   }, ActionCreators)(OptionsStandalone);
 })();

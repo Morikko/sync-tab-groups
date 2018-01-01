@@ -49,6 +49,7 @@
 .control {
   position: relative;
   display: block;
+  width: -moz-max-content;
   padding-left: 30px;
   cursor: pointer;
 }
