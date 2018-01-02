@@ -202,14 +202,23 @@ Utils.copyToTheClipBoard = function(text) {
  * @return {boolean}
  */
 Utils.search = function(title, keywords) {
-
-  let has = true;
-  keywords.split(' ').map((word) => {
-    has = has && title.toLowerCase().includes(word.toLowerCase());
-  })
-  return has;
+  results = keywords.split(' ').map((word) => {
+    return title.toLowerCase().includes(word.toLowerCase());
+  });
+  return results.reduce(
+    (accu, result,) => (accu&&result),
+    true
+  );
 }
-
+/*
+[
+Utils.search("Computer", "com"),
+Utils.search("Computer", "com pu"),
+Utils.search("Computer", "Com"),
+Utils.search("Computer", "Cm"),
+Utils.search("Computer", "Cm pu"),
+].map((t)=>console.log(t))
+*/
 /**
  * Promise is resolved after time ms
  * @param {Number} time - in ms

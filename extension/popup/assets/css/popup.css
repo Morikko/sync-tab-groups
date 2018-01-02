@@ -12,7 +12,7 @@ body {
 }
 
 .cancel-search {
-  right: 12px;
+  right: 17px;
   display: inline-block;
   opacity: 0.7;
   position: absolute;
@@ -20,7 +20,14 @@ body {
   font-size: 20px;
 }
 
-.searchbar, .mainbar {
+.searchbar {
+  margin-top: 5px;
+  padding-left: 5px;
+  padding-right: 15px;
+  position: relative;
+}
+
+.mainbar {
   padding-left: 5px;
   padding-right: 5px;
   position: relative;
@@ -37,6 +44,11 @@ body {
 .no-search-result {
   padding: 5px;
   position: relative;
+}
+
+.highlight {
+  background-color: #81d0e4;
+  border-radius: 3px;
 }
 
 /*** Search End ***/

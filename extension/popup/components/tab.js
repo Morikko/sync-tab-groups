@@ -16,7 +16,7 @@ const Tab = React.createClass({
     opened: React.PropTypes.bool,
     onCloseTab: React.PropTypes.func,
     onOpenTab: React.PropTypes.func,
-    searchTabResult: React.PropTypes.string,
+    searchTabResult: React.PropTypes.bool,
     groups: React.PropTypes.object,
     onChangePinState: React.PropTypes.func,
   },

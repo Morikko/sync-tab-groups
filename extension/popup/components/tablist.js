@@ -36,7 +36,7 @@ const TabList = React.createClass({
             opened: this.props.opened,
             onCloseTab: this.props.onCloseTab,
             onOpenTab: this.props.onOpenTab,
-            searchTabResult: this.props.searchTabsResults[index]||[],
+            searchTabResult: this.props.searchTabsResults[index]||false,
             groups: this.props.groups,
             onChangePinState: this.props.onChangePinState,
           });

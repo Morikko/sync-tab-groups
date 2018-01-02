@@ -159,6 +159,22 @@ const PopupMenu = (() => {
         }
       }
 
+      var context = document.querySelectorAll(".group-title, .tab-title");
+      var instance = new Mark(context);
+      instance.unmark({
+        "element": "span",
+        "className": "highlight",
+        done: function() {
+          instance.mark(searchValue.split(' '), {
+            "element": "span",
+            "className": "highlight",
+          });
+        }
+      });
+
+      {
+
+      }
       return {
         searchGroupsResults: searchGroupsResults,
         atLeastOneResult: atLeastOneResult,
