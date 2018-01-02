@@ -72,14 +72,6 @@ const PopupMenu = (() => {
       return React.DOM.ul({
           className: menuClasses
         },
-        React.createElement(MainBar, {
-          onChangeWindowSync: this.props.onChangeWindowSync,
-          onClickPref: this.props.onClickPref,
-          isSync: isWindowSync,
-          currentWindowId: this.props.currentWindowId,
-          maximized: this.state.maximized,
-          onClickMaximize: this.onClickMaximize,
-        }),
         searchbar,
         React.createElement(GroupList, {
           groups: this.props.groups,
@@ -111,8 +103,17 @@ const PopupMenu = (() => {
         React.DOM.li({
             className: "no-search-result" + (!this.state.atLeastOneResult ? "" : " hiddenBySearch")
           },
-          'No search result for "' + this.state.searchfilter + '".')
-      );
+          'No search result for "' + this.state.searchfilter + '".'
+      ),
+      React.createElement(MainBar, {
+        onChangeWindowSync: this.props.onChangeWindowSync,
+        onClickPref: this.props.onClickPref,
+        isSync: isWindowSync,
+        currentWindowId: this.props.currentWindowId,
+        maximized: this.state.maximized,
+        onClickMaximize: this.onClickMaximize,
+      })
+      )
     },
 
     // Change window size

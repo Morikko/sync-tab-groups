@@ -4,16 +4,16 @@ const MainBar = React.createClass({
     onClickPref: React.PropTypes.func,
     onClickMaximize: React.PropTypes.func,
     isSync: React.PropTypes.bool,
-    currentWindowId: React.PropTypes.number.isRequired,
+    currentWindowId: React.PropTypes.number.isRequired
   },
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
-      maximized: false,
+      maximized: false
     };
   },
 
-  render: function() {
+  render: function () {
     let id = "window-is-sync";
 
     let maximizerClasses = classNames({
@@ -23,68 +23,67 @@ const MainBar = React.createClass({
       "fa-compress": this.props.maximized,
       "app-maximize": true,
       "fa": true,
-      "fa-fw": true,
+      "fa-fw": true
     });
 
-    let title_expand = this.props.maximized? browser.i18n.getMessage("reduce_menu"):browser.i18n.getMessage("expand_menu");
+    let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
 
-    return (
-      React.DOM.li({
-          className: "mainbar",
-        },
-        React.DOM.div({
-          className: "window-synchronized"
-        }, [
-          React.createElement(
-            NiceCheckbox, {
-              id: id,
-              label: browser.i18n.getMessage("synchronized_window"),
-              checked: this.props.isSync,
-              onCheckChange: this.handleCheckChange,
-            }
-          ),
-        ]),
-        React.DOM.div({
-          className: "right-actions",
-        }, [
-          React.DOM.i({
-            className: "app-pref fa fa-fw fa-gear",
-            title: browser.i18n.getMessage("open_preferences"),
-            onClick: this.handleClickPref
-          }),
-          React.DOM.i({
-            className: maximizerClasses,
-            title: title_expand,
-            onClick: this.props.onClickMaximize
-          }),
-        ]),
+    return React.createElement(
+      "li",
+      { className: "mainbar" },
+      React.createElement(
+        "div",
+        { className: "grouped-button " + (this.props.isSync ? "window-grouped" : "not-window-grouped"),
+          onClick: this.handleCheckChange },
+        React.createElement("i", { className: "app-pref fa fa-fw fa-" + (this.props.isSync ? "check-" : "") + "square-o" }),
+        browser.i18n.getMessage("synchronized_window")
+      ),
+      React.createElement(
+        "div",
+        { className: "manage-button" },
+        "Manage groups"
+      ),
+      React.createElement(
+        "div",
+        { className: "right-actions" },
+        React.createElement("i", {
+          className: "app-pref fa fa-fw fa-gear",
+          title: browser.i18n.getMessage("open_preferences"),
+          onClick: this.handleClickPref
+        }),
+        React.createElement("i", {
+          className: maximizerClasses,
+          title: title_expand,
+          onClick: this.props.onClickMaximize
+        })
       )
     );
   },
 
-  handleClickPref: function(event) {
+  handleClickPref: function (event) {
     event.stopPropagation();
     this.props.onClickPref();
     window.close();
   },
 
-  handleCheckChange: function(id, value) {
-    this.props.onChangeWindowSync(this.props.currentWindowId, value);
+  handleCheckChange: function (event) {
+    event.stopPropagation();
+    this.props.onChangeWindowSync(this.props.currentWindowId, !this.props.isSync);
   },
 
-  handleGroupDragOver: function(event) {
+  handleGroupDragOver: function (event) {
     event.stopPropagation();
   },
 
-  handleDragEnter: function(event) {
+  handleDragEnter: function (event) {
     event.stopPropagation();
   },
 
-  handleDragLeave: function(event) {
+  handleDragLeave: function (event) {
     event.stopPropagation();
   },
 
-  handleDrop: function(event) {
+  handleDrop: function (event) {
     event.stopPropagation();
   }
 });

@@ -5,6 +5,14 @@ From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
 */
 
+:root {
+  --checked: #2aa1c0;
+  --checked-hover: #0e647d;
+  --not-checked: #e6e6e6;
+  --not-checked-hover: #ccc;
+  --disabled: #7b7b7b;
+}
+
 /**** Search Bar ***/
 
 body {
@@ -12,7 +20,7 @@ body {
 }
 
 .cancel-search {
-  right: 17px;
+  right: 12px;
   display: inline-block;
   opacity: 0.7;
   position: absolute;
@@ -22,12 +30,6 @@ body {
 
 .searchbar {
   margin-top: 5px;
-  padding-left: 5px;
-  padding-right: 15px;
-  position: relative;
-}
-
-.mainbar {
   padding-left: 5px;
   padding-right: 5px;
   position: relative;
@@ -51,6 +53,10 @@ body {
   border-radius: 3px;
 }
 
+.searchbar {
+  margin-bottom: 3px;
+}
+
 /*** Search End ***/
 
 body {
@@ -65,6 +71,12 @@ body {
   width: 800px;
 }
 
+
+.group-list {
+  max-height: 480px;
+  overflow-x: auto;
+}
+
 ul, li {
   display: block;
   margin: 0;
@@ -77,20 +89,61 @@ li {
   overflow: hidden;
 }
 
+/*** Main bar ***/
+
 .mainbar {
-  border-bottom: #ccc solid 2px;
+  border-top: #ccc solid 2px;
+  background-color: var(--not-checked); 
 }
 
-.mainbar .window-synchronized {
-  height: 100%;
+.grouped-button {
+  height: 34px;
+  width: 30%;
   vertical-align: middle;
   display: inline-block;
-  padding: 5px;
-  position: relative;
+  cursor: pointer;
 }
 
-.window-synchronized label {
+.grouped-button span {
+  display: inline-block;
+  word-wrap:break-word;
+  width: 80%;
+  line-height: 17px;
+  height: 34px;
+  position: relative;
+  left: 30px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.grouped-button i {
+  position: absolute;
+}
+
+.grouped-button.not-window-grouped {
+  background-color: var(--not-checked); 
+  opacity: 0.7;
+}
+
+.grouped-button.window-grouped {
+  background-color: var(--checked); 
+  color: white;
+}
+
+.manage-button {
+  height: 34px;
+  line-height: 34px;
+  vertical-align: middle;
+  display: inline-block;
+  width: calc(70% - 64px);
+  text-align: center;
+  vertical-align: middle;
+  border-left: #ccc solid 1px;
   cursor: pointer;
+}
+
+.manage-button:hover {
+  background-color: var(--not-checked-hover); 
 }
 
 .mainbar .left-actions {
@@ -98,6 +151,7 @@ li {
   font-size: 120%;
   opacity: 0.7;
   position: relative;
+  top 2px;
   vertical-align: middle;
   height: 100%;
 }
@@ -107,9 +161,11 @@ li {
   font-size: 120%;
   opacity: 0.7;
   position: absolute;
-  right: 10px;
+  right: 0px;
+  top 2px;
   vertical-align: middle;
   height: 100%;
+  border-left: #ccc solid 1px;
 }
 
 .mainbar i {
@@ -121,9 +177,13 @@ li {
   line-height: 34px;
 }
 
-.mainbar, .searchbar {
-  margin-bottom: 3px;
+.mainbar {
+  /*padding-left: 5px;
+  padding-right: 5px;*/
+  position: relative;
 }
+
+/*** Main End bar ***/
 
 .group {
   min-width: 300px;
@@ -241,7 +301,8 @@ li {
 }
 
 .tab-list {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   padding-top: 5px;
 }
 
@@ -254,7 +315,7 @@ li {
 }
 
 .group-controls {
-  right: 10px;
+  right: 0px; /*previous 10px */
 }
 
 .groupadd-controls {
@@ -262,7 +323,7 @@ li {
 }
 
 .tab-controls {
-  right: 5px;
+  right: 0px; /*previous 5px */
 }
 
 .group.editing .group-controls i {
@@ -325,6 +386,10 @@ li {
 
 .addButton {
   border-top: #ccc solid 2px;
+}
+
+.addButton .group-title {
+  font-weight: bold;
 }
 
 .max-width-25 {

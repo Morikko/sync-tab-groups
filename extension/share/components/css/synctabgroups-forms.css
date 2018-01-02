@@ -4,6 +4,14 @@
   * https://www.creativejuiz.fr/blog/tutoriels/input-file-personnalise-css-js
   */
 
+:root {
+  --checked: #2aa1c0;
+  --checked-hover: #0e647d;
+  --not-checked: #e6e6e6;
+  --not-checked-hover: #ccc;
+  --disabled: #7b7b7b;
+}
+
 .button-file {
   position: relative;
   /*! width: 225px; */
@@ -23,7 +31,7 @@
 .button-file-label, .option-button {
   display: block;
   padding: 14px 45px;
-  background: #2aa1c0;
+  background: var(--checked);
   color: #fff;
   font-size: 1em;
   transition: all .4s;
@@ -35,7 +43,7 @@
 }
 
 .button-file-input:hover+.button-file-label, .button-file-input:focus+.button-file-label, .button-file-label:hover, .button-file-label:focus, .option-button:focus, .option-button:hover {
-  background: #0e647d;
+  background: var(--checked-hover);
 }
 
 .control, .button-file-label {
@@ -66,7 +74,7 @@
   left: 0;
   width: 20px;
   height: 20px;
-  background: #e6e6e6;
+  background: var(--not-checked);
 }
 
 .control--radio .control__indicator {
@@ -76,19 +84,19 @@
 /* Hover and focus states */
 
 .control:hover input~.control__indicator, .control input:focus~.control__indicator {
-  background: #ccc;
+  background: var(--not-checked-hover);
 }
 
 /* Checked state */
 
 .control input:checked~.control__indicator {
-  background: #2aa1c0;
+  background: var(--checked);
 }
 
 /* Hover state whilst checked */
 
 .control:hover input:not([disabled]):checked~.control__indicator, .control input:checked:focus~.control__indicator {
-  background: #0e647d;
+  background: var(--checked-hover);
 }
 
 /* Disabled state */
@@ -96,7 +104,7 @@
 .control input:disabled~.control__indicator {
   pointer-events: none;
   opacity: .6;
-  background: #e6e6e6;
+  background: var(--not-checked);
 }
 
 /* Check mark */
@@ -128,7 +136,7 @@
 /* Disabled tick colour */
 
 .control--checkbox input:disabled~.control__indicator:after {
-  border-color: #7b7b7b;
+  border-color: var(--disabled);
 }
 
 /* Radio button inner circle */
@@ -145,7 +153,7 @@
 /* Disabled circle colour */
 
 .control--radio input:disabled~.control__indicator:after {
-  background: #7b7b7b;
+  background: var(--disabled);
 }
 
 /*** End Checkbox *****/
@@ -171,18 +179,18 @@
   border: 0;
   border-radius: 0;
   outline: 0;
-  background: #e6e6e6;
+  background: var(--not-checked);
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 .select select option {
-   background: #e6e6e6;
+   background: var(--not-checked);
 }
 
 .select select option:hover {
-   background: #ccc;
+   background: var(--not-checked-hover);
 }
 
 .select select::-ms-expand {
@@ -192,7 +200,7 @@
 .select select:hover,
 .select select:focus {
 	color: #000;
-	background: #ccc;
+	background: var(--not-checked-hover);
 }
 
 .select select:disabled {
@@ -218,7 +226,7 @@
 }
 
 .select select:disabled ~ .select__arrow {
-	border-top-color: #ccc;
+	border-top-color: var(--not-checked-hover);
 }
 
 /*** End Select *****/
@@ -227,7 +235,7 @@
 
 .option-input-text-help {
   margin-left: 10px;
-  color: #ccc;
+  color: var(--not-checked-hover);
 }
 
 /**** End Input text *****/
