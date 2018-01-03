@@ -1,13 +1,5 @@
-const ShortcutsSection = React.createClass({
-  propTypes: {
-    options: React.PropTypes.object.isRequired,
-    onOptionChange: React.PropTypes.func,
-    selected: React.PropTypes.string,
-  },
-
-  prefix: "shortcuts",
-
-  render: function() {
+class ShortcutsSection extends React.Component {
+  render() {
     return (
       <div className={"option-section " + (this.props.selected==="shortcuts"?
         "visible":"invisible")}>
@@ -25,6 +17,11 @@ const ShortcutsSection = React.createClass({
         />
       </div>
     );
-  },
+  }
+};
 
-});
+ShortcutsSection.propTypes = {
+  options: PropTypes.object.isRequired,
+  onOptionChange: PropTypes.func,
+  selected: PropTypes.string,
+};

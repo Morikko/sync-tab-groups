@@ -4,48 +4,17 @@ Copyright (c) 2017 Eric Masseran
 From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
 */
-const Group = React.createClass({
-  propTypes: {
-    group: React.PropTypes.object.isRequired,
-    currentWindowId: React.PropTypes.number.isRequired,
-    currentlyClosing: React.PropTypes.bool.isRequired,
-    currentlyRemoving: React.PropTypes.bool.isRequired,
-    onGroupClick: React.PropTypes.func,
-    onGroupDrop: React.PropTypes.func,
-    onGroupCloseClick: React.PropTypes.func,
-    onGroupRemoveClick: React.PropTypes.func,
-    onGroupTitleChange: React.PropTypes.func,
-    onTabClick: React.PropTypes.func,
-    onOpenInNewWindowClick: React.PropTypes.func,
-    onCloseTab: React.PropTypes.func,
-    onOpenTab: React.PropTypes.func,
-    searchGroupResult: React.PropTypes.object,
-    currentlySearching: React.PropTypes.bool,
-    showTabsNumber: React.PropTypes.bool,
-    groups: React.PropTypes.object,
-    onGroupChangePosition: React.PropTypes.func,
-    onChangePinState: React.PropTypes.func,
-  },
-
-  getClosingState: function(openWindow, props) {
-    let closingState;
-    if (openWindow) {
-      closingState = props.currentlyClosing && !props.currentlyRemoving;
-    } else {
-      closingState = false;
-    }
-    return closingState;
-  },
-
-  getInitialState: function() {
+class Group extends React.Component {
+  constructor(props) {
+    super(props);
     let openWindow = this.props.group.windowId !== browser.windows.WINDOW_ID_NONE;
-    return {
+    this.state = {
       // Removing is more priority
       closing: this.getClosingState(openWindow, this.props),
       removing: this.props.currentlyRemoving,
       editing: false,
       currentlySearching: this.props.currentlySearching,
-      expanded: false,
+      expanded: this.props.group.expand,
       opened: openWindow,
       draggingOverCounter: 0, // Many drag enter/leave are fired, know if it is a really entering
       draggingOver: false,
@@ -53,71 +22,91 @@ const Group = React.createClass({
       dragOnBottom: false,
       newTitle: Utils.getGroupTitle(this.props.group)
     };
-  },
 
-  findExpandedState: function(current_state, previous_searching, current_searching) {
-    if (previous_searching !== current_searching) {
-      return current_searching;
+    this.handleOpenInNewWindowClick = this.handleOpenInNewWindowClick.bind(this);
+    this.handleGroupRemoveClick = this.handleGroupRemoveClick.bind(this);
+    this.handleGroupCloseClick = this.handleGroupCloseClick.bind(this);
+    this.handleGroupCloseAbortClick = this.handleGroupCloseAbortClick.bind(this);
+    this.handleGroupClick = this.handleGroupClick.bind(this);
+    this.handleGroupEditClick = this.handleGroupEditClick.bind(this);
+    this.handleGroupEditAbortClick = this.handleGroupEditAbortClick.bind(this);
+    this.handleGroupEditSaveClick = this.handleGroupEditSaveClick.bind(this);
+    this.handleGroupExpandClick = this.handleGroupExpandClick.bind(this);
+    this.handleGroupTitleInputKey = this.handleGroupTitleInputKey.bind(this);
+    this.handleGroupDrop = this.handleGroupDrop.bind(this);
+    this.handleGroupDragOver = this.handleGroupDragOver.bind(this);
+    this.handleGroupDragEnter = this.handleGroupDragEnter.bind(this);
+    this.handleGroupDragLeave = this.handleGroupDragLeave.bind(this);
+    this.handleGroupDragStart = this.handleGroupDragStart.bind(this);
+  }
+
+  getClosingState(openWindow, props) {
+    let closingState;
+    if (openWindow) {
+      closingState = props.currentlyClosing && !props.currentlyRemoving;
+    } else {
+      closingState = false;
+    }
+    return closingState;
+  }
+
+  findExpandedState(current_state, current_searching) {
+    if (current_searching) {
+      return true;
     } else {
       return current_state;
     }
-  },
+  }
 
   // When a component got new props, use this to update
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     let openWindow = nextProps.group.windowId !== browser.windows.WINDOW_ID_NONE;
-    let expanded_state = this.findExpandedState(
-      this.state.expanded,
-      this.state.currentlySearching,
-      nextProps.currentlySearching
-    );
+    let expanded_state = this.findExpandedState(nextProps.group.expand, nextProps.currentlySearching);
 
     this.setState({
       closing: this.getClosingState(openWindow, nextProps),
       removing: nextProps.currentlyRemoving,
       opened: openWindow,
       expanded: expanded_state,
-      currentlySearching: nextProps.currentlySearching,
-    })
-  },
+      currentlySearching: nextProps.currentlySearching
+    });
+  }
 
-  render: function() {
+  render() {
 
     let titleElement;
     if (this.state.editing) {
-      let offsetReduceSize =
-        titleElement = React.DOM.input({
-          className: "max-width-25 max-width-hover-85",
-          autoFocus: true,
-          type: "text",
-          defaultValue: Utils.getGroupTitle(this.props.group),
-          onChange: (event) => {
-            this.setState({
-              newTitle: event.target.value
-            });
-          },
-          onClick: (event) => {
-            event.stopPropagation();
-          },
-          onFocus: (e) => {
-            e.target.select();
-          },
-          onKeyUp: this.handleGroupTitleInputKey
-        });
+      titleElement = React.createElement("input", { className: "max-width-25 max-width-hover-85",
+        autoFocus: true,
+        type: "text",
+        defaultValue: Utils.getGroupTitle(this.props.group),
+        onChange: event => {
+          this.setState({
+            newTitle: event.target.value
+          });
+        },
+        onClick: event => {
+          event.stopPropagation();
+        },
+        onFocus: e => {
+          e.target.select();
+        },
+        onKeyUp: this.handleGroupTitleInputKey
+      });
     } else {
       let title = Utils.getGroupTitle(this.props.group);
       if (this.props.showTabsNumber) {
         title = title + "  (" + this.props.group.tabs.length + ")";
       }
-      titleElement = React.DOM.span({
-          className: "group-title-text"
-        },
+      titleElement = React.createElement(
+        "span",
+        { className: "group-title-text" },
         title
       );
     }
 
     let groupClasses = classNames({
-      active: (this.props.group.windowId > -1),
+      active: this.props.group.windowId > -1,
       editing: this.state.editing,
       closing: this.state.closing,
       removing: this.state.removing,
@@ -127,13 +116,11 @@ const Group = React.createClass({
       expanded: this.state.expanded,
       focusGroup: this.props.currentWindowId === this.props.group.windowId,
       group: true,
-      hiddenBySearch: !this.props.searchGroupResult.atLeastOneResult,
+      hiddenBySearch: !this.props.searchGroupResult.atLeastOneResult
     });
 
     let offsetSizeReduceHover = 115;
-    if (this.state.editing ||
-      this.state.removing ||
-      this.state.closing) {
+    if (this.state.editing || this.state.removing || this.state.closing) {
       offsetSizeReduceHover = 85;
     }
 
@@ -147,67 +134,63 @@ const Group = React.createClass({
       groupTitle = browser.i18n.getMessage("open_group");
     }
 
-    return (
-      React.DOM.li({
-          className: groupClasses,
-          onClick: this.handleGroupClick,
-          draggable: this.props.groupDraggable,
-          onDragOver: this.handleGroupDragOver,
-          onDragEnter: this.handleGroupDragEnter,
-          onDragLeave: this.handleGroupDragLeave,
-          onDragStart: this.handleGroupDragStart,
-          onDrop: this.handleGroupDrop,
-          title: groupTitle,
+    return React.createElement(
+      "li",
+      {
+        className: groupClasses,
+        onClick: this.handleGroupClick,
+        draggable: this.props.groupDraggable,
+        onDragOver: this.handleGroupDragOver,
+        onDragEnter: this.handleGroupDragEnter,
+        onDragLeave: this.handleGroupDragLeave,
+        onDragStart: this.handleGroupDragStart,
+        onDrop: this.handleGroupDrop,
+        title: groupTitle
+      },
+      React.createElement(
+        "span",
+        {
+          className: "group-title " + "max-width-35" + " max-width-hover-" + offsetSizeReduceHover
         },
-        React.DOM.span({
-            className: "group-title " +
-              "max-width-35" +
-              " max-width-hover-" + offsetSizeReduceHover,
-          },
-          titleElement,
-          React.createElement(
-            GroupControls, {
-              closing: this.state.closing,
-              removing: this.state.removing,
-              editing: this.state.editing,
-              expanded: this.state.expanded,
-              opened: this.state.opened,
-              onClose: this.handleGroupCloseClick,
-              onRemove: this.handleGroupRemoveClick,
-              onEdit: this.handleGroupEditClick,
-              onEditAbort: this.handleGroupEditAbortClick,
-              onEditSave: this.handleGroupEditSaveClick,
-              onExpand: this.handleGroupExpandClick,
-              onUndoCloseClick: this.handleGroupCloseAbortClick,
-              onOpenInNewWindow: this.handleOpenInNewWindowClick
-            }
-          )
-        ),
-        this.state.expanded && React.createElement(
-          TabList, {
-            tabs: this.props.group.tabs,
-            group: this.props.group,
-            onTabClick: this.props.onTabClick,
-            onGroupDrop: this.props.onGroupDrop,
-            onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
-            opened: this.state.opened,
-            onCloseTab: this.props.onCloseTab,
-            onOpenTab: this.props.onOpenTab,
-            searchTabsResults: this.props.searchGroupResult.searchTabsResults,
-            groups: this.props.groups,
-            onChangePinState: this.props.onChangePinState,
-          }
-        )
-      )
+        titleElement,
+        React.createElement(GroupControls, {
+          closing: this.state.closing,
+          removing: this.state.removing,
+          editing: this.state.editing,
+          expanded: this.state.expanded,
+          opened: this.state.opened,
+          onClose: this.handleGroupCloseClick,
+          onRemove: this.handleGroupRemoveClick,
+          onEdit: this.handleGroupEditClick,
+          onEditAbort: this.handleGroupEditAbortClick,
+          onEditSave: this.handleGroupEditSaveClick,
+          onExpand: this.handleGroupExpandClick,
+          onUndoCloseClick: this.handleGroupCloseAbortClick,
+          onOpenInNewWindow: this.handleOpenInNewWindowClick
+        })
+      ),
+      this.state.expanded && React.createElement(TabList, {
+        tabs: this.props.group.tabs,
+        group: this.props.group,
+        onTabClick: this.props.onTabClick,
+        onGroupDrop: this.props.onGroupDrop,
+        onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
+        opened: this.state.opened,
+        onCloseTab: this.props.onCloseTab,
+        onOpenTab: this.props.onOpenTab,
+        searchTabsResults: this.props.searchGroupResult.searchTabsResults,
+        groups: this.props.groups,
+        onChangePinState: this.props.onChangePinState
+      })
     );
-  },
+  }
 
-  handleOpenInNewWindowClick: function(event) {
+  handleOpenInNewWindowClick(event) {
     event.stopPropagation();
     this.props.onOpenInNewWindowClick(this.props.group.id);
-  },
+  }
 
-  handleGroupRemoveClick: function(event) {
+  handleGroupRemoveClick(event) {
     event.stopPropagation();
     this.setState({
       editing: false,
@@ -227,10 +210,9 @@ const Group = React.createClass({
       });
       this.props.onGroupRemoveClick(TaskManager.ASK, this.props.group.id);
     }
+  }
 
-  },
-
-  handleGroupCloseClick: function(event) {
+  handleGroupCloseClick(event) {
     event.stopPropagation();
     this.setState({
       editing: false,
@@ -250,10 +232,9 @@ const Group = React.createClass({
       });
       this.props.onGroupCloseClick(TaskManager.ASK, this.props.group.id);
     }
+  }
 
-  },
-
-  handleGroupCloseAbortClick: function(event) {
+  handleGroupCloseAbortClick(event) {
     event.stopPropagation();
 
     this.props.onGroupCloseClick(TaskManager.CANCEL, this.props.group.id);
@@ -263,62 +244,65 @@ const Group = React.createClass({
       closing: false,
       removing: false
     });
-  },
+  }
 
-  handleGroupClick: function(event) {
+  handleGroupClick(event) {
     event.stopPropagation();
-    if (this.props.currentWindowId !== this.props.group.windowId)
-      this.props.onGroupClick(this.props.group.id);
+    if (this.props.currentWindowId !== this.props.group.windowId) this.props.onGroupClick(this.props.group.id);
     window.close();
-  },
+  }
 
-  handleGroupEditClick: function(event) {
+  handleGroupEditClick(event) {
     event.stopPropagation();
     this.setState({
       editing: !this.state.editing
     });
-  },
+  }
 
-  handleGroupEditAbortClick: function(event) {
+  handleGroupEditAbortClick(event) {
     event.stopPropagation();
     this.setState({
       editing: false
     });
-  },
+  }
 
-  handleGroupEditSaveClick: function(event) {
+  handleGroupEditSaveClick(event) {
     event.stopPropagation();
     this.setState({
       editing: false
     });
     this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
-  },
+  }
 
-  handleGroupExpandClick: function(event) {
+  handleGroupExpandClick(event) {
     event.stopPropagation();
+    this.props.onChangeExpand([this.props.group.id], !this.state.expanded);
+    /*
     this.setState({
       expanded: !this.state.expanded
     });
-  },
+    */
+  }
 
-  handleGroupTitleInputKey: function(event) {
+  handleGroupTitleInputKey(event) {
     event.stopPropagation();
-    if (event.keyCode === 13) { // Enter key
+    if (event.keyCode === 13) {
+      // Enter key
       this.setState({
         editing: false
       });
       this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
     }
-  },
+  }
 
-  handleGroupDrop: function(event) {
+  handleGroupDrop(event) {
     event.stopPropagation();
 
     this.setState({
       dragOnTop: false,
       dragOnBottom: false,
       draggingOver: false,
-      draggingOverCounter: 0,
+      draggingOverCounter: 0
     });
     if (this.expandedTimeOut >= 0) {
       clearTimeout(this.expandedTimeOut);
@@ -330,11 +314,7 @@ const Group = React.createClass({
       let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
 
       // Push at the end of the group
-      this.props.onGroupDrop(
-        sourceGroup,
-        tabIndex,
-        this.props.group.id
-      );
+      this.props.onGroupDrop(sourceGroup, tabIndex, this.props.group.id);
     }
 
     if (event.dataTransfer.getData("type") === "group") {
@@ -346,14 +326,11 @@ const Group = React.createClass({
         position = this.props.group.position + 1;
       }
 
-      this.props.onGroupChangePosition(
-        parseInt(event.dataTransfer.getData("group/id"), 10),
-        position,
-      );
+      this.props.onGroupChangePosition(parseInt(event.dataTransfer.getData("group/id"), 10), position);
     }
-  },
+  }
 
-  handleGroupDragOver: function(event) {
+  handleGroupDragOver(event) {
     event.stopPropagation();
     event.preventDefault();
     if (event.dataTransfer.getData("type") === "group") {
@@ -364,54 +341,53 @@ const Group = React.createClass({
         if (this.state.dragOnTop || !this.state.dragOnBottom) {
           this.setState({
             dragOnTop: false,
-            dragOnBottom: true,
+            dragOnBottom: true
           });
         }
       } else if (pos <= height / 2 && pos > 0) {
         if (!this.state.dragOnTop || this.state.dragOnBottom) {
           this.setState({
             dragOnTop: true,
-            dragOnBottom: false,
+            dragOnBottom: false
           });
         }
       } else {
         if (this.state.dragOnTop || this.state.dragOnBottom) {
           this.setState({
             dragOnTop: false,
-            dragOnBottom: false,
+            dragOnBottom: false
           });
         }
       }
     }
     if (event.dataTransfer.getData("type") === "tab") {
       this.setState({
-        draggingOver: true,
+        draggingOver: true
       });
     }
-  },
+  }
 
-  handleGroupDragEnter: function(event) {
+  handleGroupDragEnter(event) {
     event.preventDefault();
 
-    if (event.dataTransfer.getData("type") === "tab" &&
-      event.target.className.includes("group")) {
+    if (event.dataTransfer.getData("type") === "tab" && event.target.className.includes("group")) {
       event.stopPropagation();
 
       this.setState({
-        draggingOverCounter: (this.state.draggingOverCounter == 1) ? 2 : 1,
+        draggingOverCounter: this.state.draggingOverCounter == 1 ? 2 : 1
       });
 
       if (this.state.draggingOverCounter === 0) {
         this.expandedTimeOut = setTimeout(() => {
           this.setState({
-            expanded: true,
+            expanded: true
           });
         }, 1500);
       }
     }
-  },
+  }
 
-  handleGroupDragLeave: function(event) {
+  handleGroupDragLeave(event) {
     event.stopPropagation();
     event.preventDefault();
 
@@ -424,12 +400,35 @@ const Group = React.createClass({
     if (this.state.draggingOverCounter === 1 && this.expandedTimeOut >= 0) {
       clearTimeout(this.expandedTimeOut);
     }
-  },
+  }
 
-  handleGroupDragStart: function(event) {
+  handleGroupDragStart(event) {
     event.stopPropagation();
 
     event.dataTransfer.setData("type", "group");
     event.dataTransfer.setData("group/id", this.props.group.id);
   }
-});
+};
+
+Group.propTypes = {
+  group: PropTypes.object.isRequired,
+  currentWindowId: PropTypes.number.isRequired,
+  currentlyClosing: PropTypes.bool.isRequired,
+  currentlyRemoving: PropTypes.bool.isRequired,
+  onGroupClick: PropTypes.func,
+  onGroupDrop: PropTypes.func,
+  onGroupCloseClick: PropTypes.func,
+  onGroupRemoveClick: PropTypes.func,
+  onGroupTitleChange: PropTypes.func,
+  onTabClick: PropTypes.func,
+  onOpenInNewWindowClick: PropTypes.func,
+  onCloseTab: PropTypes.func,
+  onOpenTab: PropTypes.func,
+  searchGroupResult: PropTypes.object,
+  currentlySearching: PropTypes.bool,
+  showTabsNumber: PropTypes.bool,
+  groups: PropTypes.object,
+  onGroupChangePosition: PropTypes.func,
+  onChangePinState: PropTypes.func,
+  onChangeExpand: PropTypes.func
+};

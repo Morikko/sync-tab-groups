@@ -1,13 +1,5 @@
-const OptionsPanel = React.createClass({
-  propTypes: {
-    onOptionChange: React.PropTypes.func,
-    onBackUpClick: React.PropTypes.func,
-    onImportClick: React.PropTypes.func,
-    onExportClick: React.PropTypes.func,
-    selected: React.PropTypes.string,
-  },
-
-  render: function() {
+class OptionsPanel extends React.Component{
+  render() {
     return (
       <div id="panel">
         <SettingsSection
@@ -37,4 +29,12 @@ const OptionsPanel = React.createClass({
       </div>
     );
   }
-});
+};
+
+OptionsPanel.propTypes = {
+  onOptionChange: PropTypes.func,
+  onBackUpClick: PropTypes.func,
+  onImportClick: PropTypes.func,
+  onExportClick: PropTypes.func,
+  selected: PropTypes.string,
+};

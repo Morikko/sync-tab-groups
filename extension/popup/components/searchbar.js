@@ -1,50 +1,48 @@
-const SearchBar = React.createClass({
-  propTypes: {
-    onSearchChange: React.PropTypes.func,
-  },
-
-  getInitialState: function() {
-    return {
-      value: '',
+class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: ''
     };
-  },
 
-  render: function() {
-    this.searchbar = React.DOM.input({
-      type: "search",
-      placeholder: browser.i18n.getMessage("search"),
+    this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.clearSearchBar = this.clearSearchBar.bind(this);
+  }
+
+  render() {
+    this.searchbar = React.createElement('input', { type: 'search',
+      placeholder: browser.i18n.getMessage('search'),
       onChange: this.handleSearchChange,
       value: this.state.value,
-      id: "search-input",
-    });
+      id: 'search-input' });
 
-    return (
-      React.DOM.li({
-        className: "searchbar",
-      }, [
-        this.searchbar,
-        React.DOM.i({
-          title: browser.i18n.getMessage("clear_search"),
-          className: "cancel-search fa fa-fw fa-times-circle" + (this.state.value.length>0?"":"  hiddenBySearch"),
-          onClick: this.clearSearchBar
-        })
-      ])
+    return React.createElement(
+      'li',
+      { className: 'searchbar' },
+      this.searchbar,
+      React.createElement('i', { title: browser.i18n.getMessage("clear_search"),
+        className: "cancel-search fa fa-fw fa-times-circle" + (this.state.value.length > 0 ? "" : "  hiddenBySearch"),
+        onClick: this.clearSearchBar })
     );
-  },
+  }
 
-  handleSearchChange: function(event) {
+  handleSearchChange(event) {
     event.stopPropagation();
     this.setState({
       value: event.target.value
     });
     this.props.onSearchChange(event.target.value);
-  },
+  }
 
-  clearSearchBar: function(event) {
+  clearSearchBar(event) {
     event.stopPropagation();
     this.setState({
       value: ''
     });
     this.props.onSearchChange('');
-  },
-});
+  }
+};
+
+SearchBar.propTypes = {
+  onSearchChange: PropTypes.func
+};

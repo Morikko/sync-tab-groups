@@ -2,34 +2,31 @@
 I might have modified some parts of the code.
 Copyright (c) 2017 Eric Masseran
 
-From: https://github.com/denschub/firefox-tabgroups
+From={https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
 */
-const Tab = React.createClass({
-  propTypes: {
-    onTabClick: React.PropTypes.func,
-    onGroupDrop: React.PropTypes.func,
-    onMoveTabToNewGroup: React.PropTypes.func,
-    group: React.PropTypes.object,
-    tab: React.PropTypes.object.isRequired,
-    tabIndex: React.PropTypes.number,
-    opened: React.PropTypes.bool,
-    onCloseTab: React.PropTypes.func,
-    onOpenTab: React.PropTypes.func,
-    searchTabResult: React.PropTypes.bool,
-    groups: React.PropTypes.object,
-    onChangePinState: React.PropTypes.func,
-  },
-
-  getInitialState: function() {
-    return {
+class Tab extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       dragOnTop: false,
-      dragOnBottom: false,
+      dragOnBottom: false
     };
-  },
 
-  render: function() {
-    let favicon = React.DOM.img({
+    this.handleOnMoveTabNewMenuClick = this.handleOnMoveTabNewMenuClick.bind(this);
+    this.handleOnMoveTabMenuClick = this.handleOnMoveTabMenuClick.bind(this);
+    this.handleTabClick = this.handleTabClick.bind(this);
+    this.handleOpenTabClick = this.handleOpenTabClick.bind(this);
+    this.handleChangePin = this.handleChangePin.bind(this);
+    this.handleCloseTabClick = this.handleCloseTabClick.bind(this);
+    this.handleTabDrop = this.handleTabDrop.bind(this);
+    this.handleTabDragLeave = this.handleTabDragLeave.bind(this);
+    this.handleTabDragOver = this.handleTabDragOver.bind(this);
+    this.handleTabDragStart = this.handleTabDragStart.bind(this);
+  }
+
+  render() {
+    let favicon = React.createElement("img", {
       alt: "",
       className: "tab-icon",
       src: (Utils.isPrivilegedURL(this.props.tab.favIconUrl || "") ? "" : this.props.tab.favIconUrl) || ""
@@ -40,7 +37,7 @@ const Tab = React.createClass({
       tab: true,
       hiddenBySearch: !this.props.searchTabResult,
       dragTopBorder: this.state.dragOnTop,
-      dragBottomBorder: this.state.dragOnBottom,
+      dragBottomBorder: this.state.dragOnBottom
     });
 
     let offsetReduceSize = 25; // Icon
@@ -50,165 +47,153 @@ const Tab = React.createClass({
 
     let tabTitle;
     if (Utils.DEGUG_MODE) {
-      tabTitle = "Tab Id: " + this.props.tab.id + "\n";
-      tabTitle += "Tab Url: " + this.props.tab.url + "\n";
-      tabTitle += "Tab Title: " + this.props.tab.title + "\n";
-      tabTitle += "Tab FavIconUrl: " + this.props.tab.favIconUrl + "\n";
-      tabTitle += "Tab Index: " + this.props.tab.index;
+      tabTitle = "Tab Id={" + this.props.tab.id + "\n";
+      tabTitle += "Tab Url={" + this.props.tab.url + "\n";
+      tabTitle += "Tab Title={" + this.props.tab.title + "\n";
+      tabTitle += "Tab FavIconUrl={" + this.props.tab.favIconUrl + "\n";
+      tabTitle += "Tab Index={" + this.props.tab.index;
     } else {
       tabTitle = this.props.tab.title;
     }
 
-    return (
-      React.DOM.li({
-          className: tabClasses,
-          onDragStart: this.handleTabDragStart,
-          onDragOver: this.handleTabDragOver,
-          onDragLeave: this.handleTabDragLeave,
-          onDrop: this.handleTabDrop,
-          onClick: this.handleTabClick,
-          draggable: true,
-          onMouseEnter: this.addMenuItem,
-          onMouseLeave: this.removeMenuItem,
-          contextMenu: "moveTabSubMenu" + this.props.tab.id,
+    return React.createElement(
+      "li",
+      {
+        className: tabClasses,
+        onDragStart: this.handleTabDragStart,
+        onDragOver: this.handleTabDragOver,
+        onDragLeave: this.handleTabDragLeave,
+        onDrop: this.handleTabDrop,
+        onClick: this.handleTabClick,
+        draggable: true,
+        onMouseEnter: this.addMenuItem,
+        onMouseLeave: this.removeMenuItem,
+        contextMenu: "moveTabSubMenu" + this.props.tab.id
+      },
+      this.createContextMenuTab(),
+      this.props.tab.pinned && React.createElement("i", {
+        className: "pinned-icon fa fa-fw fa-thumb-tack"
+      }),
+      favicon,
+      React.createElement(
+        "span",
+        {
+          className: "tab-title " + "max-width-" + offsetReduceSize + " max-width-hover-" + offsetHoverReduceSize,
+          title: tabTitle
         },
-        this.createContextMenuTab(),
-        this.props.tab.pinned && React.DOM.i({
-          className: "pinned-icon fa fa-fw fa-thumb-tack",
-        }),
-        favicon,
-        React.DOM.span({
-            className: "tab-title " + "max-width-" + offsetReduceSize + " max-width-hover-" + offsetHoverReduceSize,
-            title: tabTitle,
-          },
-          this.props.tab.title,
-          React.createElement(
-            TabControls, {
-              opened: this.props.opened,
-              onCloseTab: this.handleCloseTabClick,
-              onOpenTab: this.handleOpenTabClick,
-            }
-          )),
+        this.props.tab.title,
+        React.createElement(TabControls, {
+          opened: this.props.opened,
+          onCloseTab: this.handleCloseTabClick,
+          onOpenTab: this.handleOpenTabClick
+        })
       )
     );
-  },
+  }
 
-  createContextMenuTab: function() {
+  createContextMenuTab() {
     let subMenusMoveTab = [];
     let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
     for (let i of sortedIndex) {
       let g = this.props.groups[i];
-      subMenusMoveTab.push(React.DOM.menuitem({
+      subMenusMoveTab.push(React.createElement("menuitem", {
+        key: this.props.tab.id + "-" + g.id,
         disabled: g.id === this.props.group.id,
         className: "?groupId=" + g.id,
-        onClick: this.handleOnMoveTabMenuClick
-      }, Utils.getGroupTitle(g)));
+        onClick: this.handleOnMoveTabMenuClick,
+        label: Utils.getGroupTitle(g) }));
     }
 
-    subMenusMoveTab.push(React.DOM.hr({}));
+    subMenusMoveTab.push(React.createElement("hr", { key: this.props.tab.id + "-separator" }));
 
-    subMenusMoveTab.push(React.DOM.menuitem({
-      onClick: this.handleOnMoveTabNewMenuClick
-    }, browser.i18n.getMessage("add_group")));
+    subMenusMoveTab.push(React.createElement("menuitem", {
+      key: this.props.tab.id + "-addgroup",
+      onClick: this.handleOnMoveTabNewMenuClick,
+      label: browser.i18n.getMessage("add_group") }));
 
-    let contextMenuTab = React.DOM.menu({
+    let contextMenuTab = React.createElement(
+      "menu",
+      {
         type: "context",
-        id: "moveTabSubMenu" + this.props.tab.id,
-      },
-      React.DOM.menu({
-        label: browser.i18n.getMessage("move_tab_group"),
-        icon: "/share/icons/tabspace-active-32.png" // doesn't work on menu parent
-      }, subMenusMoveTab),
-      React.DOM.menuitem({
+        id: "moveTabSubMenu" + this.props.tab.id },
+      React.createElement(
+        "menu",
+        {
+          label: browser.i18n.getMessage("move_tab_group"),
+          icon: "/share/icons/tabspace-active-32.png" /* doesn't work on menu parent*/ },
+        subMenusMoveTab
+      ),
+      React.createElement("menuitem", {
         type: "context",
         icon: "/share/icons/pin-32.png",
         label: browser.i18n.getMessage(this.props.tab.pinned ? "unpin_tab" : "pin_tab"),
-        onClick: this.handleChangePin,
+        onClick: this.handleChangePin
       }),
-      React.DOM.menuitem({
+      React.createElement("menuitem", {
         type: "context",
         icon: "/share/icons/plus-32.png",
         onClick: this.handleOpenTabClick,
         label: browser.i18n.getMessage("open_tab")
-      }));
+      })
+    );
 
     return contextMenuTab;
-  },
+  }
 
-  handleOnMoveTabNewMenuClick: function(event) {
+  handleOnMoveTabNewMenuClick(event) {
     event.stopPropagation();
 
     console.log("add");
 
-    this.props.onMoveTabToNewGroup(
-      '',
-      this.props.group.id,
-      this.props.tabIndex,
-    );
-  },
+    this.props.onMoveTabToNewGroup('', this.props.group.id, this.props.tabIndex);
+  }
 
-  handleOnMoveTabMenuClick: function(event) {
+  handleOnMoveTabMenuClick(event) {
     event.stopPropagation();
 
     let targetGroupId = parseInt(Utils.getParameterByName("groupId", event.target.className), 10);
     console.log(targetGroupId);
 
     if (targetGroupId >= 0) {
-      this.props.onGroupDrop(
-        this.props.group.id,
-        this.props.tabIndex,
-        targetGroupId,
-      );
+      this.props.onGroupDrop(this.props.group.id, this.props.tabIndex, targetGroupId);
     }
-  },
+  }
 
-  handleTabClick: function(event) {
+  handleTabClick(event) {
     event.stopPropagation();
 
     let group = this.props.group;
     let tab = this.props.tab;
-    this.props.onTabClick(
-      group.id,
-      this.props.tabIndex
-    );
+    this.props.onTabClick(group.id, this.props.tabIndex);
     window.close();
-  },
+  }
 
-  handleOpenTabClick: function(event) {
+  handleOpenTabClick(event) {
     event.stopPropagation();
 
     let tab = this.props.tab;
-    this.props.onOpenTab(
-      tab
-    );
-  },
+    this.props.onOpenTab(tab);
+  }
 
-  handleChangePin: function(event) {
+  handleChangePin(event) {
     event.stopPropagation();
 
     let tab = this.props.tab;
-    this.props.onChangePinState(
-      this.props.group.id,
-      this.props.tabIndex,
-    );
-  },
+    this.props.onChangePinState(this.props.group.id, this.props.tabIndex);
+  }
 
-  handleCloseTabClick: function(event) {
+  handleCloseTabClick(event) {
     event.stopPropagation();
 
     let group = this.props.group;
     let tab = this.props.tab;
-    this.props.onCloseTab(
-      tab.id,
-      group.id,
-      this.props.tabIndex
-    );
-  },
+    this.props.onCloseTab(tab.id, group.id, this.props.tabIndex);
+  }
 
-  handleTabDrop: function(event) {
+  handleTabDrop(event) {
     this.setState({
       dragOnTop: false,
-      dragOnBottom: false,
+      dragOnBottom: false
     });
 
     if (event.dataTransfer.getData("type") === "tab") {
@@ -225,61 +210,55 @@ const Tab = React.createClass({
         targetTabIndex = this.props.tabIndex + 1;
       }
 
-      this.props.onGroupDrop(
-        sourceGroup,
-        tabIndex,
-        this.props.group.id,
-        targetTabIndex,
-      );
+      this.props.onGroupDrop(sourceGroup, tabIndex, this.props.group.id, targetTabIndex);
     }
-  },
+  }
 
-  handleTabDragLeave: function(event) {
+  handleTabDragLeave(event) {
     event.stopPropagation();
     event.preventDefault();
 
     this.setState({
       dragOnTop: false,
-      dragOnBottom: false,
+      dragOnBottom: false
     });
-  },
+  }
 
-  handleTabDragOver: function(event) {
+  handleTabDragOver(event) {
     event.preventDefault();
 
     if (event.dataTransfer.getData("type") === "tab") {
       event.stopPropagation();
-      let pos = event.pageY -
-        event.currentTarget.offsetParent.offsetTop - // Group li
-        event.currentTarget.offsetTop; // Tab li
+      let pos = event.pageY - event.currentTarget.offsetParent.offsetTop - // Group li
+      event.currentTarget.offsetTop; // Tab li
       let height = event.currentTarget.offsetHeight;
       // Bottom
       if (pos > height / 2 && pos <= height) {
         if (this.state.dragOnTop || !this.state.dragOnBottom) {
           this.setState({
             dragOnTop: false,
-            dragOnBottom: true,
+            dragOnBottom: true
           });
         }
       } else if (pos <= height / 2 && pos > 0) {
         if (!this.state.dragOnTop || this.state.dragOnBottom) {
           this.setState({
             dragOnTop: true,
-            dragOnBottom: false,
+            dragOnBottom: false
           });
         }
       } else {
         if (this.state.dragOnTop || this.state.dragOnBottom) {
           this.setState({
             dragOnTop: false,
-            dragOnBottom: false,
+            dragOnBottom: false
           });
         }
       }
     }
-  },
+  }
 
-  handleTabDragStart: function(event) {
+  handleTabDragStart(event) {
     event.stopPropagation();
 
     let group = this.props.group;
@@ -288,4 +267,19 @@ const Tab = React.createClass({
     event.dataTransfer.setData("tab/index", this.props.tabIndex);
     event.dataTransfer.setData("tab/group", group.id);
   }
-});
+};
+
+Tab.propTypes = {
+  onTabClick: PropTypes.func,
+  onGroupDrop: PropTypes.func,
+  onMoveTabToNewGroup: PropTypes.func,
+  group: PropTypes.object,
+  tab: PropTypes.object.isRequired,
+  tabIndex: PropTypes.number,
+  opened: PropTypes.bool,
+  onCloseTab: PropTypes.func,
+  onOpenTab: PropTypes.func,
+  searchTabResult: PropTypes.bool,
+  groups: PropTypes.object,
+  onChangePinState: PropTypes.func
+};

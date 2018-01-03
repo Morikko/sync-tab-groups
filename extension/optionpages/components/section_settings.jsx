@@ -1,18 +1,5 @@
-const SettingsSection = React.createClass({
-  propTypes: {
-    options: React.PropTypes.object.isRequired,
-    onOptionChange: React.PropTypes.func,
-    selected: React.PropTypes.string,
-  },
-
-  prefix: "groups",
-
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({
-    })
-  },
-
-  render: function() {
+class SettingsSection extends React.Component {
+  render() {
     return (
       <div
         className={"option-section " + (this.props.selected==="settings"?
@@ -65,6 +52,11 @@ const SettingsSection = React.createClass({
       </div>
 
     );
-  },
+  }
+};
 
-});
+SettingsSection.propTypes = {
+  options: PropTypes.object.isRequired,
+  onOptionChange: PropTypes.func,
+  selected: PropTypes.string,
+};

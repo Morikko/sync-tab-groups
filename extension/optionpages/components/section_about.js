@@ -1,14 +1,20 @@
-const AboutSection = React.createClass({
-  propTypes: {
-    selected: React.PropTypes.string
-  },
+class AboutSection extends React.Component {
+  render() {
+    let release_notes = [{
+      version: "",
+      date: "",
+      note: "",
+      new: [],
+      removed: [],
+      changed: [],
+      bugfix: [],
+      developper: []
+    }];
 
-  render: function () {
     return React.createElement(
       "div",
       {
-        className: "option-section " + (this.props.selected === "about" ? "visible" : "invisible")
-      },
+        className: "option-section " + (this.props.selected === "about" ? "visible" : "invisible") },
       React.createElement(
         "h1",
         { className: "section-title" },
@@ -25,26 +31,22 @@ const AboutSection = React.createClass({
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam nec sodales ligula. Nam tempus ipsum sit amet lorem pellentesque, sed malesuada urna rutrum. Morbi placerat tempus mollis. Sed vel libero mattis, ultrices tellus in, consequat enim. Ut vitae fermentum nulla, vel consectetur mi. Etiam sit amet cursus augue. Ut justo metus, venenatis mollis viverra eu, lacinia faucibus velit. Donec ultricies gravida finibus. Duis ligula ante, vehicula vitae sapien nec, bibendum pretium mi. Proin porta enim at risus mattis, et sagittis odio sollicitudin. Ut mattis mauris id sem dignissim tincidunt eget a sem."
       ),
       React.createElement(
-        "p",
+        "ul",
         null,
         React.createElement(
-          "ul",
+          "li",
           null,
-          React.createElement(
-            "li",
-            null,
-            "Development"
-          ),
-          React.createElement(
-            "li",
-            null,
-            "Contribute"
-          ),
-          React.createElement(
-            "li",
-            null,
-            "Bug"
-          )
+          "Development"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Contribute"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Bug"
         )
       ),
       React.createElement(
@@ -53,17 +55,6 @@ const AboutSection = React.createClass({
         "Release Notes"
       )
     );
-
-    release_notes = [{
-      version: "",
-      date: "",
-      note: "",
-      new: [],
-      removed: [],
-      changed: [],
-      bugfix: [],
-      developper: []
-    }];
     /*
       React.DOM.div({
      }, [
@@ -81,4 +72,8 @@ const AboutSection = React.createClass({
     */
   }
 
-});
+};
+
+AboutSection.propTypes = {
+  selected: PropTypes.string
+};

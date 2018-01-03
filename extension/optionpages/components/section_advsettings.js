@@ -1,8 +1,8 @@
 const AdvSettingsSection = React.createClass({
   propTypes: {
-    options: React.PropTypes.object.isRequired,
-    onOptionChange: React.PropTypes.func,
-    selected: React.PropTypes.string,
+    options: PropTypes.object.isRequired,
+    onOptionChange: PropTypes.func,
+    selected: PropTypes.string,
   },
 
   prefix: "groups",

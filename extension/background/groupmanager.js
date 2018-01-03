@@ -24,6 +24,7 @@ GroupManager.Group = function(id,
   this.windowId = windowId;
   this.index = -1; // Position of this Group in an Array
   this.position = -1; // Position of this Group when displaying
+  this.expand = false; // state for ui
   this.lastAccessed = 0;
 }
 
@@ -172,6 +173,25 @@ GroupManager.getCopy = function() {
 }
 
 /******** SETTER *********/
+/**
+ * Change the expand state of one or more group to expandState
+ * @param {Array[Number]} groupIds
+ * @param {Boolean} expandState
+ * @param {Array[Group]} groups (Optional)
+ */
+GroupManager.changeExpandState = function (groupIds, expandState, groups = GroupManager.groups) {
+  try {
+    groupIds.map((groupId)=> {
+      let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, true, groups);
+
+      groups[groupIndex].expand = expandState;
+    })
+    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  } catch (e) {
+    let msg = "GroupManager.changeExpandState failed; " + e.message;
+    console.error(msg);
+  }
+}
 
 GroupManager.changeGroupPosition = function(groupId, position, groups = GroupManager.groups) {
   try {

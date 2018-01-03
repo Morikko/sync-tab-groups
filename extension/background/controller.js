@@ -221,6 +221,13 @@ Controller.onTabChangePin = function(params) {
   );
 };
 
+Controller.onChangeExpand = function(params) {
+  GroupManager.changeExpandState(
+    params.groupId,
+    params.expand,
+  );
+};
+
 // START of the extension
 Controller.init();
 
@@ -278,6 +285,9 @@ Controller.popupMessenger = function(message) {
       break;
     case "Tab:ChangePin":
       Controller.onTabChangePin(message.params);
+      break;
+    case "Group:Expand":
+      Controller.onChangeExpand(message.params);
       break;
   }
 }
@@ -445,8 +455,7 @@ browser.runtime.onInstalled.addListener(() => {
     "type": "basic",
     "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
     "title": "Sync Tab Groups 0.4.1 installed!",
-    "message":
-      "  * Fix: More secure initialization of the extension\n" +
+    "message": "  * Fix: More secure initialization of the extension\n" +
       "  * Remove: Bookmark auto-save until I will have fix it\n" +
       "  * Notes: Exports manually your groups regularly from the preferences or with a right click on the toolbar icon. So, you will keep a save.\n" +
       "Thanks for your feedbacks :)",

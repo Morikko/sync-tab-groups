@@ -5,43 +5,41 @@ Copyright (c) 2017 Eric Masseran
 From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
 */
-const TabList = React.createClass({
-  propTypes: {
-    onTabClick: React.PropTypes.func,
-    tabs: React.PropTypes.array.isRequired,
-    opened: React.PropTypes.bool.isRequired,
-    onCloseTab: React.PropTypes.func,
-    onOpenTab: React.PropTypes.func,
-    onGroupDrop: React.PropTypes.func,
-    onMoveTabToNewGroup: React.PropTypes.func,
-    searchTabsResults: React.PropTypes.object,
-    groups: React.PropTypes.object,
-    onChangePinState: React.PropTypes.func,
-  },
-
-  render: function() {
-    return (
-      React.DOM.ul({
-          className: "tab-list"
-        },
-        this.props.tabs.map((tab, index) => {
-          return React.createElement(Tab, {
-            key: index,
-            group: this.props.group,
-            tabIndex: index,
-            tab: tab,
-            onTabClick: this.props.onTabClick,
-            onGroupDrop: this.props.onGroupDrop,
-            onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
-            opened: this.props.opened,
-            onCloseTab: this.props.onCloseTab,
-            onOpenTab: this.props.onOpenTab,
-            searchTabResult: this.props.searchTabsResults[index]||false,
-            groups: this.props.groups,
-            onChangePinState: this.props.onChangePinState,
-          });
-        })
-      )
+class TabList extends React.Component {
+  render() {
+    return React.createElement(
+      "ul",
+      { className: "tab-list" },
+      this.props.tabs.map((tab, index) => {
+        return React.createElement(Tab, {
+          key: index,
+          group: this.props.group,
+          tabIndex: index,
+          tab: tab,
+          onTabClick: this.props.onTabClick,
+          onGroupDrop: this.props.onGroupDrop,
+          onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
+          opened: this.props.opened,
+          onCloseTab: this.props.onCloseTab,
+          onOpenTab: this.props.onOpenTab,
+          searchTabResult: this.props.searchTabsResults[index] || false,
+          groups: this.props.groups,
+          onChangePinState: this.props.onChangePinState
+        });
+      })
     );
   }
-});
+};
+
+TabList.propTypes = {
+  onTabClick: PropTypes.func,
+  tabs: PropTypes.array.isRequired,
+  opened: PropTypes.bool.isRequired,
+  onCloseTab: PropTypes.func,
+  onOpenTab: PropTypes.func,
+  onGroupDrop: PropTypes.func,
+  onMoveTabToNewGroup: PropTypes.func,
+  searchTabsResults: PropTypes.object,
+  groups: PropTypes.object,
+  onChangePinState: PropTypes.func
+};

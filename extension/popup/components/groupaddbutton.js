@@ -5,131 +5,139 @@ Copyright (c) 2017 Eric Masseran
 From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
 */
-const GroupAddButton = React.createClass({
-  propTypes: {
-    onClick: React.PropTypes.func,
-    onDrop: React.PropTypes.func,
-    currentlySearching: React.PropTypes.bool,
-  },
-
-  getInitialState: function() {
-    return {
+class GroupAddButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       draggingOverCounter: 0,
       editing: false,
       newTitle: '',
       tabIndex: -1,
-      sourceGroup: -1,
+      sourceGroup: -1
     };
-  },
 
-  render: function() {
+    this.onEditAbort = this.onEditAbort.bind(this);
+    this.onTitleSet = this.onTitleSet.bind(this);
+    this.handleGroupTitleInputKey = this.handleGroupTitleInputKey.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleGroupDragOver = this.handleGroupDragOver.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
+  }
+
+  render() {
     let buttonClasses = classNames({
       draggingOver: this.state.draggingOverCounter !== 0,
       hiddenBySearch: this.props.currentlySearching,
       addButton: true
     });
 
-    let button = [];
+    let button;
     if (this.state.editing) {
-      button.push(browser.i18n.getMessage("group_name") + ': ');
-      button.push(React.DOM.input({
-        className: "max-width-115",
-        autoFocus: true,
-        type: "text",
-        onChange: (event) => {
-          this.setState({
-            newTitle: event.target.value
-          });
-        },
-        onClick: (event) => {
-          event.stopPropagation();
-        },
-        onFocus: (e) => {
-          e.target.select();
-        },
-        onKeyUp: this.handleGroupTitleInputKey
-      }));
-      button.push(
-        React.DOM.span({
-          className: "groupadd-controls"
-        }, [
-          React.DOM.i({
+      button = React.createElement(
+        "span",
+        { className: "group-title" },
+        React.createElement(
+          "span",
+          null,
+          browser.i18n.getMessage("group_name") + ': '
+        ),
+        React.createElement("input", {
+          className: "max-width-115",
+          autoFocus: true,
+          type: "text",
+          onChange: event => {
+            this.setState({
+              newTitle: event.target.value
+            });
+          },
+          onClick: event => {
+            event.stopPropagation();
+          },
+          onFocus: e => {
+            e.target.select();
+          },
+          onKeyUp: this.handleGroupTitleInputKey
+        }),
+        React.createElement(
+          "span",
+          {
+            className: "groupadd-controls" },
+          React.createElement("i", {
             className: "group-edit fa fa-fw fa-check",
             onClick: this.onTitleSet
           }),
-          React.DOM.i({
+          React.createElement("i", {
             className: "group-edit fa fa-fw fa-ban",
             onClick: this.onEditAbort
           })
-        ])
+        )
       );
     } else {
-      button.push(
-        React.DOM.span({
-          },
-          browser.i18n.getMessage("add_group"))
+      button = React.createElement(
+        "span",
+        { className: "group-title" },
+        React.createElement(
+          "span",
+          null,
+          browser.i18n.getMessage("add_group")
+        )
       );
     }
 
-    return (
-      React.DOM.li({
-          className: buttonClasses,
-          onClick: this.handleClick,
-          onDrop: this.handleDrop,
-          onDragOver: this.handleGroupDragOver,
-          onDragEnter: this.handleDragEnter,
-          onDragLeave: this.handleDragLeave
-        },
-        React.DOM.span({
-            className: "group-title"
-          },
-          button)
-      )
+    return React.createElement(
+      "li",
+      {
+        className: buttonClasses,
+        onClick: this.handleClick,
+        onDrop: this.handleDrop,
+        onDragOver: this.handleGroupDragOver,
+        onDragEnter: this.handleDragEnter,
+        onDragLeave: this.handleDragLeave
+      },
+      button
     );
-  },
+  }
 
-  onEditAbort: function(event) {
+  onEditAbort(event) {
     event.stopPropagation();
     this.setState({
       editing: false,
-      newTitle: '',
+      newTitle: ''
     });
-  },
+  }
 
-  resetButton: function() {
+  resetButton() {
     this.setState({
       editing: false,
       newTitle: '',
       tabIndex: -1,
       sourceGroup: -1
     });
-  },
+  }
 
-  onTitleSet: function(event) {
+  onTitleSet(event) {
     event.stopPropagation();
     if (this.state.tabIndex >= 0 && this.state.sourceGroup >= 0) {
-      this.props.onDrop(
-        this.state.newTitle,
-        this.state.sourceGroup,
-        this.state.tabIndex,
-      );
+      this.props.onDrop(this.state.newTitle, this.state.sourceGroup, this.state.tabIndex);
     } else {
       this.props.onClick(this.state.newTitle);
     }
     this.resetButton();
-  },
+  }
 
-  handleGroupTitleInputKey: function(event) {
+  handleGroupTitleInputKey(event) {
     event.stopPropagation();
-    if (event.keyCode === 13) { // Enter key
+    if (event.keyCode === 13) {
+      // Enter key
       this.onTitleSet(event);
     }
-  },
+  }
 
-  handleClick: function(event) {
+  handleClick(event) {
     event.stopPropagation();
     if (!this.state.editing) {
-      if (event.button === 1) { // Mouse middle click
+      if (event.button === 1) {
+        // Mouse middle click
         this.props.onClick('');
         this.resetButton();
       } else {
@@ -138,41 +146,41 @@ const GroupAddButton = React.createClass({
         });
       }
     }
-  },
+  }
 
-  handleGroupDragOver: function(event) {
+  handleGroupDragOver(event) {
     event.stopPropagation();
     event.preventDefault();
     if (event.dataTransfer.getData("type") === "group") {
-      event.dataTransfer.dropEffect = "none"
+      event.dataTransfer.dropEffect = "none";
     }
-  },
+  }
 
-  handleDragEnter: function(event) {
+  handleDragEnter(event) {
     event.stopPropagation();
     event.preventDefault();
     if (event.dataTransfer.getData("type") === "tab") {
       this.setState({
-        draggingOverCounter: (this.state.draggingOverCounter == 1) ? 2 : 1
+        draggingOverCounter: this.state.draggingOverCounter == 1 ? 2 : 1
       });
     } else {
-      event.dataTransfer.dropEffect = "none"
+      event.dataTransfer.dropEffect = "none";
     }
-  },
+  }
 
-  handleDragLeave: function(event) {
+  handleDragLeave(event) {
     event.stopPropagation();
     event.preventDefault();
     this.setState({
       draggingOverCounter: this.state.draggingOverCounter == 2 ? 1 : 0
     });
-  },
+  }
 
-  handleDrop: function(event) {
+  handleDrop(event) {
     event.stopPropagation();
 
     this.setState({
-      draggingOverCounter: 0,
+      draggingOverCounter: 0
     });
 
     this.setState({
@@ -181,6 +189,12 @@ const GroupAddButton = React.createClass({
       sourceGroup: parseInt(event.dataTransfer.getData("tab/group")),
       tabIndex: parseInt(event.dataTransfer.getData("tab/index"))
     });
-  },
+  }
 
-});
+};
+
+GroupAddButton.propTypes = {
+  onClick: PropTypes.func,
+  onDrop: PropTypes.func,
+  currentlySearching: PropTypes.bool
+};

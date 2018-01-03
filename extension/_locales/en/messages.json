@@ -422,5 +422,15 @@
   "open_group": {
     "message": "Click to switch to this group in the current window.",
     "description": "Hover help for open group click"
+  },
+
+  "expand_all_groups": {
+    "message": "Expand all groups (see tabs)",
+    "description": "Hover help for button for expanding all groups (see tabs)"
+  },
+
+  "reduce_all_groups": {
+    "message": "Reduce all groups (hide tabs)",
+    "description": "Hover help for button for reducing all groups (hide tabs)"
   }
 }

@@ -1,13 +1,5 @@
-const InterfaceSection = React.createClass({
-  propTypes: {
-    options: React.PropTypes.object.isRequired,
-    onOptionChange: React.PropTypes.func,
-    selected: React.PropTypes.string,
-  },
-
-  prefix: "popup",
-
-  render: function() {
+class InterfaceSection extends React.Component {
+  render() {
     return (
       <div className={"option-section " + (this.props.selected==="interface"?
         "visible":"invisible")}>
@@ -71,7 +63,12 @@ const InterfaceSection = React.createClass({
           onCheckChange={this.props.onOptionChange}
           id="groups-showGroupTitleInWindow"/>
       </div>
-      );
-  },
+    );
+  }
+};
 
-});
+InterfaceSection.propTypes = {
+  options: PropTypes.object.isRequired,
+  onOptionChange: PropTypes.func,
+  selected: PropTypes.string,
+}

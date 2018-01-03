@@ -1,37 +1,37 @@
-const ButtonFile = React.createClass({
-  propTypes: {
-    title: React.PropTypes.string,
-    onFileSelected: React.PropTypes.func,
-    id: React.PropTypes.string,
-  },
+class ButtonFile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-  render: function() {
-    return React.DOM.div({
-      className: "button-file",
-    }, [
-      React.DOM.input({
+  render() {
+    return React.createElement(
+      "div",
+      { className: "button-file" },
+      React.createElement("input", {
         className: "button-file-input",
         id: this.props.id,
         type: "file",
         onChange: this.handleClick,
-        tabIndex: "-1",
+        tabIndex: "-1"
       }),
-      React.DOM.label({
+      React.createElement(
+        "label",
+        {
           className: "button-file-label",
-          for: this.props.id,
-          tabIndex: "0",
-        },
+          htmlFor: this.props.id,
+          tabIndex: "0" },
         this.props.title
-      ),
-    ]);
-  },
+      )
+    );
+  }
 
-  handleClick: async function(event) {
+  async handleClick(event) {
     event.stopPropagation();
     try {
       let files = event.target.files;
       if (files.length === 0) {
-        return "No file selected..."
+        return "No file selected...";
       }
       const jsonContent = await StorageManager.File.readJsonFile(files[0]);
       this.props.onFileSelected(jsonContent);
@@ -41,5 +41,10 @@ const ButtonFile = React.createClass({
       return msg;
     }
   }
+};
 
-});
+ButtonFile.propTypes = {
+  title: PropTypes.string,
+  onFileSelected: PropTypes.func,
+  id: PropTypes.string
+};

@@ -1,40 +1,54 @@
-const OptionSelect = React.createClass({
-  propTypes: {
-    onValueChange: React.PropTypes.func,
-    selected: React.PropTypes.bool,
-    id: React.PropTypes.string,
-    label: React.PropTypes.string,
-    choices: React.PropTypes.object, // [{value, label}]
-  },
+class OptionSelect extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
 
-  render: function() {
-    return React.DOM.div({
-      className: "select",
-      for: this.props.id
-    }, [
-      React.DOM.select({
+  render() {
+    return React.createElement(
+      "div",
+      {
+        className: "select",
+        htmlFor: this.props.id },
+      React.createElement(
+        "select",
+        {
           id: this.props.id,
           onChange: this.handleChange,
-        },
-        this.props.choices.map((choice) => {
-          return React.DOM.option({
-            value: choice.value,
-            selected: choice.value === this.props.selected,
-          }, choice.label)
-        })),
-      React.DOM.div({
-        className: "select__arrow"
-      }),
-      this.props.label,
-    ]);
-  },
+          value: this.props.selected },
+        this.props.choices.map(choice => {
+          return React.createElement(
+            "option",
+            {
+              key: choice.value,
+              value: choice.value
+              /*selected={choice.value===this.props.selected}*/ },
+            choice.label
+          );
+        })
+      ),
+      React.createElement("div", { className: "select__arrow" }),
+      React.createElement(
+        "span",
+        null,
+        this.props.label
+      )
+    );
+  }
 
-  handleChange: function(event) {
+  handleChange(event) {
     event.stopPropagation();
 
-    let selectedValue = parseInt(event.target.options[event.target.selectedIndex].value, 10)
+    let selectedValue = parseInt(event.target.options[event.target.selectedIndex].value, 10);
 
     this.props.onValueChange(this.props.id, selectedValue);
+  }
+};
 
-  },
-});
+OptionSelect.propTypes = {
+  onValueChange: PropTypes.func,
+  selected: PropTypes.bool,
+  id: PropTypes.string,
+  label: PropTypes.string,
+  choices: PropTypes.object // [{value, label}]
+};

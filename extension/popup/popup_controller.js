@@ -101,6 +101,13 @@ const Actions = {
     });
   },
 
+  onChangeExpand: function(groupId, value) {
+    Utils.sendMessage("Group:Expand", {
+      groupId: groupId,
+      expand: value,
+    });
+  },
+
   onOptionChange: function(name, value) {
     Utils.sendMessage("Option:Change", {
       optionName: name,
@@ -139,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onOptionChange: Actions.onOptionChange,
         onGroupChangePosition: Actions.changeGroupPosition,
         onChangePinState: Actions.onChangePinState,
+        onChangeExpand: Actions.onChangeExpand,
       })
     ),
     document.getElementById("content")

@@ -1,11 +1,6 @@
-OptionsMenu = React.createClass({
-  propTypes: {
-    tabs: React.PropTypes.object,
-    selected: React.PropTypes.string,
-    onClick: React.PropTypes.func
-  },
+class OptionsMenu extends React.Component {
 
-  render: function () {
+  render() {
     return React.createElement(
       "div",
       { id: "menu" },
@@ -30,7 +25,9 @@ OptionsMenu = React.createClass({
         this.props.tabs.map(tab => {
           return React.createElement(
             "a",
-            { href: "#" + tab.href,
+            {
+              key: tab.href,
+              href: "#" + tab.href,
               className: "tab " + (tab.href === this.props.selected ? "selected" : "") },
             tab.title
           );
@@ -38,4 +35,10 @@ OptionsMenu = React.createClass({
       )
     );
   }
-});
+};
+
+OptionsMenu.propTypes = {
+  tabs: PropTypes.object,
+  selected: PropTypes.string,
+  onClick: PropTypes.func
+};

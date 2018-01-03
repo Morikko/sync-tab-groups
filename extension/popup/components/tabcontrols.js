@@ -1,27 +1,23 @@
-const TabControls = React.createClass({
-  propTypes: {
-    opened: React.PropTypes.bool.isRequired,
-    onCloseTab: React.PropTypes.func,
-    onOpenTab: React.PropTypes.func,
-    onCloseTab: React.PropTypes.func,
-    onOpenTab: React.PropTypes.func,
-  },
+class TabControls extends React.Component {
+  render() {
+    let controls = React.createElement("i", {
+      title: browser.i18n.getMessage("close_tab"),
+      className: "tab-edit fa fa-fw fa-times",
+      onClick: this.props.onCloseTab
+    });
 
-  render: function() {
-    let controls = [];
-
-    controls.push(
-      React.DOM.i({
-        title: browser.i18n.getMessage("close_tab"),
-        className: "tab-edit fa fa-fw fa-times",
-        onClick: this.props.onCloseTab
-      })
-    );
-
-    return React.DOM.span({
-        className: "tab-controls"
-      },
-      controls,
+    return React.createElement(
+      "span",
+      { className: "tab-controls" },
+      controls
     );
   }
-});
+};
+
+TabControls.propTypes = {
+  opened: PropTypes.bool.isRequired,
+  onCloseTab: PropTypes.func,
+  onOpenTab: PropTypes.func,
+  onCloseTab: PropTypes.func,
+  onOpenTab: PropTypes.func
+};

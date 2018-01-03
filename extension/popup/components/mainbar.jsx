@@ -1,19 +1,17 @@
-const MainBar = React.createClass({
-  propTypes: {
-    onChangeWindowSync: React.PropTypes.func,
-    onClickPref: React.PropTypes.func,
-    onClickMaximize: React.PropTypes.func,
-    isSync: React.PropTypes.bool,
-    currentWindowId: React.PropTypes.number.isRequired,
-  },
-
-  getInitialState: function() {
-    return {
+class MainBar extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
       maximized: false,
     };
-  },
 
-  render: function() {
+    this.handleClickPref = this.handleClickPref.bind(this);
+    this.handleCloseAllExpand = this.handleCloseAllExpand.bind(this);
+    this.handleOpenAllExpand = this.handleOpenAllExpand.bind(this);
+    this.handleCheckChange = this.handleCheckChange.bind(this);
+  }
+
+  render() {
     let id = "window-is-sync";
 
     let maximizerClasses = classNames({
@@ -34,52 +32,79 @@ const MainBar = React.createClass({
                 + (this.props.isSync?"window-grouped":"not-window-grouped")}
              onClick={this.handleCheckChange}>
           <i className={"app-pref fa fa-fw fa-"+(this.props.isSync?"check-":"")+"square-o"}/>
-          {browser.i18n.getMessage("synchronized_window")}
+          <span>{browser.i18n.getMessage("synchronized_window")}</span>
         </div>
         <div className="manage-button">
           Manage groups
         </div>
         <div className="right-actions">
           <i
-            className="app-pref fa fa-fw fa-gear"
-            title={browser.i18n.getMessage("open_preferences")}
-            onClick={this.handleClickPref}
+            className="app-pref fa fa-fw fa-angle-double-down"
+            title={browser.i18n.getMessage("expand_all_groups")}
+            onClick={this.handleOpenAllExpand}
+          />
+          <i
+            className="app-pref fa fa-fw fa-angle-double-up"
+            title={browser.i18n.getMessage("reduce_all_groups")}
+            onClick={this.handleCloseAllExpand}
           />
           <i
             className={maximizerClasses}
             title={title_expand}
             onClick={this.props.onClickMaximize}
           />
+          <i
+            className="app-pref fa fa-fw fa-gear"
+            title={browser.i18n.getMessage("open_preferences")}
+            onClick={this.handleClickPref}
+          />
         </div>
 
       </li>
     );
-  },
+  }
 
-  handleClickPref: function(event) {
+  handleOpenAllExpand(event) {
+    this.props.handleAllChangeExpand(true);
+  }
+
+  handleCloseAllExpand(event) {
+    this.props.handleAllChangeExpand(false);
+  }
+
+  handleClickPref(event) {
     event.stopPropagation();
     this.props.onClickPref();
     window.close();
-  },
+  }
 
-  handleCheckChange: function(event) {
+  handleCheckChange(event) {
     event.stopPropagation();
     this.props.onChangeWindowSync(this.props.currentWindowId, !this.props.isSync);
-  },
+  }
 
-  handleGroupDragOver: function(event) {
-    event.stopPropagation();
-  },
-
-  handleDragEnter: function(event) {
-    event.stopPropagation();
-  },
-
-  handleDragLeave: function(event) {
-    event.stopPropagation();
-  },
-
-  handleDrop: function(event) {
+  handleGroupDragOver(event) {
     event.stopPropagation();
   }
-});
+
+  handleDragEnter(event) {
+    event.stopPropagation();
+  }
+
+  handleDragLeave(event) {
+    event.stopPropagation();
+  }
+
+  handleDrop(event) {
+    event.stopPropagation();
+  }
+};
+
+MainBar.propTypes = {
+  onChangeWindowSync: PropTypes.func,
+  onClickPref: PropTypes.func,
+  onClickMaximize: PropTypes.func,
+  isSync: PropTypes.bool,
+  currentWindowId: PropTypes.number.isRequired,
+  handleAllChangeExpand: PropTypes.func,
+};

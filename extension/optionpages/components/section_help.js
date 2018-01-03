@@ -1,11 +1,5 @@
-const HelpSection = React.createClass({
-  propTypes: {
-    selected: React.PropTypes.string
-  },
-
-  prefix: "pinnedTab",
-
-  render: function () {
+class HelpSection extends React.Component {
+  render() {
     return React.createElement(
       "div",
       {
@@ -62,4 +56,8 @@ const HelpSection = React.createClass({
       )
     );
   }
-});
+};
+
+HelpSection.propTypes = {
+  selected: PropTypes.string
+};

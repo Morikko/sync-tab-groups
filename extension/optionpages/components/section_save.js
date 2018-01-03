@@ -1,15 +1,5 @@
-const SaveSection = React.createClass({
-  propTypes: {
-    options: React.PropTypes.object.isRequired,
-    onOptionChange: React.PropTypes.func,
-    onImportClick: React.PropTypes.func,
-    onExportClick: React.PropTypes.func,
-    selected: React.PropTypes.string
-  },
-
-  prefix: "bookmarks",
-
-  render: function () {
+class SaveSection extends React.Component {
+  render() {
     return React.createElement(
       "div",
       { className: "option-section " + (this.props.selected === "save" ? "visible" : "invisible") },
@@ -81,5 +71,12 @@ const SaveSection = React.createClass({
       }),
     ])*/
   }
+};
 
-});
+SaveSection.propTypes = {
+  options: PropTypes.object.isRequired,
+  onOptionChange: PropTypes.func,
+  onImportClick: PropTypes.func,
+  onExportClick: PropTypes.func,
+  selected: PropTypes.string
+};

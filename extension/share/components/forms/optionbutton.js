@@ -1,23 +1,28 @@
-const OptionButton = React.createClass({
-  propTypes: {
-    title: React.PropTypes.string,
-    onClick: React.PropTypes.func,
-    id: React.PropTypes.string,
-  },
+class OptionButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-  render: function() {
-    return React.DOM.button({
-      type: "button",
-      className: "option-button",
-      onClick: this.handleClick
-    }, [
+  render() {
+    return React.createElement(
+      "button",
+      {
+        type: "button",
+        className: "option-button",
+        onClick: this.handleClick },
       this.props.title
-    ]);
-  },
+    );
+  }
 
-  handleClick: function(event) {
+  handleClick(event) {
     event.stopPropagation();
     this.props.onClick();
   }
+};
 
-});
+OptionButton.propTypes = {
+  title: PropTypes.string,
+  onClick: PropTypes.func,
+  id: PropTypes.string
+};

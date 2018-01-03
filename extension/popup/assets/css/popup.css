@@ -93,7 +93,7 @@ li {
 
 .mainbar {
   border-top: #ccc solid 2px;
-  background-color: var(--not-checked); 
+  background-color: var(--not-checked);
 }
 
 .grouped-button {
@@ -108,7 +108,7 @@ li {
   display: inline-block;
   word-wrap:break-word;
   width: 80%;
-  line-height: 17px;
+
   height: 34px;
   position: relative;
   left: 30px;
@@ -116,17 +116,26 @@ li {
   text-align: center;
 }
 
+.menu-minimized .grouped-button span {
+  line-height: 17px;
+}
+
+.menu-maximized .grouped-button span {
+  line-height: 34px;
+}
+
+
 .grouped-button i {
   position: absolute;
 }
 
 .grouped-button.not-window-grouped {
-  background-color: var(--not-checked); 
+  background-color: var(--not-checked);
   opacity: 0.7;
 }
 
 .grouped-button.window-grouped {
-  background-color: var(--checked); 
+  background-color: var(--checked);
   color: white;
 }
 
@@ -135,7 +144,7 @@ li {
   line-height: 34px;
   vertical-align: middle;
   display: inline-block;
-  width: calc(70% - 64px);
+  width: calc(70% - 128px);
   text-align: center;
   vertical-align: middle;
   border-left: #ccc solid 1px;
@@ -143,7 +152,7 @@ li {
 }
 
 .manage-button:hover {
-  background-color: var(--not-checked-hover); 
+  background-color: var(--not-checked-hover);
 }
 
 .mainbar .left-actions {

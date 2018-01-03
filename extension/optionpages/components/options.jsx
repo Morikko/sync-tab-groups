@@ -1,62 +1,66 @@
-Options = (() => {
-  const OptionsStandalone = React.createClass({
-    propTypes: {
-      onOptionChange: React.PropTypes.func,
-      onBackUpClick: React.PropTypes.func,
-      onImportClick: React.PropTypes.func,
-      onExportClick: React.PropTypes.func
-    },
+class OptionsStandalone extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      href: location.href.split('#')[1] || "about"
+    };
 
-    getInitialState: function() {
-      return {
-        href: location.href.split('#')[1] || "about"
-      };
-    },
+    this.onNavClick = this.onNavClick.bind(this);
+  }
 
-    componentDidMount: function() {
-      window.addEventListener("hashchange", this.readHash);
-    },
+  componentDidMount() {
+    window.addEventListener("hashchange", this.readHash);
+  }
 
-    componentWillUnmount: function() {
-      window.removeEventListener("hashchange", this.readHash);
-    },
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.readHash);
+  }
 
-    render: function() {
+  render() {
 
-      let tab = function(title, href) {
-        this.href = href;
-        this.title = title;
-      };
-      let tabs = [
-        new tab("Settings", "settings"),
-        new tab("Interface", "interface"),
-        new tab("Shortcuts", "shortcuts"),
-        new tab("Save/Restore", "save"),
-        //new tab("Advanced", "advanced"),
-        new tab("Guide", "help"),
-        new tab("About", "about"),
-      ];
-      return (
-        <div>
+    let tab = function(title, href) {
+      this.href = href;
+      this.title = title;
+    };
+    let tabs = [
+      new tab("Settings", "settings"),
+      new tab("Interface", "interface"),
+      new tab("Shortcuts", "shortcuts"),
+      new tab("Save/Restore", "save"),
+      //new tab("Advanced", "advanced"),
+      new tab("Guide", "help"),
+      new tab("About", "about"),
+    ];
+    return (
+      <div>
           <OptionsMenu tabs={tabs} selected={this.state.href}
                         onClick={this.onNavClick}/>
           <OptionsPanel {...this.props} selected={this.state.href} />
       </div>);
-    },
+  }
 
-    onNavClick: function(event) {
-      event.stopPropagation();
-      this.setState({
-        href: event.target.href.split("#")[1]
-      });
-    },
+  onNavClick(event) {
+    event.stopPropagation();
+    this.setState({
+      href: event.target.href.split("#")[1]
+    });
+  }
 
-    readHash: function() {
-      this.setState({
-        href: location.href.split('#')[1] || "about"
-      });
-    }
-  });
+  readHash() {
+    this.setState({
+      href: location.href.split('#')[1] || "about"
+    });
+  }
+};
+
+OptionsStandalone.propTypes = {
+  onOptionChange: PropTypes.func,
+  onBackUpClick: PropTypes.func,
+  onImportClick: PropTypes.func,
+  onExportClick: PropTypes.func
+};
+
+Options = (() => {
   return ReactRedux.connect((state) => {
     return {
       options: state.get("options")
