@@ -49,7 +49,28 @@ I would gladly accept other translations. Add it in `_locales/`, while following
 # Bugs
 If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-groups/issues).
 
-# Release
+# Build
+
+## Makefile
+- `make js` compile all .jsx -> .js
+- `make watch` launch a daemon that compile all .jsx -> js and do it again when you save a .jsx file
+- `make watch REBUILD=` Idem as previous but recompile all .jsx files first
+- `make stop-watch` kill previous daemon
+- `make release` Create the extension in release mode, a zip and a xpi in build/
+- `make` or `make all` Compile all .jsx and export the release
+- `make clean` Remove files built in build/ only
+
+## Release mode
+1. included scripts are in .production.min.js instead of .development.js
+2. Utils.DEBUG_MODE is set to false
+3. Extension in build doesn't include
+  - .jsx files
+  - .development.js libraries
+  - tests files
+4. ZIP and XPI files are mirror of extension in build/
+
+
+
 - Change Utils.DEGUG_MODE to false
 
 # Thanks

@@ -6,7 +6,8 @@ var Utils = Utils || {};
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
  */
-Utils.DEGUG_MODE = true;
+// If change the line, update makefile
+Utils.DEGUG_MODE=true;
 Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
 
 var TaskManager = TaskManager || {};
