@@ -21,7 +21,5 @@ class TabControls extends React.Component {
 TabControls.propTypes = {
   opened: PropTypes.bool.isRequired,
   onCloseTab: PropTypes.func,
-  onOpenTab: PropTypes.func,
-  onCloseTab: PropTypes.func,
   onOpenTab: PropTypes.func
 };

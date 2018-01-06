@@ -12,6 +12,42 @@
   --disabled: #7b7b7b;
 }
 
+/** Radio Button **/
+.radio-button {
+  display: inline-block;
+  height: 35px;
+}
+
+.radio-button .left, .radio-button .right{
+  display: inline-block;
+  background-color: var(--not-checked);
+  color: #aaa;
+  height: 100%;
+  line-height: 35px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.radio-button .left {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.radio-button .right {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.radio-button .highlight {
+  background-color: var(--checked);
+  color: #fff;
+}
+
+
+/** End Radio Button **/
+
 .button-file {
   position: relative;
   /*! width: 225px; */

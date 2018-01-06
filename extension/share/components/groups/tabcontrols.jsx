@@ -22,6 +22,4 @@ TabControls.propTypes = {
   opened: PropTypes.bool.isRequired,
   onCloseTab: PropTypes.func,
   onOpenTab: PropTypes.func,
-  onCloseTab: PropTypes.func,
-  onOpenTab: PropTypes.func,
 }

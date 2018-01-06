@@ -1,0 +1,99 @@
+body {
+  background-color: #f9f9fa;
+  color: #444;
+  font-size: 1.1em;
+}
+
+#menu {
+  display: block;
+  border-bottom: 3px solid #424f5a;
+  width: 100%;
+  color: #c4cdd4;
+  height: 50px;
+  z-index: 1;
+}
+
+.logo {
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 50px;
+  color: #2aa1c0;
+}
+
+.logo span {
+  line-height: 50px;
+}
+
+.logo img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#menu .title {
+  line-height: 50px;
+  font-size: 1.5em;
+  color: #424f5a;
+}
+
+#menu .right-buttons {
+  display: inline-block;
+  float: right;
+  line-height: 50px;
+}
+/*
+#content {
+  max-width: 800px;
+  margin: auto;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  font-size: 2.5em;
+  height: 64px;
+}
+
+.title span {
+  line-height: 64px;
+  vertical-align: middle;
+}
+
+.title img {
+  margin-right: 20px;
+  vertical-align: middle;
+}
+
+h1 {
+  margin-top: 60px;
+  margin-bottom: 30px;
+  font-size: 1.6em;
+  border-bottom: #2aa1c0 solid 2px;
+}
+
+button {
+  margin: auto;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+tr>th {
+  padding-bottom: 10px;
+}
+
+tr>td {
+  padding-bottom: 5px;
+}
+
+.command_shortcuts {
+  padding-right: 15px;
+}
+
+.command_description {
+  padding-left: 15px;
+  border-left: 1px solid black;
+}
+*/

@@ -432,5 +432,10 @@
   "reduce_all_groups": {
     "message": "Reduce all groups (hide tabs)",
     "description": "Hover help for button for reducing all groups (hide tabs)"
+  },
+
+  "manage_groups": {
+    "message": "Manage Groups",
+    "description": ""
   }
 }

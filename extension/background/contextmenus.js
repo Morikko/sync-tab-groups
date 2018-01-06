@@ -71,6 +71,15 @@ ContextMenu.createMoveTabMenu = async function() {
 
 ContextMenu.createSpecialActionMenu = function() {
   browser.contextMenus.create({
+    id: ContextMenu.SpecialActionMenu_ID + "manage_groups",
+    title: browser.i18n.getMessage("manage_groups"),
+    contexts: ['browser_action'],
+    icons: {
+      "64": "/share/icons/list-64.png",
+      "32": "/share/icons/list-32.png"
+    },
+  });
+  browser.contextMenus.create({
     id: ContextMenu.SpecialActionMenu_ID + "export_groups",
     title: browser.i18n.getMessage("export_groups"),
     contexts: ['browser_action'],
@@ -167,6 +176,12 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
       case "open_shortcut_list":
         browser.tabs.create({
           url: "/tabpages/shortcut-help/shortcut-help.html",
+          active: true,
+        });
+        break;
+      case "manage_groups":
+        browser.tabs.create({
+          url: "/tabpages/manage-groups/manage-groups.html",
           active: true,
         });
         break;

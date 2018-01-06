@@ -28,6 +28,7 @@ const Actions = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.title = "Preferences";
   ReactDOM.render(
     React.createElement(
       ReactRedux.Provider, {
