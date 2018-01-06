@@ -15,7 +15,8 @@ class SearchBar extends React.Component{
         placeholder={browser.i18n.getMessage('search')}
         onChange={this.handleSearchChange}
         value={this.state.value}
-        id="search-input">
+        id="search-input"
+        autoFocus>
       </input>);
 
     return (

@@ -123,11 +123,22 @@ class GroupControls extends React.Component {
       })
     );
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.expanded !== this.props.expanded || nextProps.opened !== this.props.opened || nextProps.closing !== this.props.closing || nextProps.removing !== this.props.removing || nextProps.editing !== this.props.editing) {
+      return true;
+    }
+
+    return false;
+  }
 };
 
 GroupControls.propTypes = {
   expanded: PropTypes.bool.isRequired,
   opened: PropTypes.bool.isRequired,
+  closing: PropTypes.bool,
+  removing: PropTypes.bool,
+  editing: PropTypes.bool,
   onClose: PropTypes.func,
   onRemove: PropTypes.func,
   onEdit: PropTypes.func,

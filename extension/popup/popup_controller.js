@@ -196,3 +196,7 @@ var readyStateCheckInterval = setInterval(function() {
 
   }
 }, 10);
+
+var RenderCounters = {
+  tab: 0
+}

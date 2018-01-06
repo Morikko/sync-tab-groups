@@ -8,7 +8,8 @@ Copyright (c) 2015 Dennis Schubert
 class TabList extends React.Component{
   render() {
     return (
-      <ul className ="tab-list">
+      <ul className ={"tab-list "
+                      + (this.props.visible?"":"hiddenBySearch")}>
         {this.props.tabs.map((tab, index) => {
           return <Tab
             key={index}
@@ -21,7 +22,7 @@ class TabList extends React.Component{
             opened={this.props.opened}
             onCloseTab={this.props.onCloseTab}
             onOpenTab={this.props.onOpenTab}
-            searchTabResult={this.props.searchTabsResults[index]||false}
+            searchTabResult={this.props.searchTabsResults[index]===undefined?true:this.props.searchTabsResults[index]}
             groups={this.props.groups}
             onChangePinState={this.props.onChangePinState}
           />

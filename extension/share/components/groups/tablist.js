@@ -9,7 +9,7 @@ class TabList extends React.Component {
   render() {
     return React.createElement(
       "ul",
-      { className: "tab-list" },
+      { className: "tab-list " + (this.props.visible ? "" : "hiddenBySearch") },
       this.props.tabs.map((tab, index) => {
         return React.createElement(Tab, {
           key: index,
@@ -22,7 +22,7 @@ class TabList extends React.Component {
           opened: this.props.opened,
           onCloseTab: this.props.onCloseTab,
           onOpenTab: this.props.onOpenTab,
-          searchTabResult: this.props.searchTabsResults[index] || false,
+          searchTabResult: this.props.searchTabsResults[index] === undefined ? true : this.props.searchTabsResults[index],
           groups: this.props.groups,
           onChangePinState: this.props.onChangePinState
         });

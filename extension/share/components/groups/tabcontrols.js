@@ -12,6 +12,10 @@ class TabControls extends React.Component {
       controls
     );
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
+  }
 };
 
 TabControls.propTypes = {

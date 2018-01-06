@@ -30,7 +30,7 @@ watch: stop-watch
 
 # Stop all previous background script
 stop-watch:
-	kill -9 `pgrep -f "$(WATCH_COMMAND)"`
+	-kill -9 `pgrep -f "$(WATCH_COMMAND)"`
 
 # Create ZIP and XPI file
 release: clean

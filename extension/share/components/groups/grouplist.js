@@ -38,11 +38,8 @@ class GroupList extends React.Component {
         onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
         onCloseTab: this.props.onCloseTab,
         onOpenTab: this.props.onOpenTab,
-        searchGroupResult: this.props.searchGroupsResults[index] || {
-          atLeastOneResult: false,
-          searchTabsResults: []
-        } // For init
-        , currentlySearching: this.props.currentlySearching,
+        searchGroupResult: this.props.searchGroupsResults[index] || {},
+        currentlySearching: this.props.currentlySearching,
         showTabsNumber: this.props.options.popup.showTabsNumber,
         groups: this.props.groups,
         groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,

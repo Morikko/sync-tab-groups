@@ -128,6 +128,20 @@ class PopupMenuStandAlone extends React.Component {
   }
 
   applySearch(searchValue) {
+    if ( searchValue.length === 0 ) {
+      // TODO Improve this redundent
+      var context = document.querySelectorAll(".group-title, .tab-title");
+      var instance = new Mark(context);
+      instance.unmark({
+        "element": "span",
+        "className": "highlight",
+      });
+      return {
+        searchGroupsResults: [],
+        atLeastOneResult: true,
+      };
+    }
+
     let searchGroupsResults = [];
     let atLeastOneResult = searchValue.length === 0;
 
@@ -149,6 +163,8 @@ class PopupMenuStandAlone extends React.Component {
           searchGroupsResults[i].atLeastOneResult = true;
           searchGroupsResults[i].searchTabsResults[j] = true;
           atLeastOneResult = true;
+        } else {
+          searchGroupsResults[i].searchTabsResults[j] = false;
         }
       }
     }
@@ -166,9 +182,6 @@ class PopupMenuStandAlone extends React.Component {
       }
     });
 
-    {
-
-    }
     return {
       searchGroupsResults: searchGroupsResults,
       atLeastOneResult: atLeastOneResult,

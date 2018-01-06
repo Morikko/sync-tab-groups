@@ -39,10 +39,7 @@ class GroupList extends React.Component{
           onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
           onCloseTab= {this.props.onCloseTab}
           onOpenTab= {this.props.onOpenTab}
-          searchGroupResult= {this.props.searchGroupsResults[index] || {
-            atLeastOneResult: false,
-            searchTabsResults: [],
-          }} // For init
+          searchGroupResult= {this.props.searchGroupsResults[index] || {}}
           currentlySearching= {this.props.currentlySearching}
           showTabsNumber= {this.props.options.popup.showTabsNumber}
           groups= {this.props.groups}

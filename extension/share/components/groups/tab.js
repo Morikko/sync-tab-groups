@@ -10,7 +10,8 @@ class Tab extends React.Component {
     super(props);
     this.state = {
       dragOnTop: false,
-      dragOnBottom: false
+      dragOnBottom: false,
+      waitFirstMount: false
     };
 
     this.handleOnMoveTabNewMenuClick = this.handleOnMoveTabNewMenuClick.bind(this);
@@ -23,6 +24,16 @@ class Tab extends React.Component {
     this.handleTabDragLeave = this.handleTabDragLeave.bind(this);
     this.handleTabDragOver = this.handleTabDragOver.bind(this);
     this.handleTabDragStart = this.handleTabDragStart.bind(this);
+  }
+
+  componentDidMount() {
+    if (!this.state.waitFirstMount) {
+      setTimeout((() => {
+        this.setState({
+          waitFirstMount: true
+        });
+      }).bind(this), 500);
+    }
   }
 
   render() {
@@ -70,7 +81,7 @@ class Tab extends React.Component {
         onMouseLeave: this.removeMenuItem,
         contextMenu: "moveTabSubMenu" + this.props.tab.id
       },
-      this.createContextMenuTab(),
+      this.state.waitFirstMount && this.createContextMenuTab(),
       this.props.tab.pinned && React.createElement("i", {
         className: "pinned-icon fa fa-fw fa-thumb-tack"
       }),
@@ -142,8 +153,6 @@ class Tab extends React.Component {
 
   handleOnMoveTabNewMenuClick(event) {
     event.stopPropagation();
-
-    console.log("add");
 
     this.props.onMoveTabToNewGroup('', this.props.group.id, this.props.tabIndex);
   }
@@ -266,6 +275,30 @@ class Tab extends React.Component {
     event.dataTransfer.setData("type", "tab");
     event.dataTransfer.setData("tab/index", this.props.tabIndex);
     event.dataTransfer.setData("tab/group", group.id);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.searchTabResult !== this.props.searchTabResult) {
+      return true;
+    }
+
+    if (nextProps.tab.pinned !== this.props.tab.pinned || nextProps.tab.index !== this.props.tab.index || nextProps.tab.url !== this.props.tab.url || nextProps.tab.title !== this.props.tab.title) {
+      return true;
+    }
+
+    if (this.state.dragOnTop !== nextState.dragOnTop || this.state.dragOnBottom !== nextState.dragOnBottom) {
+      return true;
+    }
+
+    if (nextProps.groups.length !== this.props.groups.length) {
+      return true;
+    }
+
+    if (this.state.waitFirstMount !== nextState.waitFirstMount) {
+      return true;
+    }
+
+    return false;
   }
 };
 

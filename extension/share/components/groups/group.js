@@ -20,7 +20,9 @@ class Group extends React.Component {
       draggingOver: false,
       dragOnTop: false,
       dragOnBottom: false,
-      newTitle: Utils.getGroupTitle(this.props.group)
+      newTitle: Utils.getGroupTitle(this.props.group),
+      atLeastOneResult: this.props.searchGroupResult.atLeastOneResult === undefined ? true : this.props.searchGroupResult.atLeastOneResult,
+      waitFirstMount: false
     };
 
     this.handleOpenInNewWindowClick = this.handleOpenInNewWindowClick.bind(this);
@@ -68,12 +70,23 @@ class Group extends React.Component {
       removing: nextProps.currentlyRemoving,
       opened: openWindow,
       expanded: expanded_state,
-      currentlySearching: nextProps.currentlySearching
+      currentlySearching: nextProps.currentlySearching,
+      atLeastOneResult: nextProps.searchGroupResult.atLeastOneResult === undefined ? true : nextProps.searchGroupResult.atLeastOneResult
     });
   }
 
-  render() {
+  componentDidMount() {
+    if (!this.state.waitFirstMount) {
+      setTimeout((() => {
+        this.setState({
+          waitFirstMount: true
+        });
+      }).bind(this), 0);
+    }
+  }
 
+  render() {
+    //console.log("Group Render");
     let titleElement;
     if (this.state.editing) {
       titleElement = React.createElement("input", { className: "max-width-25 max-width-hover-85",
@@ -116,7 +129,7 @@ class Group extends React.Component {
       expanded: this.state.expanded,
       focusGroup: this.props.currentWindowId === this.props.group.windowId,
       group: true,
-      hiddenBySearch: !this.props.searchGroupResult.atLeastOneResult
+      hiddenBySearch: !this.state.atLeastOneResult
     });
 
     let offsetSizeReduceHover = 115;
@@ -169,7 +182,7 @@ class Group extends React.Component {
           onOpenInNewWindow: this.handleOpenInNewWindowClick
         })
       ),
-      this.state.expanded && React.createElement(TabList, {
+      this.state.waitFirstMount /*&& this.state.expanded*/ && React.createElement(TabList, {
         tabs: this.props.group.tabs,
         group: this.props.group,
         onTabClick: this.props.onTabClick,
@@ -178,9 +191,10 @@ class Group extends React.Component {
         opened: this.state.opened,
         onCloseTab: this.props.onCloseTab,
         onOpenTab: this.props.onOpenTab,
-        searchTabsResults: this.props.searchGroupResult.searchTabsResults,
+        searchTabsResults: this.props.searchGroupResult.searchTabsResults || [],
         groups: this.props.groups,
-        onChangePinState: this.props.onChangePinState
+        onChangePinState: this.props.onChangePinState,
+        visible: this.state.expanded
       })
     );
   }
