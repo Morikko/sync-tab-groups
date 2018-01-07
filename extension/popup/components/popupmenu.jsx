@@ -80,6 +80,7 @@ class PopupMenuStandAlone extends React.Component {
               searchGroupsResults= {this.state.searchGroupsResults}
               currentlySearching= {this.state.searchfilter.length > 0}
               allowClickSwitch={true}
+              stateless={false}
             />
           <GroupAddButton
               onClick= {this.props.onGroupAddClick}

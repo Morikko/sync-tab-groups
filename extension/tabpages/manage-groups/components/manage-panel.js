@@ -44,7 +44,8 @@ class ManagePanelStandAlone extends React.Component {
             /*** Options ***/
             , searchGroupsResults: this.state.searchGroupsResults,
             currentlySearching: this.state.searchfilter.length > 0,
-            allowClickSwitch: false
+            allowClickSwitch: false,
+            stateless: true
           })
         ),
         React.createElement(
@@ -76,7 +77,8 @@ class ManagePanelStandAlone extends React.Component {
             /*** Options ***/
             , searchGroupsResults: this.state.searchGroupsResults,
             currentlySearching: this.state.searchfilter.length > 0,
-            allowClickSwitch: false
+            allowClickSwitch: false,
+            stateless: true
           })
         )
       ),

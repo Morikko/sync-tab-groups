@@ -14,7 +14,7 @@ class Group extends React.Component {
       removing: this.props.currentlyRemoving,
       editing: false,
       currentlySearching: this.props.currentlySearching,
-      expanded: this.props.group.expand,
+      expanded: this.props.stateless?false:this.props.group.expand,
       opened: openWindow,
       draggingOverCounter: 0, // Many drag enter/leave are fired, know if it is a really entering
       draggingOver: false,
@@ -56,7 +56,10 @@ class Group extends React.Component {
     if (current_searching) {
       return true;
     } else {
-      return current_state;
+      if ( this.props.stateless )
+        return this.state.expanded
+      else
+        return current_state;
     }
   }
 
@@ -301,12 +304,12 @@ class Group extends React.Component {
   handleGroupExpandClick(event) {
     if( event !== undefined )
       event.stopPropagation();
-    this.props.onChangeExpand([this.props.group.id],  !this.state.expanded)
-    /*
+    if ( !this.props.stateless ) {
+      this.props.onChangeExpand([this.props.group.id],  !this.state.expanded)
+    }
     this.setState({
       expanded: !this.state.expanded
     });
-    */
   }
 
   handleGroupTitleInputKey(event) {
@@ -478,4 +481,6 @@ Group.propTypes = {
   onGroupChangePosition: PropTypes.func,
   onChangePinState: PropTypes.func,
   onChangeExpand: PropTypes.func,
+  allowClickSwitch: PropTypes.bool,
+  stateless: PropTypes.bool,
 }

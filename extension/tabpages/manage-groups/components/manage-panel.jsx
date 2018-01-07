@@ -40,6 +40,7 @@ class ManagePanelStandAlone extends React.Component {
               searchGroupsResults= {this.state.searchGroupsResults}
               currentlySearching= {this.state.searchfilter.length > 0}
               allowClickSwitch={false}
+              stateless={true}
             />
           </div>
           <div className={classNames({
@@ -70,6 +71,7 @@ class ManagePanelStandAlone extends React.Component {
               searchGroupsResults= {this.state.searchGroupsResults}
               currentlySearching= {this.state.searchfilter.length > 0}
               allowClickSwitch={false}
+              stateless={true}
             />
           </div>
         </li>

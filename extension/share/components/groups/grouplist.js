@@ -46,7 +46,8 @@ class GroupList extends React.Component {
         onGroupChangePosition: this.props.onGroupChangePosition,
         onChangePinState: this.props.onChangePinState,
         onChangeExpand: this.props.onChangeExpand,
-        allowClickSwitch: this.props.allowClickSwitch
+        allowClickSwitch: this.props.allowClickSwitch,
+        stateless: this.props.stateless
       }));
     }
 
@@ -80,5 +81,6 @@ GroupList.propTypes = {
   onGroupChangePosition: PropTypes.func,
   onChangePinState: PropTypes.func,
   onChangeExpand: PropTypes.func,
-  allowClickSwitch: PropTypes.bool
+  allowClickSwitch: PropTypes.bool,
+  stateless: PropTypes.bool
 };
