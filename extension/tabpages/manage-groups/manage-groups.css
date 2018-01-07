@@ -1,9 +1,19 @@
+:root {
+  --checked: #2aa1c0;
+  --checked-hover: #0e647d;
+  --not-checked: #e6e6e6;
+  --not-checked-hover: #ccc;
+  --disabled: #7b7b7b;
+}
+
 body {
   background-color: #f9f9fa;
   color: #444;
-  font-size: 1.1em;
+  font-size: 1em;
+  font-family: sans-serif;
 }
 
+/*** Manage Bar ***/
 #menu {
   display: block;
   border-bottom: 3px solid #424f5a;
@@ -11,6 +21,7 @@ body {
   color: #c4cdd4;
   height: 50px;
   z-index: 1;
+  box-sizing: border-box;
 }
 
 .logo {
@@ -42,58 +53,106 @@ body {
   float: right;
   line-height: 50px;
 }
-/*
-#content {
-  max-width: 800px;
-  margin: auto;
-}
 
-.title {
+/*** End Manage Bar ***/
+
+/*** Manage Panel ***/
+#manage-panel {
   width: 100%;
+}
+
+.invisible {
+  display: none !important;
+}
+
+/** Group Lists **/
+#manage-panel .left-list, #manage-panel .right-list {
+  border-left: 4px solid #424f5a;
+  box-sizing: border-box;
+  float: left;
+  overflow-x: auto;
+}
+
+.group-list {
+  height: auto;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+  border: 1px solid #424f5a;
+  box-sizing: border-box;
+}
+
+#manage-panel .left-list {
+  width: 100%;
+  margin: 0 auto;
+}
+
+#manage-panel .half {
+  width: 50%;
+}
+/** End Group Lists **/
+
+/** Below Actions **/
+.belowActions {
+  height: 50px;
+  width: 100%;
+  border-top: 4px solid #424f5a;
+  background-color: var(--not-checked);
+}
+
+.belowActions .left, .belowActions .right  {
+  display: inline-block;
+  width: 100px !important;
+}
+
+.belowActions .left, .belowActions .left i {
+   float: left;
+}
+
+.belowActions .center {
+  float: left;
+  font-size: 30px;
+  width: calc(100% - 200px);
+}
+
+.belowActions .right, .belowActions .right i{
+   float: right;
+}
+
+.belowActions i {
+  font-size: 40px;
+  cursor: pointer;
+  width: 50px;
   text-align: center;
-  font-size: 2.5em;
-  height: 64px;
+  line-height: 50px;
 }
 
-.title span {
-  line-height: 64px;
-  vertical-align: middle;
+.belowActions i:hover {
+  background-color: var(--not-checked-hover);
+}
+/** End Below Actions **/
+/*** End Manage Panel ***/
+
+/** TODO: bug tab title is too big  only in manage groups**/
+.max-width-25 {
+  max-width: calc(100% - 35px);
 }
 
-.title img {
-  margin-right: 20px;
-  vertical-align: middle;
+.max-width-35 {
+  max-width: calc(100% - 45px);
 }
 
-h1 {
-  margin-top: 60px;
-  margin-bottom: 30px;
-  font-size: 1.6em;
-  border-bottom: #2aa1c0 solid 2px;
+.max-width-45 {
+  max-width: calc(100% - 55px);
 }
 
-button {
-  margin: auto;
+.max-width-65 {
+  max-width: calc(100% - 75px);
 }
 
-table {
-  border-collapse: collapse;
+.max-width-85 {
+  max-width: calc(100% - 95px);
 }
 
-tr>th {
-  padding-bottom: 10px;
+.max-width-115 {
+  max-width: calc(100% - 125px);
 }
-
-tr>td {
-  padding-bottom: 5px;
-}
-
-.command_shortcuts {
-  padding-right: 15px;
-}
-
-.command_description {
-  padding-left: 15px;
-  border-left: 1px solid black;
-}
-*/

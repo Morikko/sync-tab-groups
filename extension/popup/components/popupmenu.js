@@ -55,14 +55,9 @@ class PopupMenuStandAlone extends React.Component {
       'ul',
       { className: menuClasses },
       searchbar,
-      React.createElement(GroupList, {
-        groups: this.props.groups,
-        options: this.props.options,
-        currentWindowId: this.props.currentWindowId,
-        delayedTasks: this.props.delayedTasks,
-        onGroupClick: this.props.onGroupClick,
-        onGroupDrop: this.props.onGroupDrop,
-        onMoveTabToNewGroup: this.props.onGroupAddDrop,
+      React.createElement(GroupList
+      /*** Functions ***/
+      , { onMoveTabToNewGroup: this.props.onGroupAddDrop,
         onGroupCloseClick: this.props.onGroupCloseClick,
         onGroupRemoveClick: this.props.onGroupRemoveClick,
         onGroupTitleChange: this.props.onGroupTitleChange,
@@ -70,11 +65,20 @@ class PopupMenuStandAlone extends React.Component {
         onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
         onCloseTab: this.props.onCloseTab,
         onOpenTab: this.props.onOpenTab,
-        searchGroupsResults: this.state.searchGroupsResults,
-        currentlySearching: this.state.searchfilter.length > 0,
+        onGroupClick: this.props.onGroupClick,
+        onGroupDrop: this.props.onGroupDrop,
         onGroupChangePosition: this.props.onGroupChangePosition,
         onChangePinState: this.props.onChangePinState,
         onChangeExpand: this.props.onChangeExpand
+        /*** Data ***/
+        , groups: this.props.groups,
+        options: this.props.options,
+        currentWindowId: this.props.currentWindowId,
+        delayedTasks: this.props.delayedTasks
+        /*** Options ***/
+        , searchGroupsResults: this.state.searchGroupsResults,
+        currentlySearching: this.state.searchfilter.length > 0,
+        allowClickSwitch: true
       }),
       React.createElement(GroupAddButton, {
         onClick: this.props.onGroupAddClick,

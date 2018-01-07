@@ -13,7 +13,10 @@ class ManageWrapper extends React.Component {
         <ManageBar
           singleMode={this.state.single}
           changeColumnDisplay={this.onColumnChange}/>
-        {/*<ManagePanel />*/}
+        <ManagePanel
+          {...this.props}
+          singleMode={this.state.single}
+        />
       </div>
     )
   }

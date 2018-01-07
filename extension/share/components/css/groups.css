@@ -1,0 +1,280 @@
+:root {
+    --group-open: #b3d5ff;
+    --group-hover: #99c7ff;
+    --action-hover: #66abff;
+    --group-odd: hsl(211, 100%, 96%); /* #fff2e6 */
+    --group-even: hsl(211, 100%, 98%); /* e6f2ff */
+}
+
+ul, li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+  cursor: move;
+  overflow: hidden;
+}
+
+.group:nth-child(odd), .group:nth-child(odd) .tab-list {
+  background-color: var(--group-odd);
+}
+
+.group:nth-child(even), .group:nth-child(even) .tab-list {
+  background-color: var(--group-even);
+}
+
+.group {
+  min-width: 300px;
+}
+
+.group-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Group in window and active tab */
+
+.group, .tab, .addButton {
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 5px;
+  position: relative;
+}
+
+.focusGroup .group-title, .tab.active .tab-title {
+  font-weight: bold;
+}
+
+.group-title input {
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 0;
+  padding: 1px;
+}
+
+.group .group-title:hover input {
+  width: 100%;
+}
+
+.tab {
+  padding: 0;
+}
+
+.group.active {
+  background-color: var(--group-open);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.group:hover, .tab:hover {
+  background-color: var(--group-hover);
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+.addButton:hover {
+  background-color: rgba(0, 0, 0, 0.10);
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+.dragTopBorder {
+  border-top: 3px solid #2aa1c0 !important;
+}
+
+.dragBottomBorder {
+  border-bottom: 3px solid #2aa1c0 !important;
+}
+
+.group.draggingOver, .draggingOver {
+  border: 1px dashed #ccc;
+  background-color: #c0e7f1;
+}
+
+.addButton.draggingOver, .draggingOver {
+  border: 1px dashed #ccc;
+  background-color: #c0e7f1;
+}
+
+.tab-list {
+  display: none;
+  margin-top: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.expanded .tab-list {
+  display: block;
+}
+
+/*
+li.expanded  {
+  border-top: 3px solid #ccc;
+  border-bottom: 3px solid #ccc;
+  border-radius: 3px;
+}
+
+li.expanded  {
+  margin-left: 5px;
+  padding-left: 0px;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+*/
+.tab-title {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 5px 5px 1px;
+  margin-bottom: 1px;
+}
+
+.pinned-icon {
+  position: relative;
+  top: -6px;
+  opacity: 0.7;
+  height: 16px;
+  width: 16px;
+  margin-right: 1px;
+  margin-left: 4px;
+}
+
+.tab-icon {
+  height: 16px;
+  width: 16px;
+  margin-right: 1px;
+  /*margin-bottom: 1px;*/
+  margin-left: 4px;
+  position: relative;
+  top: -4px;
+}
+
+.group-controls, .tab-controls, .groupadd-controls {
+  display: inline-block;
+  font-size: 120%;
+  opacity: 0.7;
+  position: absolute;
+  top: -2px;
+}
+
+.group-controls {
+  right: 0px; /*previous 10px */
+}
+
+.groupadd-controls {
+  right: 10px;
+}
+
+.tab-controls {
+  right: 0px; /*previous 5px */
+}
+
+.group.editing .group-controls i {
+  height: 36px;
+  line-height: 36px;
+}
+
+.groupadd-controls i {
+  height: 36px;
+  line-height: 36px;
+}
+
+.group-controls i, .tab-controls i, .cancel-search, .groupadd-controls i {
+  width: 26px;
+  background-color: none;
+}
+
+.group-controls i:hover, .tab-controls i:hover, .left-actions i:hover, .right-actions i:hover, .groupadd-controls i:hover {
+  background-color: var(--action-hover);
+}
+
+.group-controls i, .cancel-search {
+  height: 32px;
+  line-height: 32px;
+}
+
+.tab-controls i {
+  height: 34px;
+  line-height: 34px;
+}
+
+.group.closing .group-controls .group-close, .group.closing:hover .group-controls .group-close, .group.closing .group-controls .group-edit {
+  display: none;
+}
+
+.group.closing .group-title, .group.removing .group-title {
+  color: #b3b3b3;
+  text-decoration: line-through;
+}
+
+.group.closing i:hover, .group.removing i:hover {
+  color: #222426;
+}
+
+.group .group-controls .group-close, .group .group-controls .group-edit {
+  display: none;
+}
+
+.group:hover .group-controls .group-close, .group:hover .group-controls .group-edit {
+  display: inline-block;
+}
+
+.tab .tab-controls .tab-edit {
+  display: none;
+}
+
+.tab:hover .tab-controls .tab-edit {
+  display: inline-block;
+}
+
+.addButton .group-title {
+  font-weight: bold;
+}
+
+.max-width-25 {
+  max-width: calc(100% - 25px);
+}
+
+.max-width-35 {
+  max-width: calc(100% - 35px);
+}
+
+.max-width-45 {
+  max-width: calc(100% - 45px);
+}
+
+.max-width-65 {
+  max-width: calc(100% - 65px);
+}
+
+.max-width-85 {
+  max-width: calc(100% - 85px);
+}
+
+.max-width-115 {
+  max-width: calc(100% - 115px);
+}
+
+li:hover > .max-width-hover-45 {
+  max-width: calc(100% - 45px);
+}
+
+li:hover > .max-width-hover-65 {
+  max-width: calc(100% - 65px);
+}
+
+li:hover > .max-width-hover-85 {
+  max-width: calc(100% - 85px);
+}
+
+li:hover > .max-width-hover-115 {
+  max-width: calc(100% - 115px);
+}
+
+.group-title input {
+  width: 100%;
+}

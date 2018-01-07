@@ -56,27 +56,31 @@ class PopupMenuStandAlone extends React.Component {
     return (
       <ul className={menuClasses}>
           {searchbar}
-          <GroupList
-            groups= {this.props.groups}
-            options= {this.props.options}
-            currentWindowId= {this.props.currentWindowId}
-            delayedTasks= {this.props.delayedTasks}
-            onGroupClick= {this.props.onGroupClick}
-            onGroupDrop= {this.props.onGroupDrop}
-            onMoveTabToNewGroup= {this.props.onGroupAddDrop}
-            onGroupCloseClick= {this.props.onGroupCloseClick}
-            onGroupRemoveClick= {this.props.onGroupRemoveClick}
-            onGroupTitleChange= {this.props.onGroupTitleChange}
-            onTabClick= {this.props.onTabClick}
-            onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
-            onCloseTab= {this.props.onCloseTab}
-            onOpenTab= {this.props.onOpenTab}
-            searchGroupsResults= {this.state.searchGroupsResults}
-            currentlySearching= {this.state.searchfilter.length > 0}
-            onGroupChangePosition= {this.props.onGroupChangePosition}
-            onChangePinState= {this.props.onChangePinState}
-            onChangeExpand= {this.props.onChangeExpand}
-          />
+            <GroupList
+              /*** Functions ***/
+              onMoveTabToNewGroup= {this.props.onGroupAddDrop}
+              onGroupCloseClick= {this.props.onGroupCloseClick}
+              onGroupRemoveClick= {this.props.onGroupRemoveClick}
+              onGroupTitleChange= {this.props.onGroupTitleChange}
+              onTabClick= {this.props.onTabClick}
+              onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
+              onCloseTab= {this.props.onCloseTab}
+              onOpenTab= {this.props.onOpenTab}
+              onGroupClick= {this.props.onGroupClick}
+              onGroupDrop= {this.props.onGroupDrop}
+              onGroupChangePosition= {this.props.onGroupChangePosition}
+              onChangePinState= {this.props.onChangePinState}
+              onChangeExpand= {this.props.onChangeExpand}
+              /*** Data ***/
+              groups= {this.props.groups}
+              options= {this.props.options}
+              currentWindowId= {this.props.currentWindowId}
+              delayedTasks= {this.props.delayedTasks}
+              /*** Options ***/
+              searchGroupsResults= {this.state.searchGroupsResults}
+              currentlySearching= {this.state.searchfilter.length > 0}
+              allowClickSwitch={true}
+            />
           <GroupAddButton
               onClick= {this.props.onGroupAddClick}
               onDrop= {this.props.onGroupAddDrop}

@@ -197,6 +197,7 @@ class Group extends React.Component {
             groups= {this.props.groups}
             onChangePinState= {this.props.onChangePinState}
             visible={this.state.expanded}
+            allowClickSwitch={this.props.allowClickSwitch}
           />}
     </li>);
   }
@@ -266,9 +267,13 @@ class Group extends React.Component {
 
   handleGroupClick(event) {
     event.stopPropagation();
-    if (this.props.currentWindowId !== this.props.group.windowId)
-      this.props.onGroupClick(this.props.group.id);
-    window.close();
+    if ( this.props.allowClickSwitch ) {
+      if (this.props.currentWindowId !== this.props.group.windowId)
+        this.props.onGroupClick(this.props.group.id);
+      window.close();
+    } else {
+      this.handleGroupExpandClick();
+    }
   }
 
   handleGroupEditClick(event) {
@@ -294,7 +299,8 @@ class Group extends React.Component {
   }
 
   handleGroupExpandClick(event) {
-    event.stopPropagation();
+    if( event !== undefined )
+      event.stopPropagation();
     this.props.onChangeExpand([this.props.group.id],  !this.state.expanded)
     /*
     this.setState({
@@ -355,12 +361,27 @@ class Group extends React.Component {
     }
   }
 
+  getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+  }
+
   handleGroupDragOver(event) {
     event.stopPropagation();
     event.preventDefault();
     if (event.dataTransfer.getData("type") === "group") {
-      let pos = event.pageY - event.currentTarget.offsetTop;
+      // Position of main group-list
+      let pos = event.pageY - // Event loc Full page
+        (event.currentTarget.offsetTop // Group dist
+          -event.currentTarget.parentElement.scrollTop); // Remove scroll grouplist
       let height = event.currentTarget.offsetHeight;
+      console.log(pos);
       // Bottom
       if (pos > height / 2 && pos <= height) {
         if (this.state.dragOnTop || !this.state.dragOnBottom) {

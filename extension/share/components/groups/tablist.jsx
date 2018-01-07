@@ -25,6 +25,7 @@ class TabList extends React.Component{
             searchTabResult={this.props.searchTabsResults[index]===undefined?true:this.props.searchTabsResults[index]}
             groups={this.props.groups}
             onChangePinState={this.props.onChangePinState}
+            allowClickSwitch={this.props.allowClickSwitch}
           />
         })}
       </ul>
@@ -43,4 +44,5 @@ TabList.propTypes = {
   searchTabsResults: PropTypes.object,
   groups: PropTypes.object,
   onChangePinState: PropTypes.func,
+  allowClickSwitch: PropTypes.bool,
 }

@@ -45,7 +45,8 @@ class GroupList extends React.Component {
         groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
         onGroupChangePosition: this.props.onGroupChangePosition,
         onChangePinState: this.props.onChangePinState,
-        onChangeExpand: this.props.onChangeExpand
+        onChangeExpand: this.props.onChangeExpand,
+        allowClickSwitch: this.props.allowClickSwitch
       }));
     }
 
@@ -78,5 +79,6 @@ GroupList.propTypes = {
   searchGroupResult: PropTypes.object,
   onGroupChangePosition: PropTypes.func,
   onChangePinState: PropTypes.func,
-  onChangeExpand: PropTypes.func
+  onChangeExpand: PropTypes.func,
+  allowClickSwitch: PropTypes.bool
 };

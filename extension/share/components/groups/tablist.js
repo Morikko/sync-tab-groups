@@ -24,7 +24,8 @@ class TabList extends React.Component {
           onOpenTab: this.props.onOpenTab,
           searchTabResult: this.props.searchTabsResults[index] === undefined ? true : this.props.searchTabsResults[index],
           groups: this.props.groups,
-          onChangePinState: this.props.onChangePinState
+          onChangePinState: this.props.onChangePinState,
+          allowClickSwitch: this.props.allowClickSwitch
         });
       })
     );
@@ -41,5 +42,6 @@ TabList.propTypes = {
   onMoveTabToNewGroup: PropTypes.func,
   searchTabsResults: PropTypes.object,
   groups: PropTypes.object,
-  onChangePinState: PropTypes.func
+  onChangePinState: PropTypes.func,
+  allowClickSwitch: PropTypes.bool
 };

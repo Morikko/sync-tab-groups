@@ -170,11 +170,12 @@ class Tab extends React.Component {
 
   handleTabClick(event) {
     event.stopPropagation();
-
-    let group = this.props.group;
-    let tab = this.props.tab;
-    this.props.onTabClick(group.id, this.props.tabIndex);
-    window.close();
+    if (this.props.allowClickSwitch) {
+      let group = this.props.group;
+      let tab = this.props.tab;
+      this.props.onTabClick(group.id, this.props.tabIndex);
+      window.close();
+    }
   }
 
   handleOpenTabClick(event) {
@@ -238,8 +239,9 @@ class Tab extends React.Component {
 
     if (event.dataTransfer.getData("type") === "tab") {
       event.stopPropagation();
-      let pos = event.pageY - event.currentTarget.offsetParent.offsetTop - // Group li
-      event.currentTarget.offsetTop; // Tab li
+      let pos = event.pageY - (event.currentTarget.offsetParent.offsetTop // Group li
+      - event.currentTarget.offsetParent.parentElement.scrollTop) // Remove scroll grouplis
+      - event.currentTarget.offsetTop; // Tab li
       let height = event.currentTarget.offsetHeight;
       // Bottom
       if (pos > height / 2 && pos <= height) {
@@ -314,5 +316,6 @@ Tab.propTypes = {
   onOpenTab: PropTypes.func,
   searchTabResult: PropTypes.bool,
   groups: PropTypes.object,
-  onChangePinState: PropTypes.func
+  onChangePinState: PropTypes.func,
+  allowClickSwitch: PropTypes.bool
 };
