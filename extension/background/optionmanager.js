@@ -54,6 +54,9 @@ OptionManager.updateOption = function(optionName, optionValue) {
  * @param {boolean} addTitle
  */
 OptionManager.onShowGroupTitleInWindowChange = function(addTitle) {
+  if ( Utils.isChrome() ) { // Chrome Incompatibility: doesn't handle title preface
+    return;
+  }
   for (let g of GroupManager.groups) {
     if (g.windowId !== browser.windows.WINDOW_ID_NONE) {
       if (addTitle) {

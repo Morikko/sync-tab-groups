@@ -109,7 +109,7 @@ WindowManager.closeGroup = async function(groupId, close_window = false) {
       await WindowManager.closeWindowFromGroupId(groupId);
     } else {
       await GroupManager.detachWindowFromGroupId(groupId);
-      await WindowManager.removeTabsInWindow(windowId)
+      await WindowManager.removeTabsInWindow(windowId);
     }
 
     return "WindowManager.closeGroup done!";
@@ -129,15 +129,13 @@ WindowManager.closeGroup = async function(groupId, close_window = false) {
  */
 WindowManager.removeTabsInWindow = async function(windowId, remove_pinned = false) {
   try {
-    const tabs = await browser.tabs.query({
-      windowId: windowId
-    });
+    let tabs = await TabManager.getTabsInWindowId(windowId);
 
     // 1. Create blank tab: letting window open
-    const blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
+    let blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
 
     // 2. Remove previous tabs in window
-    var tabsToRemove = [];
+    let tabsToRemove = [];
     tabs.map((tab) => {
       if ((OptionManager.options.pinnedTab.sync && tab.pinned) ||
         !tab.pinned ||
@@ -146,6 +144,21 @@ WindowManager.removeTabsInWindow = async function(windowId, remove_pinned = fals
       }
     });
     await browser.tabs.remove(tabsToRemove);
+
+    if ( Utils.isChrome() ) { // Chrome Incompatibility: doesn't wait that tabs are unloaded
+      let i=0
+      for (i=0; i<20; i++) {
+        await Utils.wait(50);
+        let tabs = await TabManager.getTabsInWindowId(windowId);
+        if (tabs.filter((tab)=>{
+          if (tabsToRemove.indexOf(tab.id) >= 0) {
+            return true;
+          }
+          return false;
+        }).length === 0)
+          break;
+      }
+    }
 
     return blank_tab[0];
   } catch (e) {
@@ -407,20 +420,31 @@ WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
  * @return {Promise}
  */
 WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
-  if (OptionManager.options.groups.showGroupTitleInWindow) {
-    let group = GroupManager.groups[
-      GroupManager.getGroupIndexFromGroupId(
-        groupId, false
-      )
-    ];
-    WindowManager.setWindowPrefixGroupTitle(windowId, group);
+  try {
+    GroupManager.setLastAccessed(groupId, Date.now());
+    if ( Utils.isFF57() || Utils.isBeforeFF57() ) { //FF
+      if (OptionManager.options.groups.showGroupTitleInWindow) {
+        let group = GroupManager.groups[
+          GroupManager.getGroupIndexFromGroupId(
+            groupId, false
+          )
+        ];
+        WindowManager.setWindowPrefixGroupTitle(windowId, group);
+      }
+    }
+    if ( Utils.isFF57() ) { // FF57+
+      await browser.sessions.setWindowValue(
+        windowId, // integer
+        WindowManager.WINDOW_GROUPID, // string
+        groupId.toString()
+      );
+    }
+    return "WindowManager.associateGroupIdToWindow done";
+  } catch (e) {
+    let msg = "WindowManager.associateGroupIdToWindow failed on window " + windowId + " and on groupId " + groupId + " and " + e;
+    console.error(msg);
+    return msg;
   }
-  GroupManager.setLastAccessed(groupId, Date.now());
-  return browser.sessions.setWindowValue(
-    windowId, // integer
-    WindowManager.WINDOW_GROUPID, // string
-    groupId.toString()
-  );
 }
 
 /**
@@ -429,17 +453,28 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
  * @return {Promise}
  */
 WindowManager.desassociateGroupIdToWindow = async function(windowId) {
-  if (OptionManager.options.groups.showGroupTitleInWindow) {
-    browser.windows.update(
-      windowId, {
-        titlePreface: " "
+    try {
+      if ( Utils.isFF57() || Utils.isBeforeFF57() ) { //FF
+        if (OptionManager.options.groups.showGroupTitleInWindow) {
+          browser.windows.update(
+            windowId, {
+              titlePreface: " "
+            }
+          );
+        }
       }
-    );
-  }
-  return browser.sessions.removeWindowValue(
-    windowId, // integer
-    WindowManager.WINDOW_GROUPID, // string
-  );
+      if ( Utils.isFF57() ) { //FF57+
+        await browser.sessions.removeWindowValue(
+          windowId, // integer
+          WindowManager.WINDOW_GROUPID, // string
+        );
+      }
+      return "WindowManager.desassociateGroupIdToWindow done";
+    } catch (e) {
+      let msg = "WindowManager.desassociateGroupIdToWindow failed on window " + windowId + " and " + e;
+      console.error(msg);
+      return msg;
+    }
 }
 
 /**
@@ -472,6 +507,122 @@ WindowManager.addGroupFromWindow = async function(windowId) {
 }
 
 /**
+ * Return the best matching group depending the tabs
+ * Criterions:
+ *  1. tabs length must be equal (out of Priv/Ext tabs)
+ *  2. tabs.url must match (out of Priv/Ext tabs)
+ *  3. A score is returned to favorise potential Priv/Ext tabs that match
+ *  4. if more than one result, take the last accessed
+ * TODO: Test :Problems privileged URLs: browser.urls !== groups.urls
+ *       On reload -> priviledged URLs are closes -> bias compare
+ * @param {Array[Tab]} tabs
+ * @return {Number} groupId
+ */
+GroupManager.bestMatchGroup = function(tabs, groups=GroupManager.groups) {
+  return groups.map((group)=>{ // Remove wrong match
+    /* Notes
+     tabs <= groups.tabs
+     incremnt good match
+     don't care missing priv/extension url
+     kill bad match
+    */
+   let ext_page_prefix = browser.runtime.getURL("");
+    let result = {
+      score: 0,
+      id: group.id,
+      lastAccessed: group.lastAccessed,
+    };
+    // Criterion 2
+    let index = 0;
+    result.score = group.tabs.reduce((count, tab, group_index)=>{
+        let next_count = count;
+        let tab_url = Utils.extractPriviledgedTabUrl(tabs[index].url);
+        let group_tab_url = Utils.extractPriviledgedTabUrl(tab.url);
+
+        if ( tab_url ===  group_tab_url ) { // Match
+          next_count++;
+          index++;
+        } else {
+          if ( tab.url.includes(ext_page_prefix) || Utils.isPrivilegedURL(tab.url) ) { // Could be a missing priv/extension
+
+          } else { // Criterion 2: Wrong good match
+            return -1000;
+          }
+        }
+
+        // Criterion 1: Don't finish together
+        if (group_index === group.length-1 // Last
+        &&  index !== tabs.length ) {
+          return -1000; // Impossible match
+        }
+
+        return next_count;
+    }, 0);
+
+    return result;
+  }).reduce((a,b)=>{ // Criterion 3
+    if ( a.score < b.score) { // Prefer best match
+      return b;
+    } else if ( a.score === b.score ) { // Prefer recent one
+      if ( a.lastAccessed >=  b.lastAccessed )
+        return a;
+      else
+        return b;
+    } else { // Keep previous best
+      return a;
+    }
+  }, {id:-1, lastAccessed:-1, score:1}).id;
+}
+
+WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
+  even_new_one = OptionManager.options.groups.syncNewWindow) {
+    try {
+      // Get tabs
+      const tabs = await TabManager.getTabsInWindowId(windowId);
+
+      // Compare to all groups
+      let bestId = GroupManager.bestMatchGroup(tabs);
+
+      if ( bestId > 0 ) { // Keep the best result
+        await GroupManager.attachWindowWithGroupId(bestId, windowId);
+      } else { // Or create a new group
+        if (even_new_one ||
+          (OptionManager.options.privateWindow.sync &&
+            window.incognito)) {
+          await WindowManager.addGroupFromWindow(windowId);
+        }
+      }
+    } catch (e) {
+      let msg = "WindowManager.integrateWindowWithTabsComparaison failed for windowId " + windowId + "\n Error msg: " + e;
+      console.error(msg);
+      return msg;
+    }
+}
+
+WindowManager.integrateWindowWithSession = async function(windowId,
+  even_new_one = OptionManager.options.groups.syncNewWindow) {
+    try {
+      const key = await browser.sessions.getWindowValue(
+        windowId, // integer
+        WindowManager.WINDOW_GROUPID // string
+      );
+
+      if (key === undefined || GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), false) === -1) { // New Window
+        if (even_new_one ||
+          (OptionManager.options.privateWindow.sync &&
+            window.incognito)) {
+          await WindowManager.addGroupFromWindow(windowId);
+        }
+      } else { // Update Group
+        await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
+      }
+    } catch (e) {
+      let msg = "WindowManager.integrateWindowWithSession failed on Get Key Value for windowId " + windowId + "\n Error msg: " + e;
+      console.error(msg);
+      return msg;
+    }
+}
+/**
  * Link an existing window to the groups
  * 1. If already linked, update the link
  * 2. If new window, add group
@@ -494,23 +645,21 @@ WindowManager.integrateWindow = async function(windowId,
       return "WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized";
     }
 
-    const key = await browser.sessions.getWindowValue(
-      windowId, // integer
-      WindowManager.WINDOW_GROUPID // string
-    );
-
-    if (key === undefined || GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), false) === -1) { // New Window
-      if (even_new_one ||
-        (OptionManager.options.privateWindow.sync &&
-          window.incognito)) {
-        await WindowManager.addGroupFromWindow(windowId);
-      }
-    } else { // Update Group
-      await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
+    if ( Utils.isFF57() ) { // FF57+
+      WindowManager.integrateWindowWithSession(
+        windowId,
+        even_new_one
+      )
+    } else { // Others
+      WindowManager.integrateWindowWithTabsComparaison(
+        windowId,
+        even_new_one
+      )
     }
+
     return "WindowManager.integrateWindow done for windowId " + windowId;
   } catch (e) {
-    let msg = "WindowManager.integrateWindow failed on Get Key Value for windowId " + windowId + "\n Error msg: " + e;
+    let msg = "WindowManager.integrateWindow for windowId " + windowId + "\n Error msg: " + e;
     console.error(msg);
     return msg;
   }

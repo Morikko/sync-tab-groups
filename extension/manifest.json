@@ -23,6 +23,7 @@
 
   "background": {
     "scripts": [
+      "lib/js/browser-polyfill.development.js",
       "background/utils/utils.js",
       "background/utils/delayedtaskmanager.js",
       "background/utils/repeatedtaskmanager.js",
@@ -60,46 +61,26 @@
   },
 
   "commands": {
-    "swtich_next_group": {
-      "suggested_key": {
-        "default": "Alt+Shift+Right"
-      }
-    },
-
-    "swtich_previous_group": {
-      "suggested_key": {
-        "default": "Alt+Shift+Left"
-      }
-    },
-
-    "create_group_swtich": {
-      "suggested_key": {
-        "default": "Alt+Shift+Insert"
-      }
-    },
-
-    "focus_next_group": {
-      "suggested_key": {
-        "default": "Alt+Shift+Up"
-      }
-    },
 
     "focus_previous_group": {
       "suggested_key": {
         "default": "Alt+Shift+Down"
-      }
+      },
+      "description": "Focus Previous Group"
     },
 
     "remove_group_swtich": {
       "suggested_key": {
         "default": "Alt+Shift+Delete"
-      }
+      },
+      "description": "Remove current group"
     },
 
     "_execute_browser_action": {
       "suggested_key": {
         "default": "Alt+Shift+Space"
-      }
+      },
+      "description": "Open Menu"
     }
   }
 }

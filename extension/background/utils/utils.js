@@ -7,7 +7,7 @@ var Utils = Utils || {};
  * Show messages
  */
 // If change the line, update makefile
-Utils.DEGUG_MODE=true;
+Utils.DEGUG_MODE = true;
 Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
 
 var TaskManager = TaskManager || {};
@@ -207,7 +207,7 @@ Utils.search = function(title, keywords) {
     return title.toLowerCase().includes(word.toLowerCase());
   });
   return results.reduce(
-    (accu, result,) => (accu&&result),
+    (accu, result, ) => (accu && result),
     true
   );
 }
@@ -231,6 +231,55 @@ Utils.wait = async function(time) {
 }
 
 /**
+ * Return true if the browser is Chrome
+ * @return {Boolean}
+ */
+Utils.isChrome = function() {
+  if (browser.sessions.getWindowValue === undefined &&
+    browser.tabs.discard !== undefined) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Return true if the browser is FF57
+ * @return {Boolean}
+ */
+Utils.isFF57 = function() {
+  if (browser.sessions.getWindowValue !== undefined ) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Return true if the browser is FF56 and -
+ * @return {Boolean}
+ */
+Utils.isBeforeFF57 = function() {
+  if (browser.sessions.getWindowValue === undefined &&
+    browser.tabs.discard === undefined) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Return the url in parameter for priviledged-tab.html pages
+ * This URL is the real normal url page.
+ * @param {String} url
+ * @return {String} new_url
+ */
+Utils.extractPriviledgedTabUrl = function(url) {
+  let new_url = url;
+  if (url.includes("priviledged-tab.html")) {
+    new_url = Utils.getParameterByName('url', url)
+  }
+  return new_url;
+}
+
+/**
  * Return true if the url is privileged
  * Privileged url: chrome: URLs, javascript: URLs,
                     data: URLs, file: URLs, about: URLs
@@ -240,7 +289,7 @@ Utils.wait = async function(time) {
  * @returns {boolean}
  */
 Utils.isPrivilegedURL = function(url) {
-  if (url === "about:newtab" || url === "about:blank")
+  if (url === "about:newtab" || url === "about:blank" || url.includes("chrome://newtab"))
     return false;
   if (url.startsWith("chrome:") ||
     url.startsWith("javascript:") ||

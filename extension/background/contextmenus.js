@@ -9,85 +9,102 @@ ContextMenu.SpecialActionMenuIds = [];
 ContextMenu.repeatedtask = new TaskManager.RepeatedTask(800);
 
 ContextMenu.createMoveTabMenu = async function() {
-  for (let id of ContextMenu.MoveTabMenuIds) {
-    await browser.contextMenus.remove(id);
-  }
-  ContextMenu.MoveTabMenuIds = [];
+  try {
+    if (browser.sessions.getWindowValue === undefined) { // Incompatible Chrome: "tab" in context menus
+      return "";
+    }
+    for (let id of ContextMenu.MoveTabMenuIds) {
+      await browser.contextMenus.remove(id);
+    }
+    ContextMenu.MoveTabMenuIds = [];
 
-  let contexts = ["tab"];
+    let contexts = ["tab"];
 
-  let parentId = ContextMenu.MoveTabMenu_ID + "title";
-  ContextMenu.MoveTabMenuIds.push(parentId);
-  await browser.contextMenus.create({
-    id: parentId,
-    title: browser.i18n.getMessage("move_tab_group"),
-    contexts: contexts,
-    icons: {
-      "64": "/share/icons/tabspace-active-64.png",
-      "32": "/share/icons/tabspace-active-32.png"
-    },
-  });
-
-  ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-1");
-  await browser.contextMenus.create({
-    id: ContextMenu.MoveTabMenu_ID + "separator-1",
-    type: "separator",
-    contexts: contexts,
-    parentId: parentId
-  });
-
-  let currentWindow = await browser.windows.getLastFocused({
-    windowTypes: ['normal']
-  });
-  let groups = GroupManager.getCopy();
-  let sortedIndex = GroupManager.getIndexSortByPosition(groups);
-  for (let i of sortedIndex) {
-    ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
+    let parentId = ContextMenu.MoveTabMenu_ID + "title";
+    ContextMenu.MoveTabMenuIds.push(parentId);
     await browser.contextMenus.create({
-      id: ContextMenu.MoveTabMenu_ID + groups[i].id,
-      title: Utils.getGroupTitle(groups[i]),
+      id: parentId,
+      title: browser.i18n.getMessage("move_tab_group"),
       contexts: contexts,
-      parentId: parentId,
-      enabled: currentWindow.id !== groups[i].windowId
+      icons: {
+        "64": "/share/icons/tabspace-active-64.png",
+        "32": "/share/icons/tabspace-active-32.png"
+      },
     });
+
+    ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-1");
+    await browser.contextMenus.create({
+      id: ContextMenu.MoveTabMenu_ID + "separator-1",
+      type: "separator",
+      contexts: contexts,
+      parentId: parentId
+    });
+
+    let currentWindow = await browser.windows.getLastFocused({
+      windowTypes: ['normal']
+    });
+    let groups = GroupManager.getCopy();
+    let sortedIndex = GroupManager.getIndexSortByPosition(groups);
+    for (let i of sortedIndex) {
+      ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
+      await browser.contextMenus.create({
+        id: ContextMenu.MoveTabMenu_ID + groups[i].id,
+        title: Utils.getGroupTitle(groups[i]),
+        contexts: contexts,
+        parentId: parentId,
+        enabled: currentWindow.id !== groups[i].windowId
+      });
+    }
+
+    ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-2");
+    await browser.contextMenus.create({
+      id: ContextMenu.MoveTabMenu_ID + "separator-2",
+      type: "separator",
+      contexts: contexts,
+      parentId: parentId
+    });
+
+    ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "new");
+    await browser.contextMenus.create({
+      id: ContextMenu.MoveTabMenu_ID + "new",
+      title: browser.i18n.getMessage("add_group"),
+      contexts: contexts,
+      parentId: parentId
+    });
+  } catch (e) {
+    let msg = "ContextMenu.createMoveTabMenu failed " + e;
+    console.error(msg);
+    return msg;
   }
-
-  ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-2");
-  await browser.contextMenus.create({
-    id: ContextMenu.MoveTabMenu_ID + "separator-2",
-    type: "separator",
-    contexts: contexts,
-    parentId: parentId
-  });
-
-  ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "new");
-  await browser.contextMenus.create({
-    id: ContextMenu.MoveTabMenu_ID + "new",
-    title: browser.i18n.getMessage("add_group"),
-    contexts: contexts,
-    parentId: parentId
-  });
 };
 
 ContextMenu.createSpecialActionMenu = function() {
-  browser.contextMenus.create({
+  let contextManageGroups = {
     id: ContextMenu.SpecialActionMenu_ID + "manage_groups",
     title: browser.i18n.getMessage("manage_groups"),
     contexts: ['browser_action'],
-    icons: {
+
+  };
+  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+    contextManageGroups.icons = {
       "64": "/share/icons/list-64.png",
       "32": "/share/icons/list-32.png"
-    },
-  });
-  browser.contextMenus.create({
+    };
+  }
+  browser.contextMenus.create(contextManageGroups);
+
+  let contextExportGroups = {
     id: ContextMenu.SpecialActionMenu_ID + "export_groups",
     title: browser.i18n.getMessage("export_groups"),
     contexts: ['browser_action'],
-    icons: {
+  };
+  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+    contextExportGroups.icons = {
       "64": "/share/icons/upload-64.png",
       "32": "/share/icons/upload-32.png"
-    },
-  });
+    };
+  }
+  browser.contextMenus.create(contextExportGroups);
   /* TODO: not working can't ask file, wait select group in popup window with filter
   browser.contextMenus.create({
     id: ContextMenu.SpecialActionMenu_ID + "import_groups",
@@ -110,25 +127,32 @@ ContextMenu.createSpecialActionMenu = function() {
     },
   });
   */
-  browser.contextMenus.create({
+
+  let contextOpenPreferences = {
     id: ContextMenu.SpecialActionMenu_ID + "open_preferences",
     title: browser.i18n.getMessage("open_preferences"),
     contexts: ['browser_action'],
-    icons: {
+  };
+  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+    contextOpenPreferences.icons = {
       "64": "/share/icons/gear-64.png",
       "32": "/share/icons/gear-32.png"
-    },
-  });
+    };
+  }
+  browser.contextMenus.create(contextOpenPreferences);
 
-  browser.contextMenus.create({
+  let contextOpenShortcuts = {
     id: ContextMenu.SpecialActionMenu_ID + "open_shortcut_list",
     title: browser.i18n.getMessage("open_shortcut_list"),
     contexts: ['browser_action'],
-    icons: {
+  };
+  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+    contextOpenShortcuts.icons = {
       "64": "/share/icons/keyboard-64.png",
       "32": "/share/icons/keyboard-32.png"
-    },
-  });
+    };
+  }
+  browser.contextMenus.create(contextOpenShortcuts);
 }
 
 ContextMenu.MoveTabMenuListener = function(info, tab) {

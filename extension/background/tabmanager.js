@@ -7,6 +7,29 @@
 var TabManager = TabManager || {};
 
 /**
+ * Return all the tabs in the window with windowId
+ * Pinned tabs are inlcuded/excluded depending options.pinnedTab.sync
+ * @param {Number} windowId
+ * @return {Array[Tab]} tabs
+ */
+TabManager.getTabsInWindowId = async function(windowId) {
+  try {
+    let selector = {
+      windowId: windowId
+    };
+    // Pinned tab
+    if (!OptionManager.options.pinnedTab.sync) {
+      selector["pinned"] = false;
+    }
+    return await browser.tabs.query(selector);
+  } catch (e) {
+    let msg = "TabManager.getTabsInWindowId failed on window " + windowId + " with " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+/**
  * Take the current tabs on the desire window and set it as the tabs
  * for the group
  * @param {Number} window id
@@ -38,20 +61,11 @@ TabManager.updateTabsInGroup = async function(windowId) {
     }
 
     var groupId = GroupManager.getGroupIdInWindow(windowId);
-    let selector = {
-      windowId: windowId
-    };
-    // Pinned tab
-    if (!OptionManager.options.pinnedTab.sync) {
-      selector["pinned"] = false;
-    }
-    const tabs = await browser.tabs.query(selector);
+    const tabs = await TabManager.getTabsInWindowId(windowId);
 
     // Remove fancy pages
     for (let tab of tabs) {
-      if (tab.url.includes("priviledged-tab.html")) {
-        tab.url = Utils.getParameterByName('url', tab.url)
-      }
+      tab.url = Utils.extractPriviledgedTabUrl(tab.url);
     }
 
 
@@ -151,6 +165,7 @@ TabManager.openListOfTabs = async function(
         }
       }
       createdTabs[index] = await browser.tabs.create(tabCreationProperties);
+
       tabIdsCrossRef[tab.id] = createdTabs[index].id;
 
       if (tab.pinned) {

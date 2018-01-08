@@ -81,7 +81,7 @@ class Tab extends React.Component {
         onMouseLeave: this.removeMenuItem,
         contextMenu: "moveTabSubMenu" + this.props.tab.id
       },
-      this.state.waitFirstMount && this.createContextMenuTab(),
+      !Utils.isChrome() && this.state.waitFirstMount && this.createContextMenuTab(),
       this.props.tab.pinned && React.createElement("i", {
         className: "pinned-icon fa fa-fw fa-thumb-tack"
       }),
