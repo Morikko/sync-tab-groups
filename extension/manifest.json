@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "version": "0.4.2",
+  "version": "0.5",
 
   "name": "Sync Tab Groups",
   "description": "__MSG_extension_description__",
@@ -18,7 +18,13 @@
   },
 
   "permissions": [
-    "bookmarks", "tabs", "storage", "sessions", "downloads", "notifications", "contextMenus"
+    "bookmarks",
+    "tabs",
+    "storage",
+    "sessions",
+    "downloads",
+    "notifications",
+    "contextMenus"
   ],
 
   "background": {
@@ -81,6 +87,34 @@
         "default": "Alt+Shift+Space"
       },
       "description": "Open Menu"
+    },
+
+    "swtich_next_group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Right"
+      },
+      "description": "Switch Next Group"
+    },
+
+    "swtich_previous_group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Left"
+      },
+      "description": "Switch Previous Group"
+    },
+
+    "create_group_swtich": {
+      "suggested_key": {
+        "default": "Alt+Shift+Insert"
+      },
+      "description": "Add New Group and Switch"
+    },
+
+    "focus_next_group": {
+      "suggested_key": {
+        "default": "Alt+Shift+Up"
+      },
+      "description": "Focus Next Group"
     }
   }
 }

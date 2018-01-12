@@ -514,7 +514,7 @@ WindowManager.addGroupFromWindow = async function(windowId) {
  *  3. A score is returned to favorise potential Priv/Ext tabs that match
  *  4. if more than one result, take the last accessed
  * TODO: Test :Problems privileged URLs: browser.urls !== groups.urls
- *       On reload -> priviledged URLs are closes -> bias compare
+ *       On reload -> privileged URLs are closes -> bias compare
  * @param {Array[Tab]} tabs
  * @return {Number} groupId
  */
@@ -536,8 +536,8 @@ GroupManager.bestMatchGroup = function(tabs, groups=GroupManager.groups) {
     let index = 0;
     result.score = group.tabs.reduce((count, tab, group_index)=>{
         let next_count = count;
-        let tab_url = Utils.extractPriviledgedTabUrl(tabs[index].url);
-        let group_tab_url = Utils.extractPriviledgedTabUrl(tab.url);
+        let tab_url = Utils.extractTabUrl(tabs[index].url);
+        let group_tab_url = Utils.extractTabUrl(tab.url);
 
         if ( tab_url ===  group_tab_url ) { // Match
           next_count++;

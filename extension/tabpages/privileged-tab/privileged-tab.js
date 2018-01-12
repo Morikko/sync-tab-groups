@@ -1,16 +1,39 @@
-function handleCopyClipBoard() {
-  Utils.copyToTheClipBoard(Utils.getParameterByName('url'));
-}
+/** Page Example
+  moz-extension://68ddee50-febc-45b5-bd3d-f7c6264e02a5/tabpages/privileged-tab/privileged-tab.html?title=Debugging%20with%20Firefox%20Developer%20Tools&url=about%3Adebugging&favIconUrl=undefined
+ */
 
+function handleCopyClipBoard() {
+  let params = new URLSearchParams(window.location.search),
+      url = params.get('url') || 'about:blank';
+  let input = document.createElement('input');
+  input.value = url;
+
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand("Copy");
+  document.body.removeChild(input);
+}
 document.addEventListener("DOMContentLoaded", () => {
 
-  let tab_title = Utils.getParameterByName('title').replace('+', ' '),
-      tab_url = Utils.getParameterByName('url'),
-      favIconUrl = Utils.getParameterByName('favIconUrl');
+  let params = new URLSearchParams(window.location.search),
+      url = params.get('url') || 'about:blank',
+      title = params.get('title') || 'New tab',
+      favIconUrl = params.get('favIconUrl'),
+      tab_information = "Current Tab Information",
+      tab_title = "Title" + ": " + title,
+      tab_url = "URL" + ": " + url,
+      copy_url = "Copy URL in the clipboard",
+      privileged_url = "About Privileged URLs",
+      privileged_url_help_reason = "Sync Tab Groups can't open directly privileged URLs for security reason:",
+      open_url_help_method = "But you can open it manually:",
+      open_url_help_method_part_1 = "Click on the button",
+      open_url_help_method_part_2 = "Paste the URL in the address bar",
+      open_url_help_method_part_3 = "Press Enter";
+
   // Set tab title
-  document.title = tab_title;
+  document.title = title;
   // Set tab icon
-  Utils.setIcon(favIconUrl);
+  document.getElementById('favIconUrl').href = favIconUrl;
 
   ReactDOM.render(React.createElement(
     'div',
@@ -24,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         width: '64',
         height: '64'
       }),
-      '"Sync Tab Groups"'
+      'Sync Tab Groups'
     ),
     React.createElement(
       'div',
@@ -32,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       React.createElement(
         'h1',
         { className: 'privileged-url' },
-        browser.i18n.getMessage("tab_information")
+        tab_information
       ),
       React.createElement(
         'ul',
@@ -40,18 +63,22 @@ document.addEventListener("DOMContentLoaded", () => {
         React.createElement(
           'li',
           null,
-          browser.i18n.getMessage("tab_title") + ": " + tab_title
+          tab_title
         ),
         React.createElement(
           'li',
           null,
-          browser.i18n.getMessage("tab_address") + ": " + tab_url
+          tab_url
         )
       ),
-      React.createElement(OptionButton, {
-        title: browser.i18n.getMessage("copy_url"),
-        onClick: handleCopyClipBoard
-      })
+      React.createElement(
+        'button',
+        {
+          type: 'button',
+          onClick: handleCopyClipBoard
+        },
+        copy_url
+      )
     ),
     React.createElement(
       'div',
@@ -59,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
       React.createElement(
         'h1',
         { className: 'privileged-url' },
-        browser.i18n.getMessage("privileged_url")
+        privileged_url
       ),
       React.createElement(
         'ul',
@@ -67,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         React.createElement(
           'li',
           { className: 'help_1' },
-          browser.i18n.getMessage("privileged_url_help_reason")
+          privileged_url_help_reason
         ),
         React.createElement(
           'ul',
@@ -101,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
         React.createElement(
           'li',
           { className: 'help_2' },
-          browser.i18n.getMessage("open_url_help_method")
+          open_url_help_method
         ),
         React.createElement(
           'ol',
@@ -109,17 +136,17 @@ document.addEventListener("DOMContentLoaded", () => {
           React.createElement(
             'li',
             null,
-            browser.i18n.getMessage("open_url_help_method_part_1")
+            open_url_help_method_part_1
           ),
           React.createElement(
             'li',
             null,
-            browser.i18n.getMessage("open_url_help_method_part_2")
+            open_url_help_method_part_2
           ),
           React.createElement(
             'li',
             null,
-            browser.i18n.getMessage("open_url_help_method_part_3")
+            open_url_help_method_part_3
           )
         )
       )

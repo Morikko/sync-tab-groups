@@ -245,17 +245,12 @@
   },
 
   "privileged_url": {
-    "message": "About Priviledged URLs",
+    "message": "About Privileged URLs",
     "description": ""
   },
 
   "privileged_url_help_reason": {
     "message": "Sync Tab Groups can't open directly privileged URLs for security reason:",
-    "description": ""
-  },
-
-  "open_url_help_method": {
-    "message": "But you can open it:",
     "description": ""
   },
 
@@ -436,6 +431,11 @@
 
   "manage_groups": {
     "message": "Manage Groups",
+    "description": ""
+  },
+
+  "open_url_help_method": {
+    "message": "But you can open it manually:",
     "description": ""
   }
 }

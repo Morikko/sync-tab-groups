@@ -42,6 +42,7 @@ OptionManager.TEMPLATE = function() {
       removeEmptyGroup: false,
       showGroupTitleInWindow: false,
       sortingType: OptionManager.SORT_OLD_RECENT,
+      discardedOpen: true,
     },
     popup: {
       maximized: false,
@@ -266,17 +267,38 @@ Utils.isBeforeFF57 = function() {
 }
 
 /**
- * Return the url in parameter for priviledged-tab.html pages
+ * Return the url in parameter for privileged-tab.html pages
  * This URL is the real normal url page.
  * @param {String} url
  * @return {String} new_url
  */
-Utils.extractPriviledgedTabUrl = function(url) {
+Utils.extractTabUrl = function(url) {
   let new_url = url;
-  if (url.includes("priviledged-tab.html")) {
-    new_url = Utils.getParameterByName('url', url)
+  if (new_url.includes("lazytab/lazytab.html")) {
+    new_url = Utils.getParameterByName('url', new_url)
+  }
+  if (new_url.includes("/privileged-tab/privileged-tab.html")) {
+    new_url = Utils.getParameterByName('url', new_url)
   }
   return new_url;
+}
+
+Utils.getPrivilegedURL = function (title, url, favIconUrl){
+  return browser.extension.getURL("/tabpages/privileged-tab/privileged-tab.html") + "?" +
+    "title=" + encodeURIComponent(title) +
+    "&url=" + encodeURIComponent(url) +
+    "&favIconUrl=" + encodeURIComponent(favIconUrl);
+}
+
+Utils.getDiscardedURL = function (title, url, favIconUrl){
+  if (url === "about:newtab" || url === "about:blank" || url.includes("chrome://newtab")) {
+      return url;
+  } else {
+    return browser.extension.getURL("/tabpages/lazytab/lazytab.html") + "?" +
+      "title=" + encodeURIComponent(title) +
+      "&url=" + encodeURIComponent(url) +
+      "&favIconUrl=" + encodeURIComponent(favIconUrl);
+  }
 }
 
 /**

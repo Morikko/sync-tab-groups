@@ -65,7 +65,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
 
     // Remove fancy pages
     for (let tab of tabs) {
-      tab.url = Utils.extractPriviledgedTabUrl(tab.url);
+      tab.url = Utils.extractTabUrl(tab.url);
     }
 
 
@@ -141,25 +141,22 @@ TabManager.openListOfTabs = async function(
     for (let tab of tabsToOpen) {
       let url = tab.url;
       url = (url === "about:privatebrowsing") ? "about:newtab" : url;
+
       if (Utils.isPrivilegedURL(url)) {
-        url = "/tabpages/priviledged-tab/priviledged-tab.html?" +
-          "title=" + tab.title.replace(' ', '+') +
-          "&url=" + tab.url +
-          "&favIconUrl=" + tab.favIconUrl;
-      } else {
-        url = "/pages/priviledged-tab/priviledged-tab.html?" +
-          "title=" + encodeURIComponent(tab.title) +
-          "&url=" + encodeURIComponent(tab.url) +
-          "&favIconUrl=" + encodeURIComponent(tab.favIconUrl) +
-          "&redirect=true";
+        url = Utils.getPrivilegedURL(tab.title, url, tab.favIconUrl)
       }
+
+      if ( OptionManager.options.groups.discardedOpen && !tab.active) {
+          url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
+      }
+
       // Create a tab to tab.url or to newtab
       let tabCreationProperties = {
         url: (url === "about:newtab") ? null : url,
         active: tab.active,
         pinned: tab.pinned,
         index: (tab.pinned) ? indexPinnedOffset : indexTabOffset,
-        windowId: windowId
+        windowId: windowId,
       };
       // Update parentId
       if (tab.hasOwnProperty("openerTabId")) {
