@@ -19,40 +19,50 @@ class GroupList extends React.Component{
       "group-list": true,
     });
 
-    let groups = [];
-    let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
-    for (let index of sortedIndex) {
-      groups.push(
-        <Group
-          key= {this.props.groups[index].id}
-          group= {this.props.groups[index]}
-          currentWindowId= {this.props.currentWindowId}
-          currentlyClosing= {this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id)}
-          currentlyRemoving= {this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id)}
-          onGroupClick= {this.props.onGroupClick}
-          onGroupDrop= {this.props.onGroupDrop}
-          onMoveTabToNewGroup= {this.props.onMoveTabToNewGroup}
-          onGroupCloseClick= {this.props.onGroupCloseClick}
-          onGroupRemoveClick= {this.props.onGroupRemoveClick}
-          onGroupTitleChange= {this.props.onGroupTitleChange}
-          onTabClick= {this.props.onTabClick}
-          onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
-          onCloseTab= {this.props.onCloseTab}
-          onOpenTab= {this.props.onOpenTab}
-          searchGroupResult= {this.props.searchGroupsResults[index] || {}}
-          currentlySearching= {this.props.currentlySearching}
-          showTabsNumber= {this.props.options.popup.showTabsNumber}
-          groups= {this.props.groups}
-          groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
-          onGroupChangePosition= {this.props.onGroupChangePosition}
-          onChangePinState= {this.props.onChangePinState}
-          onChangeExpand= {this.props.onChangeExpand}
-          allowClickSwitch={this.props.allowClickSwitch}
-          stateless={this.props.stateless}
-        />);
+    let groups;
+    if ( this.props.groups.length > 0 ) {
+      groups = [];
+      let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
+      for (let index of sortedIndex) {
+        groups.push(
+          <Group
+            key= {this.props.groups[index].id}
+            group= {this.props.groups[index]}
+            currentWindowId= {this.props.currentWindowId}
+            currentlyClosing= {this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id)}
+            currentlyRemoving= {this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id)}
+            onGroupClick= {this.props.onGroupClick}
+            onGroupDrop= {this.props.onGroupDrop}
+            onMoveTabToNewGroup= {this.props.onMoveTabToNewGroup}
+            onGroupCloseClick= {this.props.onGroupCloseClick}
+            onGroupRemoveClick= {this.props.onGroupRemoveClick}
+            onGroupTitleChange= {this.props.onGroupTitleChange}
+            onTabClick= {this.props.onTabClick}
+            onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
+            onCloseTab= {this.props.onCloseTab}
+            onOpenTab= {this.props.onOpenTab}
+            searchGroupResult= {this.props.searchGroupsResults[index] || {}}
+            currentlySearching= {this.props.currentlySearching}
+            showTabsNumber= {this.props.options.popup.showTabsNumber}
+            groups= {this.props.groups}
+            groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+            onGroupChangePosition= {this.props.onGroupChangePosition}
+            onChangePinState= {this.props.onChangePinState}
+            onChangeExpand= {this.props.onChangeExpand}
+            allowClickSwitch={this.props.allowClickSwitch}
+            stateless={this.props.stateless}
+            width={this.props.width}
+          />);
+      }
+    } else {
+      groups = (
+        <div className="empty-list">
+          There is no group now... Create your first one!
+        </div>
+      );
     }
-
-    return (<ul className={groupListClasses}>
+    return (<ul className={groupListClasses}
+                style={{width: this.props.width}}>
               {groups}
             </ul>);
   }

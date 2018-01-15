@@ -54,6 +54,7 @@ class PopupMenuStandAlone extends React.Component {
       "menu-minimized": !this.state.maximized,
     });
 
+    let width = this.state.maximized?800:450;
     return (
       <ul className={menuClasses}>
           {searchbar}
@@ -82,6 +83,7 @@ class PopupMenuStandAlone extends React.Component {
               currentlySearching= {this.state.searchfilter.length > 0}
               allowClickSwitch={true}
               stateless={false}
+              width={width}
             />
           <GroupAddButton
               onClick= {this.props.onGroupAddClick}

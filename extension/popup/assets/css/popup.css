@@ -4,6 +4,17 @@ Copyright (c) 2017 Eric Masseran
 From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
 */
+:root {
+    --group-open: #b3d5ff;
+    --group-active: #4d9dff;
+    --group-hover: #1a81ff; /*99c7ff;*/
+    --action-hover: #66abff;
+    --private-debug: #f5e6ff;
+    --private-open: #ebccff;
+    --private-hover: #c266ff;
+    --group-odd: hsl(211, 100%, 96%); /* #fff2e6 */
+    --group-even: hsl(211, 100%, 98%); /* e6f2ff */
+}
 
 :root {
   --checked: #2aa1c0;
@@ -111,14 +122,16 @@ body {
   position: absolute;
 }
 
-.grouped-button.not-window-grouped {
+.grouped-button {
   background-color: var(--not-checked);
-  opacity: 0.7;
+  color: #444;
+}
+.grouped-button.group-visible {
+  background-color: var(--group-open);
 }
 
-.grouped-button.window-grouped {
-  background-color: var(--checked);
-  color: white;
+.grouped-button.group-visible.incognito {
+  background-color: var(--private-open);
 }
 
 .manage-button {
@@ -133,7 +146,7 @@ body {
   cursor: pointer;
 }
 
-.manage-button:hover {
+.mainbar i:hover, .manage-button:hover {
   background-color: var(--not-checked-hover);
 }
 
@@ -176,7 +189,7 @@ body {
 
 /*** Main End bar ***/
 .group-list {
-  max-height: 480px;
+  height: 480px;
   overflow-x: auto;
 }
 

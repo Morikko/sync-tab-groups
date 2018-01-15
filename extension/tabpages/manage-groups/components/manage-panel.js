@@ -7,15 +7,30 @@ class ManagePanelStandAlone extends React.Component {
       searchGroupsResults: {} /*searchResults.searchGroupsResults*/
       , atLeastOneResult: true /*searchResults.atLeastOneResult*/
     };
+    this.update = this.update.bind(this);
+  }
+
+  update() {
+    this.forceUpdate();
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.update);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.update);
   }
 
   render() {
+    let width = this.props.singleMode ? window.innerWidth - 28 : window.innerWidth / 2 - 28;
+
     return React.createElement(
       "ul",
       { id: "manage-panel" },
       React.createElement(
         "li",
-        null,
+        { className: "group-lists" },
         React.createElement(
           "div",
           { className: classNames({
@@ -45,7 +60,8 @@ class ManagePanelStandAlone extends React.Component {
             , searchGroupsResults: this.state.searchGroupsResults,
             currentlySearching: this.state.searchfilter.length > 0,
             allowClickSwitch: false,
-            stateless: true
+            stateless: true,
+            width: width
           })
         ),
         React.createElement(
@@ -78,7 +94,8 @@ class ManagePanelStandAlone extends React.Component {
             , searchGroupsResults: this.state.searchGroupsResults,
             currentlySearching: this.state.searchfilter.length > 0,
             allowClickSwitch: false,
-            stateless: true
+            stateless: true,
+            width: width
           })
         )
       ),

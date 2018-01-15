@@ -7,12 +7,28 @@ class ManagePanelStandAlone extends React.Component {
         searchGroupsResults: {} /*searchResults.searchGroupsResults*/ ,
         atLeastOneResult: true /*searchResults.atLeastOneResult*/ ,
       };
+      this.update = this.update.bind(this);
     }
 
+    update() {
+      this.forceUpdate();
+    }
+
+    componentDidMount() {
+      window.addEventListener("resize", this.update);
+    }
+
+    componentWillUnmount() {
+      window.removeEventListener("resize", this.update);
+    }
+
+
     render() {
-        return (
+      let width = this.props.singleMode ? window.innerWidth-28: window.innerWidth/2-28;
+
+      return (
             <ul id="manage-panel">
-        <li>
+        <li className="group-lists">
           <div className={classNames({
             "left-list": true,
             "half": !this.props.singleMode,})}>
@@ -41,6 +57,7 @@ class ManagePanelStandAlone extends React.Component {
               currentlySearching= {this.state.searchfilter.length > 0}
               allowClickSwitch={false}
               stateless={true}
+              width={width}
             />
           </div>
           <div className={classNames({
@@ -72,6 +89,7 @@ class ManagePanelStandAlone extends React.Component {
               currentlySearching= {this.state.searchfilter.length > 0}
               allowClickSwitch={false}
               stateless={true}
+              width={width}
             />
           </div>
         </li>

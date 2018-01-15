@@ -53,6 +53,7 @@ class PopupMenuStandAlone extends React.Component {
       "menu-minimized": !this.state.maximized
     });
 
+    let width = this.state.maximized ? 800 : 450;
     return React.createElement(
       'ul',
       { className: menuClasses },
@@ -81,7 +82,8 @@ class PopupMenuStandAlone extends React.Component {
         , searchGroupsResults: this.state.searchGroupsResults,
         currentlySearching: this.state.searchfilter.length > 0,
         allowClickSwitch: true,
-        stateless: false
+        stateless: false,
+        width: width
       }),
       React.createElement(GroupAddButton, {
         onClick: this.props.onGroupAddClick,

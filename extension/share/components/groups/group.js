@@ -89,15 +89,17 @@ class Group extends React.Component {
     //console.log("Group Render");
     let titleElement;
     if (this.state.editing) {
-      titleElement = React.createElement("input", { className: "max-width-25 max-width-hover-85",
+      titleElement = React.createElement("input", {
+        className: "",
+        id: "text-editiong-" + this.props.group.id,
         autoFocus: true,
         type: "text",
-        defaultValue: Utils.getGroupTitle(this.props.group),
-        onChange: event => {
+        value: this.state.newTitle,
+        onChange: (event => {
           this.setState({
             newTitle: event.target.value
           });
-        },
+        }).bind(this),
         onClick: event => {
           event.stopPropagation();
         },
@@ -160,7 +162,8 @@ class Group extends React.Component {
         onDragLeave: this.handleGroupDragLeave,
         onDragStart: this.handleGroupDragStart,
         onDrop: this.handleGroupDrop,
-        title: groupTitle
+        title: groupTitle,
+        style: { width: this.props.width }
       },
       React.createElement(
         "span",
@@ -283,14 +286,16 @@ class Group extends React.Component {
   handleGroupEditAbortClick(event) {
     event.stopPropagation();
     this.setState({
-      editing: false
+      editing: false,
+      newTitle: Utils.getGroupTitle(this.props.group)
     });
   }
 
   handleGroupEditSaveClick(event) {
     event.stopPropagation();
     this.setState({
-      editing: false
+      editing: false,
+      newTitle: Utils.getGroupTitle(this.props.group)
     });
     this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
   }
@@ -310,7 +315,8 @@ class Group extends React.Component {
     if (event.keyCode === 13) {
       // Enter key
       this.setState({
-        editing: false
+        editing: false,
+        newTitle: Utils.getGroupTitle(this.props.group)
       });
       this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
     }
@@ -371,7 +377,6 @@ class Group extends React.Component {
       event.currentTarget.offsetTop // Group dist
       - event.currentTarget.parentElement.scrollTop); // Remove scroll grouplist
       let height = event.currentTarget.offsetHeight;
-      console.log(pos);
       // Bottom
       if (pos > height / 2 && pos <= height) {
         if (this.state.dragOnTop || !this.state.dragOnBottom) {

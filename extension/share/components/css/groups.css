@@ -1,9 +1,21 @@
 :root {
     --group-open: #b3d5ff;
-    --group-hover: #99c7ff;
+    --group-active: #4d9dff;
+    --group-hover: #1a81ff; /*99c7ff;*/
     --action-hover: #66abff;
+    --private-debug: #f5e6ff;
+    --private-open: #ebccff;
+    --private-hover: #c266ff;
     --group-odd: hsl(211, 100%, 96%); /* #fff2e6 */
     --group-even: hsl(211, 100%, 98%); /* e6f2ff */
+}
+
+:root {
+  --checked: #2aa1c0;
+  --checked-hover: #0e647d;
+  --not-checked: #e6e6e6;
+  --not-checked-hover: #ccc;
+  --disabled: #7b7b7b;
 }
 
 ul, li {
@@ -18,16 +30,91 @@ li {
   overflow: hidden;
 }
 
-.group:nth-child(odd), .group:nth-child(odd) .tab-list {
-  background-color: var(--group-odd);
+.empty-list {
+  padding: 5px;
 }
 
-.group:nth-child(even), .group:nth-child(even) .tab-list {
-  background-color: var(--group-even);
+/** Mix **/
+.group, .tab, .addButton {
+  cursor: pointer;
+  padding: 5px;
+  position: relative;
+}
+/* Group in window and active tab */
+
+
+/** Colors **/
+.group.active, .tab.active {
+  background-color: var(--group-open);
 }
 
+.group.active.focusGroup {
+  background-color: var(--group-active);
+}
+
+.group:hover, .tab:hover {
+  background-color: var(--group-hover);
+  color: #fff;
+}
+
+.group.incognito {
+  background-color: var(--private-debug);
+}
+.group.incognito.active, .incognito .tab.active {
+  background-color: var(--private-open);
+}
+
+.group.incognito.active.focusGroup {
+  background-color: var(--private-hover);
+}
+
+.group.incognito:hover, .incognito .tab:hover {
+  background-color: var(--private-hover);
+  color: #fff;
+}
+
+.group-list i:hover {
+  background-color: var(--action-hover);
+}
+
+.group-list .incognito i:hover {
+  background-color: var(--private-open);
+}
+
+.groupadd-controls i:hover {
+  background-color: var(--not-checked);
+}
+
+.addButton:hover {
+  background-color: var(--not-checked-hover);
+}
+
+.group:hover .group-title input {
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+/** End Colors **/
+
+/** End Mix **/
+
+/*** Group List ***/
+.group-list {
+  font-size: 16px;
+  height: 100%;
+  max-width: 800px;
+  min-width: 400px;
+  overflow-x: hidden;
+}
+/*** End Group List ***/
+
+/*** Group ***/
 .group {
-  min-width: 300px;
+  border-bottom: 1px solid #a6a6a6;
+  max-width: 800px;
+  min-width: 400px;
+  color: #444;
+  box-sizing: border-box;
 }
 
 .group-title {
@@ -35,56 +122,101 @@ li {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-/* Group in window and active tab */
-
-.group, .tab, .addButton {
-  border: 1px solid transparent;
-  cursor: pointer;
-  padding: 5px;
-  position: relative;
-}
-
-.focusGroup .group-title, .tab.active .tab-title {
-  font-weight: bold;
+  height: 21px;
 }
 
 .group-title input {
   background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  margin: 0;
+  box-sizing: border-box;
+  border: 1px solid #444;
   padding: 1px;
+  width: 100%;
+  height: 21px;
 }
 
 .group .group-title:hover input {
   width: 100%;
 }
 
+/*** End Group ***/
+
+/*** Tab List ***/
+.tab-list {
+  display: none;
+  margin-top: 5px;
+  border: 1px solid transparent;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-right: 14px;
+  background-color: #fff;
+}
+
+.expanded .tab-list {
+  display: block;
+}
+/*** End Tab List ***/
+
+/*** Tab ***/
 .tab {
-  padding: 0;
+  color: #444;
+  padding: 5px;
 }
 
-.group.active {
-  background-color: var(--group-open);
-  border-color: rgba(0, 0, 0, 0.06);
+.tab-title {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  margin-bottom: 1px;
 }
 
-.group:hover, .tab:hover {
-  background-color: var(--group-hover);
-  border-color: rgba(0, 0, 0, 0.14);
+.pinned-icon {
+  position: relative;
+  top: -2px;
+  opacity: 0.7;
+  vertical-align: middle;
+  height: 16px;
+  width: 16px;
+  margin-right: 1px;
+  margin-left: 4px;
 }
 
-.addButton:hover {
-  background-color: rgba(0, 0, 0, 0.10);
-  border-color: rgba(0, 0, 0, 0.14);
+.tab-icon {
+  vertical-align: middle;
+  height: 16px;
+  width: 16px;
+  margin-right: 2px;
+  margin-left: 4px;
+  position: relative;
+  top: -2px;
+}
+/*** End Tab ***/
+
+/** Add Button **/
+.addButton .group-title {
+  font-weight: bold;
+}
+/** End Add Button **/
+
+/*
+.group:nth-child(odd), .group:nth-child(odd) .tab-list {
+  background-color: var(--group-odd);
 }
 
+.group:nth-child(even), .group:nth-child(even) .tab-list {
+  background-color: var(--group-even);
+}
+*/
+
+/** Drag & Drop **/
 .dragTopBorder {
+  padding-top: 2px !important;
   border-top: 3px solid #2aa1c0 !important;
 }
 
 .dragBottomBorder {
+  padding-bottom: 2px !important;
   border-bottom: 3px solid #2aa1c0 !important;
 }
 
@@ -98,71 +230,18 @@ li {
   background-color: #c0e7f1;
 }
 
-.tab-list {
-  display: none;
-  margin-top: 5px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
+/** End Drag & Drop **/
 
-.expanded .tab-list {
-  display: block;
-}
-
-/*
-li.expanded  {
-  border-top: 3px solid #ccc;
-  border-bottom: 3px solid #ccc;
-  border-radius: 3px;
-}
-
-li.expanded  {
-  margin-left: 5px;
-  padding-left: 0px;
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-}
-*/
-.tab-title {
-  display: inline-block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 5px 5px 1px;
-  margin-bottom: 1px;
-}
-
-.pinned-icon {
-  position: relative;
-  top: -6px;
-  opacity: 0.7;
-  height: 16px;
-  width: 16px;
-  margin-right: 1px;
-  margin-left: 4px;
-}
-
-.tab-icon {
-  height: 16px;
-  width: 16px;
-  margin-right: 1px;
-  /*margin-bottom: 1px;*/
-  margin-left: 4px;
-  position: relative;
-  top: -4px;
-}
-
+/** Controls **/
 .group-controls, .tab-controls, .groupadd-controls {
   display: inline-block;
   font-size: 120%;
-  opacity: 0.7;
   position: absolute;
   top: -2px;
 }
 
 .group-controls {
-  right: 0px; /*previous 10px */
+  right: 15px;
 }
 
 .groupadd-controls {
@@ -170,17 +249,17 @@ li.expanded  {
 }
 
 .tab-controls {
-  right: 0px; /*previous 5px */
+  right: 0px;
 }
 
 .group.editing .group-controls i {
-  height: 36px;
-  line-height: 36px;
+  font-size: 20px;
+  padding: 6px 0px;
 }
 
 .groupadd-controls i {
-  height: 36px;
-  line-height: 36px;
+  font-size: 20px;
+  padding: 6px 0px;
 }
 
 .group-controls i, .tab-controls i, .cancel-search, .groupadd-controls i {
@@ -188,13 +267,9 @@ li.expanded  {
   background-color: none;
 }
 
-.group-controls i:hover, .tab-controls i:hover, .left-actions i:hover, .right-actions i:hover, .groupadd-controls i:hover {
-  background-color: var(--action-hover);
-}
-
 .group-controls i, .cancel-search {
-  height: 32px;
-  line-height: 32px;
+  font-size: 20px;
+  padding: 6px 0px;
 }
 
 .tab-controls i {
@@ -231,9 +306,7 @@ li.expanded  {
   display: inline-block;
 }
 
-.addButton .group-title {
-  font-weight: bold;
-}
+/** End Controls **/
 
 .max-width-25 {
   max-width: calc(100% - 25px);
@@ -273,8 +346,4 @@ li:hover > .max-width-hover-85 {
 
 li:hover > .max-width-hover-115 {
   max-width: calc(100% - 115px);
-}
-
-.group-title input {
-  width: 100%;
 }

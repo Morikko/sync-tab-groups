@@ -16,8 +16,8 @@ class SearchBar extends React.Component{
         onChange={this.handleSearchChange}
         value={this.state.value}
         id="search-input"
-        autoFocus>
-      </input>);
+        autoFocus/>
+      );
 
     return (
       <li className="searchbar">

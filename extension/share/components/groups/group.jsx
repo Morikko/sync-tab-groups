@@ -95,29 +95,33 @@ class Group extends React.Component {
     //console.log("Group Render");
     let titleElement;
     if (this.state.editing) {
-      titleElement = (<input className="max-width-25 max-width-hover-85"
-        autoFocus
-        type="text"
-        defaultValue={Utils.getGroupTitle(this.props.group)}
-        onChange={(event) => {
-          this.setState({
-            newTitle: event.target.value
-          });
-        }}
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-        onFocus={(e) => {
-          e.target.select();
-        }}
-        onKeyUp={this.handleGroupTitleInputKey}
+      titleElement = (
+        <input
+          className=""
+          id={"text-editiong-"+this.props.group.id}
+          autoFocus
+          type="text"
+          value={this.state.newTitle}
+          onChange={((event) => {
+            this.setState({
+              newTitle: event.target.value
+            });
+          }).bind(this)}
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+          onFocus={(e) => {
+            e.target.select();
+          }}
+          onKeyUp={this.handleGroupTitleInputKey}
         />);
     } else {
       let title = Utils.getGroupTitle(this.props.group);
       if (this.props.showTabsNumber) {
         title = title + "  (" + this.props.group.tabs.length + ")";
       }
-      titleElement = (<span className="group-title-text">
+      titleElement = (
+        <span className="group-title-text">
         {title}
         </span>);
     }
@@ -166,6 +170,7 @@ class Group extends React.Component {
           onDragStart={this.handleGroupDragStart}
           onDrop={this.handleGroupDrop}
           title={groupTitle}
+          style={{width: this.props.width}}
         >
         <span
             className={"group-title " +
@@ -291,14 +296,16 @@ class Group extends React.Component {
   handleGroupEditAbortClick(event) {
     event.stopPropagation();
     this.setState({
-      editing: false
+      editing: false,
+      newTitle: Utils.getGroupTitle(this.props.group)
     });
   }
 
   handleGroupEditSaveClick(event) {
     event.stopPropagation();
     this.setState({
-      editing: false
+      editing: false,
+      newTitle: Utils.getGroupTitle(this.props.group)
     });
     this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
   }
@@ -318,7 +325,8 @@ class Group extends React.Component {
     event.stopPropagation();
     if (event.keyCode === 13) { // Enter key
       this.setState({
-        editing: false
+        editing: false,
+        newTitle: Utils.getGroupTitle(this.props.group),
       });
       this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
     }
@@ -386,7 +394,6 @@ class Group extends React.Component {
         (event.currentTarget.offsetTop // Group dist
           -event.currentTarget.parentElement.scrollTop); // Remove scroll grouplist
       let height = event.currentTarget.offsetHeight;
-      console.log(pos);
       // Bottom
       if (pos > height / 2 && pos <= height) {
         if (this.state.dragOnTop || !this.state.dragOnBottom) {
