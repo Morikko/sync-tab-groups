@@ -7,9 +7,10 @@ StorageManager.Local = StorageManager.Local || {};
  * @param {Array[Group]} groups
  */
 StorageManager.Local.saveGroups = async function(groups) {
+  let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
   try {
     browser.storage.local.set({
-     groups: groups
+     groups: export_groups
    });
  } catch(e) {
    let msg = "StorageManager.Local.saveGroups failed :" + e;

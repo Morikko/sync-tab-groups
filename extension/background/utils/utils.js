@@ -28,7 +28,7 @@ OptionManager.TEMPLATE = function() {
     version: 0.1,
     privateWindow: {
       sync: true,
-      removeOnClose: false,
+      removeOnClose: true,
     },
     pinnedTab: {
       sync: true

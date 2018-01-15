@@ -24,11 +24,6 @@
     "description": "Default name for unnamed group"
   },
 
-  "synchronized_window": {
-    "message": "Window Synchronized",
-    "description": "Label for synchronizing window in popup"
-  },
-
   "open_preferences": {
     "message": "Open Preferences",
     "description": "Open Preferences"
@@ -442,6 +437,16 @@
   "label_select_sorting_type": {
     "message": "Group Names Sorting",
     "description": ""
+  },
+
+  "synchronized_window": {
+    "message": "Group Visible",
+    "description": "Label for group visible in popup"
+  },
+
+  "unsynchronized_window": {
+    "message": "Group Invisible",
+    "description": "Status in Mainbar in popup when group are invisible"
   }
 
 }

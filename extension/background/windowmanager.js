@@ -491,8 +491,9 @@ WindowManager.addGroupFromWindow = async function(windowId) {
       selector["pinned"] = false;
     }
     const tabs = await browser.tabs.query(selector);
+    const w = await browser.windows.get(windowId);
 
-    var newGroupId = GroupManager.addGroupWithTab(tabs, windowId);
+    var newGroupId = GroupManager.addGroupWithTab(tabs, windowId, "", w.incognito);
     await WindowManager.associateGroupIdToWindow(
       windowId,
       newGroupId

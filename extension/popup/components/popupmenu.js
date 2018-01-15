@@ -32,7 +32,8 @@ class PopupMenuStandAlone extends React.Component {
   }
 
   render() {
-    let isWindowSync = false;
+    let isWindowSync = false,
+        isIncognito = false;
 
     let searchbar = [];
     if (this.props.options.popup.showSearchBar) {
@@ -43,6 +44,7 @@ class PopupMenuStandAlone extends React.Component {
     for (let i = 0; i < this.props.groups.length; i++) {
       if (this.props.groups[i].windowId === this.props.currentWindowId) {
         isWindowSync = true;
+        isIncognito = this.props.groups[i].incognito;
       }
     }
 
@@ -95,6 +97,7 @@ class PopupMenuStandAlone extends React.Component {
         onChangeWindowSync: this.props.onChangeWindowSync,
         onClickPref: this.props.onClickPref,
         isSync: isWindowSync,
+        isIncognito: isIncognito,
         currentWindowId: this.props.currentWindowId,
         maximized: this.state.maximized,
         onClickMaximize: this.onClickMaximize,

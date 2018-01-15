@@ -24,15 +24,23 @@ class MainBar extends React.Component {
       "fa-fw": true,
     });
 
-    let title_expand = this.props.maximized? browser.i18n.getMessage("reduce_menu"):browser.i18n.getMessage("expand_menu");
+    let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
+
+    let label = browser.i18n.getMessage(
+      (this.props.isSync?"synchronized_window":"unsynchronized_window")
+    );
 
     return (
       <li className="mainbar">
-        <div className={"grouped-button "
-                + (this.props.isSync?"window-grouped":"not-window-grouped")}
-             onClick={this.handleCheckChange}>
+        <div
+          className={classNames({
+          "grouped-button": true,
+          "group-visible": this.props.isSync,
+          "incognito": this.props.isIncognito,
+            })}
+          onClick={this.handleCheckChange}>
           <i className={"app-pref fa fa-fw fa-"+(this.props.isSync?"check-":"")+"square-o"}/>
-          <span>{browser.i18n.getMessage("synchronized_window")}</span>
+          <span>{label}</span>
         </div>
         <div className="manage-button">
           Manage groups
@@ -105,6 +113,7 @@ MainBar.propTypes = {
   onClickPref: PropTypes.func,
   onClickMaximize: PropTypes.func,
   isSync: PropTypes.bool,
+  isIncognito: PropTypes.bool,
   currentWindowId: PropTypes.number.isRequired,
   handleAllChangeExpand: PropTypes.func,
 };

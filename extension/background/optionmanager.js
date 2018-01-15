@@ -29,7 +29,8 @@ OptionManager.updateOption = function(optionName, optionValue) {
 
   switch (optionName) {
     case "privateWindow-sync":
-      OptionManager.onPrivateWindowSyncChange(optionValue);
+      // TODO: do the changes for privates w ?
+      //OptionManager.onPrivateWindowSyncChange(optionValue);
       break;
     case "pinnedTab-sync":
       OptionManager.onPinnedTabSyncChange();

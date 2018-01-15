@@ -17,7 +17,8 @@ GroupManager.repeatedtask = new TaskManager.RepeatedTask(1000);
 GroupManager.Group = function(id,
   title = "",
   tabs = [],
-  windowId = browser.windows.WINDOW_ID_NONE) {
+  windowId = browser.windows.WINDOW_ID_NONE,
+  incognito = false) {
   this.title = title;
   this.tabs = tabs;
   this.id = id; // Unique in all group
@@ -26,6 +27,7 @@ GroupManager.Group = function(id,
   this.position = -1; // Position of this Group when displaying
   this.expand = false; // state for ui
   this.lastAccessed = 0;
+  this.incognito = incognito;
 }
 
 //GroupManager.groups = [];
@@ -397,10 +399,12 @@ GroupManager.detachWindow = async function(windowId) {
     }
 
     GroupManager.groups[groupIndex].windowId = browser.windows.WINDOW_ID_NONE;
-    // Remove group from private window if set
-    if (GroupManager.groups[groupIndex].tabs.length > 0 &&
-      GroupManager.groups[groupIndex].tabs[0].incognito &&
-      OptionManager.options.privateWindow.removeOnClose) {
+
+    // Remove private group on close
+    if (GroupManager.groups[groupIndex].incognito
+      /* &&
+           OptionManager.options.privateWindow.removeOnClose*/
+    ) {
       await GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
     } else {
       WindowManager.desassociateGroupIdToWindow(windowId);
@@ -564,7 +568,8 @@ GroupManager.renameGroup = function(groupIndex, title) {
  * @param {Number} windowId
  */
 GroupManager.addGroup = function(title = "",
-  windowId = browser.windows.WINDOW_ID_NONE) {
+  windowId = browser.windows.WINDOW_ID_NONE,
+  incognito = false) {
   if (GroupManager.isWindowAlreadyRegistered(windowId))
     return;
   let tabs = [{
@@ -578,7 +583,8 @@ GroupManager.addGroup = function(title = "",
     GroupManager.groups.push(new GroupManager.Group(uniqueGroupId,
       title,
       tabs,
-      windowId
+      windowId,
+      incognito
     ));
   } catch (e) {
     throw Error("addGroup: Group not created because " + e);
@@ -596,15 +602,20 @@ GroupManager.addGroup = function(title = "",
  */
 GroupManager.addGroupWithTab = function(tabs,
   windowId = browser.windows.WINDOW_ID_NONE,
-  title = "") {
+  title = "",
+  incognito = false) {
   if (tabs.length === 0) {
-    return GroupManager.addGroup(title);
+    return GroupManager.addGroup(
+      title,
+      windowId,
+      incognito,
+    );
   }
 
   let uniqueGroupId;
   try {
     uniqueGroupId = GroupManager.createUniqueGroupId();
-    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, windowId));
+    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, windowId, incognito));
   } catch (e) {
     // Propagate Error
     throw Error("addGroupWithTab: Group not created because " + e.message);
@@ -763,9 +774,9 @@ GroupManager.initEventListener = function() {
     });
 };
 
-GroupManager.cleanUndefined = function(groups=GroupManager.groups) {
-  for(let i=groups.length-1; i>=0; i--){
-    if (groups[i]===undefined){
+GroupManager.cleanUndefined = function(groups = GroupManager.groups) {
+  for (let i = groups.length - 1; i >= 0; i--) {
+    if (groups[i] === undefined) {
       groups.splice(i, 1);
     }
   }
@@ -840,6 +851,12 @@ GroupManager.sortGroupsAlphabetically = function(groups) {
   });
 
   return positions;
+}
+
+GroupManager.getGroupsWithoutPrivate = function(groups) {
+  return groups.filter(
+    group => !group.incognito
+  );
 }
 
 /**

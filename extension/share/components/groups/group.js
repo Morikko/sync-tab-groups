@@ -129,7 +129,8 @@ class Group extends React.Component {
       expanded: this.state.expanded,
       focusGroup: this.props.currentWindowId === this.props.group.windowId,
       group: true,
-      hiddenBySearch: !this.state.atLeastOneResult
+      hiddenBySearch: !this.state.atLeastOneResult,
+      incognito: this.props.group.incognito
     });
 
     let offsetSizeReduceHover = 115;
@@ -142,7 +143,8 @@ class Group extends React.Component {
       groupTitle = "Group Id: " + this.props.group.id + "\n";
       groupTitle += "Group Index: " + this.props.group.index + "\n";
       groupTitle += "Group Window: " + this.props.group.windowId + "\n";
-      groupTitle += "Group Position: " + this.props.group.position;
+      groupTitle += "Group Position: " + this.props.group.position + "\n";
+      groupTitle += "Incognito: " + this.props.group.incognito;
     } else {
       groupTitle = browser.i18n.getMessage("open_group");
     }

@@ -5,36 +5,40 @@ var StorageManager = StorageManager || {};
 StorageManager.File = StorageManager.File || {};
 
 StorageManager.File.exportGroups = function(groups) {
+  let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
+
   // Clean tabs
-  for (let g of groups) {
-    for (let it = 0; it < g.tabs.length; it++) {
+  export_groups = export_groups.map((group)=>{
+    group.tabs = group.tabs.map((tab)=>{
       // Filter values to export
-      let tab = {
-        id: g.tabs[it].id || -1,
-        title: g.tabs[it].title || "New Tab",
-        url: g.tabs[it].url || "about:newtab",
-        pinned: g.tabs[it].pinned || false,
-        active: g.tabs[it].active || false,
-        discarded: g.tabs[it].discarded || false,
-        favIconUrl: g.tabs[it].favIconUrl || "chrome://branding/content/icon32.png",
+      let export_tab = {
+        id: tab.id || -1,
+        title: tab.title || "New Tab",
+        url: tab.url || "about:newtab",
+        pinned: tab.pinned || false,
+        active: tab.active || false,
+        discarded: tab.discarded || false,
+        favIconUrl: tab.favIconUrl || "chrome://branding/content/icon32.png",
       };
-      if (g.tabs[it].hasOwnProperty("openerTabId")) {
-        tab["openerTabId"] = g.tabs[it]["openerTabId"];
+      if (tab.hasOwnProperty("openerTabId")) {
+        export_tab["openerTabId"] = tab["openerTabId"];
       }
-      g.tabs[it] = tab;
-    }
-  }
+
+      return export_tab;
+    });
+    return group;
+  });
 
   let d = new Date();
   let url = URL.createObjectURL(new Blob([
       JSON.stringify({
         version: ["syncTabGroups", 1],
-        groups: groups,
+        groups: export_groups,
       })
     ], {
       type: 'application/json'
-    })),
-    filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
+    }));
+  let filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
 
   browser.downloads.download({
     url: url,
