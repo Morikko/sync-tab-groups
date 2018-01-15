@@ -27,9 +27,8 @@ class OptionsStandalone extends React.Component {
       new tab("Interface", "interface"),
       new tab("Shortcuts", "shortcuts"),
       new tab("Save/Restore", "save"),
-      //new tab("Advanced", "advanced"),
-      new tab("Guide", "help"),
       new tab("About", "about"),
+      new tab("Guide", "help"),
     ];
     return (
       <div>

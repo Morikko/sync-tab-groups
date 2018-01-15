@@ -6,10 +6,16 @@ StorageManager.Local = StorageManager.Local || {};
  * Save the groups as JSON object in the local storage (this computer, this session)
  * @param {Array[Group]} groups
  */
-StorageManager.Local.saveGroups = function(groups) {
-  return browser.storage.local.set({
-    groups: groups
-  });
+StorageManager.Local.saveGroups = async function(groups) {
+  try {
+    browser.storage.local.set({
+     groups: groups
+   });
+ } catch(e) {
+   let msg = "StorageManager.Local.saveGroups failed :" + e;
+   console.error(msg);
+   return msg;
+ }
 }
 
 /**

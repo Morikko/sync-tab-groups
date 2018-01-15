@@ -73,6 +73,10 @@ li, div span {
   color: #c4cdd4;
 }
 
+.web-icon {
+  color: #fff;
+}
+
 .selected {
   border-top: solid #2aa1c0 5px;
   box-sizing: border-box;
@@ -159,3 +163,71 @@ input[type=checkbox]:checked ~ label{
   border-bottom: #2aa1c0 solid 2px;
 }
 
+.option-button, .button-file {
+  display: inline-block !important;
+  width: 220px;
+}
+
+.option-button, .button-file {
+  margin-right: 30px;
+}
+
+/*** Tooltip ****/
+.subsection {
+  width: 50%;
+}
+
+.tooltip {
+    position: relative;
+    /*display: inline-block;*/
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 90%;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    padding: 10px;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 22%;
+    right: 100%; /* To the left of the tooltip */
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltiptext ul {
+  padding-left: 20px;
+}
+
+.tooltiptext h2 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+/*** END Tooltip ****/

@@ -8,33 +8,36 @@ class SaveSection extends React.Component {
         { className: "section-title" },
         "Save/Restore"
       ),
-      React.createElement(
-        "h2",
-        null,
-        browser.i18n.getMessage("import_export_title")
-      ),
-      React.createElement(
-        "ul",
-        null,
-        React.createElement(
-          "li",
+      React.createElement(SubSection, {
+        title: browser.i18n.getMessage("import_export_title"),
+        tooltip: React.createElement(
+          "ul",
           null,
-          browser.i18n.getMessage("import_export_help_added")
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("import_export_help_added")
+          ),
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("import_export_help_support")
+          )
         ),
-        React.createElement(
-          "li",
+        content: React.createElement(
+          "div",
           null,
-          browser.i18n.getMessage("import_export_help_support")
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("export_groups"),
+            onClick: this.props.onExportClick,
+            enabled: true
+          }),
+          React.createElement(ButtonFile, {
+            title: browser.i18n.getMessage("import_groups"),
+            id: "import-groups",
+            onFileSelected: this.props.onImportClick
+          })
         )
-      ),
-      React.createElement(OptionButton, {
-        title: browser.i18n.getMessage("export_groups"),
-        onClick: this.props.onExportClick
-      }),
-      React.createElement(ButtonFile, {
-        title: browser.i18n.getMessage("import_groups"),
-        id: "import-groups",
-        onFileSelected: this.props.onImportClick
       })
     );
     /* TODO: end of bookmark auto-save

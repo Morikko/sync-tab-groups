@@ -248,7 +248,7 @@ Utils.isChrome = function() {
  * @return {Boolean}
  */
 Utils.isFF57 = function() {
-  if (browser.sessions.getWindowValue !== undefined ) {
+  if (browser.sessions.getWindowValue !== undefined) {
     return true;
   }
   return false;
@@ -283,16 +283,16 @@ Utils.extractTabUrl = function(url) {
   return new_url;
 }
 
-Utils.getPrivilegedURL = function (title, url, favIconUrl){
+Utils.getPrivilegedURL = function(title, url, favIconUrl) {
   return browser.extension.getURL("/tabpages/privileged-tab/privileged-tab.html") + "?" +
     "title=" + encodeURIComponent(title) +
     "&url=" + encodeURIComponent(url) +
     "&favIconUrl=" + encodeURIComponent(favIconUrl);
 }
 
-Utils.getDiscardedURL = function (title, url, favIconUrl){
+Utils.getDiscardedURL = function(title, url, favIconUrl) {
   if (url === "about:newtab" || url === "about:blank" || url.includes("chrome://newtab")) {
-      return url;
+    return url;
   } else {
     return browser.extension.getURL("/tabpages/lazytab/lazytab.html") + "?" +
       "title=" + encodeURIComponent(title) +
@@ -338,6 +338,31 @@ Utils.sendMessage = function(_task, _params) {
   }).catch((onRejected) => {
 
   });
+}
+
+/**
+ * Check if an url is already open in the focused window, if so it focuses the tab else it opens it
+ * @param {String} url
+ */
+Utils.openUrlOncePerWindow = async function(url) {
+  const currentWindowId = (await browser.windows.getLastFocused({
+    windowTypes: ['normal'],
+  })).id;
+  const tabs = await browser.tabs.query({
+    windowId: currentWindowId,
+    url: url,
+  });
+
+  if (tabs.length) { // if manage tab is found
+    browser.tabs.update(tabs[0].id, {
+      active: true,
+    });
+  } else {
+    browser.tabs.create({
+      active: true,
+      url: url,
+    });
+  }
 }
 
 /**

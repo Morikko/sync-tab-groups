@@ -6,21 +6,28 @@ class SaveSection extends React.Component {
         <h1 className="section-title">
           Save/Restore
         </h1>
-        <h2>
-          {browser.i18n.getMessage("import_export_title")}
-        </h2>
-        <ul>
-          <li>{browser.i18n.getMessage("import_export_help_added")}</li>
-          <li>{browser.i18n.getMessage("import_export_help_support")}</li>
-        </ul>
-        <OptionButton
-          title= {browser.i18n.getMessage("export_groups")}
-          onClick= {this.props.onExportClick}
-        />
-        <ButtonFile
-          title= {browser.i18n.getMessage("import_groups")}
-          id= {"import-groups"}
-          onFileSelected= {this.props.onImportClick}
+        <SubSection
+          title={browser.i18n.getMessage("import_export_title")}
+          tooltip={
+            <ul>
+              <li>{browser.i18n.getMessage("import_export_help_added")}</li>
+              <li>{browser.i18n.getMessage("import_export_help_support")}</li>
+            </ul>
+          }
+          content = {
+            <div>
+              <OptionButton
+                title= {browser.i18n.getMessage("export_groups")}
+                onClick= {this.props.onExportClick}
+                enabled={true}
+              />
+              <ButtonFile
+                title= {browser.i18n.getMessage("import_groups")}
+                id= {"import-groups"}
+                onFileSelected= {this.props.onImportClick}
+              />
+            </div>
+          }
         />
       </div>
     );

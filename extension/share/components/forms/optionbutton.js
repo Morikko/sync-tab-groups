@@ -9,7 +9,10 @@ class OptionButton extends React.Component {
       "button",
       {
         type: "button",
-        className: "option-button",
+        className: classNames({
+          "option-button": true,
+          "disabled": !this.props.enabled
+        }),
         onClick: this.handleClick },
       this.props.title
     );

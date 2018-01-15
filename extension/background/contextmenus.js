@@ -198,16 +198,14 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         browser.runtime.openOptionsPage();
         break;
       case "open_shortcut_list":
-        browser.tabs.create({
-          url: "/tabpages/shortcut-help/shortcut-help.html",
-          active: true,
-        });
+        Utils.openUrlOncePerWindow(browser.extension.getURL(
+          "/tabpages/shortcut-help/shortcut-help.html"
+        ));
         break;
       case "manage_groups":
-        browser.tabs.create({
-          url: "/tabpages/manage-groups/manage-groups.html",
-          active: true,
-        });
+        Utils.openUrlOncePerWindow(browser.extension.getURL(
+          "/tabpages/manage-groups/manage-groups.html"
+        ));
         break;
     }
   }

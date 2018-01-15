@@ -74,6 +74,15 @@
   cursor: pointer;
 }
 
+.option-button.disabled {
+  background: var(--not-checked);
+  color: #666;
+}
+
+.option-button.disabled:focus, .option-button.disabled:hover {
+  background: var(--not-checked-hover);
+}
+
 .option-button {
   border: none
 }
@@ -83,7 +92,7 @@
 }
 
 .control, .button-file-label {
-  font-size: 18px;
+  text-align: center;
 }
 
 /*** Checkbox:

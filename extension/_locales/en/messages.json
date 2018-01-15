@@ -139,11 +139,6 @@
     "description": "Label remove empty groups"
   },
 
-  "private_window_title": {
-    "message": "Private Window",
-    "description": "Option section title"
-  },
-
   "new_private_window": {
     "message": "A new opened Private window creates a new group automatically.",
     "description": "Label new private window"
@@ -374,11 +369,6 @@
     "description": ""
   },
 
-  "label_select_sorting_type": {
-    "message": "Select sorting option for the groups",
-    "description": ""
-  },
-
   "label_sort_custom": {
     "message": "Custom",
     "description": ""
@@ -437,5 +427,21 @@
   "open_url_help_method": {
     "message": "But you can open it manually:",
     "description": ""
+  },
+
+  "state_new_normal_window": {
+    "message": "New Windows",
+    "description": "Setting title: option if a new window is visible group or invisible"
+  },
+
+  "private_window_title": {
+    "message": "Private Windows",
+    "description": "Option section title"
+  },
+
+  "label_select_sorting_type": {
+    "message": "Group Names Sorting",
+    "description": ""
   }
+
 }

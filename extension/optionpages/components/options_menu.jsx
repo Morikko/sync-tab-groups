@@ -18,7 +18,13 @@ class OptionsMenu extends React.Component{
               <a
                 key={tab.href}
                 href={"#" + tab.href}
-                className={"tab " + (tab.href === this.props.selected ? "selected": "")} >
+                className={classNames({
+                  "tab": true,
+                  "selected": (tab.href === this.props.selected),
+                })}>
+              {(tab.title==="Guide") && <i
+                  className="web-icon fa fa-fw fa-globe"
+                ></i>}
               {tab.title}
             </a>);
           })

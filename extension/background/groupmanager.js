@@ -179,9 +179,9 @@ GroupManager.getCopy = function() {
  * @param {Boolean} expandState
  * @param {Array[Group]} groups (Optional)
  */
-GroupManager.changeExpandState = function (groupIds, expandState, groups = GroupManager.groups) {
+GroupManager.changeExpandState = function(groupIds, expandState, groups = GroupManager.groups) {
   try {
-    groupIds.map((groupId)=> {
+    groupIds.map((groupId) => {
       let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, true, groups);
 
       groups[groupIndex].expand = expandState;
@@ -547,8 +547,8 @@ GroupManager.updateAllOpenedGroups = async function() {
 GroupManager.renameGroup = function(groupIndex, title) {
   GroupManager.groups[groupIndex].title = title;
 
-  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE
-    && !Utils.isChrome() ) {
+  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE &&
+    !Utils.isChrome()) {
     WindowManager.setWindowPrefixGroupTitle(
       GroupManager.groups[groupIndex].windowId,
       GroupManager.groups[groupIndex]);
@@ -743,7 +743,7 @@ GroupManager.store = function() {
   */
 }
 
-GroupManager.initEventListener = function () {
+GroupManager.initEventListener = function() {
   GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     () => {
       GroupManager.repeatedtask.add(
@@ -756,11 +756,20 @@ GroupManager.initEventListener = function () {
   // Done after a group modification to assure integrity
   GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
     () => {
+      GroupManager.cleanUndefined(GroupManager.groups);
       GroupManager.setIndex(GroupManager.groups);
       GroupManager.setPosition(GroupManager.groups, OptionManager.options.groups.sortingType);
       GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
     });
 };
+
+GroupManager.cleanUndefined = function(groups=GroupManager.groups) {
+  for(let i=groups.length-1; i>=0; i--){
+    if (groups[i]===undefined){
+      groups.splice(i, 1);
+    }
+  }
+}
 
 /**
  * Sort the groups so the last accessed group first

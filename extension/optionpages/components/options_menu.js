@@ -28,7 +28,13 @@ class OptionsMenu extends React.Component {
             {
               key: tab.href,
               href: "#" + tab.href,
-              className: "tab " + (tab.href === this.props.selected ? "selected" : "") },
+              className: classNames({
+                "tab": true,
+                "selected": tab.href === this.props.selected
+              }) },
+            tab.title === "Guide" && React.createElement("i", {
+              className: "web-icon fa fa-fw fa-globe"
+            }),
             tab.title
           );
         })
