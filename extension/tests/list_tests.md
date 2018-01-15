@@ -62,14 +62,3 @@
 
 1. bookmarks
   1. Is done
-
-  "background/tests/comparator.js",
-  "background/examples/tabGroups.js",
-  "background/examples/move_tabs.js",
-  "background/tests/group_example.js",
-  "background/tests/test_utils.js",
-  "background/tests/test_taskmanager.js",
-  "background/tests/test_switchgroup.js",
-  "background/tests/test_filemanager.js",
-  "background/tests/test_movetab.js",
-  "background/tests/testmanager.js"

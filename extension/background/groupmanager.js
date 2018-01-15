@@ -669,6 +669,11 @@ GroupManager.removeEmptyGroup = function() {
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
+GroupManager.removeAllGroups = function() {
+  GroupManager.groups = [];
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+}
+
 /******** OTHER *********/
 
 /**

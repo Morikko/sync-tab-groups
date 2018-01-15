@@ -450,15 +450,11 @@ Controller.initCommandsEventListener = function() {
   });
 };
 
-browser.runtime.onInstalled.addListener(() => {
-  browser.notifications.create({
-    "type": "basic",
-    "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
-    "title": "Sync Tab Groups 0.4.1 installed!",
-    "message": "  * Fix: More secure initialization of the extension\n" +
-      "  * Remove: Bookmark auto-save until I will have fix it\n" +
-      "  * Notes: Exports manually your groups regularly from the preferences or with a right click on the toolbar icon. So, you will keep a save.\n" +
-      "Thanks for your feedbacks :)",
-    "eventTime": 10000000,
-  });
+browser.runtime.onInstalled.addListener((details) => {
+  console.log(details);
+  if(details.temporary) {
+    Utils.openUrlOncePerWindow(
+      browser.extension.getURL("/tests/test-page/test-page.html")
+    );
+  }
 });
