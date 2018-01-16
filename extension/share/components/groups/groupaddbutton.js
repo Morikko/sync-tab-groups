@@ -85,7 +85,7 @@ class GroupAddButton extends React.Component {
     }
 
     return React.createElement(
-      "li",
+      "div",
       {
         className: buttonClasses,
         onClick: this.handleClick,

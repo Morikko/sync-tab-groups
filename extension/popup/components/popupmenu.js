@@ -57,7 +57,11 @@ class PopupMenuStandAlone extends React.Component {
     return React.createElement(
       'ul',
       { className: menuClasses },
-      searchbar,
+      React.createElement(
+        'li',
+        null,
+        searchbar
+      ),
       React.createElement(GroupList
       /*** Functions ***/
       , { onMoveTabToNewGroup: this.props.onGroupAddDrop,
@@ -83,17 +87,17 @@ class PopupMenuStandAlone extends React.Component {
         currentlySearching: this.state.searchfilter.length > 0,
         allowClickSwitch: true,
         stateless: false,
-        width: width
-      }),
-      React.createElement(GroupAddButton, {
-        onClick: this.props.onGroupAddClick,
-        onDrop: this.props.onGroupAddDrop,
-        currentlySearching: this.state.searchfilter.length > 0
+        width: width,
+        atLeastOneResult: this.state.atLeastOneResult
       }),
       React.createElement(
         'li',
-        { className: "no-search-result" + (!this.state.atLeastOneResult ? "" : " hiddenBySearch") },
-        'No search result for "' + this.state.searchfilter + '".'
+        null,
+        React.createElement(GroupAddButton, {
+          onClick: this.props.onGroupAddClick,
+          onDrop: this.props.onGroupAddDrop,
+          currentlySearching: this.state.searchfilter.length > 0
+        })
       ),
       React.createElement(MainBar, {
         onChangeWindowSync: this.props.onChangeWindowSync,

@@ -17,7 +17,11 @@ class RadioButton extends React.Component {
         "span",
         { className: "left " + (this.props.left ? "highlight" : ""),
           onClick: this.onLeftClick },
-        this.props.labelLeft,
+        React.createElement(
+          "span",
+          null,
+          this.props.labelLeft
+        ),
         this.state.hasIconLeft && React.createElement("i", { className: "fa fa-fw fa-" + this.props.iconLeft })
       ),
       React.createElement(
@@ -25,7 +29,11 @@ class RadioButton extends React.Component {
         { className: "right " + (!this.props.left ? "highlight" : ""),
           onClick: this.onRightClick },
         this.state.hasIconRight && React.createElement("i", { className: "fa fa-fw fa-" + this.props.iconRight }),
-        this.props.labelRight
+        React.createElement(
+          "span",
+          null,
+          this.props.labelRight
+        )
       )
     );
   }

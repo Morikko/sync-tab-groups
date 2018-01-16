@@ -6,19 +6,15 @@ class ManageBar extends React.Component {
   render() {
     return (
       <div id="menu">
-        <a className="logo">
-          <span>
-            <img src="/share/icons/tabspace-active-64.png" alt="" height="32"/>
-          </span>
-        </a>
-        <span className="title">
-          Manage Groups
-        </span>
+        <div className="title">
+          <img src="/share/icons/tabspace-active-64.png" alt="" height="32"/>
+          <span>Manage Groups</span>
+        </div>
         <div className="right-buttons">
           <RadioButton
             labelLeft="Single"
             iconLeft="square-o"
-            labelRight="Doubles"
+            labelRight="Splitted"
             iconRight="columns"
             left={this.props.singleMode}
             getActivatedState={this.props.changeColumnDisplay}

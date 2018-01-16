@@ -43,7 +43,7 @@ class GroupControls extends React.Component {
       <i
         title={overHelp}
         key="undo"
-        className="group-edit group-close-undo fa fa-fw fa-undo"
+        className="group-undo fa fa-fw fa-undo"
         onClick={this.props.onUndoCloseClick}
       ></i>
     ];
@@ -87,7 +87,7 @@ class GroupControls extends React.Component {
           <i
             key="close"
             title={overHelp}
-            className="group-edit fa fa-fw fa-times"
+            className="group-close fa fa-fw fa-times"
             onClick={this.props.onClose}
           ></i>
         );
@@ -104,7 +104,7 @@ class GroupControls extends React.Component {
           <i
             key="remove"
             title={overHelp}
-            className="group-edit fa fa-fw fa-trash"
+            className="group-close fa fa-fw fa-trash"
             onClick={this.props.onRemove}
           ></i>
         );

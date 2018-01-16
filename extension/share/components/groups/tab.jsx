@@ -28,11 +28,17 @@ class Tab extends React.Component{
 
   componentDidMount() {
     if ( !this.state.waitFirstMount ) {
-      setTimeout((()=>{
+      this.differedTimeOut = setTimeout((()=>{
         this.setState({
           waitFirstMount: true,
         });
       }).bind(this), 500);
+    }
+  }
+
+  componentWillUnmount() {
+    if ( this.differedTimeOut ) {
+      clearTimeout(this.differedTimeOut);
     }
   }
 
@@ -51,11 +57,6 @@ class Tab extends React.Component{
       dragTopBorder: this.state.dragOnTop,
       dragBottomBorder: this.state.dragOnBottom,
     });
-
-    let offsetReduceSize = 25; // Icon
-    offsetReduceSize += this.props.tab.pinned ? 20 : 0; // Pinned
-    // Tab controls
-    let offsetHoverReduceSize = offsetReduceSize + 20;
 
     let tabTitle;
     if (Utils.DEGUG_MODE) {
@@ -87,16 +88,16 @@ class Tab extends React.Component{
         ></i>}
         {favicon}
         <span
-            className={"tab-title " + "max-width-" + offsetReduceSize + " max-width-hover-" + offsetHoverReduceSize}
+            className={"tab-title"}
             title={tabTitle}
           >
           {this.props.tab.title}
-          <TabControls
-              opened={this.props.opened}
-              onCloseTab={this.handleCloseTabClick}
-              onOpenTab={this.handleOpenTabClick}
-            />
       </span>
+      <TabControls
+          opened={this.props.opened}
+          onCloseTab={this.handleCloseTabClick}
+          onOpenTab={this.handleOpenTabClick}
+        />
     </li>);
   }
 

@@ -8,18 +8,14 @@ class ManageBar extends React.Component {
       "div",
       { id: "menu" },
       React.createElement(
-        "a",
-        { className: "logo" },
+        "div",
+        { className: "title" },
+        React.createElement("img", { src: "/share/icons/tabspace-active-64.png", alt: "", height: "32" }),
         React.createElement(
           "span",
           null,
-          React.createElement("img", { src: "/share/icons/tabspace-active-64.png", alt: "", height: "32" })
+          "Manage Groups"
         )
-      ),
-      React.createElement(
-        "span",
-        { className: "title" },
-        "Manage Groups"
       ),
       React.createElement(
         "div",
@@ -27,7 +23,7 @@ class ManageBar extends React.Component {
         React.createElement(RadioButton, {
           labelLeft: "Single",
           iconLeft: "square-o",
-          labelRight: "Doubles",
+          labelRight: "Splitted",
           iconRight: "columns",
           left: this.props.singleMode,
           getActivatedState: this.props.changeColumnDisplay

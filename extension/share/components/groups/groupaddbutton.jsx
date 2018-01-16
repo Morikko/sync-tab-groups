@@ -76,7 +76,7 @@ class GroupAddButton extends React.Component{
     }
 
     return (
-      <li
+      <div
           className={buttonClasses}
           onClick={this.handleClick}
           onDrop={this.handleDrop}
@@ -85,7 +85,7 @@ class GroupAddButton extends React.Component{
           onDragLeave={this.handleDragLeave}
         >
         {button}
-      </li>
+      </div>
     );
   }
 

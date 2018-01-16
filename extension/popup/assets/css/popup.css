@@ -4,72 +4,6 @@ Copyright (c) 2017 Eric Masseran
 From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
 */
-:root {
-    --group-open: #b3d5ff;
-    --group-active: #4d9dff;
-    --group-hover: #1a81ff; /*99c7ff;*/
-    --action-hover: #66abff;
-    --private-debug: #f5e6ff;
-    --private-open: #ebccff;
-    --private-hover: #c266ff;
-    --group-odd: hsl(211, 100%, 96%); /* #fff2e6 */
-    --group-even: hsl(211, 100%, 98%); /* e6f2ff */
-}
-
-:root {
-  --checked: #2aa1c0;
-  --checked-hover: #0e647d;
-  --not-checked: #e6e6e6;
-  --not-checked-hover: #ccc;
-  --disabled: #7b7b7b;
-}
-
-/**** Search Bar ***/
-
-body {
-  background-color: #fff;
-}
-
-.cancel-search {
-  right: 12px;
-  display: inline-block;
-  opacity: 0.7;
-  position: absolute;
-  cursor: pointer;
-  font-size: 20px;
-}
-
-.searchbar {
-  margin-top: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  position: relative;
-}
-
-.searchbar input {
-  width: 100%
-}
-
-.hiddenBySearch {
-  display: none;
-}
-
-.no-search-result {
-  padding: 5px;
-  position: relative;
-}
-
-.highlight {
-  background-color: #81d0e4;
-  border-radius: 3px;
-}
-
-.searchbar {
-  margin-bottom: 3px;
-}
-
-/*** Search End ***/
-
 body {
   overflow-x: hidden;
 }
@@ -87,45 +21,20 @@ body {
 .mainbar {
   border-top: #ccc solid 2px;
   background-color: var(--not-checked);
-}
-
-.grouped-button {
-  height: 34px;
-  width: 30%;
-  vertical-align: middle;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.grouped-button span {
-  display: inline-block;
-  word-wrap:break-word;
-  width: 80%;
-
-  height: 34px;
   position: relative;
-  left: 30px;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.menu-minimized .grouped-button span {
-  line-height: 17px;
-}
-
-.menu-maximized .grouped-button span {
-  line-height: 34px;
-}
-
-
-.grouped-button i {
-  position: absolute;
+  height: 34px;
+  display: flex;
 }
 
 .grouped-button {
+  height: 100%;
+  flex: 40;
+  display: inline-flex;
+  cursor: pointer;
   background-color: var(--not-checked);
   color: #444;
 }
+
 .grouped-button.group-visible {
   background-color: var(--group-open);
 }
@@ -134,57 +43,52 @@ body {
   background-color: var(--private-open);
 }
 
-.manage-button {
-  height: 34px;
-  line-height: 34px;
-  vertical-align: middle;
-  display: inline-block;
-  width: calc(70% - 128px);
+.grouped-button span {
+  flex: 1;
+  margin: auto 0;
   text-align: center;
-  vertical-align: middle;
+  line-height: 12px;
+}
+
+.manage-button {
+  height: 100%;
+  flex: 60;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin: auto 0;
   border-left: #ccc solid 1px;
   cursor: pointer;
 }
 
-.mainbar i:hover, .manage-button:hover {
-  background-color: var(--not-checked-hover);
+.manage-button i {
+  font-size: 20px !important;
+  padding: 7px 0 !important;
+  margin: auto 0;
 }
 
-.mainbar .left-actions {
-  display: inline-block;
-  font-size: 120%;
-  opacity: 0.7;
-  position: relative;
-  top 2px;
-  vertical-align: middle;
-  height: 100%;
+.manage-button span {
+  margin: auto 0;
+  text-align: center;
+}
+
+.mainbar .right-actions i:hover, .manage-button:hover {
+  background-color: var(--not-checked-hover);
 }
 
 .mainbar .right-actions {
   display: inline-block;
-  font-size: 120%;
   opacity: 0.7;
-  position: absolute;
-  right: 0px;
-  top 2px;
-  vertical-align: middle;
   height: 100%;
   border-left: #ccc solid 1px;
 }
 
 .mainbar i {
-  font-size: 25px;
+  font-size: 26px;
   cursor: pointer;
-  min-width: 32px;
-  vertical-align: middle;
+  width: 32px;
+  padding: 4px 0;
   text-align: center;
-  line-height: 34px;
-}
-
-.mainbar {
-  /*padding-left: 5px;
-  padding-right: 5px;*/
-  position: relative;
 }
 
 /*** Main End bar ***/
@@ -195,4 +99,9 @@ body {
 
 .addButton {
   border-top: #ccc solid 2px;
+  height: 30px;
+}
+
+.groupadd-controls i {
+  padding: 5px 0px;
 }

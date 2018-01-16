@@ -4,44 +4,37 @@
   * https://www.creativejuiz.fr/blog/tutoriels/input-file-personnalise-css-js
   */
 
-:root {
-  --checked: #2aa1c0;
-  --checked-hover: #0e647d;
-  --not-checked: #e6e6e6;
-  --not-checked-hover: #ccc;
-  --disabled: #7b7b7b;
-}
-
 /** Radio Button **/
 .radio-button {
-  display: inline-block;
+  display: flex;
   height: 35px;
 }
 
 .radio-button .left, .radio-button .right{
-  display: inline-block;
   background-color: var(--not-checked);
   color: #aaa;
   height: 100%;
-  line-height: 35px;
-  padding-left: 7px;
-  padding-right: 7px;
   border-radius: 3px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .radio-button .left {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
+  padding-left: 5px;
 }
 
 .radio-button .right {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
+  padding-right: 5px;
 }
 
 .radio-button .highlight {
-  background-color: var(--checked);
+  background-color: var(--group-focus);
   color: #fff;
 }
 

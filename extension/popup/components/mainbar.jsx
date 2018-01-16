@@ -39,11 +39,17 @@ class MainBar extends React.Component {
           "incognito": this.props.isIncognito,
             })}
           onClick={this.handleCheckChange}>
-          <i className={"app-pref fa fa-fw fa-"+(this.props.isSync?"check-":"")+"square-o"}/>
+          <i className={classNames({
+            "app-pref": true,
+            "fa fa-fw": true,
+            "fa-check-square-o": this.props.isSync,
+            "fa-square-o": !this.props.isSync,
+          })}/>
           <span>{label}</span>
         </div>
         <div className="manage-button">
-          Manage groups
+          <i className="fa fa-fw fa-list"/>
+          <span>Manage groups</span>
         </div>
         <div className="right-actions">
           <i

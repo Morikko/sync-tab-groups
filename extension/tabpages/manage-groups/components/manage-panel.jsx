@@ -32,6 +32,22 @@ class ManagePanelStandAlone extends React.Component {
           <div className={classNames({
             "left-list": true,
             "half": !this.props.singleMode,})}>
+            <div className="group-action left">
+                <i
+                  className="app-pref fa fa-fw fa-angle-double-down"
+                  title={browser.i18n.getMessage("expand_all_groups")}
+                  onClick={this.handleOpenAllExpand}
+                />
+                <i
+                  className="app-pref fa fa-fw fa-angle-double-up"
+                  title={browser.i18n.getMessage("reduce_all_groups")}
+                  onClick={this.handleCloseAllExpand}
+                />
+              {
+                <SearchBar
+                    onSearchChange={this.onSearchLeftChange.bind(this)} />
+              }
+            </div>
             <GroupList
               /*** Functions ***/
               onMoveTabToNewGroup= {this.props.onGroupAddDrop}
@@ -64,6 +80,22 @@ class ManagePanelStandAlone extends React.Component {
             "right-list": true,
             "half": true,
             "invisible": this.props.singleMode,})} >
+            <div className="group-action right">
+              {
+                <SearchBar
+                    onSearchChange={this.onSearchRightChange.bind(this)} />
+              }
+              <i
+                className="app-pref fa fa-fw fa-angle-double-down"
+                title={browser.i18n.getMessage("expand_all_groups")}
+                onClick={this.handleOpenAllExpand}
+              />
+              <i
+                className="app-pref fa fa-fw fa-angle-double-up"
+                title={browser.i18n.getMessage("reduce_all_groups")}
+                onClick={this.handleCloseAllExpand}
+              />
+            </div>
             <GroupList
               /*** Functions ***/
               onMoveTabToNewGroup= {this.props.onGroupAddDrop}
@@ -95,46 +127,101 @@ class ManagePanelStandAlone extends React.Component {
         </li>
         <li>
           <div className="belowActions">
-            <div className="left">
-              <i
-                className="app-pref fa fa-fw fa-angle-double-down"
-                title={browser.i18n.getMessage("expand_all_groups")}
-                onClick={this.handleOpenAllExpand}
-              />
-              <i
-                className="app-pref fa fa-fw fa-angle-double-up"
-                title={browser.i18n.getMessage("reduce_all_groups")}
-                onClick={this.handleCloseAllExpand}
-              />
-            </div>
-            <div className={classNames({
-              "center": true,
-            })}>
-              <GroupAddButton
-                  onClick= {this.props.onGroupAddClick}
-                  onDrop= {this.props.onGroupAddDrop}
-                  currentlySearching= {false}
-              />
-            </div>
-            <div className={classNames({
-              "right": true,
-              "invisible": this.props.singleMode,})} >
-              <i
-                className="app-pref fa fa-fw fa-angle-double-down"
-                title={browser.i18n.getMessage("expand_all_groups")}
-                onClick={this.handleOpenAllExpand}
-              />
-              <i
-                className="app-pref fa fa-fw fa-angle-double-up"
-                title={browser.i18n.getMessage("reduce_all_groups")}
-                onClick={this.handleCloseAllExpand}
-              />
-            </div>
+            <GroupAddButton
+                onClick= {this.props.onGroupAddClick}
+                onDrop= {this.props.onGroupAddDrop}
+                currentlySearching= {false}
+            />
           </div>
         </li>
       </ul>
     );
   }
+
+  onSearchLeftChange(searchValue) {
+
+    /*
+    let searchResults = this.applySearch(searchValue);
+    this.setState({
+      searchfilter: searchValue,
+      searchGroupsResults: searchResults.searchGroupsResults,
+      atLeastOneResult: searchResults.atLeastOneResult,
+    });
+    */
+  }
+
+  onSearchRightChange(searchValue) {
+    /*
+    let searchResults = this.applySearch(searchValue);
+    this.setState({
+      searchfilter: searchValue,
+      searchGroupsResults: searchResults.searchGroupsResults,
+      atLeastOneResult: searchResults.atLeastOneResult,
+    });
+    */
+  }
+
+  applySearch(searchValue) {
+    if ( searchValue.length === 0 ) {
+      // TODO Improve this redundent
+      var context = document.querySelectorAll(".group-title, .tab-title");
+      var instance = new Mark(context);
+      instance.unmark({
+        "element": "span",
+        "className": "highlight",
+      });
+      return {
+        searchGroupsResults: [],
+        atLeastOneResult: true,
+      };
+    }
+
+    let searchGroupsResults = [];
+    let atLeastOneResult = searchValue.length === 0;
+
+    // Apply search
+    for (let i = 0; i < this.props.groups.length; i++) {
+      searchGroupsResults[i] = {
+        atLeastOneResult: false,
+        searchTabsResults: [],
+      };
+      // Search in group title
+      if (Utils.search(this.props.groups[i].title, searchValue)) {
+        searchGroupsResults[i].atLeastOneResult = true;
+        atLeastOneResult = true;
+      }
+
+      for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
+        // Search in tab title
+        if (Utils.search(this.props.groups[i].tabs[j].title, searchValue)) {
+          searchGroupsResults[i].atLeastOneResult = true;
+          searchGroupsResults[i].searchTabsResults[j] = true;
+          atLeastOneResult = true;
+        } else {
+          searchGroupsResults[i].searchTabsResults[j] = false;
+        }
+      }
+    }
+
+    var context = document.querySelectorAll(".group-title, .tab-title");
+    var instance = new Mark(context);
+    instance.unmark({
+      "element": "span",
+      "className": "highlight",
+      done() {
+        instance.mark(searchValue.split(' '), {
+          "element": "span",
+          "className": "highlight",
+        });
+      }
+    });
+
+    return {
+      searchGroupsResults: searchGroupsResults,
+      atLeastOneResult: atLeastOneResult,
+    };
+  }
+
 }
 
 const ManagePanel = (() =>{

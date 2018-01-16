@@ -77,11 +77,20 @@ class Group extends React.Component {
 
   componentDidMount() {
     if (!this.state.waitFirstMount) {
-      setTimeout((() => {
+      this.differedTimeOut = setTimeout((() => {
         this.setState({
           waitFirstMount: true
         });
       }).bind(this), 0);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.differedTimeOut) {
+      clearTimeout(this.differedTimeOut);
+    }
+    if (this.expandedTimeOut) {
+      clearTimeout(this.expandedTimeOut);
     }
   }
 
@@ -135,11 +144,6 @@ class Group extends React.Component {
       incognito: this.props.group.incognito
     });
 
-    let offsetSizeReduceHover = 115;
-    if (this.state.editing || this.state.removing || this.state.closing) {
-      offsetSizeReduceHover = 85;
-    }
-
     let groupTitle;
     if (Utils.DEGUG_MODE) {
       groupTitle = "Group Id: " + this.props.group.id + "\n";
@@ -168,7 +172,7 @@ class Group extends React.Component {
       React.createElement(
         "span",
         {
-          className: "group-title " + "max-width-35" + " max-width-hover-" + offsetSizeReduceHover
+          className: "group-title"
         },
         titleElement,
         React.createElement(GroupControls, {

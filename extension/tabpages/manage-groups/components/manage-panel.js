@@ -36,6 +36,22 @@ class ManagePanelStandAlone extends React.Component {
           { className: classNames({
               "left-list": true,
               "half": !this.props.singleMode }) },
+          React.createElement(
+            "div",
+            { className: "group-action left" },
+            React.createElement("i", {
+              className: "app-pref fa fa-fw fa-angle-double-down",
+              title: browser.i18n.getMessage("expand_all_groups"),
+              onClick: this.handleOpenAllExpand
+            }),
+            React.createElement("i", {
+              className: "app-pref fa fa-fw fa-angle-double-up",
+              title: browser.i18n.getMessage("reduce_all_groups"),
+              onClick: this.handleCloseAllExpand
+            }),
+            React.createElement(SearchBar, {
+              onSearchChange: this.onSearchLeftChange.bind(this) })
+          ),
           React.createElement(GroupList
           /*** Functions ***/
           , { onMoveTabToNewGroup: this.props.onGroupAddDrop,
@@ -70,6 +86,22 @@ class ManagePanelStandAlone extends React.Component {
               "right-list": true,
               "half": true,
               "invisible": this.props.singleMode }) },
+          React.createElement(
+            "div",
+            { className: "group-action right" },
+            React.createElement(SearchBar, {
+              onSearchChange: this.onSearchRightChange.bind(this) }),
+            React.createElement("i", {
+              className: "app-pref fa fa-fw fa-angle-double-down",
+              title: browser.i18n.getMessage("expand_all_groups"),
+              onClick: this.handleOpenAllExpand
+            }),
+            React.createElement("i", {
+              className: "app-pref fa fa-fw fa-angle-double-up",
+              title: browser.i18n.getMessage("reduce_all_groups"),
+              onClick: this.handleCloseAllExpand
+            })
+          ),
           React.createElement(GroupList
           /*** Functions ***/
           , { onMoveTabToNewGroup: this.props.onGroupAddDrop,
@@ -105,51 +137,100 @@ class ManagePanelStandAlone extends React.Component {
         React.createElement(
           "div",
           { className: "belowActions" },
-          React.createElement(
-            "div",
-            { className: "left" },
-            React.createElement("i", {
-              className: "app-pref fa fa-fw fa-angle-double-down",
-              title: browser.i18n.getMessage("expand_all_groups"),
-              onClick: this.handleOpenAllExpand
-            }),
-            React.createElement("i", {
-              className: "app-pref fa fa-fw fa-angle-double-up",
-              title: browser.i18n.getMessage("reduce_all_groups"),
-              onClick: this.handleCloseAllExpand
-            })
-          ),
-          React.createElement(
-            "div",
-            { className: classNames({
-                "center": true
-              }) },
-            React.createElement(GroupAddButton, {
-              onClick: this.props.onGroupAddClick,
-              onDrop: this.props.onGroupAddDrop,
-              currentlySearching: false
-            })
-          ),
-          React.createElement(
-            "div",
-            { className: classNames({
-                "right": true,
-                "invisible": this.props.singleMode }) },
-            React.createElement("i", {
-              className: "app-pref fa fa-fw fa-angle-double-down",
-              title: browser.i18n.getMessage("expand_all_groups"),
-              onClick: this.handleOpenAllExpand
-            }),
-            React.createElement("i", {
-              className: "app-pref fa fa-fw fa-angle-double-up",
-              title: browser.i18n.getMessage("reduce_all_groups"),
-              onClick: this.handleCloseAllExpand
-            })
-          )
+          React.createElement(GroupAddButton, {
+            onClick: this.props.onGroupAddClick,
+            onDrop: this.props.onGroupAddDrop,
+            currentlySearching: false
+          })
         )
       )
     );
   }
+
+  onSearchLeftChange(searchValue) {
+
+    /*
+    let searchResults = this.applySearch(searchValue);
+    this.setState({
+      searchfilter: searchValue,
+      searchGroupsResults: searchResults.searchGroupsResults,
+      atLeastOneResult: searchResults.atLeastOneResult,
+    });
+    */
+  }
+
+  onSearchRightChange(searchValue) {
+    /*
+    let searchResults = this.applySearch(searchValue);
+    this.setState({
+      searchfilter: searchValue,
+      searchGroupsResults: searchResults.searchGroupsResults,
+      atLeastOneResult: searchResults.atLeastOneResult,
+    });
+    */
+  }
+
+  applySearch(searchValue) {
+    if (searchValue.length === 0) {
+      // TODO Improve this redundent
+      var context = document.querySelectorAll(".group-title, .tab-title");
+      var instance = new Mark(context);
+      instance.unmark({
+        "element": "span",
+        "className": "highlight"
+      });
+      return {
+        searchGroupsResults: [],
+        atLeastOneResult: true
+      };
+    }
+
+    let searchGroupsResults = [];
+    let atLeastOneResult = searchValue.length === 0;
+
+    // Apply search
+    for (let i = 0; i < this.props.groups.length; i++) {
+      searchGroupsResults[i] = {
+        atLeastOneResult: false,
+        searchTabsResults: []
+      };
+      // Search in group title
+      if (Utils.search(this.props.groups[i].title, searchValue)) {
+        searchGroupsResults[i].atLeastOneResult = true;
+        atLeastOneResult = true;
+      }
+
+      for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
+        // Search in tab title
+        if (Utils.search(this.props.groups[i].tabs[j].title, searchValue)) {
+          searchGroupsResults[i].atLeastOneResult = true;
+          searchGroupsResults[i].searchTabsResults[j] = true;
+          atLeastOneResult = true;
+        } else {
+          searchGroupsResults[i].searchTabsResults[j] = false;
+        }
+      }
+    }
+
+    var context = document.querySelectorAll(".group-title, .tab-title");
+    var instance = new Mark(context);
+    instance.unmark({
+      "element": "span",
+      "className": "highlight",
+      done() {
+        instance.mark(searchValue.split(' '), {
+          "element": "span",
+          "className": "highlight"
+        });
+      }
+    });
+
+    return {
+      searchGroupsResults: searchGroupsResults,
+      atLeastOneResult: atLeastOneResult
+    };
+  }
+
 }
 
 const ManagePanel = (() => {

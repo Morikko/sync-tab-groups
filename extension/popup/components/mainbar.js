@@ -40,7 +40,12 @@ class MainBar extends React.Component {
             "incognito": this.props.isIncognito
           }),
           onClick: this.handleCheckChange },
-        React.createElement("i", { className: "app-pref fa fa-fw fa-" + (this.props.isSync ? "check-" : "") + "square-o" }),
+        React.createElement("i", { className: classNames({
+            "app-pref": true,
+            "fa fa-fw": true,
+            "fa-check-square-o": this.props.isSync,
+            "fa-square-o": !this.props.isSync
+          }) }),
         React.createElement(
           "span",
           null,
@@ -50,7 +55,12 @@ class MainBar extends React.Component {
       React.createElement(
         "div",
         { className: "manage-button" },
-        "Manage groups"
+        React.createElement("i", { className: "fa fa-fw fa-list" }),
+        React.createElement(
+          "span",
+          null,
+          "Manage groups"
+        )
       ),
       React.createElement(
         "div",

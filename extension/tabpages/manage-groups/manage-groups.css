@@ -1,11 +1,3 @@
-:root {
-  --checked: #2aa1c0;
-  --checked-hover: #0e647d;
-  --not-checked: #e6e6e6;
-  --not-checked-hover: #ccc;
-  --disabled: #7b7b7b;
-}
-
 body {
   background-color: #f9f9fa;
   color: #444;
@@ -15,48 +7,75 @@ body {
 
 /*** Manage Bar ***/
 #menu {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   border-bottom: 3px solid #424f5a;
   width: 100%;
   color: #c4cdd4;
   height: 50px;
   z-index: 1;
   box-sizing: border-box;
-}
-
-.logo {
-  display: inline-block;
-  float: left;
   padding-left: 10px;
   padding-right: 10px;
-  height: 50px;
-  color: #2aa1c0;
-}
-
-.logo span {
-  line-height: 50px;
-}
-
-.logo img {
-  display: inline-block;
-  vertical-align: middle;
 }
 
 #menu .title {
-  line-height: 50px;
-  font-size: 1.5em;
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  margin: auto 0;
+  font-size: 32px;
   color: #424f5a;
+}
+
+#menu .title span {
+  padding-left: 10px;
 }
 
 #menu .right-buttons {
   display: inline-block;
-  float: right;
-  line-height: 50px;
+  margin: auto 0;
 }
 
 /*** End Manage Bar ***/
 
 /*** Manage Panel ***/
+
+/** Group Action Bar **/
+
+.group-action {
+  display: flex;
+  background-color: var(--not-checked);
+}
+
+.group-action.left {
+  align-items: flex-start;
+}
+
+.group-action.right {
+  align-items: flex-end;
+}
+
+.group-action > i {
+  font-size: 30px;
+  cursor: pointer;
+  width: 32px;
+  margin: auto;
+  padding: 6px 0;
+  box-sizing: border-box;
+}
+
+.group-action > i:hover {
+  background-color: var(--not-checked-hover);
+  cursor: pointer;
+}
+
+.searchbar {
+  flex: 1;
+}
+
+/** Group Action Bar **/
+
 #manage-panel {
   width: 100%;
 }
@@ -77,18 +96,17 @@ body {
 
 /** Group Lists **/
 #manage-panel .left-list, #manage-panel .right-list {
-  /*border-left: 4px solid #424f5a;*/
   box-sizing: content-box;
   display: inline-block;
-  /*float: left;*/
   max-width: 800px;
-  min-width: 400px;
+  min-width: 350px;
+  border-left: 1px solid #424f5a;
+  border-right: 1px solid #424f5a;
 }
 
 .group-list {
-  height: calc(100vh - 120px) !important;
-  border-left: 1px solid #424f5a;
-  border-right: 1px solid #424f5a;
+  height: calc(100vh - 165px) !important;
+
   box-sizing: border-box;
 }
 
@@ -107,60 +125,19 @@ body {
   background-color: var(--not-checked);
 }
 
-.belowActions .left, .belowActions .right  {
-  display: inline-block;
-  width: 100px !important;
-}
-
-.belowActions .left, .belowActions .left i {
-   float: left;
-}
-
-.belowActions .center {
-  float: left;
-  font-size: 30px;
-  width: calc(100% - 200px);
-}
-
-.belowActions .right, .belowActions .right i{
-   float: right;
-}
-
 .belowActions i {
   font-size: 40px;
   cursor: pointer;
   width: 50px;
   text-align: center;
-  line-height: 50px;
+  height: 100%;
 }
 
 .belowActions i:hover {
-  background-color: var(--not-checked-hover);
+  background-color: var(--not-checked);
 }
+
+
+
 /** End Below Actions **/
 /*** End Manage Panel ***/
-
-/** TODO: bug tab title is too big  only in manage groups**/
-.max-width-25 {
-  max-width: calc(100% - 35px);
-}
-
-.max-width-35 {
-  max-width: calc(100% - 45px);
-}
-
-.max-width-45 {
-  max-width: calc(100% - 55px);
-}
-
-.max-width-65 {
-  max-width: calc(100% - 75px);
-}
-
-.max-width-85 {
-  max-width: calc(100% - 95px);
-}
-
-.max-width-115 {
-  max-width: calc(100% - 125px);
-}

@@ -14,13 +14,13 @@ class RadioButton extends React.Component {
       <div className="radio-button">
         <span className={"left "+(this.props.left?"highlight":"")}
           onClick={this.onLeftClick}>
-          {this.props.labelLeft}
+          <span>{this.props.labelLeft}</span>
           {this.state.hasIconLeft && <i className={"fa fa-fw fa-" + this.props.iconLeft}></i>}
         </span>
         <span className={"right "+(!this.props.left?"highlight":"")}
           onClick={this.onRightClick}>
           {this.state.hasIconRight && <i className={"fa fa-fw fa-" + this.props.iconRight}></i>}
-          {this.props.labelRight}
+          <span>{this.props.labelRight}</span>
         </span>
       </div>
     );

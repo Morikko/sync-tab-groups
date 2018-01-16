@@ -20,12 +20,12 @@ class SearchBar extends React.Component{
       );
 
     return (
-      <li className="searchbar">
+      <div className="searchbar">
         {this.searchbar}
         <i title={browser.i18n.getMessage("clear_search")}
           className={"cancel-search fa fa-fw fa-times-circle" + (this.state.value.length>0?"":"  hiddenBySearch")}
           onClick={this.clearSearchBar}/>
-      </li>
+      </div>
     );
   }
 

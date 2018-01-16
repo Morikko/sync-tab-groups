@@ -57,7 +57,9 @@ class PopupMenuStandAlone extends React.Component {
     let width = this.state.maximized?800:450;
     return (
       <ul className={menuClasses}>
-          {searchbar}
+          <li>
+            {searchbar}
+          </li>
             <GroupList
               /*** Functions ***/
               onMoveTabToNewGroup= {this.props.onGroupAddDrop}
@@ -84,17 +86,15 @@ class PopupMenuStandAlone extends React.Component {
               allowClickSwitch={true}
               stateless={false}
               width={width}
+              atLeastOneResult={this.state.atLeastOneResult}
             />
-          <GroupAddButton
-              onClick= {this.props.onGroupAddClick}
-              onDrop= {this.props.onGroupAddDrop}
-              currentlySearching= {this.state.searchfilter.length > 0}
-          />
-          <li className={"no-search-result"
-              + (!this.state.atLeastOneResult ? "" : " hiddenBySearch")}>
-            {'No search result for "' + this.state.searchfilter + '".'}
+          <li>
+            <GroupAddButton
+                onClick= {this.props.onGroupAddClick}
+                onDrop= {this.props.onGroupAddDrop}
+                currentlySearching= {this.state.searchfilter.length > 0}
+            />
           </li>
-
           <MainBar
             onChangeWindowSync= {this.props.onChangeWindowSync}
             onClickPref= {this.props.onClickPref}

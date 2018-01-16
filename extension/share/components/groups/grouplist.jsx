@@ -20,7 +20,13 @@ class GroupList extends React.Component{
     });
 
     let groups;
-    if ( this.props.groups.length > 0 ) {
+    if ( this.props.currentlySearching && !this.props.atLeastOneResult ) {
+      groups = (
+        <div className="no-search-result">
+          {'No search result!'/* for "' + this.state.searchfilter + '".'*/}
+        </div>);
+    }
+    else if ( this.props.groups.length > 0 ) {
       groups = [];
       let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
       for (let index of sortedIndex) {
@@ -92,4 +98,5 @@ GroupList.propTypes = {
   onChangeExpand: PropTypes.func,
   allowClickSwitch: PropTypes.bool,
   stateless: PropTypes.bool,
+  atLeastOneResult: PropTypes.bool,
 }
