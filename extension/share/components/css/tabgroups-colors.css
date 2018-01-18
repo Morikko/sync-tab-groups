@@ -2,11 +2,13 @@
     --group-open: #b3d5ff;
     --group-focus: #4d9dff;
     --group-hover: #1a81ff; /*99c7ff;*/
+    --group-highlight: #005ccc;
     --action-hover: #66abff;
     --private-debug: #f5e6ff;
     --private-open: #ebccff;
     --private-focus: #d699ff;
     --private-hover: #c266ff;
+    --private-highlight: #a31aff;
     --group-odd: hsl(211, 100%, 96%); /* #fff2e6 */
     --group-even: hsl(211, 100%, 98%); /* e6f2ff */
 }

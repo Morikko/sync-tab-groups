@@ -22,7 +22,7 @@ class TabList extends React.Component {
           opened: this.props.opened,
           onCloseTab: this.props.onCloseTab,
           onOpenTab: this.props.onOpenTab,
-          searchTabResult: this.props.searchTabsResults[index] === undefined ? true : this.props.searchTabsResults[index],
+          searchTabResult: this.props.searchTabsResults ? this.props.searchTabsResults[index] : true,
           groups: this.props.groups,
           onChangePinState: this.props.onChangePinState,
           allowClickSwitch: this.props.allowClickSwitch

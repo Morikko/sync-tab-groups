@@ -204,23 +204,23 @@ Utils.copyToTheClipBoard = function(text) {
  * @return {boolean}
  */
 Utils.search = function(title, keywords) {
+  removeAccents = function(txt) { return txt.normalize('NFD').replace(/[\u0300-\u036f]/g, "")};
+
+  let title_normalize = removeAccents(title.toLowerCase());
+
   results = keywords.split(' ').map((word) => {
-    return title.toLowerCase().includes(word.toLowerCase());
+    return title_normalize.includes(
+      removeAccents(word.toLowerCase())
+    );
   });
+  
   return results.reduce(
     (accu, result, ) => (accu && result),
     true
   );
 }
-/*
-[
-Utils.search("Computer", "com"),
-Utils.search("Computer", "com pu"),
-Utils.search("Computer", "Com"),
-Utils.search("Computer", "Cm"),
-Utils.search("Computer", "Cm pu"),
-].map((t)=>console.log(t))
-*/
+
+
 /**
  * Promise is resolved after time ms
  * @param {Number} time - in ms
@@ -345,23 +345,29 @@ Utils.sendMessage = function(_task, _params) {
  * @param {String} url
  */
 Utils.openUrlOncePerWindow = async function(url) {
-  const currentWindowId = (await browser.windows.getLastFocused({
-    windowTypes: ['normal'],
-  })).id;
-  const tabs = await browser.tabs.query({
-    windowId: currentWindowId,
-    url: url,
-  });
-
-  if (tabs.length) { // if manage tab is found
-    browser.tabs.update(tabs[0].id, {
-      active: true,
-    });
-  } else {
-    browser.tabs.create({
-      active: true,
+  try {
+    const currentWindowId = (await browser.windows.getLastFocused({
+      windowTypes: ['normal'],
+    })).id;
+    const tabs = await browser.tabs.query({
+      windowId: currentWindowId,
       url: url,
     });
+
+    if (tabs.length) { // if tab is found
+      browser.tabs.update(tabs[0].id, {
+        active: true,
+      });
+    } else {
+      browser.tabs.create({
+        active: true,
+        url: url,
+      });
+    }
+  } catch (e) {
+    let msg = "Utils.openUrlOncePerWindow failed; " + e;
+    console.error(msg);
+    return msg;
   }
 }
 

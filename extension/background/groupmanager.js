@@ -20,7 +20,7 @@ GroupManager.Group = function(id,
   windowId = browser.windows.WINDOW_ID_NONE,
   incognito = false) {
   this.title = title;
-  this.tabs = tabs;
+  this.tabs = Utils.getCopy(tabs);
   this.id = id; // Unique in all group
   this.windowId = windowId;
   this.index = -1; // Position of this Group in an Array
@@ -316,7 +316,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
       groupId
     );
-    GroupManager.groups[groupIndex].tabs = tabs;
+    GroupManager.groups[groupIndex].tabs = Utils.getCopy(tabs);
 
     if (OptionManager.options.groups.removeEmptyGroup) {
       GroupManager.removeEmptyGroup();

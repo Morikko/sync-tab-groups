@@ -21,7 +21,6 @@ class Group extends React.Component {
       dragOnTop: false,
       dragOnBottom: false,
       newTitle: Utils.getGroupTitle(this.props.group),
-      atLeastOneResult: (this.props.searchGroupResult.atLeastOneResult===undefined?true:this.props.searchGroupResult.atLeastOneResult),
       waitFirstMount: false,
     };
 
@@ -53,6 +52,12 @@ class Group extends React.Component {
   }
 
   findExpandedState(current_state, current_searching) {
+    if ( this.props.forceExpand ) {
+      return true;
+    }
+    if ( this.props.forceReduce ) {
+      return false;
+    }
     if (current_searching) {
       return true;
     } else {
@@ -77,7 +82,6 @@ class Group extends React.Component {
       opened: openWindow,
       expanded: expanded_state,
       currentlySearching: nextProps.currentlySearching,
-      atLeastOneResult: (nextProps.searchGroupResult.atLeastOneResult===undefined?true:nextProps.searchGroupResult.atLeastOneResult)
     });
   }
 
@@ -146,7 +150,7 @@ class Group extends React.Component {
       expanded: this.state.expanded,
       focusGroup: this.props.currentWindowId === this.props.group.windowId,
       group: true,
-      hiddenBySearch: !this.state.atLeastOneResult,
+      hiddenBySearch: !(this.props.searchGroupResult?this.props.searchGroupResult.atLeastOneResult:true),
       incognito: this.props.group.incognito,
     });
 
@@ -203,7 +207,7 @@ class Group extends React.Component {
             opened= {this.state.opened}
             onCloseTab= {this.props.onCloseTab}
             onOpenTab= {this.props.onOpenTab}
-            searchTabsResults= {this.props.searchGroupResult.searchTabsResults||[]}
+            searchTabsResults= {(this.props.searchGroupResult?this.props.searchGroupResult.searchTabsResults:undefined)}
             groups= {this.props.groups}
             onChangePinState= {this.props.onChangePinState}
             visible={this.state.expanded}

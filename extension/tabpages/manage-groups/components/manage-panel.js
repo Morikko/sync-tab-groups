@@ -2,10 +2,13 @@ class ManagePanelStandAlone extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchfilter: '',
       maximized: this.props.options.popup.maximized,
-      searchGroupsResults: {} /*searchResults.searchGroupsResults*/
-      , atLeastOneResult: true /*searchResults.atLeastOneResult*/
+      leftsearchfilter: '',
+      rightsearchfilter: '',
+      leftForceExpand: false,
+      leftForceReduce: false,
+      rightForceExpand: false,
+      rightForceReduce: false
     };
     this.update = this.update.bind(this);
   }
@@ -22,32 +25,55 @@ class ManagePanelStandAlone extends React.Component {
     window.removeEventListener("resize", this.update);
   }
 
+  componentDidUpdate() {
+    if (this.state.leftForceExpand) {
+      this.setState({
+        leftForceExpand: false
+      });
+    }
+    if (this.state.leftForceReduce) {
+      this.setState({
+        leftForceReduce: false
+      });
+    }
+    if (this.state.rightForceExpand) {
+      this.setState({
+        rightForceExpand: false
+      });
+    }
+    if (this.state.rightForceReduce) {
+      this.setState({
+        rightForceReduce: false
+      });
+    }
+  }
+
   render() {
     let width = this.props.singleMode ? window.innerWidth - 28 : window.innerWidth / 2 - 28;
 
     return React.createElement(
-      "ul",
-      { id: "manage-panel" },
+      'ul',
+      { id: 'manage-panel' },
       React.createElement(
-        "li",
-        { className: "group-lists" },
+        'li',
+        { className: 'group-lists' },
         React.createElement(
-          "div",
+          'div',
           { className: classNames({
               "left-list": true,
               "half": !this.props.singleMode }) },
           React.createElement(
-            "div",
-            { className: "group-action left" },
-            React.createElement("i", {
-              className: "app-pref fa fa-fw fa-angle-double-down",
+            'div',
+            { className: 'group-action left' },
+            React.createElement('i', {
+              className: 'app-pref fa fa-fw fa-angle-double-down',
               title: browser.i18n.getMessage("expand_all_groups"),
-              onClick: this.handleOpenAllExpand
+              onClick: this.handleLeftForceExpand.bind(this)
             }),
-            React.createElement("i", {
-              className: "app-pref fa fa-fw fa-angle-double-up",
+            React.createElement('i', {
+              className: 'app-pref fa fa-fw fa-angle-double-up',
               title: browser.i18n.getMessage("reduce_all_groups"),
-              onClick: this.handleCloseAllExpand
+              onClick: this.handleLeftForceReduce.bind(this)
             }),
             React.createElement(SearchBar, {
               onSearchChange: this.onSearchLeftChange.bind(this) })
@@ -73,33 +99,36 @@ class ManagePanelStandAlone extends React.Component {
             currentWindowId: this.props.currentWindowId,
             delayedTasks: this.props.delayedTasks
             /*** Options ***/
-            , searchGroupsResults: this.state.searchGroupsResults,
-            currentlySearching: this.state.searchfilter.length > 0,
+            , id: 'manage-left',
+            searchfilter: this.state.leftsearchfilter,
             allowClickSwitch: false,
             stateless: true,
             width: width
+            /*** actions ***/
+            , forceExpand: this.state.leftForceExpand,
+            forceReduce: this.state.leftForceReduce
           })
         ),
         React.createElement(
-          "div",
+          'div',
           { className: classNames({
               "right-list": true,
               "half": true,
               "invisible": this.props.singleMode }) },
           React.createElement(
-            "div",
-            { className: "group-action right" },
+            'div',
+            { className: 'group-action right' },
             React.createElement(SearchBar, {
               onSearchChange: this.onSearchRightChange.bind(this) }),
-            React.createElement("i", {
-              className: "app-pref fa fa-fw fa-angle-double-down",
+            React.createElement('i', {
+              className: 'app-pref fa fa-fw fa-angle-double-down',
               title: browser.i18n.getMessage("expand_all_groups"),
-              onClick: this.handleOpenAllExpand
+              onClick: this.handleRightForceExpand.bind(this)
             }),
-            React.createElement("i", {
-              className: "app-pref fa fa-fw fa-angle-double-up",
+            React.createElement('i', {
+              className: 'app-pref fa fa-fw fa-angle-double-up',
               title: browser.i18n.getMessage("reduce_all_groups"),
-              onClick: this.handleCloseAllExpand
+              onClick: this.handleRightForceReduce.bind(this)
             })
           ),
           React.createElement(GroupList
@@ -123,20 +152,23 @@ class ManagePanelStandAlone extends React.Component {
             currentWindowId: this.props.currentWindowId,
             delayedTasks: this.props.delayedTasks
             /*** Options ***/
-            , searchGroupsResults: this.state.searchGroupsResults,
-            currentlySearching: this.state.searchfilter.length > 0,
+            , id: 'manage-right',
+            searchfilter: this.state.rightsearchfilter,
             allowClickSwitch: false,
             stateless: true,
             width: width
+            /*** actions ***/
+            , forceExpand: this.state.rightForceExpand,
+            forceReduce: this.state.rightForceReduce
           })
         )
       ),
       React.createElement(
-        "li",
+        'li',
         null,
         React.createElement(
-          "div",
-          { className: "belowActions" },
+          'div',
+          { className: 'belowActions' },
           React.createElement(GroupAddButton, {
             onClick: this.props.onGroupAddClick,
             onDrop: this.props.onGroupAddDrop,
@@ -148,89 +180,44 @@ class ManagePanelStandAlone extends React.Component {
   }
 
   onSearchLeftChange(searchValue) {
-
-    /*
-    let searchResults = this.applySearch(searchValue);
     this.setState({
-      searchfilter: searchValue,
-      searchGroupsResults: searchResults.searchGroupsResults,
-      atLeastOneResult: searchResults.atLeastOneResult,
+      leftsearchfilter: searchValue
     });
-    */
   }
 
   onSearchRightChange(searchValue) {
-    /*
-    let searchResults = this.applySearch(searchValue);
     this.setState({
-      searchfilter: searchValue,
-      searchGroupsResults: searchResults.searchGroupsResults,
-      atLeastOneResult: searchResults.atLeastOneResult,
+      rightsearchfilter: searchValue
     });
-    */
   }
 
-  applySearch(searchValue) {
-    if (searchValue.length === 0) {
-      // TODO Improve this redundent
-      var context = document.querySelectorAll(".group-title, .tab-title");
-      var instance = new Mark(context);
-      instance.unmark({
-        "element": "span",
-        "className": "highlight"
-      });
-      return {
-        searchGroupsResults: [],
-        atLeastOneResult: true
-      };
-    }
-
-    let searchGroupsResults = [];
-    let atLeastOneResult = searchValue.length === 0;
-
-    // Apply search
-    for (let i = 0; i < this.props.groups.length; i++) {
-      searchGroupsResults[i] = {
-        atLeastOneResult: false,
-        searchTabsResults: []
-      };
-      // Search in group title
-      if (Utils.search(this.props.groups[i].title, searchValue)) {
-        searchGroupsResults[i].atLeastOneResult = true;
-        atLeastOneResult = true;
-      }
-
-      for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
-        // Search in tab title
-        if (Utils.search(this.props.groups[i].tabs[j].title, searchValue)) {
-          searchGroupsResults[i].atLeastOneResult = true;
-          searchGroupsResults[i].searchTabsResults[j] = true;
-          atLeastOneResult = true;
-        } else {
-          searchGroupsResults[i].searchTabsResults[j] = false;
-        }
-      }
-    }
-
-    var context = document.querySelectorAll(".group-title, .tab-title");
-    var instance = new Mark(context);
-    instance.unmark({
-      "element": "span",
-      "className": "highlight",
-      done() {
-        instance.mark(searchValue.split(' '), {
-          "element": "span",
-          "className": "highlight"
-        });
-      }
+  handleLeftForceExpand(event) {
+    event.stopPropagation();
+    this.setState({
+      leftForceExpand: true
     });
-
-    return {
-      searchGroupsResults: searchGroupsResults,
-      atLeastOneResult: atLeastOneResult
-    };
   }
 
+  handleLeftForceReduce(event) {
+    event.stopPropagation();
+    this.setState({
+      leftForceReduce: true
+    });
+  }
+
+  handleRightForceExpand(event) {
+    event.stopPropagation();
+    this.setState({
+      rightForceExpand: true
+    });
+  }
+
+  handleRightForceReduce(event) {
+    event.stopPropagation();
+    this.setState({
+      rightForceReduce: true
+    });
+  }
 }
 
 const ManagePanel = (() => {

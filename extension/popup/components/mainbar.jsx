@@ -47,7 +47,8 @@ class MainBar extends React.Component {
           })}/>
           <span>{label}</span>
         </div>
-        <div className="manage-button">
+        <div className="manage-button"
+              onClick={this.handleClickManageButton}>
           <i className="fa fa-fw fa-list"/>
           <span>Manage groups</span>
         </div>
@@ -78,11 +79,22 @@ class MainBar extends React.Component {
     );
   }
 
+  handleClickManageButton(event) {
+    event.stopPropagation();
+    Utils.openUrlOncePerWindow(browser.extension.getURL(
+      "/tabpages/manage-groups/manage-groups.html"
+    )).then(()=>{ // Let time to window to Open
+      window.close();
+    })
+  }
+
   handleOpenAllExpand(event) {
+    event.stopPropagation();
     this.props.handleAllChangeExpand(true);
   }
 
   handleCloseAllExpand(event) {
+    event.stopPropagation();
     this.props.handleAllChangeExpand(false);
   }
 

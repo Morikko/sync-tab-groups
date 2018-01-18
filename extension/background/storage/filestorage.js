@@ -9,7 +9,8 @@ StorageManager.File.exportGroups = function(groups) {
 
   // Clean tabs
   export_groups = export_groups.map((group)=>{
-    group.tabs = group.tabs.map((tab)=>{
+    let export_group = Utils.getCopy(group);
+    export_group.tabs = export_group.tabs.map((tab)=>{
       // Filter values to export
       let export_tab = {
         id: tab.id || -1,
@@ -26,7 +27,7 @@ StorageManager.File.exportGroups = function(groups) {
 
       return export_tab;
     });
-    return group;
+    return export_group;
   });
 
   let d = new Date();

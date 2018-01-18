@@ -1,33 +1,59 @@
 class ManagePanelStandAlone extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        searchfilter: '',
-        maximized: this.props.options.popup.maximized,
-        searchGroupsResults: {} /*searchResults.searchGroupsResults*/ ,
-        atLeastOneResult: true /*searchResults.atLeastOneResult*/ ,
-      };
-      this.update = this.update.bind(this);
+  constructor(props) {
+    super(props);
+    this.state = {
+      maximized: this.props.options.popup.maximized,
+      leftsearchfilter: '',
+      rightsearchfilter: '',
+      leftForceExpand: false,
+      leftForceReduce: false,
+      rightForceExpand: false,
+      rightForceReduce: false,
+    };
+    this.update = this.update.bind(this);
+  }
+
+  update() {
+    this.forceUpdate();
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.update);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.update);
+  }
+
+  componentDidUpdate() {
+    if ( this.state.leftForceExpand ) {
+      this.setState({
+        leftForceExpand: false
+      });
     }
-
-    update() {
-      this.forceUpdate();
+    if ( this.state.leftForceReduce ) {
+      this.setState({
+        leftForceReduce: false
+      });
     }
-
-    componentDidMount() {
-      window.addEventListener("resize", this.update);
+    if ( this.state.rightForceExpand ) {
+      this.setState({
+        rightForceExpand: false
+      });
     }
-
-    componentWillUnmount() {
-      window.removeEventListener("resize", this.update);
+    if ( this.state.rightForceReduce ) {
+      this.setState({
+        rightForceReduce: false
+      });
     }
+  }
 
 
-    render() {
-      let width = this.props.singleMode ? window.innerWidth-28: window.innerWidth/2-28;
+  render() {
+    let width = this.props.singleMode ? window.innerWidth - 28 : window.innerWidth / 2 - 28;
 
-      return (
-            <ul id="manage-panel">
+    return (
+      <ul id="manage-panel">
         <li className="group-lists">
           <div className={classNames({
             "left-list": true,
@@ -36,12 +62,12 @@ class ManagePanelStandAlone extends React.Component {
                 <i
                   className="app-pref fa fa-fw fa-angle-double-down"
                   title={browser.i18n.getMessage("expand_all_groups")}
-                  onClick={this.handleOpenAllExpand}
+                  onClick={this.handleLeftForceExpand.bind(this)}
                 />
                 <i
                   className="app-pref fa fa-fw fa-angle-double-up"
                   title={browser.i18n.getMessage("reduce_all_groups")}
-                  onClick={this.handleCloseAllExpand}
+                  onClick={this.handleLeftForceReduce.bind(this)}
                 />
               {
                 <SearchBar
@@ -69,11 +95,14 @@ class ManagePanelStandAlone extends React.Component {
               currentWindowId= {this.props.currentWindowId}
               delayedTasks= {this.props.delayedTasks}
               /*** Options ***/
-              searchGroupsResults= {this.state.searchGroupsResults}
-              currentlySearching= {this.state.searchfilter.length > 0}
+              id="manage-left"
+              searchfilter= {this.state.leftsearchfilter}
               allowClickSwitch={false}
               stateless={true}
               width={width}
+              /*** actions ***/
+              forceExpand={this.state.leftForceExpand}
+              forceReduce={this.state.leftForceReduce}
             />
           </div>
           <div className={classNames({
@@ -88,12 +117,12 @@ class ManagePanelStandAlone extends React.Component {
               <i
                 className="app-pref fa fa-fw fa-angle-double-down"
                 title={browser.i18n.getMessage("expand_all_groups")}
-                onClick={this.handleOpenAllExpand}
+                onClick={this.handleRightForceExpand.bind(this)}
               />
               <i
                 className="app-pref fa fa-fw fa-angle-double-up"
                 title={browser.i18n.getMessage("reduce_all_groups")}
-                onClick={this.handleCloseAllExpand}
+                onClick={this.handleRightForceReduce.bind(this)}
               />
             </div>
             <GroupList
@@ -117,11 +146,14 @@ class ManagePanelStandAlone extends React.Component {
               currentWindowId= {this.props.currentWindowId}
               delayedTasks= {this.props.delayedTasks}
               /*** Options ***/
-              searchGroupsResults= {this.state.searchGroupsResults}
-              currentlySearching= {this.state.searchfilter.length > 0}
+              id="manage-right"
+              searchfilter= {this.state.rightsearchfilter}
               allowClickSwitch={false}
               stateless={true}
               width={width}
+              /*** actions ***/
+              forceExpand={this.state.rightForceExpand}
+              forceReduce={this.state.rightForceReduce}
             />
           </div>
         </li>
@@ -139,92 +171,47 @@ class ManagePanelStandAlone extends React.Component {
   }
 
   onSearchLeftChange(searchValue) {
-
-    /*
-    let searchResults = this.applySearch(searchValue);
     this.setState({
-      searchfilter: searchValue,
-      searchGroupsResults: searchResults.searchGroupsResults,
-      atLeastOneResult: searchResults.atLeastOneResult,
+      leftsearchfilter: searchValue,
     });
-    */
   }
 
   onSearchRightChange(searchValue) {
-    /*
-    let searchResults = this.applySearch(searchValue);
     this.setState({
-      searchfilter: searchValue,
-      searchGroupsResults: searchResults.searchGroupsResults,
-      atLeastOneResult: searchResults.atLeastOneResult,
+      rightsearchfilter: searchValue,
     });
-    */
   }
 
-  applySearch(searchValue) {
-    if ( searchValue.length === 0 ) {
-      // TODO Improve this redundent
-      var context = document.querySelectorAll(".group-title, .tab-title");
-      var instance = new Mark(context);
-      instance.unmark({
-        "element": "span",
-        "className": "highlight",
-      });
-      return {
-        searchGroupsResults: [],
-        atLeastOneResult: true,
-      };
-    }
-
-    let searchGroupsResults = [];
-    let atLeastOneResult = searchValue.length === 0;
-
-    // Apply search
-    for (let i = 0; i < this.props.groups.length; i++) {
-      searchGroupsResults[i] = {
-        atLeastOneResult: false,
-        searchTabsResults: [],
-      };
-      // Search in group title
-      if (Utils.search(this.props.groups[i].title, searchValue)) {
-        searchGroupsResults[i].atLeastOneResult = true;
-        atLeastOneResult = true;
-      }
-
-      for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
-        // Search in tab title
-        if (Utils.search(this.props.groups[i].tabs[j].title, searchValue)) {
-          searchGroupsResults[i].atLeastOneResult = true;
-          searchGroupsResults[i].searchTabsResults[j] = true;
-          atLeastOneResult = true;
-        } else {
-          searchGroupsResults[i].searchTabsResults[j] = false;
-        }
-      }
-    }
-
-    var context = document.querySelectorAll(".group-title, .tab-title");
-    var instance = new Mark(context);
-    instance.unmark({
-      "element": "span",
-      "className": "highlight",
-      done() {
-        instance.mark(searchValue.split(' '), {
-          "element": "span",
-          "className": "highlight",
-        });
-      }
+  handleLeftForceExpand(event) {
+    event.stopPropagation();
+    this.setState({
+      leftForceExpand: true,
     });
-
-    return {
-      searchGroupsResults: searchGroupsResults,
-      atLeastOneResult: atLeastOneResult,
-    };
   }
 
+  handleLeftForceReduce(event) {
+    event.stopPropagation();
+    this.setState({
+      leftForceReduce: true,
+    });
+  }
+
+  handleRightForceExpand(event) {
+    event.stopPropagation();
+    this.setState({
+      rightForceExpand: true,
+    });
+  }
+
+  handleRightForceReduce(event) {
+    event.stopPropagation();
+    this.setState({
+      rightForceReduce: true,
+    });
+  }
 }
 
-const ManagePanel = (() =>{
+const ManagePanel = (() => {
   return ReactRedux.connect((state) => {
     return {
       groups: state.get("tabgroups"),
@@ -232,4 +219,5 @@ const ManagePanel = (() =>{
       delayedTasks: state.get("delayedTasks"),
       options: state.get("options")
     };
-  }, ActionCreators)(ManagePanelStandAlone)})();
+  }, ActionCreators)(ManagePanelStandAlone)
+})();

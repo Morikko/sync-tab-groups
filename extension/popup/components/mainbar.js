@@ -54,7 +54,8 @@ class MainBar extends React.Component {
       ),
       React.createElement(
         "div",
-        { className: "manage-button" },
+        { className: "manage-button",
+          onClick: this.handleClickManageButton },
         React.createElement("i", { className: "fa fa-fw fa-list" }),
         React.createElement(
           "span",
@@ -89,11 +90,21 @@ class MainBar extends React.Component {
     );
   }
 
+  handleClickManageButton(event) {
+    event.stopPropagation();
+    Utils.openUrlOncePerWindow(browser.extension.getURL("/tabpages/manage-groups/manage-groups.html")).then(() => {
+      // Let time to window to Open
+      window.close();
+    });
+  }
+
   handleOpenAllExpand(event) {
+    event.stopPropagation();
     this.props.handleAllChangeExpand(true);
   }
 
   handleCloseAllExpand(event) {
+    event.stopPropagation();
     this.props.handleAllChangeExpand(false);
   }
 

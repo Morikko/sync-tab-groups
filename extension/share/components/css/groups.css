@@ -84,6 +84,18 @@ li {
   color: #444;
 }
 
+.group .highlight {
+  background-color: var(--group-highlight);
+  border-radius: 3px;
+  color: #fff;
+}
+
+.group.incognito .highlight {
+  background-color: var(--private-highlight);
+  border-radius: 3px;
+  color: #fff;
+}
+
 
 /** End Colors **/
 
@@ -225,6 +237,7 @@ li {
   height: 16px;
   width: 16px;
   margin: auto 0;
+  margin-right: 3px;
 }
 
 .tab-controls {
@@ -280,11 +293,6 @@ body {
 .no-search-result {
   padding: 5px;
   position: relative;
-}
-
-.highlight {
-  background-color: #81d0e4;
-  border-radius: 3px;
 }
 
 .searchbar {

@@ -8,12 +8,9 @@ Copyright (c) 2015 Dennis Schubert
 class PopupMenuStandAlone extends React.Component {
   constructor(props) {
     super(props);
-    let searchResults = this.applySearch('');
     this.state = {
-      searchfilter: '',
       maximized: this.props.options.popup.maximized,
-      searchGroupsResults: searchResults.searchGroupsResults,
-      atLeastOneResult: searchResults.atLeastOneResult,
+      searchfilter: '',
     };
 
     this.onClickMaximize = this.onClickMaximize.bind(this);
@@ -22,13 +19,11 @@ class PopupMenuStandAlone extends React.Component {
 
   // When a component got new props, use this to update
   componentWillReceiveProps(nextProps) {
-    // In case of change in groups
-    let searchResults = this.applySearch(this.state.searchfilter);
-    this.setState({
-      maximized: nextProps.options.popup.maximized,
-      searchGroupsResults: searchResults.searchGroupsResults,
-      atLeastOneResult: searchResults.atLeastOneResult,
-    });
+    if(nextProps.options.popup.maximized !== this.state.maximized ) {
+      this.setState({
+        maximized: nextProps.options.popup.maximized,
+      });
+    }
   }
 
   render() {
@@ -81,12 +76,14 @@ class PopupMenuStandAlone extends React.Component {
               currentWindowId= {this.props.currentWindowId}
               delayedTasks= {this.props.delayedTasks}
               /*** Options ***/
-              searchGroupsResults= {this.state.searchGroupsResults}
-              currentlySearching= {this.state.searchfilter.length > 0}
+              id="popup"
+              searchfilter= {this.state.searchfilter}
               allowClickSwitch={true}
               stateless={false}
               width={width}
-              atLeastOneResult={this.state.atLeastOneResult}
+              /*** actions ***/
+              forceExpand={false}
+              forceReduce={false}
             />
           <li>
             <GroupAddButton
@@ -127,74 +124,9 @@ class PopupMenuStandAlone extends React.Component {
   }
 
   onSearchChange(searchValue) {
-    let searchResults = this.applySearch(searchValue);
     this.setState({
       searchfilter: searchValue,
-      searchGroupsResults: searchResults.searchGroupsResults,
-      atLeastOneResult: searchResults.atLeastOneResult,
     });
-
-  }
-
-  applySearch(searchValue) {
-    if ( searchValue.length === 0 ) {
-      // TODO Improve this redundent
-      var context = document.querySelectorAll(".group-title, .tab-title");
-      var instance = new Mark(context);
-      instance.unmark({
-        "element": "span",
-        "className": "highlight",
-      });
-      return {
-        searchGroupsResults: [],
-        atLeastOneResult: true,
-      };
-    }
-
-    let searchGroupsResults = [];
-    let atLeastOneResult = searchValue.length === 0;
-
-    // Apply search
-    for (let i = 0; i < this.props.groups.length; i++) {
-      searchGroupsResults[i] = {
-        atLeastOneResult: false,
-        searchTabsResults: [],
-      };
-      // Search in group title
-      if (Utils.search(this.props.groups[i].title, searchValue)) {
-        searchGroupsResults[i].atLeastOneResult = true;
-        atLeastOneResult = true;
-      }
-
-      for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
-        // Search in tab title
-        if (Utils.search(this.props.groups[i].tabs[j].title, searchValue)) {
-          searchGroupsResults[i].atLeastOneResult = true;
-          searchGroupsResults[i].searchTabsResults[j] = true;
-          atLeastOneResult = true;
-        } else {
-          searchGroupsResults[i].searchTabsResults[j] = false;
-        }
-      }
-    }
-
-    var context = document.querySelectorAll(".group-title, .tab-title");
-    var instance = new Mark(context);
-    instance.unmark({
-      "element": "span",
-      "className": "highlight",
-      done() {
-        instance.mark(searchValue.split(' '), {
-          "element": "span",
-          "className": "highlight",
-        });
-      }
-    });
-
-    return {
-      searchGroupsResults: searchGroupsResults,
-      atLeastOneResult: atLeastOneResult,
-    };
   }
 
   componentDidMount() {
