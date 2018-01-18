@@ -175,6 +175,38 @@ GroupManager.getCopy = function() {
 }
 
 /******** SETTER *********/
+
+/**
+ * Change the groups if necessary for:
+ *  1. At least one tab active (last by default)
+ *  2. No more than 1 tab active (last by default)
+ * @param {Array[Group]} groups
+ */
+GroupManager.coherentActiveTabInGroups = function(groups=GroupManager.groups) {
+  for ( let i=0; i<groups.length; i++) {
+    if ( !groups[i].tabs.length ) { // No tab in group
+      continue;
+    }
+
+    let activeTabIndex = groups[i].tabs.map((tab, index)=>{
+      return tab.active?index:-1;
+    }).filter((index)=>{
+      return index>=0;
+    });
+
+    // No active tab
+    if ( !activeTabIndex.length ) {
+      groups[i].tabs[groups[i].tabs.length-1].active = true;
+    }
+    // More than 1 active tabs
+    if ( activeTabIndex.length > 1 ) {
+      for ( let j=1; j < activeTabIndex.length; j++ ) {
+        groups[i].tabs[activeTabIndex[j]].active = false;
+      }
+    }
+  }
+}
+
 /**
  * Change the expand state of one or more group to expandState
  * @param {Array[Number]} groupIds
@@ -626,12 +658,15 @@ GroupManager.addGroupWithTab = function(tabs,
 }
 
 GroupManager.addGroups = function(groups) {
+  let ids = []
   for (let g of groups) {
     g.id = GroupManager.createUniqueGroupId();
+    ids.push(g.id);
     GroupManager.groups.push(g);
   }
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  return ids;
 }
 
 /**
@@ -774,7 +809,9 @@ GroupManager.initEventListener = function() {
     () => {
       GroupManager.cleanUndefined(GroupManager.groups);
       GroupManager.setIndex(GroupManager.groups);
-      GroupManager.setPosition(GroupManager.groups, OptionManager.options.groups.sortingType);
+      GroupManager.setPosition(GroupManager.groups,
+         OptionManager.options.groups.sortingType);
+      GroupManager.coherentActiveTabInGroups(GroupManager.groups);
       GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
     });
 };

@@ -48,8 +48,38 @@ TestManager.compareGroups = function(groups, groups_ref) {
       return false;
     if (groups[i].windowId !== groups_ref[i].windowId)
       return false;
-    if (!TestManager.compareTabs(groups[i].tabs, groups_ref[i].tabs, true))
+    if (!TestManager.compareTabs(groups[i].tabs, groups_ref[i].tabs, false))
       return false;
   }
   return true;
+}
+
+var tabGroupsMatchers = {
+  /**
+   * Compare only:
+      * Groups: title, id, windowId,
+      * Tabs: length and url
+   * For a complete comparaison: use toEqual
+   */
+  equalToGroups: function(util, customEqualityTesters) {
+    return {
+      compare: function(actual, expected) {
+        let result = {};
+
+        if ( expected === undefined ) {
+          result.pass = false;
+          result.message = "Wrong use of compareToGroups on an undefined expected.";
+        } else {
+          result.pass = TestManager.compareGroups(actual, expected);
+
+          if ( result.pass ) {
+            result.message = "Groups are similar.";
+          } else {
+            result.message = "Groups are different.";
+          }
+        }
+        return result;
+      }
+    }
+  }
 }

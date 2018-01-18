@@ -17,7 +17,7 @@ class Tab extends React.Component {
     this.handleOnMoveTabNewMenuClick = this.handleOnMoveTabNewMenuClick.bind(this);
     this.handleOnMoveTabMenuClick = this.handleOnMoveTabMenuClick.bind(this);
     this.handleTabClick = this.handleTabClick.bind(this);
-    this.handleOpenTabClick = this.handleOpenTabClick.bind(this);
+    this.onClickOpenTab = this.onClickOpenTab.bind(this);
     this.handleChangePin = this.handleChangePin.bind(this);
     this.handleCloseTabClick = this.handleCloseTabClick.bind(this);
     this.handleTabDrop = this.handleTabDrop.bind(this);
@@ -98,7 +98,7 @@ class Tab extends React.Component {
       React.createElement(TabControls, {
         opened: this.props.opened,
         onCloseTab: this.handleCloseTabClick,
-        onOpenTab: this.handleOpenTabClick
+        onOpenTab: this.onClickOpenTab
       })
     );
   }
@@ -144,7 +144,7 @@ class Tab extends React.Component {
       React.createElement("menuitem", {
         type: "context",
         icon: "/share/icons/plus-32.png",
-        onClick: this.handleOpenTabClick,
+        onClick: this.onClickOpenTab,
         label: browser.i18n.getMessage("open_tab")
       })
     );
@@ -171,17 +171,27 @@ class Tab extends React.Component {
 
   handleTabClick(event) {
     event.stopPropagation();
+
     if (this.props.allowClickSwitch) {
-      let group = this.props.group;
-      let tab = this.props.tab;
-      this.props.onTabClick(group.id, this.props.tabIndex);
-      window.close();
+      if (event.button === 0) {
+        // Left
+        let group = this.props.group;
+        let tab = this.props.tab;
+        this.props.onTabClick(group.id, this.props.tabIndex);
+        window.close();
+      } else if (event.button === 1) {
+        // Middle
+        this.handleOpenTabClick();
+      }
     }
   }
 
-  handleOpenTabClick(event) {
+  onClickOpenTab(event) {
     event.stopPropagation();
+    this.handleOpenTabClick();
+  }
 
+  handleOpenTabClick() {
     let tab = this.props.tab;
     this.props.onOpenTab(tab);
   }
@@ -285,7 +295,7 @@ class Tab extends React.Component {
       return true;
     }
 
-    if (nextProps.tab.pinned !== this.props.tab.pinned || nextProps.tab.index !== this.props.tab.index || nextProps.tab.url !== this.props.tab.url || nextProps.tab.title !== this.props.tab.title) {
+    if (nextProps.tab.pinned !== this.props.tab.pinned || nextProps.tab.index !== this.props.tab.index || nextProps.tab.url !== this.props.tab.url || nextProps.tab.active !== this.props.tab.active || nextProps.tab.title !== this.props.tab.title) {
       return true;
     }
 

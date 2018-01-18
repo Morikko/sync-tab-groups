@@ -99,6 +99,7 @@ Utils.mergeObject = function(object, ref_object) {
       Utils.mergeObject(object[pro], ref_object[pro]);
     }
   }
+  return object;
 }
 
 /**
@@ -213,7 +214,7 @@ Utils.search = function(title, keywords) {
       removeAccents(word.toLowerCase())
     );
   });
-  
+
   return results.reduce(
     (accu, result, ) => (accu && result),
     true
@@ -338,6 +339,19 @@ Utils.sendMessage = function(_task, _params) {
   }).catch((onRejected) => {
 
   });
+}
+
+/**
+ * Shuffles array in place. ES6 version
+ * @param {Array} a items An array containing the items.
+ * Source: https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
+ */
+Utils.shuffleArray = function(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
 
 /**
