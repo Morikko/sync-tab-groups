@@ -169,28 +169,55 @@ WindowManager.removeTabsInWindow = async function(windowId, remove_pinned = fals
 }
 
 /**
+ * Wrap the function for acting only if the targeted window is available
+ * Release the Semaphore even in case of error
+ * Return the value of func executed
+ *
+ */
+WindowManager.decoratorCurrentlyChanging = function (func) {
+  return async function() {
+    let result, currentWindow;
+    try {
+      currentWindow = await browser.windows.getCurrent();
+      if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
+          currentWindow.id
+        )) {
+        browser.notifications.create({
+          "type": "basic",
+          "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+          "title": "Can't change Group now",
+          "message": "Reason: the current window has not finished to switch to a group.",
+          "eventTime": 4000,
+        });
+        return "WindowManager.openGroupInWindow not done because the current window has not finished to switch to a group.";
+      }
+      WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id] = true;
+
+      // Do your job
+      result = await func.apply(this, arguments);
+
+    } catch(e) {
+      console.log("WindowManager.decoratorCurrentlyChanging: There was an error.")
+    } finally { // Clean
+      if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
+          currentWindow.id
+        )) {
+        const currentWindow = await browser.windows.getCurrent();
+        delete WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id];
+      }
+      return result;
+    }
+  };
+}
+
+/**
  * Open newGroupId in current window, close the previous group if has
  * Secure: don't switch a window if it is already switching
  * @param {Number} newGroupId
  */
 WindowManager.switchGroup = async function(newGroupId) {
-  let currentWindow;
   try {
-    currentWindow = await browser.windows.getCurrent();
-    if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
-        currentWindow.id
-      )) {
-      browser.notifications.create({
-        "type": "basic",
-        "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
-        "title": "Can't change Group now",
-        "message": "Reason: the current window has not finished to switch to a group.",
-        "eventTime": 4000,
-      });
-      return "WindowManager.openGroupInWindow not done because the current window has not finished to switch to a group.";
-    }
-    WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id] = true;
-
+    let currentWindow = await browser.windows.getCurrent();
     if (GroupManager.isWindowAlreadyRegistered(currentWindow.id)) { // From sync window
       let currentGroupId = GroupManager.getGroupIdInWindow(
         currentWindow.id
@@ -203,13 +230,6 @@ WindowManager.switchGroup = async function(newGroupId) {
     let msg = "WindowManager.switchGroup failed: " + e;
     console.error(msg);
     return msg;
-  } finally {
-    if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
-        currentWindow.id
-      )) {
-      const currentWindow = await browser.windows.getCurrent();
-      delete WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id];
-    }
   }
 }
 
@@ -381,7 +401,8 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
       state: "maximized",
     });
 
-    await WindowManager.openGroupInWindow(groupId, w.id);
+    //await WindowManager.openGroupInWindow(groupId, w.id);
+    await WindowManager.switchGroup(groupId);
     return w.id;
 
   } catch (e) {
@@ -447,6 +468,18 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
   }
 }
 
+WindowManager.isWindowIdOpen = async function(windowId) {
+  try {
+    const windows = await browser.windows.getAll();
+    return windows.filter(w => w.id === windowId).length>0;
+
+  } catch (e) {
+    let msg = "WindowManager.desassociateGroupIdToWindow failed on window " + windowId + " and " + e;
+    console.error(msg);
+    return false;
+  }
+}
+
 /**
  * Remove groupId stored with the window
  * @param {Number} windowId
@@ -454,6 +487,9 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
  */
 WindowManager.desassociateGroupIdToWindow = async function(windowId) {
     try {
+      if ( !WindowManager.isWindowIdOpen(windowId) ) {
+        return;
+      }
       if ( Utils.isFF57() || Utils.isBeforeFF57() ) { //FF
         if (OptionManager.options.groups.showGroupTitleInWindow) {
           browser.windows.update(
@@ -708,3 +744,8 @@ WindowManager.OnlyOneNewWindow = async function(sync_window = true) {
     return msg;
   }
 }
+
+// TODO: add ES6 support for more beautiful syntac + cf babel compiler
+WindowManager.switchGroup = WindowManager.decoratorCurrentlyChanging(WindowManager.switchGroup);
+//WindowManager.openGroupInNewWindow = WindowManager.decoratorCurrentlyChanging(WindowManager.openGroupInNewWindow);
+//WindowManager.closeGroup = WindowManager.decoratorCurrentlyChanging(WindowManager.closeGroup);

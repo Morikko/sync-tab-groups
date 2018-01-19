@@ -136,6 +136,16 @@ Session.setHeavySession = function() {
 
 }
 
+Session.getRandomNormalTab = function(params) {
+  let tab = Session.getRandomTab(Session.ListOfTabURLs);
+  for ( let k in params ) {
+    if ( k in tab ) {
+      tab[k] = params[k];
+    }
+  }
+  return tab;
+}
+
 Session.getRandomTab = function(tabs) {
   return  Utils.getCopy(
     Session.createTab(
@@ -222,5 +232,6 @@ Session.createTab = function(
     active: false,
     discarded: false,
     favIconUrl: "",
+    index: -1,
   })
 };

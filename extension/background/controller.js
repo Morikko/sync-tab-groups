@@ -373,8 +373,10 @@ Controller.initWindowsEventListener = function() {
   browser.windows.onCreated.addListener((window) => {
     // Let time for opening well and be sure it is a new one
     setTimeout(() => {
-      WindowManager.integrateWindow(window.id);
-    }, 1000);
+      if ( !WindowManager.WINDOW_CURRENTLY_SWITCHING[window.id] ) {
+        WindowManager.integrateWindow(window.id);
+      }
+    }, 400);
   });
   browser.windows.onRemoved.addListener((windowId) => {
     GroupManager.detachWindow(windowId);

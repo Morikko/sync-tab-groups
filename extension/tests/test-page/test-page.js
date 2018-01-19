@@ -30,4 +30,7 @@ env.specFilter = function(spec) {
 (async () => {
   bg = await browser.runtime.getBackgroundPage();
   GroupManager = bg.GroupManager;
+  WindowManager = bg.WindowManager;
+  TabManager = bg.TabManager;
+  OptionManager = bg.OptionManager;
 })()
