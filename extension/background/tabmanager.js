@@ -39,6 +39,12 @@ TabManager.updateTabsInGroup = async function(windowId) {
   try {
     const allWindows = await browser.windows.getAll();
 
+    if ( WindowManager.WINDOW_CURRENTLY_SWITCHING[
+      windowId
+    ]) {
+        return "Doesn't update the groups while it is changed by the extension."
+    }
+
     let window;
     for (let w of allWindows) {
       if (w.id === windowId) {
@@ -46,6 +52,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
         break;
       }
     }
+
     if (window === undefined) {
       return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window has been closed";
     }
@@ -67,7 +74,6 @@ TabManager.updateTabsInGroup = async function(windowId) {
     for (let tab of tabs) {
       tab.url = Utils.extractTabUrl(tab.url);
     }
-
 
     GroupManager.setTabsInGroupId(groupId, tabs);
     return "TabManager.updateTabsInGroup done on window id " + windowId;
@@ -196,16 +202,17 @@ TabManager.openListOfTabs = async function(
  */
 TabManager.activeTabInWindow = async function(windowId, tabIndex) {
   try {
-    const tabs = await browser.tabs.query({
-      windowId: windowId
-    });
-    for (let tab of tabs) {
-      if (tab.index === tabIndex) {
-        await browser.tabs.update(tab.id, {
-          active: true
-        });
-      }
+    const tabs = await TabManager.getTabsInWindowId(windowId);
+
+    let tabId = tabs.filter((tab, index)=> index===tabIndex)
+                      .map((tab)=> tab.id);
+
+    if ( tabId.length ) {
+      await browser.tabs.update(tabId[0], {
+        active: true
+      });
     }
+
     return "TabManager.activeTabInWindow done!";
   } catch (e) {
     let msg = "TabManager.activeTabInWindow: tab " + tabIndex + " in window " + windowId + " not found. " + e;

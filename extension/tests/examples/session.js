@@ -75,8 +75,20 @@ Session.createGroup = function(
   } else {
     return group;
   }
-
 }
+
+Session.addTabToGroup = async function (group, tab_params) {
+  let tab = Session.createTab(tab_params)
+
+  if ( group.id ) { // Local Mode
+    let realIndex = TabManager.secureIndex(params.index, tab, group.tabs);
+    group.tabs.splice(realIndex, 0, tab);
+  } else { // Global
+    let id = group;
+    await GroupManager.addTabInGroupId(id, tab, tab.index);
+  }
+}
+
 
 /**
  * 5 groups:  2x7 + 2x7(Pinned) + 1x7(Private) + Empty + 1x7(Priv/Ext)
@@ -126,7 +138,7 @@ Session.setLightSession = function() {
     extensionUrlLength: 1,
     title:"Special URLs",
   });
-  
+
 }
 
 /**
