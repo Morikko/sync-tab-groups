@@ -1,5 +1,26 @@
 /** Session
  * Create groups and tab easily
+ Groups:
+ - createGroup
+ - addTabToGroup
+
+ Complete Session:
+ - setLightSession
+ - setHeavySession TODO: Not implemented
+
+ Tabs:
+ - createTab
+ - getRandomNormalTab
+ - getRandomTab
+
+ Ressources:
+ - ListOfTabURLs
+ - ListOfPrivTabURLs
+ - ListOfExtensionTabURLs
+
+ Windows:
+ - keepOneWindowOpen
+ - closeAllAndOpenOnlyOneNewWindow
  */
 var Session = Session || {};
 
@@ -143,6 +164,7 @@ Session.setLightSession = function() {
 
 /**
  * 20 groups:  12x(8-14) + 4xEmpty + 4x7(Priv/Ext)
+ * TODO: Not implemented
  */
 Session.setHeavySession = function() {
 
@@ -247,3 +269,46 @@ Session.createTab = function(
     index: -1,
   })
 };
+
+/**
+ * Close all windows except one
+ */
+Session.keepOneWindowOpen = async function() {
+  try {
+    const windows = await browser.windows.getAll();
+    for (let i = 1; i < windows.length; i++) {
+      await browser.windows.remove(windows[i].id);
+    }
+    return "WindowManager.keepOneWindowOpen done";
+  } catch (e) {
+    let msg = "WindowManager.keepOneWindowOpen failed " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+/**
+ * Close all windows and open a new one with only a new tab
+ */
+Session.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
+  try {
+    OptionManager.options.groups.syncNewWindow = sync_window;
+    const windows = await browser.windows.getAll();
+
+    const w = await browser.windows.create();
+
+    if (sync_window) {
+      await WindowManager.integrateWindow(w.id);
+    }
+
+    for (let i = 0; i < windows.length; i++) {
+      await browser.windows.remove(windows[i].id);
+    }
+
+    return w.id;
+  } catch (e) {
+    let msg = "Session.closeAllAndOpenOnlyOneNewWindow failed " + e;
+    console.error(msg);
+    return msg;
+  }
+}

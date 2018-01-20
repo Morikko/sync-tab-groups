@@ -1,8 +1,69 @@
 /**
  * Model of the Groups
- * Functions getter: that handle error case (else get directly the information)
- * Functions writer: always trhough the API to fire event
- * Event: EVENT_CHANGE
+
+ Getter Group:
+ - getGroupIdInWindow
+ - getGroupIndexFromGroupId
+ - getGroupIndexFromWindowId
+ - getGroupIdFromTabId
+ - getTabIndexFromTabId
+ - getWindowIdFromGroupId
+
+ Setter Group
+ - changeExpandState
+ - changeGroupPosition
+ - setLastAccessed
+ - setTabsInGroupId
+ - removeTabFromIndexInGroupIds
+ - removeGroupFromId
+ - addTabInGroupId
+ - renameGroup
+
+ Getter GroupS
+ - getGroupsWithoutPrivate
+ - getCopy
+
+ Setter GroupS
+ - setAllPositions
+ - setAllIndexes
+ - removeGroupsInPrivateWindow
+ - updateAllOpenedGroups
+ - addGroup TODO: if windowId: do the attachment inside
+ - addGroupWithTab TODO: if windowId: do the attachment inside
+ - addGroups
+ - resetAssociatedWindows
+ - removeUnopenGroups
+ - removeEmptyGroup
+ - updateLastAccessedFromTabs (Not Used)
+
+ Safer:
+ - cleanUndefined TODO
+ - check_integrity
+ - createUniqueGroupId
+
+ Tests:
+ - isWindowAlreadyRegistered
+ - isGroupIndexInOpenWindow
+ - bestMatchGroup
+
+ Windows:
+ - attachWindowWithGroupId
+ - detachWindowFromGroupId
+ - detachWindow
+ - integrateAllOpenedWindows
+
+ Initialization:
+ - init
+ - initEventListener
+ - store
+
+ Preparation tools:
+ - coherentActiveTabInGroups
+ - coherentPositionInGroups
+ - sortGroupsLastAccessed
+ - sortGroupsAlphabetically
+
+ * Event: EVENT_CHANGE EVENT_PREPARE
  * DelayedTask: store() (Limited mode)
  */
 var GroupManager = GroupManager || {};
@@ -950,4 +1011,73 @@ GroupManager.coherentPositionInGroups = function(groups) {
       }
     }
   }
+}
+
+
+/**
+ * Return the best matching group depending the tabs
+ * Criterions:
+ *  1. tabs length must be equal (out of Priv/Ext tabs)
+ *  2. tabs.url must match (out of Priv/Ext tabs)
+ *  3. A score is returned to favorise potential Priv/Ext tabs that match
+ *  4. if more than one result, take the last accessed
+ * TODO: Test :Problems privileged URLs: browser.urls !== groups.urls
+ *       On reload -> privileged URLs are closes -> bias compare
+ * @param {Array[Tab]} tabs
+ * @return {Number} groupId
+ */
+GroupManager.bestMatchGroup = function(tabs, groups=GroupManager.groups) {
+  return groups.map((group)=>{ // Remove wrong match
+    /* Notes
+     tabs <= groups.tabs
+     incremnt good match
+     don't care missing priv/extension url
+     kill bad match
+    */
+   let ext_page_prefix = browser.runtime.getURL("");
+    let result = {
+      score: 0,
+      id: group.id,
+      lastAccessed: group.lastAccessed,
+    };
+    // Criterion 2
+    let index = 0;
+    result.score = group.tabs.reduce((count, tab, group_index)=>{
+        let next_count = count;
+        let tab_url = Utils.extractTabUrl(tabs[index].url);
+        let group_tab_url = Utils.extractTabUrl(tab.url);
+
+        if ( tab_url ===  group_tab_url ) { // Match
+          next_count++;
+          index++;
+        } else {
+          if ( tab.url.includes(ext_page_prefix) || Utils.isPrivilegedURL(tab.url) ) { // Could be a missing priv/extension
+
+          } else { // Criterion 2: Wrong good match
+            return -1000;
+          }
+        }
+
+        // Criterion 1: Don't finish together
+        if (group_index === group.length-1 // Last
+        &&  index !== tabs.length ) {
+          return -1000; // Impossible match
+        }
+
+        return next_count;
+    }, 0);
+
+    return result;
+  }).reduce((a,b)=>{ // Criterion 3
+    if ( a.score < b.score) { // Prefer best match
+      return b;
+    } else if ( a.score === b.score ) { // Prefer recent one
+      if ( a.lastAccessed >=  b.lastAccessed )
+        return a;
+      else
+        return b;
+    } else { // Keep previous best
+      return a;
+    }
+  }, {id:-1, lastAccessed:-1, score:1}).id;
 }

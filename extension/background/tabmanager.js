@@ -1,8 +1,31 @@
 /**
  * Functions that update the tabs in browser
- * All are insynchronous functions
- * ALL functions HAVE TO return a new Promises that is resolved when everything is done
- * Have direct access (R/W) to the data
+
+ Tools:
+ - getTabsInWindowId
+ - countPinnedTabs
+ - secureIndex
+
+ Getter:
+ - updateTabsInGroup
+
+ Setter:
+ - openListOfTabs
+ - removeTabsInWindow
+
+ Update States
+ - activeTabInWindow
+ - changePinState
+ - selectTab (Open/Close group) TODO: change active before opening
+
+ Moves:
+ - moveOpenTabToGroup
+ - moveTabBetweenGroups
+ - moveUnFollowedTabToGroup
+ - moveTabToNewGroup
+ - moveUnFollowedTabToNewGroup
+
+ - removeTabsWithUnallowedURL: deprecated
  */
 var TabManager = TabManager || {};
 
@@ -513,6 +536,53 @@ TabManager.selectTab = async function(tabIndex, groupId) {
 
   } catch (e) {
     let msg = "TabManager.selectTab failed; " + e;
+    console.error(msg);
+    return msg;
+  }
+}
+
+/**
+ * Remove all the tabs in the windowId
+ * Pinned are avoided except if there are synchronized or the option to force is set
+ * @param {Number} groupId
+ * @return {Promise} - the blank tab created
+ */
+TabManager.removeTabsInWindow = async function(windowId, remove_pinned = false) {
+  try {
+    let tabs = await TabManager.getTabsInWindowId(windowId);
+
+    // 1. Create blank tab: letting window open
+    let blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
+
+    // 2. Remove previous tabs in window
+    let tabsToRemove = [];
+    tabs.map((tab) => {
+      if ((OptionManager.options.pinnedTab.sync && tab.pinned) ||
+        !tab.pinned ||
+        remove_pinned) {
+        tabsToRemove.push(tab.id);
+      }
+    });
+    await browser.tabs.remove(tabsToRemove);
+
+    if ( Utils.isChrome() ) { // Chrome Incompatibility: doesn't wait that tabs are unloaded
+      let i=0
+      for (i=0; i<20; i++) {
+        await Utils.wait(50);
+        let tabs = await TabManager.getTabsInWindowId(windowId);
+        if (tabs.filter((tab)=>{
+          if (tabsToRemove.indexOf(tab.id) >= 0) {
+            return true;
+          }
+          return false;
+        }).length === 0)
+          break;
+      }
+    }
+
+    return blank_tab[0];
+  } catch (e) {
+    let msg = "TabManager.removeTabsInWindow failed; " + e;
     console.error(msg);
     return msg;
   }

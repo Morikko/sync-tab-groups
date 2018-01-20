@@ -1,8 +1,30 @@
 /**
  * Functions that update the windows in browser
- * All are insynchronous functions
- * ALL functions HAVE TO return a new Promises that is resolved when everything is done
- * Have direct access (R/W) to the data
+
+ Functions
+ - openGroupInNewWindow
+ - closeGroup
+ - removeGroup
+ - selectGroup
+ - selectNextGroup
+
+ Low-level
+  - openGroupInWindow
+  - switchGroup TODO Merge with WindowManager.openGroupInWindow
+  - closeWindowFromGroupId
+
+ Integration
+ - associateGroupIdToWindow
+ - desassociateGroupIdToWindow
+ - addGroupFromWindow
+ - integrateWindowWithTabsComparaison
+ - integrateWindowWithSession
+ - integrateWindow
+
+ - isWindowIdOpen
+
+ Decorator
+ - decoratorCurrentlyChanging
  */
 
 var WindowManager = WindowManager || {};
@@ -27,7 +49,7 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
       newGroupId
     );
 
-    const blank_tab = await WindowManager.removeTabsInWindow(windowId, false);
+    const blank_tab = await TabManager.removeTabsInWindow(windowId, false);
 
     await TabManager.openListOfTabs(
       GroupManager.groups[newGroupIndex].tabs, windowId, false, true);
@@ -109,60 +131,13 @@ WindowManager.closeGroup = async function(groupId, close_window = false) {
       await WindowManager.closeWindowFromGroupId(groupId);
     } else {
       await GroupManager.detachWindowFromGroupId(groupId);
-      await WindowManager.removeTabsInWindow(windowId);
+      await TabManager.removeTabsInWindow(windowId);
     }
 
     return "WindowManager.closeGroup done!";
 
   } catch (e) {
     let msg = "WindowManager.closeGroup failed; " + e;
-    console.error(msg);
-    return msg;
-  }
-}
-
-/**
- * Remove all the tabs in the windowId
- * Pinned are avoided except if there are synchronized or the option to force is set
- * @param {Number} groupId
- * @return {Promise} - the blank tab created
- */
-WindowManager.removeTabsInWindow = async function(windowId, remove_pinned = false) {
-  try {
-    let tabs = await TabManager.getTabsInWindowId(windowId);
-
-    // 1. Create blank tab: letting window open
-    let blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
-
-    // 2. Remove previous tabs in window
-    let tabsToRemove = [];
-    tabs.map((tab) => {
-      if ((OptionManager.options.pinnedTab.sync && tab.pinned) ||
-        !tab.pinned ||
-        remove_pinned) {
-        tabsToRemove.push(tab.id);
-      }
-    });
-    await browser.tabs.remove(tabsToRemove);
-
-    if ( Utils.isChrome() ) { // Chrome Incompatibility: doesn't wait that tabs are unloaded
-      let i=0
-      for (i=0; i<20; i++) {
-        await Utils.wait(50);
-        let tabs = await TabManager.getTabsInWindowId(windowId);
-        if (tabs.filter((tab)=>{
-          if (tabsToRemove.indexOf(tab.id) >= 0) {
-            return true;
-          }
-          return false;
-        }).length === 0)
-          break;
-      }
-    }
-
-    return blank_tab[0];
-  } catch (e) {
-    let msg = "WindowManager.removeTabsInWindow failed; " + e;
     console.error(msg);
     return msg;
   }
@@ -543,73 +518,6 @@ WindowManager.addGroupFromWindow = async function(windowId) {
   }
 }
 
-/**
- * Return the best matching group depending the tabs
- * Criterions:
- *  1. tabs length must be equal (out of Priv/Ext tabs)
- *  2. tabs.url must match (out of Priv/Ext tabs)
- *  3. A score is returned to favorise potential Priv/Ext tabs that match
- *  4. if more than one result, take the last accessed
- * TODO: Test :Problems privileged URLs: browser.urls !== groups.urls
- *       On reload -> privileged URLs are closes -> bias compare
- * @param {Array[Tab]} tabs
- * @return {Number} groupId
- */
-GroupManager.bestMatchGroup = function(tabs, groups=GroupManager.groups) {
-  return groups.map((group)=>{ // Remove wrong match
-    /* Notes
-     tabs <= groups.tabs
-     incremnt good match
-     don't care missing priv/extension url
-     kill bad match
-    */
-   let ext_page_prefix = browser.runtime.getURL("");
-    let result = {
-      score: 0,
-      id: group.id,
-      lastAccessed: group.lastAccessed,
-    };
-    // Criterion 2
-    let index = 0;
-    result.score = group.tabs.reduce((count, tab, group_index)=>{
-        let next_count = count;
-        let tab_url = Utils.extractTabUrl(tabs[index].url);
-        let group_tab_url = Utils.extractTabUrl(tab.url);
-
-        if ( tab_url ===  group_tab_url ) { // Match
-          next_count++;
-          index++;
-        } else {
-          if ( tab.url.includes(ext_page_prefix) || Utils.isPrivilegedURL(tab.url) ) { // Could be a missing priv/extension
-
-          } else { // Criterion 2: Wrong good match
-            return -1000;
-          }
-        }
-
-        // Criterion 1: Don't finish together
-        if (group_index === group.length-1 // Last
-        &&  index !== tabs.length ) {
-          return -1000; // Impossible match
-        }
-
-        return next_count;
-    }, 0);
-
-    return result;
-  }).reduce((a,b)=>{ // Criterion 3
-    if ( a.score < b.score) { // Prefer best match
-      return b;
-    } else if ( a.score === b.score ) { // Prefer recent one
-      if ( a.lastAccessed >=  b.lastAccessed )
-        return a;
-      else
-        return b;
-    } else { // Keep previous best
-      return a;
-    }
-  }, {id:-1, lastAccessed:-1, score:1}).id;
-}
 
 WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
   even_new_one = OptionManager.options.groups.syncNewWindow) {
@@ -697,49 +605,6 @@ WindowManager.integrateWindow = async function(windowId,
     return "WindowManager.integrateWindow done for windowId " + windowId;
   } catch (e) {
     let msg = "WindowManager.integrateWindow for windowId " + windowId + "\n Error msg: " + e;
-    console.error(msg);
-    return msg;
-  }
-}
-
-/**
- * Close all windows except one
- */
-WindowManager.keepOneWindowOpen = async function() {
-  try {
-    const windows = await browser.windows.getAll();
-    for (let i = 1; i < windows.length; i++) {
-      await browser.windows.remove(windows[i].id);
-    }
-    return "WindowManager.keepOneWindowOpen done";
-  } catch (e) {
-    let msg = "WindowManager.keepOneWindowOpen failed " + e;
-    console.error(msg);
-    return msg;
-  }
-}
-
-/**
- * Close all windows and open a new one with only a new tab
- */
-WindowManager.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
-  try {
-    OptionManager.options.groups.syncNewWindow = sync_window;
-    const windows = await browser.windows.getAll();
-
-    const w = await browser.windows.create();
-
-    if (sync_window) {
-      await WindowManager.integrateWindow(w.id);
-    }
-
-    for (let i = 0; i < windows.length; i++) {
-      await browser.windows.remove(windows[i].id);
-    }
-
-    return w.id;
-  } catch (e) {
-    let msg = "WindowManager.keepOneWindowOpen failed " + e;
     console.error(msg);
     return msg;
   }

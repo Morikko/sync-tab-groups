@@ -1,6 +1,21 @@
 /**
  * Settings of the extension
- *
+ Change:
+ - updateOption
+
+ Reactions:
+ - onShowGroupTitleInWindowChange
+ - onPopupThemeChange
+ - onPrivateWindowSyncChange
+ - onPinnedTabSyncChange
+ - onRemoveEmptyGroupChange
+
+ Initialization:
+ - init
+ - initEventListener
+ - store
+ - check_integrity
+
  * Event: EVENT_CHANGE
  * DelayedTask: store() (Limited mode)
  */
@@ -109,9 +124,9 @@ OptionManager.onPrivateWindowSyncChange = async function(state) {
 OptionManager.onPinnedTabSyncChange = async function() {
   try {
     await GroupManager.updateAllOpenedGroups();
-    return "OptionManager.onPrivateWindowSyncChange done!";
+    return "OptionManager.onPinnedTabSyncChange done!";
   } catch (e) {
-    let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;
+    let msg = "OptionManager.onPinnedTabSyncChange failed; " + e;
     console.error(msg);
     return msg;
   }
@@ -132,6 +147,7 @@ OptionManager.init = async function() {
   try {
     let options = await StorageManager.Local.loadOptions();
     OptionManager.options = OptionManager.check_integrity(options);
+    OptionManager.initEventListener();
     OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
     return "OptionManager.init done";
   } catch (e) {
@@ -162,11 +178,13 @@ OptionManager.store = function() {
   return StorageManager.Local.saveOptions(OptionManager.options);
 }
 
-OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
-  () => {
-    OptionManager.repeatedtask.add(
-      () => {
-        OptionManager.store();
-      }
-    )
-  });
+OptionManager.initEventListener = function() {
+  OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
+    () => {
+      OptionManager.repeatedtask.add(
+        () => {
+          OptionManager.store();
+        }
+      )
+    });
+}

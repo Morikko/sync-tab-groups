@@ -1,5 +1,35 @@
 /**
  * Useful code shared in all the apps UI and background
+ * Shared variables definition
+ Tools:
+ - mergeObject
+ - getCopy
+ - wait
+ - shuffleArray
+ - search
+ - sendMessage
+
+ Browser type:
+ - isChrome
+ - isFF57
+ - isBeforeFF57
+
+ URLs
+ - extractTabUrl
+ - getPrivilegedURL
+ - getDiscardedURL
+ - isPrivilegedURL
+ - openUrlOncePerWindow
+
+ HTML Page:
+ - getParameterByName
+ - setIcon
+ - copyToTheClipBoard
+
+ - getGroupTitle
+ - setBrowserActionIcon
+ - StorageManager.File.readJsonFile
+ - GroupManager.getIndexSortByPosition
  */
 var Utils = Utils || {};
 /**

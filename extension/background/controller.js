@@ -1,5 +1,35 @@
-// Portage help from SDK/XUL to Web extension
-// https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Comparison_with_the_Add-on_SDK
+/**
+ * Entry Point of the Extension
+ * Init the Data -> Events
+ * Manage the messages with all the extensive parts of the Extension
+
+ Sender:
+ - refreshOptionsUI
+ - refreshUi
+
+ Receiver:
+ - onOpenGroupInNewWindow
+ - onGroupAdd
+ - onGroupAddWithTab
+ - onGroupClose
+ - onGroupRemove
+ - onGroupRename
+ - onGroupSelect
+ - onTabSelect
+ - onMoveTabToGroup
+ - onBookmarkSave
+ - onOpenSettings
+ - changeSynchronizationStateOfWindow
+ - onTabClose
+ - onTabOpen
+ - onImportGroups
+ - onExportGroups
+ - onGroupChangePosition
+ - onTabChangePin
+ - onChangeExpand
+
+ - init
+ */
 
 TaskManager.fromUI = {
   [TaskManager.CLOSE_REFERENCE]: new TaskManager.DelayedTask(),
@@ -133,7 +163,7 @@ Controller.onOpenSettings = function() {
   browser.runtime.openOptionsPage();
 };
 
-Controller.synchronizeWindowManager = function(params) {
+Controller.changeSynchronizationStateOfWindow = function(params) {
   if (params.isSync) {
     WindowManager.integrateWindow(params.windowId, true);
   } else {
@@ -275,7 +305,7 @@ Controller.popupMessenger = function(message) {
       Controller.onOpenSettings();
       break;
     case "Window:Sync":
-      Controller.synchronizeWindowManager(message.params);
+      Controller.changeSynchronizationStateOfWindow(message.params);
       break;
     case "Tab:Open":
       Controller.onTabOpen(message.params);
