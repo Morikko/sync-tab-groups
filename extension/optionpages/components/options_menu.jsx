@@ -18,6 +18,7 @@ class OptionsMenu extends React.Component{
               <a
                 key={tab.href}
                 href={"#" + tab.href}
+                onClick={this.handleNavClick.bind(this)}
                 className={classNames({
                   "tab": true,
                   "selected": (tab.href === this.props.selected),
@@ -31,6 +32,16 @@ class OptionsMenu extends React.Component{
         }
       </nav>
     </div>);
+  }
+
+  // Close Menu (Narow mode)
+  handleNavClick(event) {
+    event.stopPropagation();
+
+    let box = document.getElementById('show-menu');
+    if ( box && box.checked) {
+      box.click();
+    }
   }
 };
 

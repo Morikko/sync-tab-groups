@@ -153,6 +153,81 @@ class SettingsSection extends React.Component {
         })]
       }),
       React.createElement(SubSection, {
+        title: "Tab Opening Behavior",
+        tooltip: React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            "Discarded (Faster and Lighter)"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "Tabs are not fully loaded on opening."
+            ),
+            React.createElement(
+              "li",
+              null,
+              "The tabs are only loaded once you click on it. After, they stay loaded."
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Full"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "Tabs are completely loaded on opening."
+            ),
+            React.createElement(
+              "li",
+              null,
+              "Consume more memory and network data."
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Limits (In both cases)"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "Tabs History are not restored. (Limited by the browser)"
+            ),
+            React.createElement(
+              "li",
+              null,
+              "Temporary data (forms...) added before tabs were closed are lost. (Limited by the browser)"
+            )
+          )
+        ),
+        content: [React.createElement(OptionButton, {
+          title: "Discarded",
+          onClick: this.clickOnOpenDiscarded.bind(this),
+          enabled: this.props.options.groups.discardedOpen,
+          key: "opening-tab-discarded"
+        }), React.createElement(OptionButton, {
+          title: "Full",
+          onClick: this.clickOnOpenFull.bind(this),
+          enabled: !this.props.options.groups.discardedOpen,
+          key: "opening-tab-full"
+        })]
+      }),
+      React.createElement(SubSection, {
         title: browser.i18n.getMessage("private_window_title"),
         tooltip: React.createElement(
           "ul",
@@ -259,6 +334,14 @@ class SettingsSection extends React.Component {
 
   clickOnPrivateInvisible() {
     this.props.onOptionChange("privateWindow-sync", false);
+  }
+
+  clickOnOpenFull() {
+    this.props.onOptionChange("groups-discardedOpen", false);
+  }
+
+  clickOnOpenDiscarded() {
+    this.props.onOptionChange("groups-discardedOpen", true);
   }
 };
 

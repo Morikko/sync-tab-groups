@@ -6,7 +6,7 @@
 */
 
 if (window.location.search.length) {
-    let params = new URLSearchParams(window.location.search),
+    var params = new URLSearchParams(window.location.search),
         url = params.get('url') || 'about:blank',
         title = params.get('title') || 'New tab',
         favIconUrl = params.get('favIconUrl');
@@ -18,6 +18,13 @@ if (window.location.search.length) {
     }
 
     window.onfocus = window.onmousemove = () => window.location.href = url;
-} else {
-    window.location.href = 'about:blank';
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  let tab_link = document.getElementById('tab_link');
+
+  if ( tab_link ) {
+    tab_link.innerText = title;
+    tab_link.href = url;
+  }
+});

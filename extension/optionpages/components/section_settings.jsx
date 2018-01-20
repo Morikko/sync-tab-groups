@@ -89,6 +89,42 @@ class SettingsSection extends React.Component {
               }
             />
             <SubSection
+              title={"Tab Opening Behavior"}
+              tooltip={
+                <ul>
+                  <li>Discarded (Faster and Lighter)</li>
+                  <ul>
+                    <li>Tabs are not fully loaded on opening.</li>
+                    <li>The tabs are only loaded once you click on it. After, they stay loaded.</li>
+                  </ul>
+                  <li>Full</li>
+                  <ul>
+                    <li>Tabs are completely loaded on opening.</li>
+                    <li>Consume more memory and network data.</li>
+                  </ul>
+                  <li>Limits (In both cases)</li>
+                  <ul>
+                    <li>Tabs History are not restored. (Limited by the browser)</li>
+                    <li>Temporary data (forms...) added before tabs were closed are lost. (Limited by the browser)</li>
+                  </ul>
+                </ul>
+              }
+              content = {
+                [<OptionButton
+                  title= {"Discarded"}
+                  onClick= {this.clickOnOpenDiscarded.bind(this)}
+                  enabled={this.props.options.groups.discardedOpen}
+                  key="opening-tab-discarded"
+                />,
+                <OptionButton
+                  title= {"Full"}
+                  onClick= {this.clickOnOpenFull.bind(this)}
+                  enabled={!this.props.options.groups.discardedOpen}
+                  key="opening-tab-full"
+                />,]
+              }
+            />
+            <SubSection
               title={browser.i18n.getMessage("private_window_title")}
               tooltip={
                 <ul>
@@ -158,6 +194,14 @@ class SettingsSection extends React.Component {
 
   clickOnPrivateInvisible() {
     this.props.onOptionChange("privateWindow-sync", false);
+  }
+
+  clickOnOpenFull() {
+    this.props.onOptionChange("groups-discardedOpen", false);
+  }
+
+  clickOnOpenDiscarded() {
+    this.props.onOptionChange("groups-discardedOpen", true);
   }
 };
 

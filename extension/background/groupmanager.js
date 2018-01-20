@@ -263,9 +263,9 @@ GroupManager.changeGroupPosition = function(groupId, position, groups = GroupMan
  * @param {Array[Group]} groups - (default: global groups)
  * @param {Number} sortingType - (default: the one set in option)
  */
-GroupManager.setPosition = function(groups = GroupManager.groups, sortingType = OptionManager.options.groups.sortingType) {
+GroupManager.setAllPositions = function(groups = GroupManager.groups, sortingType = OptionManager.options.groups.sortingType) {
   // Set a position to every groups and remove doublon
-  GroupManager.fillPositions(groups);
+  GroupManager.coherentPositionInGroups(groups);
 
   if (sortingType === OptionManager.SORT_CUSTOM) {
     return;
@@ -314,7 +314,7 @@ GroupManager.setLastAccessed = function(groupId, time, groups = GroupManager.gro
  * Set the bigger last Accessed from the tab to the group
  * @param {Array[Group]} groups - (default: global groups)
  */
-GroupManager.updateLastAccessed = function(groups = GroupManager.groups) {
+GroupManager.updateLastAccessedFromTabs = function(groups = GroupManager.groups) {
   for (let g of groups) {
     let lastAccessed = g.lastAccessed;
     for (let tab of g.tabs) { // If no tab, keep the old value
@@ -330,7 +330,7 @@ GroupManager.updateLastAccessed = function(groups = GroupManager.groups) {
  * Set the index variable for each group in groups
  * @param {Array[Group]} groups - (default: global groups)
  */
-GroupManager.setIndex = function(groups = GroupManager.groups) {
+GroupManager.setAllIndexes = function(groups = GroupManager.groups) {
   let i = 0;
   for (let g of groups) {
     g.index = i;
@@ -808,8 +808,8 @@ GroupManager.initEventListener = function() {
   GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
     () => {
       GroupManager.cleanUndefined(GroupManager.groups);
-      GroupManager.setIndex(GroupManager.groups);
-      GroupManager.setPosition(GroupManager.groups,
+      GroupManager.setAllIndexes(GroupManager.groups);
+      GroupManager.setAllPositions(GroupManager.groups,
          OptionManager.options.groups.sortingType);
       GroupManager.coherentActiveTabInGroups(GroupManager.groups);
       GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
@@ -907,7 +907,7 @@ GroupManager.getGroupsWithoutPrivate = function(groups) {
  * Change directly on groups
  * @param {Array[Group]} - groups
  */
-GroupManager.fillPositions = function(groups) {
+GroupManager.coherentPositionInGroups = function(groups) {
   let alreadyPositioned = [];
 
   // Detect Gap: groups removed

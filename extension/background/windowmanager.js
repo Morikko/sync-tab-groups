@@ -722,7 +722,7 @@ WindowManager.keepOneWindowOpen = async function() {
 /**
  * Close all windows and open a new one with only a new tab
  */
-WindowManager.OnlyOneNewWindow = async function(sync_window = true) {
+WindowManager.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
   try {
     OptionManager.options.groups.syncNewWindow = sync_window;
     const windows = await browser.windows.getAll();

@@ -371,6 +371,11 @@ Controller.initTabsEventListener = function() {
 /**** Event about windows *****/
 Controller.initWindowsEventListener = function() {
   browser.windows.onCreated.addListener((window) => {
+    if ( !OptionManager.options.privateWindow.sync
+          && window.incognito) {
+              return; // Don't lose time
+    }
+
     // Let time for opening well and be sure it is a new one
     setTimeout(() => {
       if ( !WindowManager.WINDOW_CURRENTLY_SWITCHING[window.id] ) {
