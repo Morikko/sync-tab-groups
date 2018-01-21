@@ -125,6 +125,9 @@ TabManager.countPinnedTabs = function(tabs) {
 
 /**
  * Open all the tabs in tabsToOpen
+ * By default:
+    1. Pinned Tabs are always open in last pinned postion
+    2. Normal Tabs are always open in first Position
  * @param {array[Tab]} tabsToOpen
  * @param {Number} windowId
  * @param {Boolean} inLastPos (optional) - if true the tabs are opened in last index
@@ -133,37 +136,49 @@ TabManager.countPinnedTabs = function(tabs) {
  */
 TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = false, openAtLeastOne = false) {
   try {
+
     // Look if has Tab in tabs
     if (tabsToOpen.length === 0) {
       if (openAtLeastOne) {
         tabsToOpen.push({url: "about:newtab", active: true, pinned: false});
       } else {
-        return "TabManager.openListOfTabs: tabsToOpen was empty, no tab to open";
+        // tabsToOpen was empty, no tab to open
+        return [];
+      }
+    }
+
+    const tabs = await TabManager.getTabsInWindowId(
+      windowId,
+      false, // Without fancy
+      true, // Force add pinned
+    );
+
+    // Don't Reopen only a new tab
+    if ( tabsToOpen.length === 1 && tabsToOpen[0].url === "about:newtab" ) {
+      let notPinnedTabs = tabs.filter(tab=>!tab.pinnded);
+      if ( notPinnedTabs.length === 1 && notPinnedTabs[0].url === "about:newtab" ) {
+        // open only a new tab that was already open
+        return [];
       }
     }
 
     let createdTabs = [];
     let tabIdsCrossRef = {};
 
-    // Always open in last pos
+    // Prepare index
     let indexTabOffset = 0,
       indexPinnedOffset = 0;
-    if (inLastPos || !OptionManager.options.pinnedTab.sync) {
-      const tabs = await browser.tabs.query({windowId: windowId});
 
-      indexPinnedOffset = TabManager.countPinnedTabs(tabs);
-      indexTabOffset = indexPinnedOffset;
 
-      if (inLastPos) {
-        indexTabOffset = indexTabOffset + tabs.length;
-      }
-    }
+
+    indexPinnedOffset = TabManager.countPinnedTabs(tabs);
+    indexTabOffset = inLastPos?tabs.length:indexPinnedOffset;
+
     let index = 0;
+
+    // Open the tabs
     for (let tab of tabsToOpen) {
       let url = tab.url;
-      url = (url === "about:privatebrowsing")
-        ? "about:newtab"
-        : url;
 
       if (Utils.isPrivilegedURL(url)) {
         url = Utils.getPrivilegedURL(tab.title, url, tab.favIconUrl)
@@ -173,40 +188,45 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
         url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
       }
 
+      if ( url === "about:privatebrowsing" || url === "about:newtab" ) {
+        url = null;
+      }
+
+      let currentIndex = (tab.pinned) ? indexPinnedOffset:indexTabOffset;
+
       // Create a tab to tab.url or to newtab
       let tabCreationProperties = {
-        url: (url === "about:newtab")
-          ? null
-          : url,
+        url: url,
         active: tab.active,
         pinned: tab.pinned,
-        index: (tab.pinned)
-          ? indexPinnedOffset
-          : indexTabOffset,
+        index: currentIndex,
         windowId: windowId
       };
+
       // Update parentId
       if (tab.hasOwnProperty("openerTabId")) {
         // Check tab is still present -> was not removed when group was closed
         // Parent tab has to be opened before children else it will be lost
         if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
           let tabParentId = tabIdsCrossRef[tab.openerTabId];
+          // Set the new id of the parent Tab to the child
           tabCreationProperties["openerTabId"] = tabParentId;
         }
       }
-      createdTabs[index] = await browser.tabs.create(tabCreationProperties);
 
+      // Save results
+      createdTabs[index] = await browser.tabs.create(tabCreationProperties);
       tabIdsCrossRef[tab.id] = createdTabs[index].id;
 
+      // Update current Index
       if (tab.pinned) {
         indexPinnedOffset++;
       }
       indexTabOffset++;
       index++;
-
     }
 
-    return (createdTabs);
+    return createdTabs;
 
   } catch (e) {
     let msg = "TabManager.openListOfTabs failed; " + e;
@@ -517,22 +537,33 @@ TabManager.selectTab = async function(tabIndex, groupId) {
  * Remove all the tabs in the windowId
  * Pinned are avoided except if there are synchronized or the option to force is set
  * @param {Number} groupId
- * @return {Promise} - the blank tab created
+ * @param {Boolean} if force to open a new tab for letting the window open
+ * @param {Boolean} if force to close the Pinned Tabs, else take in account the option: pinnedTab.sync
+ * @return {Promise} - The only tab saved (first one or blank), or nothing if pinned tabs are staying
  */
-TabManager.removeTabsInWindow = async function(windowId, remove_pinned = OptionManager.options.pinnedTab.sync) {
+TabManager.removeTabsInWindow = async function(windowId,
+  openBlankTab=false,
+  remove_pinned = OptionManager.options.pinnedTab.sync) {
   try {
-    let tabs = await TabManager.getTabsInWindowId(windowId, false);
+    let tabs = await TabManager.getTabsInWindowId(windowId, false, true);
 
-    // 1. Create blank tab: letting window open
-    let blank_tab = await TabManager.openListOfTabs([], windowId, true, true);
+    let survivorTab;
+
+    // 1. Save a tab for letting the window open and return this tab
+    if ( !OptionManager.options.pinnedTab.sync
+      && tabs[0].pinned ) {
+      // Kill all
+    } else {
+      if ( openBlankTab ) {
+         survivorTab = (await TabManager.openListOfTabs([], windowId, true, true))[0];
+      } else {
+        survivorTab = tabs.shift();
+      }
+    }
 
     // 2. Remove previous tabs in window
-    let tabsToRemove = [];
-    tabs.map((tab) => {
-      if (remove_pinned || !tab.pinned) {
-        tabsToRemove.push(tab.id);
-      }
-    });
+    let tabsToRemove = tabs.filter(tab => remove_pinned || !tab.pinned)
+                          .map(tab => tab.id);
     await browser.tabs.remove(tabsToRemove);
 
     if (Utils.isChrome()) { // Chrome Incompatibility: doesn't wait that tabs are unloaded
@@ -550,7 +581,7 @@ TabManager.removeTabsInWindow = async function(windowId, remove_pinned = OptionM
         }
       }
 
-    return blank_tab[0];
+    return survivorTab;
   } catch (e) {
     let msg = "TabManager.removeTabsInWindow failed; " + e;
     console.error(msg);

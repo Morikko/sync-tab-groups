@@ -49,7 +49,7 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
       newGroupId
     );
 
-    const blank_tab = await TabManager.removeTabsInWindow(windowId, false);
+    const blank_tab = await TabManager.removeTabsInWindow(windowId);
 
     await TabManager.openListOfTabs(
       GroupManager.groups[newGroupIndex].tabs, windowId, false, true);
@@ -131,7 +131,7 @@ WindowManager.closeGroup = async function(groupId, close_window = false) {
       await WindowManager.closeWindowFromGroupId(groupId);
     } else {
       await GroupManager.detachWindowFromGroupId(groupId);
-      await TabManager.removeTabsInWindow(windowId);
+      await TabManager.removeTabsInWindow(windowId, true);
     }
 
     return "WindowManager.closeGroup done!";
@@ -194,6 +194,8 @@ WindowManager.switchGroup = async function(newGroupId) {
   try {
     let currentWindow = await browser.windows.getCurrent();
     if (GroupManager.isWindowAlreadyRegistered(currentWindow.id)) { // From sync window
+
+      // TODO Just detach, closing are done in switch
       let currentGroupId = GroupManager.getGroupIdInWindow(
         currentWindow.id
       );
