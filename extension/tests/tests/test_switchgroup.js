@@ -51,7 +51,7 @@ TestManager.switchgroup_pinnedsync = function() {
 
   this.set = async function() {
     OptionManager.updateOption("pinnedTab-sync", true);
-    this.windowId = await WindowManager.OnlyOneNewWindow();
+    this.windowId = await Session.closeAllAndOpenOnlyOneNewWindow();
     GroupManager.removeUnopenGroups();
   }
 }

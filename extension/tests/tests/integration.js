@@ -112,6 +112,7 @@ describe("WindowManager: ", ()=>{
     })
 
   });
+
 })
 
 describe("Session: ", ()=>{
@@ -169,197 +170,199 @@ describe("Session: ", ()=>{
   });
 });
 
-describe("Select Tab: ", ()=>{
-
-  beforeAll(async function(){
-    // Create Group
-    this.length = 7;
-    [this.id, this.group] = Session.createGroup({
-        tabsLength: this.length,
-        global: true,
-        pinnedTabs: 0,
-        active: 5,
-        title: "Debug Select Tab"
-      });
-    this.lastIndex = this.length-1;
-    this.middleIndex = parseInt(this.length/2);
-    this.firstIndex = 0;
-    this.groupIndex = GroupManager.getGroupIndexFromGroupId(this.id);
-    // Open
-    this.windowId = await WindowManager.openGroupInNewWindow(this.id);
-  });
-
-  afterAll(async function() {
-    // Close Window
-    await WindowManager.closeWindowFromGroupId(this.id);
-    // Remove Group
-    GroupManager.removeGroupFromId(this.id)
-  });
-
-  describe("Group With No Pinned Tab", ()=>{
-
-    describe("and Included Pinned Tabs: ", ()=>{
-
-      beforeAll(function(){
-        // Set option: Pinned tab Included
-        OptionManager.updateOption("pinnedTab-sync", true);
-      });
-
-      it("Select last...", async function(){
-        await TabManager.selectTab(
-          this.lastIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
-      });
-
-      it("Select Middle...", async function(){
-        await TabManager.selectTab(
-          this.middleIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
-      });
-
-      it("Select first...", async function(){
-        await TabManager.selectTab(
-          this.firstIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
-      });
-    });
-
-    describe("and Excluded Pinned Tabs: ", ()=>{
-      beforeAll(function(){
-        // Set option: Pinned tab Excluded
-        OptionManager.updateOption("pinnedTab-sync", false);
-      });
-
-      it("Select last...", async function(){
-        await TabManager.selectTab(
-          this.lastIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
-      });
-
-      it("Select Middle...", async function(){
-        await TabManager.selectTab(
-          this.middleIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
-      });
-
-      it("Select first...", async function(){
-        await TabManager.selectTab(
-          this.firstIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
-      });
-    });
-
-  });
-
-  describe("Group With 2 Pinned Tabs", ()=>{
+describe("TabManager", ()=>{
+  describe("Select Tab: ", ()=>{
 
     beforeAll(async function(){
-      // Add 2 Pinned Tabs
-      await Session.addTabToGroup(
-        this.id,
-        Session.getRandomNormalTab({
-          pinned:true,
-        })
-      );
-      await Session.addTabToGroup(
-        this.id,
-        Session.getRandomNormalTab({
-          pinned:true,
-        })
-      );
-      await Utils.wait(400);
+      // Create Group
+      this.length = 7;
+      [this.id, this.group] = Session.createGroup({
+          tabsLength: this.length,
+          global: true,
+          pinnedTabs: 0,
+          active: 5,
+          title: "Debug Select Tab"
+        });
+      this.lastIndex = this.length-1;
+      this.middleIndex = parseInt(this.length/2);
+      this.firstIndex = 0;
+      this.groupIndex = GroupManager.getGroupIndexFromGroupId(this.id);
+      // Open
+      this.windowId = await WindowManager.openGroupInNewWindow(this.id);
     });
 
-    describe("Without Pinned Tabs (Excluded): ", ()=>{
-      beforeAll(function(){
-        // Set option: Pinned tab Excluded
-        OptionManager.updateOption("pinnedTab-sync", false);
-      });
-
-      it("Select last...", async function(){
-        await TabManager.selectTab(
-          this.lastIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
-      });
-
-      it("Select Middle...", async function(){
-        await TabManager.selectTab(
-          this.middleIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
-      });
-
-      it("Select first...", async function(){
-        await TabManager.selectTab(
-          this.firstIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
-      });
+    afterAll(async function() {
+      // Close Window
+      await WindowManager.closeWindowFromGroupId(this.id);
+      // Remove Group
+      GroupManager.removeGroupFromId(this.id)
     });
 
-    describe("With Pinned Tabs Included: ", function(){
+    describe("Group With No Pinned Tab", ()=>{
+
+      describe("and Included Pinned Tabs: ", ()=>{
+
+        beforeAll(function(){
+          // Set option: Pinned tab Included
+          OptionManager.updateOption("pinnedTab-sync", true);
+        });
+
+        it("Select last...", async function(){
+          await TabManager.selectTab(
+            this.lastIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+        });
+
+        it("Select Middle...", async function(){
+          await TabManager.selectTab(
+            this.middleIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+        });
+
+        it("Select first...", async function(){
+          await TabManager.selectTab(
+            this.firstIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
+        });
+      });
+
+      describe("and Excluded Pinned Tabs: ", ()=>{
+        beforeAll(function(){
+          // Set option: Pinned tab Excluded
+          OptionManager.updateOption("pinnedTab-sync", false);
+        });
+
+        it("Select last...", async function(){
+          await TabManager.selectTab(
+            this.lastIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+        });
+
+        it("Select Middle...", async function(){
+          await TabManager.selectTab(
+            this.middleIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+        });
+
+        it("Select first...", async function(){
+          await TabManager.selectTab(
+            this.firstIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
+        });
+      });
+
+    });
+
+    describe("Group With 2 Pinned Tabs", ()=>{
+
       beforeAll(async function(){
-        // Set option: Pinned tab Excluded
-        OptionManager.updateOption("pinnedTab-sync", true);
-        this.length = 9;
-        this.lastIndex = this.length-1;
-        this.middleIndex = parseInt(this.length/2);
-        this.firstIndex = 0;
+        // Add 2 Pinned Tabs
+        await Session.addTabToGroup(
+          this.id,
+          Session.getRandomNormalTab({
+            pinned:true,
+          })
+        );
+        await Session.addTabToGroup(
+          this.id,
+          Session.getRandomNormalTab({
+            pinned:true,
+          })
+        );
         await Utils.wait(400);
       });
 
-      it("Select last...", async function(){
-        await TabManager.selectTab(
-          this.lastIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+      describe("Without Pinned Tabs (Excluded): ", ()=>{
+        beforeAll(function(){
+          // Set option: Pinned tab Excluded
+          OptionManager.updateOption("pinnedTab-sync", false);
+        });
+
+        it("Select last...", async function(){
+          await TabManager.selectTab(
+            this.lastIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+        });
+
+        it("Select Middle...", async function(){
+          await TabManager.selectTab(
+            this.middleIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+        });
+
+        it("Select first...", async function(){
+          await TabManager.selectTab(
+            this.firstIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
+        });
       });
 
-      it("Select Middle...", async function(){
-        await TabManager.selectTab(
-          this.middleIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+      describe("With Pinned Tabs Included: ", function(){
+        beforeAll(async function(){
+          // Set option: Pinned tab Excluded
+          OptionManager.updateOption("pinnedTab-sync", true);
+          this.length = 9;
+          this.lastIndex = this.length-1;
+          this.middleIndex = parseInt(this.length/2);
+          this.firstIndex = 0;
+          await Utils.wait(400);
+        });
+
+        it("Select last...", async function(){
+          await TabManager.selectTab(
+            this.lastIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+        });
+
+        it("Select Middle...", async function(){
+          await TabManager.selectTab(
+            this.middleIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+        });
+
+        it("Select first...", async function(){
+          await TabManager.selectTab(
+            this.firstIndex,
+            this.id
+          );
+          await Utils.wait(400);
+          expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
+        });
       });
 
-      it("Select first...", async function(){
-        await TabManager.selectTab(
-          this.firstIndex,
-          this.id
-        );
-        await Utils.wait(400);
-        expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
-      });
     });
-
   });
 });

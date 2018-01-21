@@ -63,7 +63,7 @@ TestManager.movetabs = function() {
   this.set = async function() {
     // 2 groups: 1 open / 1 close
     // 2 windows: 1 sync/ 1 unsync
-    this.window_unsync = await WindowManager.OnlyOneNewWindow(false);
+    this.window_unsync = await Session.closeAllAndOpenOnlyOneNewWindow(false);
     GroupManager.removeUnopenGroups();
     GroupManager.addGroups(Examples.move_tab_group);
     GroupManager.addGroups(Examples.move_tab_group);

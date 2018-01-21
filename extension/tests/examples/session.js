@@ -25,20 +25,15 @@
 var Session = Session || {};
 
 /**
- * @return {Number} Group id
+ * @param {Object} params
+ * @return {Array[Tab]} tabs
  */
-Session.createGroup = function(
-  params
-) {
+Session.createTabs = function(params){
   Utils.mergeObject(params, {
     tabsLength: 0,
-    global: false,
     pinnedTabs: 0,
     privilegedLength: 0,
     extensionUrlLength: 0,
-    incognito: false,
-    active: -1,
-    title:"",
   });
 
   let tabs = [];
@@ -81,6 +76,29 @@ Session.createGroup = function(
   for (let i = 0; i < safePinnedTabs; i++) {
     tabs[i].pinned = true;
   }
+
+  return tabs;
+}
+
+/**
+ * @return {Array} [Group id, Group Object] if global true
+ * @return {Group} [Group Object] if global false
+ */
+Session.createGroup = function(
+  params
+) {
+  Utils.mergeObject(params, {
+    tabsLength: 0,
+    pinnedTabs: 0,
+    privilegedLength: 0,
+    extensionUrlLength: 0,
+    global: false,
+    incognito: false,
+    active: -1,
+    title:"",
+  });
+
+  let tabs = Session.createTabs(params);
 
   let group = new bg.GroupManager.Group(
     id = GroupManager.createUniqueGroupId(),

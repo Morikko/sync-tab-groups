@@ -1,5 +1,45 @@
 // Reminder
-//expect(groups).equalToGroups(good_groups);
+
+describe("Comparator: ", ()=>{
+  beforeEach(function() {
+    jasmine.addMatchers(tabGroupsMatchers);
+  });
+
+  it("toEqualTabs", ()=>{
+    let tabs = Session.createTabs({tabsLength: 7, pinnedTabs: 2});
+
+    expect(tabs).toEqualTabs(tabs);
+
+    let alter_tabs = Session.createTabs(
+      {tabsLength: 7, pinnedTabs: 2}
+    );
+
+    expect(tabs).not.toEqualTabs(alter_tabs);
+
+    expect(undefined).not.toEqualTabs(tabs);
+    expect(tabs).not.toEqualTabs(undefined);
+  })
+
+  it("toEqualGroups", ()=>{
+    let groups = Session.createGroup({tabsLength: 7, pinnedTabs: 2, incognito: false});
+    expect(groups).toEqualGroups(groups);
+
+    let groups_alter = Utils.getCopy(groups);
+    groups_alter.incognito = true;
+
+    let groups_alter_tabs = Utils.getCopy(groups);
+    groups_alter_tabs.tabs = Session.createTabs(
+      {tabsLength: 7, pinnedTabs: 2}
+    );
+
+    expect(groups).not.toEqualGroups(groups_alter);
+    expect(groups).not.toEqualGroups(groups_alter_tabs);
+
+    expect(undefined).not.toEqualGroups(groups);
+    expect(groups).not.toEqualGroups(undefined);
+  });
+
+});
 
 describe("Session: ", () => {
 
@@ -83,7 +123,7 @@ describe("Session: ", () => {
       let title = "coucou",
         length = 5;
       let [id, group] = Session.createGroup({tabsLength: length, title: title, global: true});
-      expect([group]).equalToGroups([GroupManager.groups[GroupManager.getGroupIndexFromGroupId(id)]]);
+      expect([group]).toEqualGroups([GroupManager.groups[GroupManager.getGroupIndexFromGroupId(id)]]);
 
       GroupManager.removeGroupFromId(id);
     });
@@ -114,7 +154,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).equalToGroups(good_groups);
+      expect(this.groups).toEqualGroups(good_groups);
     });
 
     it("1 active in group", function() {
@@ -123,7 +163,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).equalToGroups(good_groups);
+      expect(this.groups).toEqualGroups(good_groups);
     });
 
     it("3 active in group", function() {
@@ -137,7 +177,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).equalToGroups(good_groups);
+      expect(this.groups).toEqualGroups(good_groups);
     });
 
     it("Empty Group", function() {
@@ -150,7 +190,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).equalToGroups(good_groups);
+      expect(this.groups).toEqualGroups(good_groups);
     });
   });
 
