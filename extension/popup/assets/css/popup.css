@@ -94,7 +94,6 @@ body {
 /*** Main End bar ***/
 .group-list {
   height: 480px;
-  overflow-x: auto;
 }
 
 .addButton {

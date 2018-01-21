@@ -494,10 +494,7 @@ GroupManager.detachWindow = async function(windowId) {
     GroupManager.groups[groupIndex].windowId = browser.windows.WINDOW_ID_NONE;
 
     // Remove private group on close
-    if (GroupManager.groups[groupIndex].incognito
-      /* &&
-           OptionManager.options.privateWindow.removeOnClose*/
-    ) {
+    if (GroupManager.groups[groupIndex].incognito ) {
       await GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
     } else {
       WindowManager.desassociateGroupIdToWindow(windowId);

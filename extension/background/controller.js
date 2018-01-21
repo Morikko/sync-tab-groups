@@ -195,7 +195,7 @@ Controller.onTabClose = async function(params) {
 
 Controller.onTabOpen = async function(params) {
   try {
-    const currentWindow = await browser.windows.getCurrent();
+    const currentWindow = await browser.windows.getLastFocused();
     await TabManager.openListOfTabs(
       [params.tab],
       currentWindow.id,
