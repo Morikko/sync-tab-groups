@@ -124,6 +124,39 @@ TabManager.countPinnedTabs = function(tabs) {
 }
 
 /**
+ * Open A Tab
+ * @param {Tab} tab
+ * @param {Number} windowId
+ * @param {Number} index (tab)
+  */
+TabManager.openTab = async function(tab, windowId, index) {
+  let url = tab.url;
+
+  if (Utils.isPrivilegedURL(url)) {
+    url = Utils.getPrivilegedURL(tab.title, url, tab.favIconUrl)
+  }
+
+  if (OptionManager.options.groups.discardedOpen && !tab.active) {
+    url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
+  }
+
+  if (url === "about:privatebrowsing" || url === "about:newtab") {
+    url = undefined;
+  }
+
+  // Create a tab to tab.url or to newtab
+  let tabCreationProperties = {
+    url: url,
+    active: tab.active,
+    pinned: tab.pinned,
+    index: index,
+    windowId: windowId
+  };
+
+  return await browser.tabs.create(tabCreationProperties);
+}
+
+/**
  * Open all the tabs in tabsToOpen
  * By default:
     1. Pinned Tabs are always open in last pinned postion
@@ -132,9 +165,11 @@ TabManager.countPinnedTabs = function(tabs) {
  * @param {Number} windowId
  * @param {Boolean} inLastPos (optional) - if true the tabs are opened in last index
  * @param {Boolean} openAtLeastOne (optional) - if true and tabsToOpen is empty, open at least a new tab
+ * @param {Tab} pendingTab (optional) - A tab to close once the fist tab is open; At least one tab has to be open for closing it 
  * @return {Proise{Array[Tab]} - created tab
+ TODO: ParentId is not tested
  */
-TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = false, openAtLeastOne = false) {
+TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = false, openAtLeastOne = false, pendingTab=undefined) {
   try {
 
     // Look if has Tab in tabs
@@ -147,16 +182,12 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
       }
     }
 
-    const tabs = await TabManager.getTabsInWindowId(
-      windowId,
-      false, // Without fancy
-      true, // Force add pinned
-    );
+    const tabs = await TabManager.getTabsInWindowId(windowId, false, true);
 
     // Don't Reopen only a new tab
-    if ( tabsToOpen.length === 1 && tabsToOpen[0].url === "about:newtab" ) {
-      let notPinnedTabs = tabs.filter(tab=>!tab.pinnded);
-      if ( notPinnedTabs.length === 1 && notPinnedTabs[0].url === "about:newtab" ) {
+    if (tabsToOpen.length === 1 && tabsToOpen[0].url === "about:newtab") {
+      let notPinnedTabs = tabs.filter(tab => !tab.pinnded);
+      if (notPinnedTabs.length === 1 && notPinnedTabs[0].url === "about:newtab") {
         // open only a new tab that was already open
         return [];
       }
@@ -169,54 +200,41 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
     let indexTabOffset = 0,
       indexPinnedOffset = 0;
 
-
-
     indexPinnedOffset = TabManager.countPinnedTabs(tabs);
-    indexTabOffset = inLastPos?tabs.length:indexPinnedOffset;
+    indexTabOffset = (
+      inLastPos
+      ? tabs.length
+      : indexPinnedOffset);
 
     let index = 0;
 
+    // Extract active tab
+    let activeIndex = tabsToOpen.reduce((accu, tab, index)=>{
+      return tab.active ? index: accu;
+    }, 0);
+    let activeTab = tabsToOpen[activeIndex];
+
+    // Open active tab first
+    createdTabs[activeIndex] = await TabManager.openTab(activeTab, windowId, indexTabOffset);
+    tabIdsCrossRef[activeTab.id] = createdTabs[activeIndex].id;
+
     // Open the tabs
     for (let tab of tabsToOpen) {
-      let url = tab.url;
 
-      if (Utils.isPrivilegedURL(url)) {
-        url = Utils.getPrivilegedURL(tab.title, url, tab.favIconUrl)
+      // Open the tab
+      if (index !== activeIndex) {
+        let currentIndex = (tab.pinned)
+          ? indexPinnedOffset
+          : indexTabOffset;
+        // Save results
+        createdTabs[index] = await TabManager.openTab(tab, windowId, currentIndex);
+        tabIdsCrossRef[tab.id] = createdTabs[index].id;
       }
 
-      if (OptionManager.options.groups.discardedOpen && !tab.active) {
-        url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
+      if ( pendingTab ) {
+        browser.tabs.remove(pendingTab.id);
+        pendingTab = undefined;
       }
-
-      if ( url === "about:privatebrowsing" || url === "about:newtab" ) {
-        url = null;
-      }
-
-      let currentIndex = (tab.pinned) ? indexPinnedOffset:indexTabOffset;
-
-      // Create a tab to tab.url or to newtab
-      let tabCreationProperties = {
-        url: url,
-        active: tab.active,
-        pinned: tab.pinned,
-        index: currentIndex,
-        windowId: windowId
-      };
-
-      // Update parentId
-      if (tab.hasOwnProperty("openerTabId")) {
-        // Check tab is still present -> was not removed when group was closed
-        // Parent tab has to be opened before children else it will be lost
-        if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
-          let tabParentId = tabIdsCrossRef[tab.openerTabId];
-          // Set the new id of the parent Tab to the child
-          tabCreationProperties["openerTabId"] = tabParentId;
-        }
-      }
-
-      // Save results
-      createdTabs[index] = await browser.tabs.create(tabCreationProperties);
-      tabIdsCrossRef[tab.id] = createdTabs[index].id;
 
       // Update current Index
       if (tab.pinned) {
@@ -224,6 +242,22 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
       }
       indexTabOffset++;
       index++;
+    }
+
+    // Update parentId
+    for (let tab of tabsToOpen) {
+      if (tab.hasOwnProperty("openerTabId")) {
+        // Check tab is still present -> was not removed when group was closed
+        // Parent tab has to be opened before children else it will be lost
+        if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
+          let tabParentId = tabIdsCrossRef[tab.openerTabId];
+          // Set the new id of the parent Tab to the child
+          browser.tabs.update(tabIdsCrossRef[tab.id], {
+            openerTabId: tabIdsCrossRef[tab.openerTabId]
+          })
+          tabCreationProperties["openerTabId"] = tabParentId;
+        }
+      }
     }
 
     return createdTabs;
@@ -541,29 +575,25 @@ TabManager.selectTab = async function(tabIndex, groupId) {
  * @param {Boolean} if force to close the Pinned Tabs, else take in account the option: pinnedTab.sync
  * @return {Promise} - The only tab saved (first one or blank), or nothing if pinned tabs are staying
  */
-TabManager.removeTabsInWindow = async function(windowId,
-  openBlankTab=false,
-  remove_pinned = OptionManager.options.pinnedTab.sync) {
+TabManager.removeTabsInWindow = async function(windowId, openBlankTab = false, remove_pinned = OptionManager.options.pinnedTab.sync) {
   try {
     let tabs = await TabManager.getTabsInWindowId(windowId, false, true);
 
     let survivorTab;
 
     // 1. Save a tab for letting the window open and return this tab
-    if ( !OptionManager.options.pinnedTab.sync
-      && tabs[0].pinned ) {
+    if (!OptionManager.options.pinnedTab.sync && tabs[0].pinned) {
       // Kill all
     } else {
-      if ( openBlankTab ) {
-         survivorTab = (await TabManager.openListOfTabs([], windowId, true, true))[0];
+      if (openBlankTab) {
+        survivorTab = (await TabManager.openListOfTabs([], windowId, true, true))[0];
       } else {
         survivorTab = tabs.shift();
       }
     }
 
     // 2. Remove previous tabs in window
-    let tabsToRemove = tabs.filter(tab => remove_pinned || !tab.pinned)
-                          .map(tab => tab.id);
+    let tabsToRemove = tabs.filter(tab => remove_pinned || !tab.pinned).map(tab => tab.id);
     await browser.tabs.remove(tabsToRemove);
 
     if (Utils.isChrome()) { // Chrome Incompatibility: doesn't wait that tabs are unloaded

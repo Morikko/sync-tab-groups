@@ -64,9 +64,9 @@ describe("TabManager - Tab Creation ", ()=>{
         );
 
         let expectedTabs = tabs.concat(this.previousTabs);
-        expectedTabs.forEach((tab, index)=>{
-          tab.index = index;
-        })
+        TestManager.resetIndexProperties(expectedTabs);
+        TestManager.resetActiveProperties(expectedTabs);
+        TestManager.resetActiveProperties(resultingTabs);
 
         expect(resultingTabs).toEqualTabs(expectedTabs);
       });
@@ -282,6 +282,51 @@ describe("TabManager - Tab Creation ", ()=>{
       });
     });
   });
+
+  describe("Active support - ", ()=>{
+    it("Open list Tabs and keeping only one active", async function(){
+      // Close all except blank
+      let survivorTab = await TabManager.removeTabsInWindow(
+        this.windowId,
+        true, // Let Blank tab
+        true, // removed Pinned
+      );
+      OptionManager.updateOption("groups-discardedOpen", true);
+
+      let tabs = Session.createTabs({
+        tabsLength: 5,
+        pinnedTabs: 0,
+        privilegedLength: 0,
+        extensionUrlLength: 0,
+      });
+      tabs[2].active = true;
+
+      await TabManager.openListOfTabs(
+        tabs,
+        this.windowId,
+        false, // Last pos
+        false, //openAtLeastOne
+        survivorTab, // tab to kill
+      );
+
+      let resultingTabs = await TabManager.getTabsInWindowId(
+        this.windowId,
+        true,
+        true,
+      );
+
+      let resultingTabsWithFancy = await TabManager.getTabsInWindowId(
+        this.windowId,
+        false,
+        true,
+      );
+
+      let nbrNotDiscarded = resultingTabsWithFancy.filter(tab => tab.url.includes("lazytab/lazytab.html")).length;
+
+      expect(resultingTabs).toEqualTabs(tabs);
+      expect(nbrNotDiscarded).toEqual(4);
+    });
+  })
 });
 
 describe("WindowManager - Window Creation: ", ()=>{
