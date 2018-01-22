@@ -10,7 +10,7 @@
 
  Low-level
   - openGroupInWindow
-  - switchGroup TODO Merge with WindowManager.openGroupInWindow
+  - switchGroup
   - closeWindowFromGroupId
 
  Integration
@@ -22,6 +22,7 @@
  - integrateWindow
 
  - isWindowIdOpen
+ - setWindowPrefixGroupTitle
 
  Decorator
  - decoratorCurrentlyChanging
