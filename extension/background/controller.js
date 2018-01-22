@@ -422,9 +422,7 @@ Controller.initWindowsEventListener = function() {
     Controller.refreshUi();
 
     try {
-      const w = await browser.windows.getLastFocused({
-        windowTypes: ['normal'],
-      });
+      const w = await browser.windows.getLastFocused();
       ContextMenu.MoveTabMenuIds.map((id) => {
         let order = id.substring(ContextMenu.MoveTabMenu_ID.length, id.length);
         let groupId = parseInt(order);

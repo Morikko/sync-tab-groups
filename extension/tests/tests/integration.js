@@ -644,15 +644,144 @@ describe("Select Groups - ", ()=>{
 });
 
 describe("End of Groups - ", ()=>{
+  beforeAll(async function(){
+    OptionManager.updateOption("groups-syncNewWindow", false);
+    OptionManager.updateOption("pinnedTab-sync", true);
+    jasmine.addMatchers(tabGroupsMatchers);
+    this.length = 3;
+    this.groups = [];
+    for( let i=0; i<2; i++) {
+      let id, group;
+      [id, group] = Session.createGroup({
+          tabsLength: this.length,
+          global: true,
+          pinnedTabs: i,
+          active: 5,
+          title: "Debug Select Groups " + i
+        });
+      this.groupIndex =
+      this.groups.push({
+        id: id,
+        group: group,
+        groupIndex: GroupManager.getGroupIndexFromGroupId(id)
+      });
+    }
+
+    this.windowId = await WindowManager.openGroupInNewWindow(this.groups[0].id);
+    await TestManager.splitOnHalfScreen(this.windowId);
+  }, 10000);
+
+  afterAll(async function(){
+    // Close Window
+    if ( this.windowId )
+      await browser.windows.remove(this.windowId);
+    // Remove Group
+    for (let group of this.groups ) {
+      if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false) >= 0 )
+        GroupManager.removeGroupFromId(group.id);
+    }
+  });
+
   describe("Closing - ", ()=>{
-    // Focus Window
-    // Not
-    // With Pinned Tabs not to close ...
+
+    it("Current Window", async function(){
+      let previousLength = GroupManager.groups.length;
+      await WindowManager.closeGroup(this.groups[0].id);
+
+      let tabs = await TabManager.getTabsInWindowId(this.windowId);
+
+      let blank = [Session.createTab(Session.ListOfTabURLs[0])];
+
+      TestManager.resetActiveProperties(tabs);
+      TestManager.resetIndexProperties(blank);
+
+      expect(tabs).toEqualTabs(blank);
+      expect(previousLength).toEqual(GroupManager.groups.length);
+      expect(GroupManager.groups[this.groups[0].groupIndex].windowId).toEqual(browser.windows.WINDOW_ID_NONE);
+    });
+
+    it("Another Window", async function(){
+      let windowId = await WindowManager.openGroupInNewWindow(this.groups[0].id);
+      await TestManager.splitOnHalfScreen(windowId);
+
+      await browser.windows.update(this.windowId, {
+        focused: true,
+      });
+
+      let previousLength = GroupManager.groups.length;
+      let windowsNumber = (await browser.windows.getAll()).length;
+
+      await WindowManager.closeGroup(this.groups[0].id);
+
+      expect(previousLength).toEqual(GroupManager.groups.length);
+      expect(windowsNumber).toEqual((await browser.windows.getAll()).length+1);
+      expect(GroupManager.groups[this.groups[0].groupIndex].windowId).toEqual(browser.windows.WINDOW_ID_NONE);
+    }, 10000);
+
+    // With Pinned Tabs not to close ..
+    it("With Pinned Tabs To Keep", async function(){
+      let previousLength = GroupManager.groups.length;
+
+      OptionManager.updateOption("pinnedTab-sync", false);
+
+      let pinnedTab = [GroupManager.groups[this.groups[1].groupIndex].tabs[0]];
+
+      await WindowManager.switchGroup(this.groups[1].id);
+      await WindowManager.closeGroup(this.groups[1].id);
+
+      let tabs = await TabManager.getTabsInWindowId(this.windowId, true, true);
+
+      TestManager.resetActiveProperties(tabs);
+      TestManager.resetActiveProperties(pinnedTab);
+
+      OptionManager.updateOption("pinnedTab-sync", true);
+
+      expect(tabs).toEqualTabs(pinnedTab);
+      expect(previousLength).toEqual(GroupManager.groups.length);
+      expect(GroupManager.groups[this.groups[1].groupIndex].windowId).toEqual(browser.windows.WINDOW_ID_NONE);
+    });
   });
 
   describe("Removing - ", ()=>{
-    // Focus Window
-    // Not
+    it("Current Window", async function(){
+      let previousLength = GroupManager.groups.length;
+
+      await browser.windows.update(this.windowId, {
+        focused: true,
+      });
+
+      await WindowManager.switchGroup(this.groups[0].id);
+      await WindowManager.removeGroup(this.groups[0].id);
+
+      let tabs = await TabManager.getTabsInWindowId(this.windowId);
+
+      let blank = [Session.createTab(Session.ListOfTabURLs[0])];
+
+      TestManager.resetActiveProperties(tabs);
+      TestManager.resetIndexProperties(blank);
+
+      expect(tabs).toEqualTabs(blank);
+      expect(previousLength).toEqual(GroupManager.groups.length+1);
+      expect(GroupManager.getGroupIndexFromGroupId(this.groups[0].id, false)).toEqual(-1);
+    }, 10000);
+
+    it("Another Window", async function(){
+      let windowId = await WindowManager.openGroupInNewWindow(this.groups[1].id);
+      await TestManager.splitOnHalfScreen(windowId);
+
+      await browser.windows.update(this.windowId, {
+        focused: true,
+      });
+
+      let previousLength = GroupManager.groups.length;
+      let windowsNumber = (await browser.windows.getAll()).length;
+
+      await WindowManager.removeGroup(this.groups[1].id);
+
+      expect(previousLength).toEqual(GroupManager.groups.length+1);
+      expect(windowsNumber).toEqual((await browser.windows.getAll()).length+1);
+      expect(GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false)).toEqual(-1);
+    }, 10000);
   });
 });
 

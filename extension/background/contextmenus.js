@@ -6,16 +6,17 @@ ContextMenu.SpecialActionMenu_ID = "stg-special-actions-";
 ContextMenu.MoveTabMenuIds = [];
 ContextMenu.SpecialActionMenuIds = [];
 
-ContextMenu.repeatedtask = new TaskManager.RepeatedTask(800);
+ContextMenu.repeatedtask = new TaskManager.RepeatedTask(1000);
 
 ContextMenu.createMoveTabMenu = async function() {
   try {
-    if (browser.sessions.getWindowValue === undefined) { // Incompatible Chrome: "tab" in context menus
+    if ( Utils.isChrome() ) { // Incompatible Chrome: "tab" in context menus
       return "";
     }
     for (let id of ContextMenu.MoveTabMenuIds) {
       await browser.contextMenus.remove(id);
     }
+    await Utils.wait(500)
     ContextMenu.MoveTabMenuIds = [];
 
     let contexts = ["tab"];
@@ -32,6 +33,7 @@ ContextMenu.createMoveTabMenu = async function() {
       },
     });
 
+    /*
     ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-1");
     await browser.contextMenus.create({
       id: ContextMenu.MoveTabMenu_ID + "separator-1",
@@ -39,6 +41,7 @@ ContextMenu.createMoveTabMenu = async function() {
       contexts: contexts,
       parentId: parentId
     });
+    */
 
     let currentWindow = await browser.windows.getLastFocused({
       windowTypes: ['normal']

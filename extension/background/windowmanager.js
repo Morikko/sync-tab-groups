@@ -49,7 +49,7 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
       newGroupId
     );
 
-    const blank_tab = await TabManager.removeTabsInWindow(windowId);
+    let blank_tab = await TabManager.removeTabsInWindow(windowId);
 
     await TabManager.openListOfTabs(
       GroupManager.groups[newGroupIndex].tabs, windowId, false, true, blank_tab);
@@ -133,19 +133,18 @@ WindowManager.closeGroup = async function(groupId, close_window = false) {
     if (close_window) {
       // Move pinned from windowId to currentWindow.id
       if (!OptionManager.options.pinnedTab.sync) {
-        let pinnedTabsIds = [];
         const tabs = await browser.tabs.query({
           windowId: windowId,
           pinned: true
         });
-        tabs.forEach((tab) => {
-          pinnedTabsIds.push(tab.id);
-        });
-        // Start at 0, don't take risk
-        await browser.tabs.move(pinnedTabsIds, {
-          windowId: currentWindow.id,
-          index: 0
-        });
+        let pinnedTabsIds = tabs.map(tab => tab.id);
+        if ( pinnedTabsIds.length ) {
+          // Start at 0, don't take risk
+          await browser.tabs.move(pinnedTabsIds, {
+            windowId: currentWindow.id,
+            index: 0
+          });
+        }
       }
       await WindowManager.closeWindowFromGroupId(groupId);
     } else {
@@ -346,7 +345,7 @@ WindowManager.removeGroup = async function(groupId = -1) {
     if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
       await WindowManager.closeGroup(groupId);
     }
-    GroupManager.removeGroupFromId(groupId);
+    await GroupManager.removeGroupFromId(groupId);
     return "WindowManager.removeGroup done on groupId " + groupId;
 
   } catch (e) {

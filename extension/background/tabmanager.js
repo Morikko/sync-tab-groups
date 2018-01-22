@@ -153,7 +153,7 @@ TabManager.openTab = async function(tab, windowId, index) {
     windowId: windowId
   };
 
-  return await browser.tabs.create(tabCreationProperties);
+  return browser.tabs.create(tabCreationProperties);
 }
 
 /**
@@ -165,7 +165,7 @@ TabManager.openTab = async function(tab, windowId, index) {
  * @param {Number} windowId
  * @param {Boolean} inLastPos (optional) - if true the tabs are opened in last index
  * @param {Boolean} openAtLeastOne (optional) - if true and tabsToOpen is empty, open at least a new tab
- * @param {Tab} pendingTab (optional) - A tab to close once the fist tab is open; At least one tab has to be open for closing it 
+ * @param {Tab} pendingTab (optional) - A tab to close once the fist tab is open; At least one tab has to be open for closing it
  * @return {Proise{Array[Tab]} - created tab
  TODO: ParentId is not tested
  */
@@ -211,12 +211,14 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
     // Extract active tab
     let activeIndex = tabsToOpen.reduce((accu, tab, index)=>{
       return tab.active ? index: accu;
-    }, 0);
-    let activeTab = tabsToOpen[activeIndex];
+    }, -1);
 
-    // Open active tab first
-    createdTabs[activeIndex] = await TabManager.openTab(activeTab, windowId, indexTabOffset);
-    tabIdsCrossRef[activeTab.id] = createdTabs[activeIndex].id;
+    if ( activeIndex >= 0 ) {
+      let activeTab = tabsToOpen[activeIndex];
+      // Open active tab first
+      createdTabs[activeIndex] = await TabManager.openTab(activeTab, windowId, indexTabOffset);
+      tabIdsCrossRef[activeTab.id] = createdTabs[activeIndex].id;
+    }
 
     // Open the tabs
     for (let tab of tabsToOpen) {
@@ -232,7 +234,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
       }
 
       if ( pendingTab ) {
-        browser.tabs.remove(pendingTab.id);
+        await browser.tabs.remove(pendingTab.id);
         pendingTab = undefined;
       }
 
