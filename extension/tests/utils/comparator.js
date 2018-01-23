@@ -61,12 +61,30 @@ TestManager.compareTabs = function(tabs, tabs_ref, full = false) {
 }
 
 TestManager.compareGroup = function(groups, groups_ref) {
-  return TestManager.compareGroups([groups], [groups_ref]);
+
+  let title = "Group comparator";
+
+  if (groups.title !== groups_ref.title)
+    return [false, TestManager.compileErrorMsg(title, "Title", groups.title, groups_ref.title)];
+  if (groups.id !== groups_ref.id)
+    return [false, TestManager.compileErrorMsg(title, "Id", groups.id, groups_ref.id)];
+  if (groups.windowId !== groups_ref.windowId)
+    return [false, TestManager.compileErrorMsg(title, "Window Id", groups.windowId, groups_ref.windowId)];
+  if (groups.incognito !== groups_ref.incognito)
+    return [false, TestManager.compileErrorMsg(title, "Incognito", groups.incognito, groups_ref.incognito)];
+  if (groups.index !== groups_ref.index)
+    return [false, TestManager.compileErrorMsg(title, "Index", groups.index, groups_ref.index)];
+  if (groups.position !== groups_ref.position)
+    return [false, TestManager.compileErrorMsg(title, "Position", groups.position, groups_ref.position)];
+  let tab_result;
+  if (!(tab_result = TestManager.compareTabs(groups.tabs, groups_ref.tabs, false))[0]) {
+    tab_result[1] += "Groups comparator: " + tab_result[1];
+    return tab_result;
+  }
+  return [true, "Group is similar."];
 }
 
 TestManager.compareGroups = function(groups, groups_ref) {
-  /*console.log(groups);
-  console.log(groups_ref);*/
   let title = "Groups comparator";
 
   if (groups.length !== groups_ref.length)
@@ -75,31 +93,20 @@ TestManager.compareGroups = function(groups, groups_ref) {
       TestManager.compileErrorMsg(title, "Length", groups.length, groups_ref.length)
     ];
 
+  let group_result;
   for (let i = 0; i < groups.length; i++) {
-    if (groups[i].title !== groups_ref[i].title)
-      return [false, TestManager.compileErrorMsg(title, "Title", groups[i].title, groups_ref[i].title)];
-    if (groups[i].id !== groups_ref[i].id)
-      return [false, TestManager.compileErrorMsg(title, "Id", groups[i].id, groups_ref[i].id)];
-    if (groups[i].windowId !== groups_ref[i].windowId)
-      return [false, TestManager.compileErrorMsg(title, "Window Id", groups[i].windowId, groups_ref[i].windowId)];
-    if (groups[i].incognito !== groups_ref[i].incognito)
-      return [false, TestManager.compileErrorMsg(title, "Incognito", groups[i].incognito, groups_ref[i].incognito)];
-    if (groups[i].index !== groups_ref[i].index)
-      return [false, TestManager.compileErrorMsg(title, "Index", groups[i].index, groups_ref[i].index)];
-    if (groups[i].position !== groups_ref[i].position)
-      return [false, TestManager.compileErrorMsg(title, "Position", groups[i].position, groups_ref[i].position)];
-    let tab_result;
-    if (!(tab_result = TestManager.compareTabs(groups[i].tabs, groups_ref[i].tabs, false))[0]) {
-      tab_result[1] += "Groups comparator: " + tab_result[1];
-      return tab_result;
+    if (!(group_result = TestManager.compareGroup(groups[i], groups_ref[i]))[0]) {
+      group_result[1] += "Groups comparator @ " + i + ": " + tab_result[1];
+      return group_result;
     }
   }
+
   return [true, "Groups are similar."];
 }
 
 var tabGroupsMatchers = {
   /**
-   * Compare only:
+   * Compare Many Groups:
       * Groups: title, id, windowId, incognito
       * Tabs: length, url, active, pinned, discarded
    * For a complete comparaison: use toEqual
@@ -112,6 +119,28 @@ var tabGroupsMatchers = {
         if (expected === undefined || actual === undefined) {
           result.pass = false;
           result.message = "Wrong use of toEqualGroups on an undefined expected.";
+        } else {
+          [result.pass, result.message] = TestManager.compareGroups(actual, expected);
+        }
+        return result;
+      }
+    }
+  },
+
+  /**
+   * Compare only:
+      * Groups: title, id, windowId, incognito
+      * Tabs: length, url, active, pinned, discarded
+   * For a complete comparaison: use toEqual
+   */
+  toEqualGroup: function(util, customEqualityTesters) {
+    return {
+      compare: function(actual, expected) {
+        let result = {};
+
+        if (expected === undefined || actual === undefined) {
+          result.pass = false;
+          result.message = "Wrong use of toEqualGroup on an undefined expected.";
         } else {
           [result.pass, result.message] = TestManager.compareGroup(actual, expected);
           /*

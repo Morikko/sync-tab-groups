@@ -39,6 +39,8 @@ var Utils = Utils || {};
 // If change the line, update makefile
 Utils.DEGUG_MODE = true;
 Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
+Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
+Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";
 
 var TaskManager = TaskManager || {};
 TaskManager.ASK = "ASK";
@@ -305,30 +307,37 @@ Utils.isBeforeFF57 = function() {
  */
 Utils.extractTabUrl = function(url) {
   let new_url = url;
-  if (new_url.includes("lazytab/lazytab.html")) {
+  if (new_url.includes(Utils.LAZY_PAGE_URL)) {
     new_url = Utils.getParameterByName('url', new_url)
   }
-  if (new_url.includes("/privileged-tab/privileged-tab.html")) {
+  if (new_url.includes(Utils.PRIV_PAGE_URL)) {
+    new_url = Utils.getParameterByName('url', new_url)
+  }
+  return new_url;
+}
+Utils.extractLazyUrl = function(url) {
+  let new_url = url;
+  if (new_url.includes(Utils.LAZY_PAGE_URL)) {
     new_url = Utils.getParameterByName('url', new_url)
   }
   return new_url;
 }
 
 Utils.getPrivilegedURL = function(title, url, favIconUrl) {
-  return browser.extension.getURL("/tabpages/privileged-tab/privileged-tab.html") + "?" +
-    "title=" + encodeURIComponent(title) +
+  return browser.extension.getURL(Utils.PRIV_PAGE_URL) + "?" +
+    "title=" + encodeURIComponent(title|| "") +
     "&url=" + encodeURIComponent(url) +
-    "&favIconUrl=" + encodeURIComponent(favIconUrl);
+    "&favIconUrl=" + encodeURIComponent(favIconUrl|| "");
 }
 
 Utils.getDiscardedURL = function(title, url, favIconUrl) {
   if (url === "about:newtab" || url === "about:blank" || url.includes("chrome://newtab")) {
     return url;
   } else {
-    return browser.extension.getURL("/tabpages/lazytab/lazytab.html") + "?" +
-      "title=" + encodeURIComponent(title) +
+    return browser.extension.getURL(Utils.LAZY_PAGE_URL) + "?" +
+      "title=" + encodeURIComponent(title|| "") +
       "&url=" + encodeURIComponent(url) +
-      "&favIconUrl=" + encodeURIComponent(favIconUrl);
+      "&favIconUrl=" + encodeURIComponent(favIconUrl|| "");
   }
 }
 

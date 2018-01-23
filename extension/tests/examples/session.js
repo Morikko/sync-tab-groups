@@ -32,7 +32,9 @@ Session.createTabs = function(params){
   Utils.mergeObject(params, {
     tabsLength: 0,
     pinnedTabs: 0,
+    lazyMode: false, // Note: Real Groups never have this types (urls are filtered)
     privilegedLength: 0,
+    openPrivileged: false, // Note: Real Groups never have this types (urls are filtered)
     extensionUrlLength: 0,
   });
 
@@ -48,6 +50,9 @@ Session.createTabs = function(params){
   }
   for (let i = 0; i < params.privilegedLength && index<params.tabsLength; i++) {
     let tab = Session.getRandomTab(Session.ListOfPrivTabURLs)
+    if ( params.openPrivileged ) {
+      tab.url = Utils.getPrivilegedURL(tab.title, tab.url, tab.favIconUrl);
+    }
     index++;
     tabs.push(
       tab
@@ -67,7 +72,13 @@ Session.createTabs = function(params){
   // Set indexes
   tabs = tabs.map((tab, index)=>{
     tab.index = index;
-    if (index===params.active) tab.active = true;
+    if (index===params.active) {
+      tab.active = true;
+    } else {
+      if ( params.lazyMode ) {
+        tab.url = Utils.getDiscardedURL(tab.title, tab.url, tab.favIconUrl);
+      }
+    }
     return tab;
   });
 
@@ -90,7 +101,9 @@ Session.createGroup = function(
   Utils.mergeObject(params, {
     tabsLength: 0,
     pinnedTabs: 0,
+    lazyMode: false,
     privilegedLength: 0,
+    openPrivileged: false,
     extensionUrlLength: 0,
     global: false,
     incognito: false,
@@ -261,14 +274,15 @@ Session.ListOfTabURLs = [{
 Session.ListOfPrivTabURLs = [{
   "title": "Debugging",
   "url": "about:debugging",
-  "favIconUrl": "chrome://branding/content/icon32.png"
+  "favIconUrl": ""
 }];
 
 Session.ListOfExtensionTabURLs = [{
-  "title": "Debugging",
-  "url": "moz-extension://68ddee50-febc-45b5-bd3d-f7c6264e02a5/tabpages/privileged-tab/privileged-tab.html?title=Debugging%20with%20Firefox%20Developer%20Tools&url=about%3Adebugging&favIconUrl=undefineds",
-  "favIconUrl": "chrome://branding/content/icon32.png"
+  "title": "Preferences",
+  "url": browser.extension.getURL("/optionpages/option-page.html"),
+  "favIconUrl": "/share/icons/tabspace-active-64.png"
 }];
+
 
 
 /**

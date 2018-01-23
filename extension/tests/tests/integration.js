@@ -322,7 +322,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
         true,
       );
 
-      let nbrNotDiscarded = resultingTabsWithFancy.filter(tab => tab.url.includes("lazytab/lazytab.html")).length;
+      let nbrNotDiscarded = resultingTabsWithFancy.filter(tab => tab.url.includes(Utils.LAZY_PAGE_URL)).length;
 
       expect(resultingTabs).toEqualTabs(tabs);
       expect(nbrNotDiscarded).toEqual(4);

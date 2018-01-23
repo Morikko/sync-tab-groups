@@ -20,9 +20,9 @@ describe("Comparator: ", ()=>{
     expect(tabs).not.toEqualTabs(undefined);
   })
 
-  it("toEqualGroups", ()=>{
+  it("toEqualGroup", ()=>{
     let groups = Session.createGroup({tabsLength: 7, pinnedTabs: 2, incognito: false});
-    expect(groups).toEqualGroups(groups);
+    expect(groups).toEqualGroup(groups);
 
     let groups_alter = Utils.getCopy(groups);
     groups_alter.incognito = true;
@@ -32,11 +32,15 @@ describe("Comparator: ", ()=>{
       {tabsLength: 7, pinnedTabs: 2}
     );
 
-    expect(groups).not.toEqualGroups(groups_alter);
-    expect(groups).not.toEqualGroups(groups_alter_tabs);
+    expect(groups).not.toEqualGroup(groups_alter);
+    expect(groups).not.toEqualGroup(groups_alter_tabs);
 
-    expect(undefined).not.toEqualGroups(groups);
-    expect(groups).not.toEqualGroups(undefined);
+    expect(undefined).not.toEqualGroup(groups);
+    expect(groups).not.toEqualGroup(undefined);
+  });
+
+  it("toEqualGroups", ()=>{
+    // TODO
   });
 
 });
@@ -44,7 +48,7 @@ describe("Comparator: ", ()=>{
 describe("Session: ", () => {
 
   describe("createGroup", () => {
-    beforeEach(function() {
+    beforeAll(function() {
       jasmine.addMatchers(tabGroupsMatchers);
     });
 
@@ -78,12 +82,16 @@ describe("Session: ", () => {
         privLength = 2,
         extLength = 2;
       let group = Session.createGroup({tabsLength: length, privilegedLength: privLength, extensionUrlLength: extLength});
-      let actualPrivLength = group.tabs.reduce((a, b) => {
-        return a + (Session.ListOfPrivTabURLs.filter((tab) => b.url === tab.url).length);
-      }, 0);
-      let actualExtLength = group.tabs.reduce((a, b) => {
-        return a + (Session.ListOfExtensionTabURLs.filter((tab) => b.url === tab.url).length);
-      }, 0);
+      let actualPrivLength = group.tabs.filter((tab)=>{
+        return Session.ListOfPrivTabURLs.filter((list)=>{
+          return tab.url.includes(list.url);
+        }).length;
+      }).length;
+      let actualExtLength = group.tabs.filter((tab)=>{
+        return Session.ListOfExtensionTabURLs.filter((list)=>{
+          return tab.url.includes(list.url);
+        }).length;
+      }).length;
 
       expect(group.tabs.length).toEqual(length);
       expect(actualPrivLength).toEqual(privLength);
@@ -107,23 +115,71 @@ describe("Session: ", () => {
         privLength = 2,
         extLength = 2;
       let group = Session.createGroup({tabsLength: length, privilegedLength: privLength, extensionUrlLength: extLength});
-      let actualPrivLength = group.tabs.reduce((a, b) => {
-        return a + (b.url.startsWith("about:"));
-      }, 0);
-      let actualExtLength = group.tabs.reduce((a, b) => {
-        return a + (b.url.startsWith("moz-extension://"));
-      }, 0);
+      let actualPrivLength = group.tabs.filter((tab)=>{
+        return Session.ListOfPrivTabURLs.filter((list)=>{
+          return tab.url.includes(list.url);
+        }).length;
+      }).length;
+      let actualExtLength = group.tabs.filter((tab)=>{
+        return Session.ListOfExtensionTabURLs.filter((list)=>{
+          return tab.url.includes(list.url);
+        }).length;
+      }).length;
 
       expect(group.tabs.length).toEqual(length);
       expect(actualPrivLength).toEqual(privLength);
       expect(actualExtLength).toEqual(length - privLength);
     });
 
+    it("Lazy and Open Privileged urls", ()=>{
+      let length = 5,
+        privLength = 2,
+        extLength = 2;
+      let group = Session.createGroup({
+        tabsLength: length,
+        privilegedLength: privLength,
+        extensionUrlLength: extLength,
+        active: 3,
+        lazyMode: true,
+        openPrivileged: true,
+      });
+      let actualPrivLength = group.tabs.filter((tab)=>{
+        return Session.ListOfPrivTabURLs.filter((list)=>{
+          return Utils.extractTabUrl(tab.url).includes(list.url);
+        }).length;
+      }).length;
+
+      let actualExtLength = group.tabs.filter((tab)=>{
+        return Session.ListOfExtensionTabURLs.filter((list)=>{
+          return  Utils.extractTabUrl(tab.url).includes(list.url);
+        }).length;
+      }).length;
+
+      let openPrivLength = group.tabs.filter((tab)=>{
+        return Utils.extractLazyUrl(tab.url).includes(Utils.PRIV_PAGE_URL);
+      }).length;
+
+      let lazyLength = group.tabs.filter((tab)=>{
+        return tab.url.includes(Utils.LAZY_PAGE_URL);
+      }).length;
+
+      expect(group.tabs.length).toEqual(length);
+      expect(actualPrivLength).toEqual(privLength);
+      expect(actualExtLength).toEqual(extLength);
+      expect(openPrivLength).toEqual(privLength);
+      expect(lazyLength).toEqual(length-1);
+    });
+
     it("Group global", () => {
       let title = "coucou",
         length = 5;
       let [id, group] = Session.createGroup({tabsLength: length, title: title, global: true});
-      expect([group]).toEqualGroups([GroupManager.groups[GroupManager.getGroupIndexFromGroupId(id)]]);
+
+      let groupIndex = GroupManager.getGroupIndexFromGroupId(id);
+
+      TestManager.resetActiveProperties(GroupManager.groups[groupIndex].tabs);
+
+      expect(group).toEqualGroups(GroupManager.groups[groupIndex]);
 
       GroupManager.removeGroupFromId(id);
     });
@@ -154,7 +210,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).toEqualGroups(good_groups);
+      expect(this.groups).toEqualGroup(good_groups);
     });
 
     it("1 active in group", function() {
@@ -163,7 +219,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).toEqualGroups(good_groups);
+      expect(this.groups).toEqualGroup(good_groups);
     });
 
     it("3 active in group", function() {
@@ -177,7 +233,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).toEqualGroups(good_groups);
+      expect(this.groups).toEqualGroup(good_groups);
     });
 
     it("Empty Group", function() {

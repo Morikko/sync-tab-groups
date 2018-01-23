@@ -584,7 +584,6 @@ WindowManager.integrateWindow = async function(windowId,
     }
 
     // Private Window sync
-    // TODO: only with no associated window, if user forced, should be set again
     if (!OptionManager.options.privateWindow.sync &&
       window.incognito && !even_new_one) {
         // WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized
