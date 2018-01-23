@@ -408,6 +408,135 @@ describe("Switch Group - ", ()=>{
 
 describe("WindowManager: ", ()=>{
 
+  describe("Integration", ()=>{
+
+    describe(" Normal Window: ", ()=>{
+      beforeAll(async function(){
+        jasmine.addMatchers(tabGroupsMatchers);
+        OptionManager.updateOption("groups-syncNewWindow", false);
+        [this.id, this.group] = Session.createGroup({
+            tabsLength: 5,
+            global: true,
+            pinnedTabs: 0,
+            active: -1,
+            title: "Debug Integration"
+          });
+          this.groupIndex = GroupManager.getGroupIndexFromGroupId(this.id);
+
+         this.windowId = await WindowManager.openGroupInNewWindow(this.id);
+         await TestManager.splitOnHalfScreen(this.windowId);
+
+         await Utils.wait(500);
+      }, 10000);
+
+      afterAll(async function(){
+        if ( this.windowId )
+          await browser.windows.remove(this.windowId);
+        if ( this.id )
+          GroupManager.removeGroupFromId(this.id);
+      });
+
+      it("Desassociate Windows", async function(){
+        let previousLength = GroupManager.groups.length;
+
+        GroupManager.removeGroupFromId(this.id);
+
+        let tabs = await TabManager.getTabsInWindowId(this.windowId);
+
+        TestManager.resetActiveProperties(tabs);
+        TestManager.resetActiveProperties(this.group.tabs);
+
+        expect(previousLength).toEqual(GroupManager.groups.length+1);
+        expect(GroupManager.getGroupIndexFromGroupId(this.id, false)).toEqual(-1);
+        expect(tabs).toEqualTabs(this.group.tabs);
+
+        this.id = undefined;
+      });
+
+      it("Associate Windows", async function(){
+        let previousLength = GroupManager.groups.length;
+
+        let id = await WindowManager.integrateWindow(this.windowId, true);
+        expect(id).toBeGreaterThan(-1);
+
+        let groupIndex = GroupManager.getGroupIndexFromGroupId(id, false);
+        expect(groupIndex).not.toEqual(-1);
+
+        let tabs = Utils.getCopy(GroupManager.groups[groupIndex].tabs);
+
+        TestManager.resetActiveProperties(tabs);
+
+        expect(previousLength).toEqual(GroupManager.groups.length-1);
+        expect(tabs).toEqualTabs(this.group.tabs);
+
+        GroupManager.removeGroupFromId(id);
+      });
+    });
+
+    describe(" Private Window: ", ()=>{
+      beforeAll(async function(){
+        jasmine.addMatchers(tabGroupsMatchers);
+        OptionManager.updateOption("privateWindow-sync", false);
+        [this.id, this.group] = Session.createGroup({
+            tabsLength: 5,
+            global: true,
+            pinnedTabs: 0,
+            active: -1,
+            incognito: true,
+            title: "Debug Integration"
+          });
+          this.groupIndex = GroupManager.getGroupIndexFromGroupId(this.id);
+
+         this.windowId = await WindowManager.openGroupInNewWindow(this.id);
+         await TestManager.splitOnHalfScreen(this.windowId);
+
+         await Utils.wait(500);
+      }, 10000);
+
+      afterAll(async function(){
+        if ( this.windowId )
+          await browser.windows.remove(this.windowId);
+      });
+
+      it("Desassociate Windows", async function(){
+        let previousLength = GroupManager.groups.length;
+
+        GroupManager.removeGroupFromId(this.id);
+
+        let tabs = await TabManager.getTabsInWindowId(this.windowId);
+
+        TestManager.resetActiveProperties(tabs);
+        TestManager.resetActiveProperties(this.group.tabs);
+
+        expect(previousLength).toEqual(GroupManager.groups.length+1);
+        expect(GroupManager.getGroupIndexFromGroupId(this.id, false)).toEqual(-1);
+        expect(tabs).toEqualTabs(this.group.tabs);
+
+        this.id = undefined;
+      });
+
+      it("Associate Windows", async function(){
+        let previousLength = GroupManager.groups.length;
+
+        let id = await WindowManager.integrateWindow(this.windowId, true);
+        expect(id).toBeGreaterThan(-1);
+
+        let groupIndex = GroupManager.getGroupIndexFromGroupId(id, false);
+        expect(groupIndex).not.toEqual(-1);
+
+        let tabs = Utils.getCopy(GroupManager.groups[groupIndex].tabs);
+
+        TestManager.resetActiveProperties(tabs);
+
+        expect(GroupManager.groups[groupIndex].incognito).toBe(true);
+        expect(previousLength).toEqual(GroupManager.groups.length-1);
+        expect(tabs).toEqualTabs(this.group.tabs);
+
+        GroupManager.removeGroupFromId(id);
+      });
+    });
+  });
+
   describe("OnNewWindowOpen: ", ()=>{
 
     beforeEach(function() {
@@ -526,7 +655,6 @@ describe("WindowManager: ", ()=>{
 describe("Select Groups - ", ()=>{
   beforeAll(async function(){
     OptionManager.updateOption("groups-syncNewWindow", false);
-    //this.previousGroups = GroupManager.groups;
     this.length = 3;
     this.groups = [];
     for( let i=0; i<4; i++) {
@@ -538,7 +666,6 @@ describe("Select Groups - ", ()=>{
           active: 5,
           title: "Debug Select Groups " + i
         });
-      this.groupIndex =
       this.groups.push({
         id: id,
         group: group,
@@ -563,7 +690,6 @@ describe("Select Groups - ", ()=>{
     for (let group of this.groups ) {
       GroupManager.removeGroupFromId(group.id);
     }
-    //GroupManager.groups = this.previousGroups;
   });
 
   describe("Basic", ()=>{

@@ -369,6 +369,7 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
 
     const w = await browser.windows.create({
       state: "maximized",
+      incognito: GroupManager.groups[groupIndex].incognito,
     });
 
     await WindowManager.switchGroup(groupId);
@@ -485,34 +486,29 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
 /**
  * Take the tabs from a current opened window and create a new group
  * @param {Number} windowId
- * @return {Promise}
+ * @return {Number} groupId created or -1
  */
 WindowManager.addGroupFromWindow = async function(windowId) {
   try {
-    let selector = {
-      windowId: windowId
-    };
-    if (!OptionManager.options.pinnedTab.sync) {
-      selector["pinned"] = false;
-    }
-    const tabs = await browser.tabs.query(selector);
+    const tabs = await TabManager.getTabsInWindowId(windowId);
     const w = await browser.windows.get(windowId);
 
-    var newGroupId = GroupManager.addGroupWithTab(tabs, windowId, "", w.incognito);
+    let newGroupId = GroupManager.addGroupWithTab(tabs, windowId, "", w.incognito);
     await WindowManager.associateGroupIdToWindow(
       windowId,
       newGroupId
     );
-    return "WindowManager.integrateWindow done on New Window with window " + windowId;
-
+    return newGroupId;
   } catch (e) {
     let msg = "WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e;
     console.error(msg);
-    return msg;
+    return -1;
   }
 }
 
-
+/**
+  * @return {Number} groupId created or -1
+  */
 WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
   even_new_one = OptionManager.options.groups.syncNewWindow) {
     try {
@@ -522,22 +518,28 @@ WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
       // Compare to all groups
       let bestId = GroupManager.bestMatchGroup(tabs);
 
+      let id = -1;
       if ( bestId > 0 ) { // Keep the best result
         await GroupManager.attachWindowWithGroupId(bestId, windowId);
+        id = bestId;
       } else { // Or create a new group
         if (even_new_one ||
           (OptionManager.options.privateWindow.sync &&
             window.incognito)) {
-          await WindowManager.addGroupFromWindow(windowId);
+          id = await WindowManager.addGroupFromWindow(windowId);
         }
       }
+      return id;
     } catch (e) {
       let msg = "WindowManager.integrateWindowWithTabsComparaison failed for windowId " + windowId + "\n Error msg: " + e;
       console.error(msg);
-      return msg;
+      return -1;
     }
 }
 
+/**
+  * @return {Number} groupId created or -1
+  */
 WindowManager.integrateWindowWithSession = async function(windowId,
   even_new_one = OptionManager.options.groups.syncNewWindow) {
     try {
@@ -546,19 +548,22 @@ WindowManager.integrateWindowWithSession = async function(windowId,
         WindowManager.WINDOW_GROUPID // string
       );
 
+      let id = -1;
       if (key === undefined || GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), false) === -1) { // New Window
         if (even_new_one ||
           (OptionManager.options.privateWindow.sync &&
             window.incognito)) {
-          await WindowManager.addGroupFromWindow(windowId);
+          id = await WindowManager.addGroupFromWindow(windowId);
         }
       } else { // Update Group
         await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
+        id = parseInt(key, 10);
       }
+      return id;
     } catch (e) {
       let msg = "WindowManager.integrateWindowWithSession failed on Get Key Value for windowId " + windowId + "\n Error msg: " + e;
       console.error(msg);
-      return msg;
+      return -1;
     }
 }
 /**
@@ -566,7 +571,7 @@ WindowManager.integrateWindowWithSession = async function(windowId,
  * 1. If already linked, update the link
  * 2. If new window, add group
  * @param {Number} windowId
- * @return {Promise}
+ * @return {Number} groupId created or -1
  */
 WindowManager.integrateWindow = async function(windowId,
   even_new_one = OptionManager.options.groups.syncNewWindow) {
@@ -574,33 +579,36 @@ WindowManager.integrateWindow = async function(windowId,
     const window = await browser.windows.get(windowId);
 
     if (window.type !== 'normal') {
-      return "WindowManager.integrateWindow not done for windowId " + windowId + " because window is not normal";
+      //WindowManager.integrateWindow not done for windowId " + windowId + " because window is not normal
+      return -1;
     }
 
     // Private Window sync
     // TODO: only with no associated window, if user forced, should be set again
     if (!OptionManager.options.privateWindow.sync &&
-      window.incognito) {
-      return "WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized";
+      window.incognito && !even_new_one) {
+        // WindowManager.integrateWindow not done for windowId " + windowId + " because private window are not synchronized
+      return -1;
     }
 
+    let id;
     if ( Utils.isFF57() ) { // FF57+
-      WindowManager.integrateWindowWithSession(
+      id = await WindowManager.integrateWindowWithSession(
         windowId,
         even_new_one
       )
     } else { // Others
-      WindowManager.integrateWindowWithTabsComparaison(
+      id = await WindowManager.integrateWindowWithTabsComparaison(
         windowId,
         even_new_one
       )
     }
 
-    return "WindowManager.integrateWindow done for windowId " + windowId;
+    return id;
   } catch (e) {
     let msg = "WindowManager.integrateWindow for windowId " + windowId + "\n Error msg: " + e;
     console.error(msg);
-    return msg;
+    return -1;
   }
 }
 
