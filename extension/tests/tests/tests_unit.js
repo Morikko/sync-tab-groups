@@ -246,10 +246,141 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).toEqualGroups(good_groups);
+      expect(this.groups).toEqualGroup(good_groups);
     });
   });
 
+  /**
+   * normal: only tabs with raw URLs
+   * fancy: tabs with raw, Privileged and Lazy URLs
+   */
+  describe("bestMatchGroup: ", ()=>{
+    beforeAll(function() {
+      jasmine.addMatchers(tabGroupsMatchers);
+    });
+
+    it("Match normal", ()=>{
+      let id = 122;
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      group.id = id;
+
+      let bestId = GroupManager.bestMatchGroup(group.tabs, [group]);
+
+      expect(bestId).toEqual(id);
+    });
+
+    it("Match fancy", ()=>{
+      let id = 122;
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      group.id = id;
+      let tabs = Utils.getCopy(group.tabs);
+
+      group.tabs.forEach((tab)=>{
+        tab.url = Utils.extractTabUrl(tab.url);
+      });
+
+      let bestId = GroupManager.bestMatchGroup(tabs, [group]);
+
+      expect(bestId).toEqual(id);
+    });
+
+    it("Match reject length", ()=>{
+      let id = 122;
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      let group2 = Session.createGroup({tabsLength: 6, pinnedTabs: 2});
+      group2.id = id;
+
+      let bestId = GroupManager.bestMatchGroup(group.tabs, [group2]);
+
+      expect(bestId).toEqual(-1);
+    });
+
+    it("Match reject URL", ()=>{
+      let id = 122;
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      let group2 = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      group2.id = id;
+
+      let bestId = GroupManager.bestMatchGroup(group.tabs, [group2]);
+
+      expect(bestId).toEqual(-1);
+    });
+
+    it("Match 1 in 5 groups", ()=>{
+      let id = 122;
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      group.id = id;
+      let groups = new Array(4);
+
+      groups = groups.map((a, index)=>{
+        let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+        group.id = index;
+        return group;
+      })
+
+      let bestId = GroupManager.bestMatchGroup(group.tabs, groups.concat(group));
+
+      expect(bestId).toEqual(id);
+    });
+
+    it("Match prefer lastAccessed", ()=>{
+      let id = 122;
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      group.id = id;
+      group.lastAccessed = 11;
+
+      let groupOlder = Utils.getCopy(group);
+      groupOlder.id++;
+      groupOlder.lastAccessed--;
+
+      let bestId = GroupManager.bestMatchGroup(group.tabs, [group, groupOlder]);
+
+      expect(bestId).toEqual(id);
+    });
+
+    it("Match retrieve even with closed extension tabs", ()=>{
+      let id = 122;
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2,
+      extensionUrlLength: 2});
+      group.id = id;
+
+      // Without ext tabs
+      let tabs = Utils.getCopy(group.tabs).filter((tab)=>{
+        return !(Session.ListOfExtensionTabURLs.filter((list)=>{
+          return  Utils.extractTabUrl(tab.url).includes(list.url);
+        }).length);
+      });
+
+      console.log(tabs);
+
+      let bestId = GroupManager.bestMatchGroup(tabs, [group]);
+
+      expect(bestId).toEqual(id);
+    });
+
+    it("Match prefer with extension tabs", ()=>{
+      let id = 122, id2 = 127;
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2,
+      extensionUrlLength: 2});
+      group.id = id;
+
+      let group2 = Utils.getCopy(group);
+      group2.id = id2;
+      // Without ext tabs
+      group2.tabs = Utils.getCopy(group2.tabs).filter((tab)=>{
+        return !(Session.ListOfExtensionTabURLs.filter((list)=>{
+          return  Utils.extractTabUrl(tab.url).includes(list.url);
+        }).length);
+      });
+
+      let bestId = GroupManager.bestMatchGroup(group.tabs, [group, group2]);
+      expect(bestId).toEqual(id);
+
+      bestId = GroupManager.bestMatchGroup(group2.tabs, [group, group2]);
+      expect(bestId).toEqual(id2);
+    });
+
+  });
 });
 
 describe("Search", () => {

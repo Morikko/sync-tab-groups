@@ -75,11 +75,7 @@ GroupManager.EVENT_CHANGE = 'groups-change';
 GroupManager.eventlistener = new EventListener();
 GroupManager.repeatedtask = new TaskManager.RepeatedTask(1000);
 
-GroupManager.Group = function(id,
-  title = "",
-  tabs = [],
-  windowId = browser.windows.WINDOW_ID_NONE,
-  incognito = false) {
+GroupManager.Group = function(id, title = "", tabs = [], windowId = browser.windows.WINDOW_ID_NONE, incognito = false) {
   this.title = title;
   this.tabs = Utils.getCopy(tabs);
   this.id = id; // Unique in all group
@@ -104,8 +100,8 @@ GroupManager.getGroupIdInWindow = function(windowId, error = true) {
     for (let group of GroupManager.groups) {
       if (group.windowId === windowId)
         return group.id;
+      }
     }
-  }
 
   if (error) {
     throw Error("getGroupIdInWindow: Failed to find group in window " + windowId);
@@ -123,14 +119,11 @@ GroupManager.getGroupIdInWindow = function(windowId, error = true) {
  * @param {Array[Group]} - array on which looking for groupId
  * @returns {Number} - group index
  */
-GroupManager.getGroupIndexFromGroupId = function(
-  groupId,
-  error = true,
-  groups = GroupManager.groups) {
+GroupManager.getGroupIndexFromGroupId = function(groupId, error = true, groups = GroupManager.groups) {
   for (let i = 0; i < groups.length; i++) {
     if (groups[i].id === groupId)
       return i;
-  }
+    }
   if (error) {
     throw Error("GroupManager.getGroupIndexFromGroupId: Failed to find group index for id:  " + groupId);
   } else {
@@ -149,7 +142,7 @@ GroupManager.getGroupIndexFromWindowId = function(windowId, error = true) {
   for (let i = 0; i < GroupManager.groups.length; i++) {
     if (GroupManager.groups[i].windowId === windowId)
       return i;
-  }
+    }
 
   if (error) {
     throw Error("GroupManager.getGroupIndexFromWindowId: Failed to find group index for id:  " + windowId);
@@ -170,8 +163,8 @@ GroupManager.getGroupIdFromTabId = function(tabId, error = false) {
     for (let j = 0; j < GroupManager.groups[i].tabs.length; j++) {
       if (GroupManager.groups[i].tabs[j].id === tabId)
         return GroupManager.groups[i].id;
+      }
     }
-  }
 
   if (error) {
     throw Error("GroupManager.getGroupIdFromTabId: Failed to find group id for tab id:  " + tabId);
@@ -191,7 +184,7 @@ GroupManager.getTabIndexFromTabId = function(tabId, groupIndex, error = false) {
   for (let j = 0; j < GroupManager.groups[groupIndex].tabs.length; j++) {
     if (GroupManager.groups[groupIndex].tabs[j].id === tabId)
       return j;
-  }
+    }
 
   if (error) {
     throw Error("GroupManager.getTabIndexFromTabId: Failed to find tab index for tab id:  " + tabId + " in group id " + GroupManager.groups[groupIndex].id);
@@ -211,8 +204,8 @@ GroupManager.getWindowIdFromGroupId = function(groupId) {
     if (GroupManager.groups[i].id === groupId) {
       if (GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE)
         return GroupManager.groups[i].windowId;
+      }
     }
-  }
 
   throw Error("GroupManager.getWindowIdFromGroupId: Failed to find opened window for id:  " + groupId);
 }
@@ -223,7 +216,7 @@ GroupManager.isWindowAlreadyRegistered = function(windowId) {
   for (let g of GroupManager.groups) {
     if (g.windowId === windowId)
       return true;
-  }
+    }
   return false;
 }
 
@@ -243,25 +236,27 @@ GroupManager.getCopy = function() {
  *  2. No more than 1 tab active (last by default)
  * @param {Array[Group]} groups
  */
-GroupManager.coherentActiveTabInGroups = function(groups=GroupManager.groups) {
-  for ( let i=0; i<groups.length; i++) {
-    if ( !groups[i].tabs.length ) { // No tab in group
+GroupManager.coherentActiveTabInGroups = function(groups = GroupManager.groups) {
+  for (let i = 0; i < groups.length; i++) {
+    if (!groups[i].tabs.length) { // No tab in group
       continue;
     }
 
-    let activeTabIndex = groups[i].tabs.map((tab, index)=>{
-      return tab.active?index:-1;
-    }).filter((index)=>{
-      return index>=0;
+    let activeTabIndex = groups[i].tabs.map((tab, index) => {
+      return tab.active
+        ? index
+        : -1;
+    }).filter((index) => {
+      return index >= 0;
     });
 
     // No active tab
-    if ( !activeTabIndex.length ) {
-      groups[i].tabs[groups[i].tabs.length-1].active = true;
+    if (!activeTabIndex.length) {
+      groups[i].tabs[groups[i].tabs.length - 1].active = true;
     }
     // More than 1 active tabs
-    if ( activeTabIndex.length > 1 ) {
-      for ( let j=1; j < activeTabIndex.length; j++ ) {
+    if (activeTabIndex.length > 1) {
+      for (let j = 1; j < activeTabIndex.length; j++) {
         groups[i].tabs[activeTabIndex[j]].active = false;
       }
     }
@@ -293,8 +288,7 @@ GroupManager.changeGroupPosition = function(groupId, position, groups = GroupMan
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, true, groups);
 
     let oldPosition = groups[groupIndex].position;
-    if (oldPosition === position ||
-      position === oldPosition + 1) { // Move useless, same position
+    if (oldPosition === position || position === oldPosition + 1) { // Move useless, same position
       return;
     } else if (oldPosition > position) {
       for (let g of groups) {
@@ -358,11 +352,7 @@ GroupManager.setAllPositions = function(groups = GroupManager.groups, sortingTyp
  */
 GroupManager.setLastAccessed = function(groupId, time, groups = GroupManager.groups) {
   try {
-    let groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupId,
-      true,
-      groups,
-    );
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, true, groups,);
     groups[groupIndex].lastAccessed = time;
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
@@ -406,9 +396,7 @@ GroupManager.setAllIndexes = function(groups = GroupManager.groups) {
  */
 GroupManager.setTabsInGroupId = function(groupId, tabs) {
   try {
-    let groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupId
-    );
+    let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
     GroupManager.groups[groupIndex].tabs = Utils.getCopy(tabs);
 
     if (OptionManager.options.groups.removeEmptyGroup) {
@@ -425,9 +413,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
 GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
   let groupIndex;
   try {
-    groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupId
-    );
+    groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
     GroupManager.groups[groupIndex].windowId = windowId;
     await WindowManager.associateGroupIdToWindow(windowId, groupId);
@@ -462,9 +448,7 @@ GroupManager.check_integrity = function(groups) {
 GroupManager.detachWindowFromGroupId = async function(groupId) {
   let groupIndex;
   try {
-    windowId = GroupManager.getWindowIdFromGroupId(
-      groupId
-    );
+    windowId = GroupManager.getWindowIdFromGroupId(groupId);
 
     await GroupManager.detachWindow(windowId);
 
@@ -482,10 +466,7 @@ GroupManager.detachWindowFromGroupId = async function(groupId) {
 GroupManager.detachWindow = async function(windowId) {
   let groupIndex;
   try {
-    groupIndex = GroupManager.getGroupIndexFromWindowId(
-      windowId,
-      false
-    );
+    groupIndex = GroupManager.getGroupIndexFromWindowId(windowId, false);
 
     if (groupIndex === -1) {
       return "GroupManager.detachWindow done because no group was in window: " + windowId;
@@ -494,7 +475,7 @@ GroupManager.detachWindow = async function(windowId) {
     GroupManager.groups[groupIndex].windowId = browser.windows.WINDOW_ID_NONE;
 
     // Remove private group on close
-    if (GroupManager.groups[groupIndex].incognito ) {
+    if (GroupManager.groups[groupIndex].incognito) {
       await GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
     } else {
       WindowManager.desassociateGroupIdToWindow(windowId);
@@ -516,9 +497,7 @@ GroupManager.removeGroupsInPrivateWindow = async function() {
   try {
     for (let i = GroupManager.groups.length - 1; i >= 0; i--) {
       // Remove group from private window if set
-      if (GroupManager.groups[i].tabs.length > 0 &&
-        GroupManager.groups[i].tabs[0].incognito &&
-        !OptionManager.options.privateWindow.sync) {
+      if (GroupManager.groups[i].tabs.length > 0 && GroupManager.groups[i].tabs[0].incognito && !OptionManager.options.privateWindow.sync) {
 
         await GroupManager.removeGroupFromId(GroupManager.groups[i].id);
       }
@@ -539,9 +518,7 @@ GroupManager.removeGroupsInPrivateWindow = async function() {
 GroupManager.removeGroupFromId = async function(groupId) {
   let groupIndex;
   try {
-    groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupId
-    );
+    groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
     if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE) {
       await WindowManager.desassociateGroupIdToWindow(GroupManager.groups[groupIndex].windowId);
@@ -559,9 +536,7 @@ GroupManager.removeGroupFromId = async function(groupId) {
 GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, changeBrowser = true) {
   let groupIndex;
   try {
-    groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupId
-    );
+    groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
     if (GroupManager.groups[groupIndex].tabs.length <= tabIndex) {
       throw Error("GroupManager.removeTabFromIndexInGroupId impossible");
     }
@@ -591,24 +566,13 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, cha
 GroupManager.addTabInGroupId = async function(groupId, tab, targetIndex = -1) {
   let groupIndex;
   try {
-    groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupId
-    );
+    groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
     if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
-      const openedTabs = await TabManager.openListOfTabs(
-        [tab],
-        GroupManager.groups[groupIndex].windowId,
-        true,
-        false);
-      await TabManager.moveOpenTabToGroup(
-        openedTabs[0],
-        GroupManager.groups[groupIndex].windowId,
-        targetIndex,
-      );
+      const openedTabs = await TabManager.openListOfTabs([tab], GroupManager.groups[groupIndex].windowId, true, false);
+      await TabManager.moveOpenTabToGroup(openedTabs[0], GroupManager.groups[groupIndex].windowId, targetIndex,);
     } else {
-      let realIndex = TabManager.secureIndex(targetIndex, tab,
-        GroupManager.groups[groupIndex].tabs);
+      let realIndex = TabManager.secureIndex(targetIndex, tab, GroupManager.groups[groupIndex].tabs);
       GroupManager.groups[groupIndex].tabs.splice(realIndex, 0, tab);
     }
 
@@ -641,11 +605,8 @@ GroupManager.updateAllOpenedGroups = async function() {
 GroupManager.renameGroup = function(groupIndex, title) {
   GroupManager.groups[groupIndex].title = title;
 
-  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE &&
-    !Utils.isChrome()) {
-    WindowManager.setWindowPrefixGroupTitle(
-      GroupManager.groups[groupIndex].windowId,
-      GroupManager.groups[groupIndex]);
+  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE && !Utils.isChrome()) {
+    WindowManager.setWindowPrefixGroupTitle(GroupManager.groups[groupIndex].windowId, GroupManager.groups[groupIndex]);
   }
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
@@ -657,25 +618,20 @@ GroupManager.renameGroup = function(groupIndex, title) {
  * @param {String} title - kept blank if not given
  * @param {Number} windowId
  */
-GroupManager.addGroup = function(title = "",
-  windowId = browser.windows.WINDOW_ID_NONE,
-  incognito = false) {
+GroupManager.addGroup = function(title = "", windowId = browser.windows.WINDOW_ID_NONE, incognito = false) {
   if (GroupManager.isWindowAlreadyRegistered(windowId))
     return;
-  let tabs = [{
-    url: "about:newtab",
-    title: "New Tab",
-    active: true
-  }];
+  let tabs = [
+    {
+      url: "about:newtab",
+      title: "New Tab",
+      active: true
+    }
+  ];
   let uniqueGroupId;
   try {
     uniqueGroupId = GroupManager.createUniqueGroupId();
-    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId,
-      title,
-      tabs,
-      windowId,
-      incognito
-    ));
+    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, windowId, incognito));
   } catch (e) {
     throw Error("addGroup: Group not created because " + e);
   }
@@ -690,16 +646,9 @@ GroupManager.addGroup = function(title = "",
  * @param {Array[Tab]} tabs - the tabs to place into the new group
  * @param {String} title - the name to give to that group
  */
-GroupManager.addGroupWithTab = function(tabs,
-  windowId = browser.windows.WINDOW_ID_NONE,
-  title = "",
-  incognito = false) {
+GroupManager.addGroupWithTab = function(tabs, windowId = browser.windows.WINDOW_ID_NONE, title = "", incognito = false) {
   if (tabs.length === 0) {
-    return GroupManager.addGroup(
-      title,
-      windowId,
-      incognito,
-    );
+    return GroupManager.addGroup(title, windowId, incognito,);
   }
 
   let uniqueGroupId;
@@ -749,7 +698,6 @@ GroupManager.removeUnopenGroups = function() {
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
-
 /**
  *
  */
@@ -778,7 +726,7 @@ GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
     return true;
   else
     return false;
-}
+  }
 
 /**
  * Find an Id that is not used in the groups
@@ -800,7 +748,8 @@ GroupManager.createUniqueGroupId = function() {
     if (count > 100000)
       throw Error("createUniqueGroupId: Can't find an unique group Id");
 
-  } while (!isUnique);
+    }
+  while (!isUnique);
 
   return uniqueGroupId;
 }
@@ -853,25 +802,20 @@ GroupManager.store = function() {
 }
 
 GroupManager.initEventListener = function() {
-  GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
-    () => {
-      GroupManager.repeatedtask.add(
-        () => {
-          GroupManager.store();
-        }
-      )
-    });
+  GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE, () => {
+    GroupManager.repeatedtask.add(() => {
+      GroupManager.store();
+    })
+  });
 
   // Done after a group modification to assure integrity
-  GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE,
-    () => {
-      GroupManager.cleanUndefined(GroupManager.groups);
-      GroupManager.setAllIndexes(GroupManager.groups);
-      GroupManager.setAllPositions(GroupManager.groups,
-         OptionManager.options.groups.sortingType);
-      GroupManager.coherentActiveTabInGroups(GroupManager.groups);
-      GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
-    });
+  GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE, () => {
+    GroupManager.cleanUndefined(GroupManager.groups);
+    GroupManager.setAllIndexes(GroupManager.groups);
+    GroupManager.setAllPositions(GroupManager.groups, OptionManager.options.groups.sortingType);
+    GroupManager.coherentActiveTabInGroups(GroupManager.groups);
+    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+  });
 };
 
 GroupManager.cleanUndefined = function(groups = GroupManager.groups) {
@@ -892,25 +836,32 @@ GroupManager.sortGroupsLastAccessed = function(groups) {
   let positions = [];
   let toSort = [];
   groups.map((group) => {
-    toSort.push({
-      lastAccessed: group.lastAccessed,
-      id: group.id,
-      title: group.title,
-      index: group.index,
-    });
+    toSort.push({lastAccessed: group.lastAccessed, id: group.id, title: group.title, index: group.index});
   });
 
   toSort.sort((a, b) => {
     if (a.lastAccessed === b.lastAccessed) { // Same time; sort alphabetically
-      if (a.title === "" && b.title === "") return a.id < b.id ? -1 : 1;
-      if (a.title === b.title) return a.id < b.id ? -1 : 1;
-      if (a.title === "") return 1;
-      if (b.title === "") return -1;
+      if (a.title === "" && b.title === "")
+        return a.id < b.id
+          ? -1
+          : 1;
+      if (a.title === b.title)
+        return a.id < b.id
+          ? -1
+          : 1;
+      if (a.title === "")
+        return 1;
+      if (b.title === "")
+        return -1;
 
-      return a.title < b.title ? -1 : 1;
+      return a.title < b.title
+        ? -1
+        : 1;
     }
 
-    return a.lastAccessed < b.lastAccessed ? 1 : -1;
+    return a.lastAccessed < b.lastAccessed
+      ? 1
+      : -1;
   });
   toSort.map((sorted, index) => {
     positions[sorted.index] = index;
@@ -918,7 +869,6 @@ GroupManager.sortGroupsLastAccessed = function(groups) {
 
   return positions;
 }
-
 
 /**
  * Sort the groups to be in alphabetical order
@@ -930,20 +880,26 @@ GroupManager.sortGroupsAlphabetically = function(groups) {
   let positions = [];
   let toSort = [];
   groups.map((group) => {
-    toSort.push({
-      title: group.title,
-      id: group.id,
-      index: group.index,
-    });
+    toSort.push({title: group.title, id: group.id, index: group.index});
   });
 
   toSort.sort((a, b) => {
-    if (a.title === "" && b.title === "") return a.id < b.id ? -1 : 1;
-    if (a.title === b.title) return a.id < b.id ? -1 : 1;
-    if (a.title === "") return 1;
-    if (b.title === "") return -1;
+    if (a.title === "" && b.title === "")
+      return a.id < b.id
+        ? -1
+        : 1;
+    if (a.title === b.title)
+      return a.id < b.id
+        ? -1
+        : 1;
+    if (a.title === "")
+      return 1;
+    if (b.title === "")
+      return -1;
 
-    return a.title < b.title ? -1 : 1;
+    return a.title < b.title
+      ? -1
+      : 1;
   });
 
   toSort.map((sorted, index) => {
@@ -954,9 +910,7 @@ GroupManager.sortGroupsAlphabetically = function(groups) {
 }
 
 GroupManager.getGroupsWithoutPrivate = function(groups) {
-  return groups.filter(
-    group => !group.incognito
-  );
+  return groups.filter(group => !group.incognito);
 }
 
 /**
@@ -969,7 +923,7 @@ GroupManager.coherentPositionInGroups = function(groups) {
   let alreadyPositioned = [];
 
   // Detect Gap: groups removed
-  for (let pos of [...Array(groups.length).keys()]) {
+  for (let pos of[...Array(groups.length).keys()]) {
     let hasPos = false;
     for (let group of groups) { // check pos is present
       if (group.position === pos) {
@@ -998,7 +952,7 @@ GroupManager.coherentPositionInGroups = function(groups) {
   });
 
   // Fill unused position
-  for (let pos of [...Array(groups.length).keys()]) {
+  for (let pos of[...Array(groups.length).keys()]) {
     if (!alreadyPositioned[pos]) {
       for (let group of groups) {
         if (group.position === -1) { // Update first unkown positioned group
@@ -1010,71 +964,66 @@ GroupManager.coherentPositionInGroups = function(groups) {
   }
 }
 
+/**
+ *
+ */
+GroupManager.compareTabs = function(tabs, tabs_ref) {
+  let title = "Tabs comparator";
+  if (tabs.length !== tabs_ref.length)
+    return false;
+
+  for (let i = 0; i < tabs.length; i++) {
+    if (tabs[i].url !== tabs_ref[i].url)
+      return false;
+    if (tabs[i].pinned !== tabs_ref[i].pinned)
+      return false;
+  }
+  return true;
+}
 
 /**
  * Return the best matching group depending the tabs
  * Criterions:
- *  1. tabs length must be equal (out of Priv/Ext tabs)
- *  2. tabs.url must match (out of Priv/Ext tabs)
+ *  1. tabs length must be equal (out of Ext tabs)
+ *  2. tabs.url must match (out of Ext tabs)
  *  3. A score is returned to favorise potential Priv/Ext tabs that match
  *  4. if more than one result, take the last accessed
- * TODO: Test :Problems privileged URLs: browser.urls !== groups.urls
- *       On reload -> privileged URLs are closes -> bias compare
+ * Notes: extension tabs contain extension prefix (manage tab, settings)...
+      But not privileged tabs, lazy tab as they are not closed
  * @param {Array[Tab]} tabs
  * @return {Number} groupId
  */
-GroupManager.bestMatchGroup = function(tabs, groups=GroupManager.groups) {
-  return groups.map((group)=>{ // Remove wrong match
-    /* Notes
+GroupManager.bestMatchGroup = function(tabs, groups = GroupManager.groups) {
+  /* Notes
      tabs <= groups.tabs
      incremnt good match
      don't care missing priv/extension url
      kill bad match
     */
-   let ext_page_prefix = browser.runtime.getURL("");
-    let result = {
-      score: 0,
-      id: group.id,
-      lastAccessed: group.lastAccessed,
-    };
-    // Criterion 2
-    let index = 0;
-    result.score = group.tabs.reduce((count, tab, group_index)=>{
-        let next_count = count;
-        let tab_url = Utils.extractTabUrl(tabs[index].url);
-        let group_tab_url = Utils.extractTabUrl(tab.url);
+  let ext_page_prefix = browser.runtime.getURL("");
 
-        if ( tab_url ===  group_tab_url ) { // Match
-          next_count++;
-          index++;
-        } else {
-          if ( tab.url.includes(ext_page_prefix) || Utils.isPrivilegedURL(tab.url) ) { // Could be a missing priv/extension
+  let result = groups.filter((group)=>{
+    return GroupManager.compareTabs(tabs, group.tabs);
+  });
 
-          } else { // Criterion 2: Wrong good match
-            return -1000;
-          }
-        }
+  if ( !result.length ) {
+    result = groups.filter((group)=>{
+      let tabsWithoutExtTabs = Utils.getCopy(group.tabs).filter((tab)=>{
+          return !Utils.extractTabUrl(tab.url).includes(ext_page_prefix);
+      });
+      return GroupManager.compareTabs(tabs, tabsWithoutExtTabs);
+    });
+  }
 
-        // Criterion 1: Don't finish together
-        if (group_index === group.length-1 // Last
-        &&  index !== tabs.length ) {
-          return -1000; // Impossible match
-        }
+  if ( result.length > 1 ) {   // Criterion 3    // Prefer recent one
+    result = result.reduce((a, b) => {
+        if (a.lastAccessed >= b.lastAccessed)
+          return a;
+        else
+          return b;
+    });
+    result = [result];
+  }
 
-        return next_count;
-    }, 0);
-
-    return result;
-  }).reduce((a,b)=>{ // Criterion 3
-    if ( a.score < b.score) { // Prefer best match
-      return b;
-    } else if ( a.score === b.score ) { // Prefer recent one
-      if ( a.lastAccessed >=  b.lastAccessed )
-        return a;
-      else
-        return b;
-    } else { // Keep previous best
-      return a;
-    }
-  }, {id:-1, lastAccessed:-1, score:1}).id;
+  return result.length?result[0].id:-1;
 }
