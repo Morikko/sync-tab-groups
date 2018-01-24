@@ -219,11 +219,13 @@ Session.getRandomTab = function(tabs) {
   );
 }
 
-Session.ListOfTabURLs = [{
+Session.newTab = {
     "title": "New Tab",
     "url": "about:newtab",
     "favIconUrl": "chrome://branding/content/icon32.png"
-  },
+  };
+
+Session.ListOfTabURLs = [
   {
     "title": "Issues · Morikko/sync-tab-groups",
     "url": "https://github.com/Morikko/sync-tab-groups/issues",

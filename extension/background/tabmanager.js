@@ -16,7 +16,7 @@
  Update States
  - activeTabInWindow
  - changePinState
- - selectTab (Open/Close group) TODO: change active before opening
+ - selectTab (Open/Close group)
 
  Moves:
  - moveOpenTabToGroup
@@ -275,8 +275,8 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
  */
 TabManager.activeTabInWindow = async function(windowId, tabIndex) {
   try {
+    // Filter pinned if necessary
     const tabs = await TabManager.getTabsInWindowId(windowId, false);
-
     let tabId = tabs.filter((tab, index) => index === tabIndex).map((tab) => tab.id);
 
     if (tabId.length) {
@@ -552,14 +552,29 @@ TabManager.removeTabsWithUnallowedURL = async function(groupId) {
  * @param {Number} groupId - the tabs groupId
  * @return {Promise}
  */
-TabManager.selectTab = async function(tabIndex, groupId) {
+TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
   try {
-    await WindowManager.selectGroup(groupId);
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
-    let windowId = GroupManager.groups[groupIndex].windowId;
-    await TabManager.activeTabInWindow(windowId, tabIndex);
-    return "TabManager.selectTab done!";
 
+    // 1. Change active tab
+    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
+      let windowId = GroupManager.groups[groupIndex].windowId;
+      await TabManager.activeTabInWindow(windowId, tabIndex);
+    } else {
+      GroupManager.groups[groupIndex].tabs.forEach((tab)=>{
+        tab.active = false;
+      });
+      GroupManager.groups[groupIndex].tabs[tabIndex].active = true;
+    }
+
+    // 2. Open the group
+    if ( newWindow && !GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
+      await WindowManager.openGroupInNewWindow(groupId);
+    } else {
+      await WindowManager.selectGroup(groupId);
+    }
+
+    return "TabManager.selectTab done!";
   } catch (e) {
     let msg = "TabManager.selectTab failed; " + e;
     console.error(msg);

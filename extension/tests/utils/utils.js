@@ -28,6 +28,19 @@ TestManager.splitOnHalfBottomScreen = async function(windowId){
   });
 }
 
+TestManager.getGroup = (groups, id)=>{
+  return GroupManager.groups[groups[id].groupIndex];
+};
+
+TestManager.countDiscardedTabs = function (tabs) {
+  return tabs.filter((tab)=>{
+      if ( tab.discarded || tab.url.includes(Utils.LAZY_PAGE_URL) ) {
+        return true;
+      }
+      return false;
+  }).length;
+}
+
 TestManager.resetActiveProperties = function (tabs) {
   tabs.forEach((tab)=>{
     tab.active = false;

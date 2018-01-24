@@ -142,7 +142,8 @@ Controller.onGroupSelect = function(params) {
 Controller.onTabSelect = function(params) {
   TabManager.selectTab(
     params.tabIndex,
-    params.groupId
+    params.groupId,
+    params.newWindow,
   );
 };
 

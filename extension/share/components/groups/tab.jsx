@@ -180,17 +180,14 @@ class Tab extends React.Component{
     event.stopPropagation();
 
     if ( this.props.allowClickSwitch ) {
-      if ( event.button === 0 ) { // Left
-        let group = this.props.group;
-        let tab = this.props.tab;
-        this.props.onTabClick(
-          group.id,
-          this.props.tabIndex
-        );
-        window.close();
-      } else if ( event.button === 1 ) { // Middle
-        this.handleOpenTabClick();
-      }
+      let group = this.props.group;
+      let tab = this.props.tab;
+      this.props.onTabClick(
+        group.id,
+        this.props.tabIndex,
+        (event.button === 1), // Middle
+      );
+      window.close();
     }
   }
 

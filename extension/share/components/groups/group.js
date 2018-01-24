@@ -277,7 +277,14 @@ class Group extends React.Component {
   handleGroupClick(event) {
     event.stopPropagation();
     if (this.props.allowClickSwitch) {
-      if (this.props.currentWindowId !== this.props.group.windowId) this.props.onGroupClick(this.props.group.id);
+      if (this.props.currentWindowId !== this.props.group.windowId) {
+        // Close and middle click
+        if (event.button === 1 && this.props.group.windowId === browser.windows.WINDOW_ID_NONE) {
+          this.props.onOpenInNewWindowClick(this.props.group.id);
+        } else {
+          this.props.onGroupClick(this.props.group.id);
+        }
+      }
       window.close();
     } else {
       this.handleGroupExpandClick();

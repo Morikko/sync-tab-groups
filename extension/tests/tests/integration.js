@@ -816,7 +816,7 @@ describe("End of Groups - ", ()=>{
 
       let tabs = await TabManager.getTabsInWindowId(this.windowId);
 
-      let blank = [Session.createTab(Session.ListOfTabURLs[0])];
+      let blank = [Session.createTab(Session.newTab)];
 
       TestManager.resetActiveProperties(tabs);
       TestManager.resetIndexProperties(blank);
@@ -881,7 +881,7 @@ describe("End of Groups - ", ()=>{
 
       let tabs = await TabManager.getTabsInWindowId(this.windowId);
 
-      let blank = [Session.createTab(Session.ListOfTabURLs[0])];
+      let blank = [Session.createTab(Session.newTab)];
 
       TestManager.resetActiveProperties(tabs);
       TestManager.resetIndexProperties(blank);
@@ -986,6 +986,7 @@ describe("TabManager", ()=>{
       this.groupIndex = GroupManager.getGroupIndexFromGroupId(this.id);
       // Open
       this.windowId = await WindowManager.openGroupInNewWindow(this.id);
+
     });
 
     afterAll(async function() {
@@ -1160,6 +1161,78 @@ describe("TabManager", ()=>{
         });
       });
 
+    });
+  });
+
+  describe("Select Tab and Switch (Open): ", ()=>{
+    beforeAll(function(){
+      jasmine.addMatchers(tabGroupsMatchers);
+      this.length = 4;
+      this.groups = [];
+      for( let i=0; i<2; i++) {
+        let id, group;
+        [id, group] = Session.createGroup({
+            tabsLength: this.length,
+            global: true,
+            pinnedTabs: 0,
+            active: -1,
+            lazyMode: true,
+            title: "Debug Select Tab and Switch " + i
+          });
+        this.groups.push({
+          id: id,
+          group: group,
+          groupIndex: GroupManager.getGroupIndexFromGroupId(id)
+        });
+      }
+    });
+
+    afterAll(async function(){
+      if ( TestManager.getGroup(this.groups, 1).windowId >= 0 ) {
+        await browser.windows.remove(TestManager.getGroup(this.groups, 1).windowId);
+      }
+      for (let group of this.groups ) {
+        if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false) >= 0 )
+          GroupManager.removeGroupFromId(group.id);
+      }
+    });
+
+    it("Open In New Window", async function(){
+      let tabIndex = Math.round(this.length/2);
+      await TabManager.selectTab(
+        tabIndex,
+        this.groups[0].id,
+        true,
+      );
+
+      expect(TestManager.getGroup(this.groups, 0).windowId).not.toEqual(browser.windows.WINDOW_ID_NONE);
+
+      await TestManager.splitOnHalfTopScreen(TestManager.getGroup(this.groups, 0).windowId);
+      let tabs = await TabManager.getTabsInWindowId(TestManager.getGroup(this.groups, 0).windowId);
+
+      let nbrDiscarded = TestManager.countDiscardedTabs(tabs);
+
+      expect(tabs[tabIndex].active).toBe(true);
+      expect(nbrDiscarded).toEqual(this.length-1);
+    });
+
+    it("Switch in current Window", async function(){
+      let tabIndex = Math.round(this.length/2);
+      await TabManager.selectTab(
+        tabIndex,
+        this.groups[1].id,
+        false,
+      );
+
+      expect(TestManager.getGroup(this.groups, 1).windowId).not.toEqual(browser.windows.WINDOW_ID_NONE);
+      expect(TestManager.getGroup(this.groups, 0).windowId).toEqual(browser.windows.WINDOW_ID_NONE);
+
+      let tabs = await TabManager.getTabsInWindowId(TestManager.getGroup(this.groups, 1).windowId);
+
+      let nbrDiscarded = TestManager.countDiscardedTabs(tabs);
+
+      expect(tabs[tabIndex].active).toBe(true);
+      expect(nbrDiscarded).toEqual(this.length-1);
     });
   });
 

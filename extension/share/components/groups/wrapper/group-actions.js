@@ -63,10 +63,11 @@ const GroupActions = {
     });
   },
 
-  selectTab: function(groupId, tabIndex) {
+  selectTab: function(groupId, tabIndex, newWindow) {
     Utils.sendMessage("Tab:Select", {
       groupId: groupId,
-      tabIndex: tabIndex
+      tabIndex: tabIndex,
+      newWindow: newWindow,
     });
   },
 
