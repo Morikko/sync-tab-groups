@@ -269,10 +269,11 @@ class Tab extends React.Component{
 
     if (event.dataTransfer.getData("type") === "tab") {
       event.stopPropagation();
-      let pos = event.pageY -
-        (event.currentTarget.offsetParent.offsetTop // Group li
-          -event.currentTarget.offsetParent.parentElement.scrollTop) // Remove scroll grouplis
-        -event.currentTarget.offsetTop; // Tab li
+      let pos = event.pageY // Position of the cursor
+          // Compare to the Body
+          - event.currentTarget.offsetTop
+          // Invisible scroll offset to remove
+          + event.currentTarget.parentElement.parentElement.parentElement.scrollTop
       let height = event.currentTarget.offsetHeight;
       // Bottom
       if (pos > height / 2 && pos <= height) {
