@@ -4,7 +4,7 @@ class SaveSection extends React.Component {
       <div className={"option-section " + (this.props.selected==="save"?
         "visible":"invisible")}>
         <h1 className="section-title">
-          Save/Restore
+          Groups
         </h1>
         <SubSection
           title={browser.i18n.getMessage("import_export_title")}
@@ -26,6 +26,42 @@ class SaveSection extends React.Component {
                 id= {"import-groups"}
                 onFileSelected= {this.props.onImportClick}
               />
+            </div>
+          }
+        />
+        <SubSection
+          title={"Cleaning (Dangerous)"}
+          tooltip={
+            <ul>
+              <li>{"Remove all groups:"}</li>
+              <ul>
+                <li>{"Once done, you can't recover your groups if you don't have export them manually."}</li>
+              </ul>
+              {/*
+              <li>{"Reload your groups"}</li>
+              <ul>
+                <li>{"Load the groups saved on the disk and replace the one in memory (actually visible in your browser)."}</li>
+                <li>{"This function is only provided in error case, if your groups in memory have been corrupted."}</li>
+                <li>{"In any cases, it is better to contact me on Github or with a mail. In that case, reporting the error messages from the browser (Ctrl+Maj+J) will be greatly helpful."}</li>
+                <li>{"Be aware, that your groups in memory are overwritten and lost after this operation."}</li>
+              </ul>
+              */}
+            </ul>
+          }
+          content = {
+            <div className="dangerous-zone">
+              <OptionButton
+                title= {"Remove all groups"}
+                onClick= {this.handleClickOnRemoveAllGroups.bind(this)}
+                enabled={true}
+              />
+              {/*
+              <OptionButton
+                title= {"Reload your groups"}
+                onClick= {this.handleClickOnReloadGroups.bind(this)}
+                enabled={true}
+              />
+              */}
             </div>
           }
         />
@@ -65,6 +101,18 @@ class SaveSection extends React.Component {
       }),
     ])*/
   }
+
+  handleClickOnRemoveAllGroups() {
+    if (confirm("Are you sure you want to remove all the groups?")) {
+        this.props.onDeleteAllGroups();
+    }
+  }
+
+  handleClickOnReloadGroups() {
+    if (confirm("Are you sure you want to reload your groups from the disk?")) {
+        this.props.onReloadGroups();
+    }
+  }
 };
 
 SaveSection.propTypes = {
@@ -72,5 +120,7 @@ SaveSection.propTypes = {
   onOptionChange: PropTypes.func,
   onImportClick: PropTypes.func,
   onExportClick: PropTypes.func,
+  onDeleteAllGroups: PropTypes.func,
+  onReloadGroups: PropTypes.func,
   selected: PropTypes.string,
 };

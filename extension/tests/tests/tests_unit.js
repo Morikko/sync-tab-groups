@@ -47,7 +47,7 @@ describe("Comparator: ", ()=>{
 
 describe("Session: ", () => {
 
-  describe("createGroup", () => {
+  describe("createGroup: ", () => {
     beforeAll(function() {
       jasmine.addMatchers(tabGroupsMatchers);
     });
@@ -182,6 +182,103 @@ describe("Session: ", () => {
       expect(group).toEqualGroups(GroupManager.groups[groupIndex]);
 
       GroupManager.removeGroupFromId(id);
+    });
+  });
+
+  describe("createGroups: ", ()=>{
+
+    it("Create similar groups", ()=>{
+      let groupsLength = 4, titlePrefix="Test";
+      let groups = Session.createArrayGroups({
+        groupsLength: groupsLength,
+        tabsLength: groupsLength,
+        pinnedTabs: 1,
+        lazyMode: false,
+        privilegedLength: 0,
+        openPrivileged: false,
+        extensionUrlLength: 0,
+        global: false,
+        incognito: false,
+        active: -1,
+        title:titlePrefix,
+      });
+
+      expect(groups.length).toEqual(groupsLength);
+      groups.forEach((group, index)=>{
+        expect(group.tabs.length).toEqual(groupsLength);
+        expect(group.incognito).toBe(false);
+        expect(group.title).toEqual(titlePrefix+" "+index);
+      });
+    });
+
+    it("Create different groups", ()=>{
+      let groupsLength = 4, title=["Coucou", "bonjour", "Salut", "Aurevoir"];
+      let groups = Session.createArrayGroups({
+        groupsLength: groupsLength,
+        tabsLength: Utils.range(groupsLength),
+        pinnedTabs: 1,
+        lazyMode: false,
+        privilegedLength: 0,
+        openPrivileged: false,
+        extensionUrlLength: 0,
+        global: false,
+        incognito: [false, true, false, true],
+        active: -1,
+        title:title,
+      });
+
+      expect(groups.length).toEqual(groupsLength);
+      groups.forEach((group, index)=>{
+        expect(group.tabs.length).toEqual(index);
+        expect(group.incognito).toBe((index%2)?true:false);
+        expect(group.title).toEqual(title[index]);
+      });
+    });
+
+    it("Create Global Groups", ()=>{
+      let ids = [], groups = [];
+      try {
+        let groupsLength = 4, titlePrefix="Create Global Groups";
+        let previousGroupsLength = GroupManager.groups.length;
+        [ids, groups] = Session.createArrayGroups({
+          groupsLength: groupsLength,
+          tabsLength: Utils.range(groupsLength),
+          pinnedTabs: 1,
+          lazyMode: false,
+          privilegedLength: 0,
+          openPrivileged: false,
+          extensionUrlLength: 0,
+          global: true,
+          incognito: [false, true, false, true],
+          active: -1,
+          title:titlePrefix,
+        });
+
+        expect(groups.length).toEqual(groupsLength);
+        expect(ids.length).toEqual(groupsLength);
+        expect(previousGroupsLength).toEqual(GroupManager.groups.length-groupsLength);
+        ids.forEach((id, index)=>{
+          let groupIndex = GroupManager.getGroupIndexFromGroupId(id);
+          let group = GroupManager.groups[groupIndex];
+          expect(group.tabs.length).toEqual(index);
+          expect(group.incognito).toBe((index%2)?true:false);
+          expect(group.title).toEqual(titlePrefix + " " + index);
+        });
+      } finally {
+        ids.forEach((id, index)=>{
+          if ( GroupManager.getGroupIndexFromGroupId(id, false) >= 0) {
+            GroupManager.removeGroupFromId(id);
+          }
+        });
+      }
+    });
+
+    it("Raise error if param length is wrong", ()=>{
+      expect(Session.createArrayGroups.bind(null, {
+        groupsLength: 4,
+        tabsLength: Utils.range(4),
+        incognito: [false, true, false],
+      })).toThrow();
     });
   });
 });
@@ -382,29 +479,90 @@ describe("GroupManager: ", () => {
 
   });
 
-  beforeAll(()=>{
-    Utils.DEBUG_MODE = false;
-  });
-  afterAll(()=>{
-    Utils.DEBUG_MODE = true;
+  describe("removeAllGroups: ", ()=>{
+
+    it("is Removing well", ()=>{
+      let groups = Session.createArrayGroups({
+        groupsLength: 4,
+        tabsLength: 4,
+      });
+
+      GroupManager.removeAllGroups(groups);
+
+      expect(groups.length).toEqual(0);
+    });
+
   });
 
-  beforeEach(function(){
-    spyOn(StorageManager.Local, "loadGroups");
+  describe("reloadGroupsFromDisk: ", ()=>{
+    beforeAll(function() {
+      jasmine.addMatchers(tabGroupsMatchers);
+    });
+
+    it("is Reloading well", async ()=>{
+      let groups = Session.createArrayGroups({
+        groupsLength: 4,
+        tabsLength: 4,
+      });
+      let groupsToReload = [];
+
+      let saveGroups = await StorageManager.Local.loadGroups();
+      await StorageManager.Local.saveGroups(groups);
+
+      /*
+      spyOn(StorageManager.Local, "loadGroups").and.callFake(async function(){
+        return Promise.resolve(groups);
+      });
+      */
+
+      await GroupManager.reloadGroupsFromDisk(groupsToReload);
+      expect(groupsToReload).toEqualGroups(groups);
+      await StorageManager.Local.saveGroups(saveGroups);
+    });
+
+    it("is well changing GroupManager.groups", async ()=>{
+      let saveGroups = GroupManager.groups;
+      let targetGroups = Session.createArrayGroups({
+        groupsLength: 4,
+        tabsLength: 4,
+      });
+      GroupManager.groups = [];
+
+      //spyOn(StorageManager.Local, "loadGroups").and.returnValue(saveGroups);
+      await StorageManager.Local.saveGroups(targetGroups);
+
+      await GroupManager.reloadGroupsFromDisk();
+
+      expect(GroupManager.groups.length).toEqual(targetGroups.length);
+      GroupManager.groups = saveGroups;
+      await StorageManager.Local.saveGroups(saveGroups);
+    });
+
   });
 
   describe("checkCorruptedGroups: ", ()=>{
+    beforeAll(()=>{
+      Utils.DEBUG_MODE = false;
+    });
+    afterAll(()=>{
+      Utils.DEBUG_MODE = true;
+    });
+
+    beforeEach(function(){
+      spyOn(GroupManager, "reloadGroupsFromDisk");
+    });
+
     it("No corruption", async function(){
       let groups = [
         Session.createGroup({tabsLength: 7, pinnedTabs: 2})
       ]
       await GroupManager.checkCorruptedGroups(groups);
-      expect(StorageManager.Local.loadGroups).toHaveBeenCalledTimes(0);
+      expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(0);
     });
 
     it("A  group is undefined", async function(){
       await GroupManager.checkCorruptedGroups([undefined]);
-      expect(StorageManager.Local.loadGroups).toHaveBeenCalledTimes(1);
+      expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(1);
     });
 
     it("A Tabs Group is undefined", async function(){
@@ -416,9 +574,10 @@ describe("GroupManager: ", () => {
       group.tabs = undefined;
       await GroupManager.checkCorruptedGroups([group]);
 
-      expect(StorageManager.Local.loadGroups).toHaveBeenCalledTimes(2);
+      expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(2);
     });
   });
+
 });
 
 describe("Search", () => {

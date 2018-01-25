@@ -231,3 +231,15 @@ input[type=checkbox]:checked ~ label{
 }
 
 /*** END Tooltip ****/
+
+/*** Button in dangerous zone ***/
+
+.dangerous-zone .option-button {
+  background: var(--dangerous-checked);
+}
+
+.dangerous-zone .option-button:focus, .dangerous-zone  .option-button:hover {
+  background: var(--dangerous-checked-hover);
+}
+
+/*** End Button in dangerous zone *****/

@@ -96,7 +96,7 @@ TestManager.compareGroups = function(groups, groups_ref) {
   let group_result;
   for (let i = 0; i < groups.length; i++) {
     if (!(group_result = TestManager.compareGroup(groups[i], groups_ref[i]))[0]) {
-      group_result[1] += "Groups comparator @ " + i + ": " + tab_result[1];
+      group_result[1] = "Groups comparator @ " + i + ": " + group_result[1];
       return group_result;
     }
   }

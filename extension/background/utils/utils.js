@@ -30,6 +30,8 @@
  - setBrowserActionIcon
  - StorageManager.File.readJsonFile
  - GroupManager.getIndexSortByPosition
+ - objectHasUndefined
+ - isDeadObject
  */
 var Utils = Utils || {};
 /**
@@ -467,4 +469,12 @@ Utils.isDeadObject = function (obj) {
     console.log("Sync Tab Groups: " + obj + " is probably dead...");
     return true;
   }
+}
+
+/**
+ * Return an array with integer from 0 to N-1
+ * @param {Number} N - Size of the array
+ */
+Utils.range = function(N) {
+  return [...Array(N).keys()]
 }

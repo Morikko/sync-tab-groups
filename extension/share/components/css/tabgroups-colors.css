@@ -16,6 +16,8 @@
 :root {
   --checked: #2aa1c0;
   --checked-hover: #0e647d;
+  --dangerous-checked: #ff4d4d;
+  --dangerous-checked-hover: #b30000;
   --not-checked: #e6e6e6;
   --not-checked-hover: #ccc;
   --disabled: #7b7b7b;

@@ -6,7 +6,7 @@ class SaveSection extends React.Component {
       React.createElement(
         "h1",
         { className: "section-title" },
-        "Save/Restore"
+        "Groups"
       ),
       React.createElement(SubSection, {
         title: browser.i18n.getMessage("import_export_title"),
@@ -36,6 +36,36 @@ class SaveSection extends React.Component {
             title: browser.i18n.getMessage("import_groups"),
             id: "import-groups",
             onFileSelected: this.props.onImportClick
+          })
+        )
+      }),
+      React.createElement(SubSection, {
+        title: "Cleaning (Dangerous)",
+        tooltip: React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            "Remove all groups:"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "Once done, you can't recover your groups if you don't have export them manually."
+            )
+          )
+        ),
+        content: React.createElement(
+          "div",
+          { className: "dangerous-zone" },
+          React.createElement(OptionButton, {
+            title: "Remove all groups",
+            onClick: this.handleClickOnRemoveAllGroups.bind(this),
+            enabled: true
           })
         )
       })
@@ -74,6 +104,18 @@ class SaveSection extends React.Component {
       }),
     ])*/
   }
+
+  handleClickOnRemoveAllGroups() {
+    if (confirm("Are you sure you want to remove all the groups?")) {
+      this.props.onDeleteAllGroups();
+    }
+  }
+
+  handleClickOnReloadGroups() {
+    if (confirm("Are you sure you want to reload your groups from the disk?")) {
+      this.props.onReloadGroups();
+    }
+  }
 };
 
 SaveSection.propTypes = {
@@ -81,5 +123,7 @@ SaveSection.propTypes = {
   onOptionChange: PropTypes.func,
   onImportClick: PropTypes.func,
   onExportClick: PropTypes.func,
+  onDeleteAllGroups: PropTypes.func,
+  onReloadGroups: PropTypes.func,
   selected: PropTypes.string
 };

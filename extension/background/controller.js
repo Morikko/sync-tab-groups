@@ -164,6 +164,14 @@ Controller.onOpenSettings = function() {
   browser.runtime.openOptionsPage();
 };
 
+Controller.onRemoveAllGroups = function() {
+  GroupManager.removeAllGroups();
+};
+
+Controller.onReloadGroups = function() {
+  GroupManager.reloadGroupsFromDisk();
+};
+
 Controller.changeSynchronizationStateOfWindow = function(params) {
   if (params.isSync) {
     WindowManager.integrateWindow(params.windowId, true);
@@ -345,6 +353,12 @@ Controller.optionMessenger = function(message) {
       break;
     case "Option:Export":
       Controller.onExportGroups();
+      break;
+    case "Option:DeleteAllGroups":
+      Controller.onRemoveAllGroups();
+      break;
+    case "Option:ReloadGroups":
+      Controller.onReloadGroups();
       break;
   }
 }

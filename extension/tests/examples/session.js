@@ -113,7 +113,7 @@ Session.createGroup = function(
 
   let tabs = Session.createTabs(params);
 
-  let group = new bg.GroupManager.Group(
+  let group = new GroupManager.Group(
     id = GroupManager.createUniqueGroupId(),
     title = params.title,
     tabs = tabs,
@@ -127,6 +127,75 @@ Session.createGroup = function(
   } else {
     return group;
   }
+}
+
+/**
+ * Create groupsLength groups and return the array with all the created groups
+ * params.groupsLength is always a number
+ * Other params are either single or an array with a length of groupsLength
+ * If params.title is single, it will be used as a prefix and the nbr of the groups is added behind (with a space between)
+ * @param {Object} params - Option for the creation
+ * @param {Object}
+      - groups{Array} if params.global to false
+      - [ids{Array}, groups{Array}]  if params.global to true
+ */
+Session.createArrayGroups = function(params) {
+  Utils.mergeObject(params, {
+    groupsLength: 0,
+    tabsLength: 0,
+    pinnedTabs: 0,
+    lazyMode: false,
+    privilegedLength: 0,
+    openPrivileged: false,
+    extensionUrlLength: 0,
+    global: false,
+    incognito: false,
+    active: -1,
+    title:"",
+  });
+
+  // Prepare params
+  for(let pro in params) {
+    if ( typeof params[pro] !== "string" && params[pro].length !== undefined
+      && params[pro].length !== params.groupsLength ) {
+      console.error("Session.createArrayGroups: Params length are not right, it should be either 1 or the nbr of groups. Error on " + pro + " with value: ");
+      console.error(params[pro]);
+      throw Error("");
+    }
+  }
+
+  // Create Groups
+  let groups = [], ids = [];
+  for(let i=0; i<params.groupsLength; i++){
+    let groupParam = {};
+    for(let pro in params) {
+      if ( params[pro].length === undefined ) {
+        groupParam[pro] = params[pro];
+      } else {
+        groupParam[pro] = params[pro][i];
+      }
+    }
+    if ( typeof params.title === "string" ) {
+      groupParam.title = params.title + " " + i;
+    } else {
+      groupParam.title = params.title[i];
+    }
+
+    let group, id;
+    if ( params.global ) {
+      [id, group] = Session.createGroup(
+        groupParam
+      );
+      ids.push(id);
+    } else {
+      group = Session.createGroup(
+        groupParam
+      );
+    }
+    groups.push(group);
+  }
+
+  return params.global?[ids, groups]:groups;
 }
 
 Session.addTabToGroup = async function (group, tab_params) {

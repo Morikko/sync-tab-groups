@@ -19,6 +19,8 @@ class OptionsPanel extends React.Component{
           options={this.props.options} onOptionChange={this.props.onOptionChange}
           onImportClick={this.props.onImportClick}
           onExportClick={this.props.onExportClick}
+          onDeleteAllGroups={this.props.onDeleteAllGroups}
+          onReloadGroups={this.props.onReloadGroups}
           selected={this.props.selected}
          /* TODO: end of bookmark auto-save
          onBackUpClick: this.props.onBackUpClick*//>
@@ -36,5 +38,7 @@ OptionsPanel.propTypes = {
   onBackUpClick: PropTypes.func,
   onImportClick: PropTypes.func,
   onExportClick: PropTypes.func,
+  onDeleteAllGroups: PropTypes.func,
+  onReloadGroups: PropTypes.func,
   selected: PropTypes.string,
 };

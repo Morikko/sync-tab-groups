@@ -25,6 +25,14 @@ const Actions = {
   onExportAsk: function() {
     Utils.sendMessage("Option:Export", {});
   },
+
+  onDeleteAllGroups: function( ) {
+    Utils.sendMessage("Option:DeleteAllGroups", {});
+  },
+
+  onReloadGroups: function( ) {
+    Utils.sendMessage("Option:ReloadGroups", {});
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -39,6 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
         onBackUpClick: Actions.onBackUpAsk,
         onImportClick: Actions.onImportAsk,
         onExportClick: Actions.onExportAsk,
+        onDeleteAllGroups: Actions.onDeleteAllGroups,
+        onReloadGroups: Actions.onReloadGroups,
       })
     ),
     document.getElementById("content")

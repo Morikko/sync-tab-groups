@@ -6,6 +6,7 @@ class OptionsStandalone extends React.Component {
     };
 
     this.onNavClick = this.onNavClick.bind(this);
+    this.readHash = this.readHash.bind(this);
   }
 
   componentDidMount() {
@@ -26,7 +27,7 @@ class OptionsStandalone extends React.Component {
       new tab("Settings", "settings"),
       new tab("Interface", "interface"),
       new tab("Shortcuts", "shortcuts"),
-      new tab("Save/Restore", "save"),
+      new tab("Groups", "save"),
       new tab("About", "about"),
       new tab("Guide", "help"),
     ];
@@ -56,7 +57,9 @@ OptionsStandalone.propTypes = {
   onOptionChange: PropTypes.func,
   onBackUpClick: PropTypes.func,
   onImportClick: PropTypes.func,
-  onExportClick: PropTypes.func
+  onExportClick: PropTypes.func,
+  onDeleteAllGroups: PropTypes.func,
+  onReloadGroups: PropTypes.func,
 };
 
 Options = (() => {

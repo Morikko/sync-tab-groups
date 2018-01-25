@@ -25,7 +25,7 @@ class OptionsStandalone extends React.Component {
       this.href = href;
       this.title = title;
     };
-    let tabs = [new tab("Settings", "settings"), new tab("Interface", "interface"), new tab("Shortcuts", "shortcuts"), new tab("Save/Restore", "save"), new tab("About", "about"), new tab("Guide", "help")];
+    let tabs = [new tab("Settings", "settings"), new tab("Interface", "interface"), new tab("Shortcuts", "shortcuts"), new tab("Groups", "save"), new tab("About", "about"), new tab("Guide", "help")];
     return React.createElement(
       "div",
       null,
@@ -53,7 +53,9 @@ OptionsStandalone.propTypes = {
   onOptionChange: PropTypes.func,
   onBackUpClick: PropTypes.func,
   onImportClick: PropTypes.func,
-  onExportClick: PropTypes.func
+  onExportClick: PropTypes.func,
+  onDeleteAllGroups: PropTypes.func,
+  onReloadGroups: PropTypes.func
 };
 
 Options = (() => {

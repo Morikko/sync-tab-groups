@@ -73,7 +73,7 @@ GroupManager.EVENT_PREPARE = 'groups-prepare';
 // Done after a group modification when groups are safe
 GroupManager.EVENT_CHANGE = 'groups-change';
 GroupManager.eventlistener = new EventListener();
-GroupManager.repeatedtask = new TaskManager.RepeatedTask(1000);
+GroupManager.repeatedtask = new TaskManager.RepeatedTask(3000);
 // Reference to the interval that checks if groups are corrupted
 GroupManager.checkerInterval = undefined;
 
@@ -463,6 +463,32 @@ GroupManager.detachWindowFromGroupId = async function(groupId) {
 }
 
 /**
+ * Remove all the elements in groups
+ * @param {Array} groups
+ */
+GroupManager.removeAllGroups = function (groups=GroupManager.groups) {
+  groups.length = 0;
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+}
+
+/**
+ * Reload the groups from the disk and set them to groups.
+ * If an error occured (data too corrupted), GroupManager.groups is replaced (no matter groups variable)
+ * @param {Array} groups
+ */
+GroupManager.reloadGroupsFromDisk = async function (groups=GroupManager.groups) {
+  try {
+    // Do it first as removeAllGroups can overwrite the value
+    let tmpGroups =  await StorageManager.Local.loadGroups();
+    GroupManager.removeAllGroups(groups);
+    GroupManager.addGroups(tmpGroups, groups);
+  } catch (e) { // If data is too corrupted, replace it direclty
+    GroupManager.groups = await StorageManager.Local.loadGroups();
+  }
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+}
+
+/**
  * Remove the windowId associated to a group (windows was closed)
  * @param {Number} windowId
  */
@@ -667,12 +693,17 @@ GroupManager.addGroupWithTab = function(tabs, windowId = browser.windows.WINDOW_
   return uniqueGroupId;
 }
 
-GroupManager.addGroups = function(groups) {
+/**
+ * Add all the groups from newGroups in groups with a unique Id
+ * @param {Array} newGroups - groups to add
+ * @param {Array} groups - groups where to add
+ */
+GroupManager.addGroups = function(newGroups, groups=GroupManager.groups) {
   let ids = []
-  for (let g of groups) {
+  for (let g of newGroups) {
     g.id = GroupManager.createUniqueGroupId();
     ids.push(g.id);
-    GroupManager.groups.push(g);
+    groups.push(g);
   }
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
@@ -713,11 +744,6 @@ GroupManager.removeEmptyGroup = function() {
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
-GroupManager.removeAllGroups = function() {
-  GroupManager.groups = [];
-  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
-}
-
 /******** OTHER *********/
 
 /**
@@ -736,7 +762,7 @@ GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
  * @return {Number} uniqueGroupId
  */
 GroupManager.createUniqueGroupId = function() {
-  var uniqueGroupId = GroupManager.groups.length - 1;
+  let uniqueGroupId = GroupManager.groups.length - 1;
   let isUnique = true,
     count = 0;
 
@@ -791,9 +817,8 @@ GroupManager.integrateAllOpenedWindows = async function() {
 }
 
 /**
- * Save groups
- * In local storage
- * Do back up in bookmarks
+ * Save groups In local storage
+ * Function is avorted if groups are corrupted
  */
 GroupManager.store = function() {
   if ( GroupManager.checkCorruptedGroups(GroupManager.groups) ) {
@@ -822,35 +847,34 @@ GroupManager.initEventListener = function() {
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   });
 
+  // Check groups are not corrupted every 30s
   GroupManager.checkerInterval = setInterval(()=>{
     GroupManager.checkCorruptedGroups(GroupManager.groups);
   }, 30000);
 };
 
 
-GroupManager.checkCorruptedGroups = async function(groups = GroupManager.groups) {
+GroupManager.checkCorruptedGroups = function(groups = GroupManager.groups) {
   let corrupted = false;
-  for (let i = groups.length - 1; i >= 0; i--) {
-    try {
-      corrupted = corrupted || Utils.isDeadObject(groups);
-      corrupted = corrupted || (Utils.isDeadObject(groups[i].tabs));
-      corrupted = corrupted || Utils.objectHasUndefined(groups[i]);
-    } catch (e) {
-      corrupted = true;
+  try {
+    corrupted = corrupted || Utils.isDeadObject(groups);
+    corrupted = corrupted || Utils.objectHasUndefined(groups);
+    for (let i = groups.length - 1; i >= 0; i--) {
+        corrupted = corrupted || Utils.isDeadObject(groups[i]);
+        corrupted = corrupted || (Utils.isDeadObject(groups[i].tabs));
+      if (corrupted){
+        break;
+      }
     }
-    if (corrupted){
-      break;
-    }
+  } catch (e) {
+    corrupted = true;
   }
 
   if ( corrupted ) {
     console.error("GroupManager.checkCorruptedGroups has detected a corrupted groups: ");
+    // Don't fix data in debug mode for allowing to analyze
     if ( !Utils.DEBUG_MODE ) {
-      if ( groups === GroupManager.groups ) {
-        GroupManager.groups = await StorageManager.Local.loadGroups();;
-      } else {
-        groups = await StorageManager.Local.loadGroups();
-      }
+      GroupManager.reloadGroupsFromDisk(groups);
     }
   }
   return corrupted;

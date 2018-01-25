@@ -9,7 +9,7 @@ StorageManager.Local = StorageManager.Local || {};
 StorageManager.Local.saveGroups = async function(groups) {
   let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
   try {
-    browser.storage.local.set({
+    await browser.storage.local.set({
      groups: export_groups
    });
  } catch(e) {
