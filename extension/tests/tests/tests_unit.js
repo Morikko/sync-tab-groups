@@ -381,6 +381,44 @@ describe("GroupManager: ", () => {
     });
 
   });
+
+  beforeAll(()=>{
+    Utils.DEBUG_MODE = false;
+  });
+  afterAll(()=>{
+    Utils.DEBUG_MODE = true;
+  });
+
+  beforeEach(function(){
+    spyOn(StorageManager.Local, "loadGroups");
+  });
+
+  describe("checkCorruptedGroups: ", ()=>{
+    it("No corruption", async function(){
+      let groups = [
+        Session.createGroup({tabsLength: 7, pinnedTabs: 2})
+      ]
+      await GroupManager.checkCorruptedGroups(groups);
+      expect(StorageManager.Local.loadGroups).toHaveBeenCalledTimes(0);
+    });
+
+    it("A  group is undefined", async function(){
+      await GroupManager.checkCorruptedGroups([undefined]);
+      expect(StorageManager.Local.loadGroups).toHaveBeenCalledTimes(1);
+    });
+
+    it("A Tabs Group is undefined", async function(){
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+
+      group.tabs[0].url = undefined;
+      await GroupManager.checkCorruptedGroups([group]);
+
+      group.tabs = undefined;
+      await GroupManager.checkCorruptedGroups([group]);
+
+      expect(StorageManager.Local.loadGroups).toHaveBeenCalledTimes(2);
+    });
+  });
 });
 
 describe("Search", () => {

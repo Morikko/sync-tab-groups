@@ -434,3 +434,37 @@ Utils.getGroupTitle = function(group) {
     browser.i18n.getMessage("unnamed_group") + " " + group.id
   );
 };
+
+/**
+ * Return true if at least the object or one of its properties is undefined
+ */
+Utils.objectHasUndefined = function(object) {
+  if ( object === undefined ) {
+    return true;
+  }
+  for (let pro in object) {
+    if ( object[pro] === undefined ) {
+      return true;
+    }
+    if ("object" === typeof object[pro]) {
+      if ( Utils.objectHasUndefined(object[pro]) ) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Return true if obj is a dead object
+ */
+Utils.isDeadObject = function (obj) {
+  try {
+    String(obj);
+    return false;
+  }
+  catch (e) {
+    console.log("Sync Tab Groups: " + obj + " is probably dead...");
+    return true;
+  }
+}
