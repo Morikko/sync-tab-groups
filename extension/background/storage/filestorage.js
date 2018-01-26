@@ -31,14 +31,7 @@ StorageManager.File.exportGroups = function(groups) {
   });
 
   let d = new Date();
-  let url = URL.createObjectURL(new Blob([
-      JSON.stringify({
-        version: ["syncTabGroups", 1],
-        groups: export_groups,
-      })
-    ], {
-      type: 'application/json'
-    }));
+  let url = Utils.createGroupsJsonFile();
   let filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
 
   browser.downloads.download({

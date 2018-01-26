@@ -108,6 +108,19 @@ ContextMenu.createSpecialActionMenu = function() {
     };
   }
   browser.contextMenus.create(contextExportGroups);
+
+  let contextBackUp = {
+    id: ContextMenu.SpecialActionMenu_ID + "backup",
+    title: browser.i18n.getMessage("contextmenu_backup"),
+    contexts: ['browser_action'],
+  };
+  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+    contextBackUp.icons = {
+      "64": "/share/icons/hdd-o-64.png",
+      "32": "/share/icons/hdd-o-32.png"
+    };
+  }
+  browser.contextMenus.create(contextBackUp);
   /* TODO: not working can't ask file, wait select group in popup window with filter
   browser.contextMenus.create({
     id: ContextMenu.SpecialActionMenu_ID + "import_groups",
@@ -209,6 +222,9 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         Utils.openUrlOncePerWindow(browser.extension.getURL(
           "/tabpages/manage-groups/manage-groups.html"
         ));
+        break;
+      case "backup":
+        StorageManager.Backup.backup("manual");
         break;
     }
   }

@@ -40,6 +40,114 @@ class SaveSection extends React.Component {
         )
       }),
       React.createElement(SubSection, {
+        title: "Back Up",
+        tooltip: React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            "Behaviors"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "Back Up is an automatic download of a file with all your groups."
+            ),
+            React.createElement(
+              "li",
+              null,
+              "The download is visible in the download history (it can't be hidden)"
+            ),
+            React.createElement(
+              "li",
+              null,
+              "Each specific timer is saved in a distinct file."
+            ),
+            React.createElement(
+              "li",
+              null,
+              "However the same timer will overwrite its previous back up."
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Back Up Location"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "Back Up is done in the subfolder '" + StorageManager.Backup.LOCATION + "' in your browser download folder."
+            ),
+            React.createElement(
+              "li",
+              null,
+              "The browser restricts it to be inside the browser download folder, so you can change the location."
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Timer explanation"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "Timers are started when the extension is launched."
+            ),
+            React.createElement(
+              "li",
+              null,
+              "Timers are reset to 0, when you restart the browser or disable the extension."
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Manual Back Up"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "From the shortcuts menu (Right click on the extension icon)."
+            ),
+            React.createElement(
+              "li",
+              null,
+              "The back up is in a distinct file but the behaviors are the same."
+            )
+          )
+        ),
+        content: React.createElement(
+          "div",
+          null,
+          React.createElement(OptionButton, {
+            title: "Enable",
+            onClick: this.onEnableBackUp.bind(this),
+            enabled: this.props.options.backup.enable
+          }),
+          React.createElement(OptionButton, {
+            title: "Disable",
+            onClick: this.onDisableBackUp.bind(this),
+            enabled: !this.props.options.backup.enable
+          }),
+          this.createCheckBoxesForTimers()
+        )
+      }),
+      React.createElement(SubSection, {
         title: "Cleaning (Dangerous)",
         tooltip: React.createElement(
           "ul",
@@ -103,6 +211,29 @@ class SaveSection extends React.Component {
         onClick: this.props.onBackUpClick
       }),
     ])*/
+  }
+
+  createCheckBoxesForTimers() {
+    let checkboxes = [];
+    for (let time in OptionManager.TIMERS) {
+      checkboxes.push(React.createElement(NiceCheckbox, {
+        checked: this.props.options.backup.time[time],
+        label: "Back up every " + time,
+        onCheckChange: this.props.onOptionChange,
+        id: "backup-time-" + time,
+        disabled: !this.props.options.backup.enable,
+        key: time
+      }));
+    }
+    return checkboxes;
+  }
+
+  onEnableBackUp() {
+    this.props.onOptionChange("backup-enable", true);
+  }
+
+  onDisableBackUp() {
+    this.props.onOptionChange("backup-enable", false);
   }
 
   handleClickOnRemoveAllGroups() {

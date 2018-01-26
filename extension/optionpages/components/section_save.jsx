@@ -30,6 +30,50 @@ class SaveSection extends React.Component {
           }
         />
         <SubSection
+          title={"Back Up"}
+          tooltip={
+            <ul>
+              <li>{"Behaviors"}</li>
+              <ul>
+                <li>{"Back Up is an automatic download of a file with all your groups."}</li>
+                <li>{"The download is visible in the download history (it can't be hidden)"}</li>
+                <li>{"Each specific timer is saved in a distinct file."}</li>
+                <li>{"However the same timer will overwrite its previous back up."}</li>
+              </ul>
+              <li>{"Back Up Location"}</li>
+              <ul>
+                <li>{"Back Up is done in the subfolder '"+ StorageManager.Backup.LOCATION+ "' in your browser download folder."}</li>
+                <li>{"The browser restricts it to be inside the browser download folder, so you can change the location."}</li>
+              </ul>
+              <li>{"Timer explanation"}</li>
+              <ul>
+                <li>{"Timers are started when the extension is launched."}</li>
+                <li>{"Timers are reset to 0, when you restart the browser or disable the extension."}</li>
+              </ul>
+              <li>{"Manual Back Up"}</li>
+              <ul>
+                <li>{"From the shortcuts menu (Right click on the extension icon)."}</li>
+                <li>{"The back up is in a distinct file but the behaviors are the same."}</li>
+              </ul>
+            </ul>
+          }
+          content = {
+            <div>
+              <OptionButton
+                title= {"Enable"}
+                onClick= {this.onEnableBackUp.bind(this)}
+                enabled={this.props.options.backup.enable}
+              />
+              <OptionButton
+                title= {"Disable"}
+                onClick= {this.onDisableBackUp.bind(this)}
+                enabled={!this.props.options.backup.enable}
+              />
+              {this.createCheckBoxesForTimers()}
+            </div>
+          }
+        />
+        <SubSection
           title={"Cleaning (Dangerous)"}
           tooltip={
             <ul>
@@ -37,7 +81,7 @@ class SaveSection extends React.Component {
               <ul>
                 <li>{"Once done, you can't recover your groups if you don't have export them manually."}</li>
               </ul>
-              {/*
+              {/* TODO: check if necessary to keep
               <li>{"Reload your groups"}</li>
               <ul>
                 <li>{"Load the groups saved on the disk and replace the one in memory (actually visible in your browser)."}</li>
@@ -100,6 +144,31 @@ class SaveSection extends React.Component {
         onClick: this.props.onBackUpClick
       }),
     ])*/
+  }
+
+  createCheckBoxesForTimers() {
+    let checkboxes = [];
+    for(let time in OptionManager.TIMERS) {
+      checkboxes.push(
+        <NiceCheckbox
+          checked= {this.props.options.backup.time[time]}
+          label= {"Back up every " + time}
+          onCheckChange= {this.props.onOptionChange}
+          id={"backup-time-"+time}
+          disabled={!this.props.options.backup.enable}
+          key={time}
+        />
+      );
+    }
+    return checkboxes;
+  }
+
+  onEnableBackUp() {
+    this.props.onOptionChange("backup-enable", true);
+  }
+
+  onDisableBackUp() {
+    this.props.onOptionChange("backup-enable", false);
   }
 
   handleClickOnRemoveAllGroups() {

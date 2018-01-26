@@ -37,6 +37,7 @@
       "background/storage/bookmarkstorage.js",
       "background/storage/localstorage.js",
       "background/storage/filestorage.js",
+      "background/storage/backup.js",
       "background/optionmanager.js",
       "background/groupmanager.js",
       "background/windowmanager.js",

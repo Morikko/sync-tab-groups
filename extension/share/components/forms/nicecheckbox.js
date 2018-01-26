@@ -19,7 +19,11 @@ class NiceCheckbox extends React.Component {
     return React.createElement(
       "label",
       {
-        className: "control control--checkbox",
+        className: classNames({
+          "control": true,
+          "control--checkbox": true,
+          "disabled": this.state.disabled
+        }),
         htmlFor: this.props.id },
       React.createElement(
         "span",

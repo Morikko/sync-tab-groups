@@ -44,6 +44,10 @@ Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
 Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
 Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";
 
+var StorageManager = StorageManager || {};
+StorageManager.Backup = StorageManager.Backup || {};
+StorageManager.Backup.LOCATION = "synctabgroups-backup/";
+
 var TaskManager = TaskManager || {};
 TaskManager.ASK = "ASK";
 TaskManager.CANCEL = "CANCEL";
@@ -57,6 +61,14 @@ OptionManager.SORT_RECENT_OLD = 1;
 OptionManager.SORT_ALPHABETICAL = 2;
 OptionManager.SORT_LAST_ACCESSED = 3;
 OptionManager.SORT_CUSTOM = 4;
+OptionManager.TIMERS = {
+  t_5mins: 5*60*1000,
+  t_1h: 60*60*1000,
+  t_4h: 4*60*60*1000,
+  t_1d: 24*60*60*1000,
+  t_1w: 7*24*60*60*1000,
+}
+
 OptionManager.TEMPLATE = function() {
   return {
     version: 0.1,
@@ -86,9 +98,20 @@ OptionManager.TEMPLATE = function() {
     },
     shortcuts: {
       allowGlobal: false,
+    },
+    backup: {
+      enable: true,
+      time: Utils.setObjectPropertiesWith(OptionManager.TIMERS, true),
     }
   };
 };
+
+Utils.setObjectPropertiesWith = function(obj, val)  {
+  let obj2 = Utils.getCopy(obj);
+  for(let pro in obj2 )
+    obj2[pro] = val;
+  return obj2;
+}
 
 var GroupManager = GroupManager || {};
 
@@ -477,4 +500,15 @@ Utils.isDeadObject = function (obj) {
  */
 Utils.range = function(N) {
   return [...Array(N).keys()]
+}
+
+Utils.createGroupsJsonFile = function (groups=GroupManager.groups) {
+  return URL.createObjectURL(new Blob([
+    JSON.stringify({
+      version: ["syncTabGroups", 1],
+      groups: groups,
+    })
+  ], {
+    type: 'application/json'
+  }))
 }

@@ -447,6 +447,11 @@
   "unsynchronized_window": {
     "message": "Group Invisible",
     "description": "Status in Mainbar in popup when group are invisible"
+  },
+
+  "contextmenu_backup": {
+    "message": "Manual Back Up",
+    "description": "Right click on extension icon, title for doing a back up."
   }
 
 }

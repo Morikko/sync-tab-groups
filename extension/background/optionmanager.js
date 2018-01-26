@@ -62,6 +62,36 @@ OptionManager.updateOption = function(optionName, optionValue) {
     case "groups-sortingType":
       GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
       break;
+    case "backup-enable":
+      OptionManager.onBackUpEnableChange(optionValue);
+      break;
+  }
+  if ( optionName.startsWith("backup-time-") ) {
+    OptionManager.onBackUpTimerChange(
+      optionName.substring("backup-time-".length),
+      optionValue);
+  }
+}
+
+/**
+  * Init or stop the automatic back up process
+  */
+OptionManager.onBackUpEnableChange = function(value) {
+  if ( value ) {
+    StorageManager.Backup.init();
+  } else {
+    StorageManager.Backup.stopAll();
+  }
+}
+
+/**
+  * Init or stop the automatic back up process
+  */
+OptionManager.onBackUpTimerChange = function(timer, value) {
+  if ( value ) {
+    StorageManager.Backup.startTimer(timer);
+  } else {
+    StorageManager.Backup.stopTimer(timer);
   }
 }
 

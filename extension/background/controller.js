@@ -53,6 +53,8 @@ Controller.init = async function() {
   browser.runtime.onMessage.addListener(Controller.popupMessenger);
   browser.runtime.onMessage.addListener(Controller.optionMessenger);
 
+  StorageManager.Backup.init();
+
   Utils.setBrowserActionIcon(OptionManager.options.popup.whiteTheme);
 };
 

@@ -145,6 +145,10 @@
   background: var(--not-checked);
 }
 
+.control.disabled span {
+  color: #ccc;
+}
+
 /* Check mark */
 
 .control__indicator:after {

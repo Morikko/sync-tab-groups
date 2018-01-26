@@ -18,7 +18,11 @@ class NiceCheckbox extends React.Component {
   render() {
     return (
       <label
-      className="control control--checkbox"
+      className={classNames({
+        "control": true,
+        "control--checkbox": true,
+        "disabled": this.state.disabled,
+      })}
       htmlFor={this.props.id}>
         <span>{this.props.label}</span>
         <input
