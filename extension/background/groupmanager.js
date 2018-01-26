@@ -471,20 +471,8 @@ GroupManager.removeAllGroups = function (groups=GroupManager.groups) {
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
-/**
- * Reload the groups from the disk and set them to groups.
- * If an error occured (data too corrupted), GroupManager.groups is replaced (no matter groups variable)
- * @param {Array} groups
- */
-GroupManager.reloadGroupsFromDisk = async function (groups=GroupManager.groups) {
-  try {
-    // Do it first as removeAllGroups can overwrite the value
-    let tmpGroups =  await StorageManager.Local.loadGroups();
-    GroupManager.removeAllGroups(groups);
-    GroupManager.addGroups(tmpGroups, groups);
-  } catch (e) { // If data is too corrupted, replace it direclty
-    GroupManager.groups = await StorageManager.Local.loadGroups();
-  }
+GroupManager.reloadGroupsFromDisk = async function () {
+  GroupManager.groups = await StorageManager.Local.loadGroups();
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
@@ -853,28 +841,17 @@ GroupManager.initEventListener = function() {
   }, 30000);
 };
 
-
+/**
+ * Check if groups is corrupted
+ * If so, try to reload the groups from the disk
+ */
 GroupManager.checkCorruptedGroups = function(groups = GroupManager.groups) {
-  let corrupted = false;
-  try {
-    corrupted = corrupted || Utils.isDeadObject(groups);
-    corrupted = corrupted || Utils.objectHasUndefined(groups);
-    for (let i = groups.length - 1; i >= 0; i--) {
-        corrupted = corrupted || Utils.isDeadObject(groups[i]);
-        corrupted = corrupted || (Utils.isDeadObject(groups[i].tabs));
-      if (corrupted){
-        break;
-      }
-    }
-  } catch (e) {
-    corrupted = true;
-  }
-
-  if ( corrupted ) {
+  let corrupted;
+  if ( (corrupted = Utils.checkCorruptedObject(groups)) ) {
     console.error("GroupManager.checkCorruptedGroups has detected a corrupted groups: ");
     // Don't fix data in debug mode for allowing to analyze
     if ( !Utils.DEBUG_MODE ) {
-      GroupManager.reloadGroupsFromDisk(groups);
+      GroupManager.reloadGroupsFromDisk();
     }
   }
   return corrupted;

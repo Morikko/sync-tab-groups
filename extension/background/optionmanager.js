@@ -26,8 +26,9 @@ OptionManager.EVENT_CHANGE = 'options-change';
 
 //OptionManager.options = OptionManager.TEMPLATE();
 OptionManager.eventlistener = new EventListener();
+OptionManager.checkerInterval = undefined;
 
-OptionManager.repeatedtask = new TaskManager.RepeatedTask(1000);
+OptionManager.repeatedtask = new TaskManager.RepeatedTask(3000);
 
 /**
  * Change option value
@@ -205,6 +206,9 @@ OptionManager.check_integrity = function(options) {
  * @return {Promise}
  */
 OptionManager.store = function() {
+  if ( OptionManager.checkCorruptedOptions(OptionManager.options) ) {
+    return;
+  }
   return StorageManager.Local.saveOptions(OptionManager.options);
 }
 
@@ -217,4 +221,25 @@ OptionManager.initEventListener = function() {
         }
       )
     });
+
+    // Check options are not corrupted every 30s
+    OptionManager.checkerInterval = setInterval(()=>{
+      OptionManager.checkCorruptedOptions(OptionManager.options);
+    }, 30000);
+}
+
+OptionManager.reloadOptionsFromDisk = async function () {
+  OptionManager.options = await StorageManager.Local.loadGroups();
+}
+
+OptionManager.checkCorruptedOptions = function (options=OptionManager.options) {
+  let corrupted;
+  if ( (corrupted = Utils.checkCorruptedObject(options)) ) {
+    console.error("OptionManager.checkCorruptedOptions has detected a corrupted options: ");
+    // Don't fix data in debug mode for allowing to analyze
+    if ( !Utils.DEBUG_MODE ) {
+      OptionManager.reloadOptionsFromDisk();
+    }
+  }
+  return corrupted;
 }

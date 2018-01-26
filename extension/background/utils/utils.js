@@ -2,12 +2,19 @@
  * Useful code shared in all the apps UI and background
  * Shared variables definition
  Tools:
- - mergeObject
- - getCopy
- - wait
- - shuffleArray
  - search
  - sendMessage
+ - getCopy
+ - wait
+Array:
+ - shuffleArray
+ - range
+Objects:
+ - mergeObject
+ - setObjectPropertiesWith
+ - objectHasUndefined
+ - isDeadObject
+ - checkCorruptedObject
 
  Browser type:
  - isChrome
@@ -30,8 +37,8 @@
  - setBrowserActionIcon
  - StorageManager.File.readJsonFile
  - GroupManager.getIndexSortByPosition
- - objectHasUndefined
- - isDeadObject
+ - createGroupsJsonFile
+
  */
 var Utils = Utils || {};
 /**
@@ -495,6 +502,25 @@ Utils.isDeadObject = function (obj) {
 }
 
 /**
+ * Check if obj contains at least
+    1. One Dead Object
+    2. One undefined
+  * @param {Object} obj
+  * @return {Boolean} corrupted state
+  */
+Utils.checkCorruptedObject = function( obj ) {
+  let corrupted = false;
+  try {
+    corrupted = corrupted || Utils.isDeadObject(obj);
+    corrupted = corrupted || Utils.objectHasUndefined(obj);
+  } catch (e) {
+    corrupted = true;
+  }
+
+  return corrupted;
+};
+
+/**
  * Return an array with integer from 0 to N-1
  * @param {Number} N - Size of the array
  */
@@ -511,4 +537,16 @@ Utils.createGroupsJsonFile = function (groups=GroupManager.groups) {
   ], {
     type: 'application/json'
   }))
+}
+
+Utils.timerDecorator = function(func, name="Perf", times=1) {
+  return async function() {
+
+    let t0 = performance.now();
+    for(let i=0; i<times; i++){
+      await func.apply(this, arguments);
+    }
+    let t1 = performance.now();
+    console.log(name + ": " + (t1 - t0)/times + " milliseconds.")
+  };
 }
