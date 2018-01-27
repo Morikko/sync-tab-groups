@@ -507,7 +507,7 @@ WindowManager.addGroupFromWindow = async function(windowId) {
 }
 
 /**
-  * @return {Number} groupId created or -1
+  * @return {Number} groupId matched or -1
   */
 WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
   even_new_one = OptionManager.options.groups.syncNewWindow) {
@@ -522,12 +522,6 @@ WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
       if ( bestId > 0 ) { // Keep the best result
         await GroupManager.attachWindowWithGroupId(bestId, windowId);
         id = bestId;
-      } else { // Or create a new group
-        if (even_new_one ||
-          (OptionManager.options.privateWindow.sync &&
-            window.incognito)) {
-          id = await WindowManager.addGroupFromWindow(windowId);
-        }
       }
       return id;
     } catch (e) {
@@ -538,7 +532,7 @@ WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
 }
 
 /**
-  * @return {Number} groupId created or -1
+  * @return {Number} groupId matched or -1
   */
 WindowManager.integrateWindowWithSession = async function(windowId,
   even_new_one = OptionManager.options.groups.syncNewWindow) {
@@ -549,13 +543,7 @@ WindowManager.integrateWindowWithSession = async function(windowId,
       );
 
       let id = -1;
-      if (key === undefined || GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), false) === -1) { // New Window
-        if (even_new_one ||
-          (OptionManager.options.privateWindow.sync &&
-            window.incognito)) {
-          id = await WindowManager.addGroupFromWindow(windowId);
-        }
-      } else { // Update Group
+      if (key !== undefined && GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), false) !== -1) { // Update Group
         await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
         id = parseInt(key, 10);
       }
@@ -571,10 +559,12 @@ WindowManager.integrateWindowWithSession = async function(windowId,
  * 1. If already linked, update the link
  * 2. If new window, add group
  * @param {Number} windowId
+ * @param {Boolean} even_new_one - Normally user preference, if true window will be created for sure, if false won't
  * @return {Number} groupId created or -1
  */
 WindowManager.integrateWindow = async function(windowId,
-  even_new_one = OptionManager.options.groups.syncNewWindow) {
+  even_new_one = OptionManager.options.groups.syncNewWindow,
+  allow_creation) {
   try {
     const window = await browser.windows.get(windowId);
 
@@ -601,6 +591,14 @@ WindowManager.integrateWindow = async function(windowId,
         windowId,
         even_new_one
       )
+    }
+
+    if ( id === -1 ) { // No match
+      if (even_new_one ||
+        (OptionManager.options.privateWindow.sync &&
+          window.incognito)) {
+        id = await WindowManager.addGroupFromWindow(windowId);
+      }
     }
 
     return id;

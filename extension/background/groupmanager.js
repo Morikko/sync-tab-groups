@@ -800,7 +800,11 @@ GroupManager.init = async function() {
 GroupManager.integrateAllOpenedWindows = async function() {
   const windowInfoArray = await browser.windows.getAll();
   for (let windowInfo of windowInfoArray) {
-    await WindowManager.integrateWindow(windowInfo.id);
+    // Don't create
+    await WindowManager.integrateWindow(
+      windowInfo.id,
+      Controller.install?true:false // When installed add all, else none
+    );
   }
 }
 

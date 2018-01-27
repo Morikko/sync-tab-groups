@@ -56,6 +56,9 @@ Controller.init = async function() {
   StorageManager.Backup.init();
 
   Utils.setBrowserActionIcon(OptionManager.options.popup.whiteTheme);
+
+  Controller.refreshUi();
+  Controller.refreshOptionsUI();
 };
 
 Controller.refreshOptionsUI = function() {
@@ -511,7 +514,9 @@ Controller.initCommandsEventListener = function() {
 };
 
 browser.runtime.onInstalled.addListener((details) => {
-  console.log(details);
+  if ( details.reason === "install" ) {
+    Controller.install = true;
+  }
   if(details.temporary) {
     Utils.DEBUG_MODE = true;
     Utils.openUrlOncePerWindow(
