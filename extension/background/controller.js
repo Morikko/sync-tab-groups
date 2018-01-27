@@ -513,8 +513,11 @@ Controller.initCommandsEventListener = function() {
 browser.runtime.onInstalled.addListener((details) => {
   console.log(details);
   if(details.temporary) {
+    Utils.DEBUG_MODE = true;
     Utils.openUrlOncePerWindow(
       browser.extension.getURL("/tests/test-page/test-page.html")
     );
+  } else {
+    Controller.onOpenSettings();
   }
 });
