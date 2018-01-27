@@ -75,7 +75,7 @@ class MainBar extends React.Component {
           />
           <i
             className="app-pref fa fa-fw fa-gear"
-            title={browser.i18n.getMessage("open_preferences")}
+            title={browser.i18n.getMessage("contextmenu_preferences")}
             onClick={this.handleClickPref}
           />
         </div>
