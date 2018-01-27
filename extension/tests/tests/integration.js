@@ -115,8 +115,6 @@ describe("Tabs Creation/Deletion - ", ()=>{
           true,
         );
 
-        console.log(new_tab);
-
         let expectedTabs = this.previousTabs.concat(new_tab);
         TestManager.resetActiveProperties(expectedTabs);
         TestManager.resetActiveProperties(resultingTabs);
@@ -799,11 +797,11 @@ describe("End of Groups - ", ()=>{
 
   afterAll(async function(){
     // Close Window
-    if ( this.windowId )
+    if ( await WindowManager.isWindowIdOpen(this.windowId) )
       await browser.windows.remove(this.windowId);
     // Remove Group
     for (let group of this.groups ) {
-      if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false) >= 0 )
+      if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
         GroupManager.removeGroupFromId(group.id);
     }
   });
@@ -830,14 +828,20 @@ describe("End of Groups - ", ()=>{
       let windowId = await WindowManager.openGroupInNewWindow(this.groups[0].id);
       await TestManager.splitOnHalfScreen(windowId);
 
-      await browser.windows.update(this.windowId, {
-        focused: true,
-      });
-
       let previousLength = GroupManager.groups.length;
       let windowsNumber = (await browser.windows.getAll()).length;
 
-      await WindowManager.closeGroup(this.groups[0].id);
+      try {
+        await browser.windows.update(this.windowId, {
+          focused: true,
+        });
+        await Utils.wait(500);
+
+        await WindowManager.closeGroup(this.groups[0].id);
+      } catch ( e ) {
+        let msg = "Closing Another Window failed on window " + windowId + " and " + e;
+        console.error(msg);
+      }
 
       expect(previousLength).toEqual(GroupManager.groups.length);
       expect(windowsNumber).toEqual((await browser.windows.getAll()).length+1);
@@ -872,12 +876,18 @@ describe("End of Groups - ", ()=>{
     it("Current Window", async function(){
       let previousLength = GroupManager.groups.length;
 
-      await browser.windows.update(this.windowId, {
-        focused: true,
-      });
+      try {
+        await browser.windows.update(this.windowId, {
+          focused: true,
+        });
+        await Utils.wait(500);
 
-      await WindowManager.switchGroup(this.groups[0].id);
-      await WindowManager.removeGroup(this.groups[0].id);
+        await WindowManager.switchGroup(this.groups[0].id);
+        await WindowManager.removeGroup(this.groups[0].id);
+      } catch ( e ) {
+        let msg = "Removing Current Window failed on window " + windowId + " and " + e;
+        console.error(msg);
+      }
 
       let tabs = await TabManager.getTabsInWindowId(this.windowId);
 
@@ -894,19 +904,28 @@ describe("End of Groups - ", ()=>{
     it("Another Window", async function(){
       let windowId = await WindowManager.openGroupInNewWindow(this.groups[1].id);
       await TestManager.splitOnHalfScreen(windowId);
-
-      await browser.windows.update(this.windowId, {
-        focused: true,
-      });
-
       let previousLength = GroupManager.groups.length;
       let windowsNumber = (await browser.windows.getAll()).length;
 
-      await WindowManager.removeGroup(this.groups[1].id);
+      try {
+        await browser.windows.update(this.windowId, {
+          focused: true,
+        });
+        await Utils.wait(500);
 
+        await WindowManager.removeGroup(this.groups[1].id);
+      } catch ( e ) {
+        let msg = "Removing Another Window failed on window " + windowId + " and " + e;
+        console.error(msg);
+      }
       expect(previousLength).toEqual(GroupManager.groups.length+1);
       expect(windowsNumber).toEqual((await browser.windows.getAll()).length+1);
       expect(GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false)).toEqual(-1);
+
+      if ( await WindowManager.isWindowIdOpen(windowId) ) {
+        await browser.windows.remove(windowId);
+      }
+
     }, 10000);
   });
 });

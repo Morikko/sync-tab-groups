@@ -311,7 +311,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).toEqualGroup(good_groups);
+      expect(this.groups).toEqualGroups(good_groups);
     });
 
     it("1 active in group", function() {
@@ -320,7 +320,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).toEqualGroup(good_groups);
+      expect(this.groups).toEqualGroups(good_groups);
     });
 
     it("3 active in group", function() {
@@ -334,7 +334,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).toEqualGroup(good_groups);
+      expect(this.groups).toEqualGroups(good_groups);
     });
 
     it("Empty Group", function() {
@@ -347,7 +347,7 @@ describe("GroupManager: ", () => {
 
       GroupManager.coherentActiveTabInGroups(this.groups);
 
-      expect(this.groups).toEqualGroup(good_groups);
+      expect(this.groups).toEqualGroups(good_groups);
     });
   });
 
@@ -452,8 +452,6 @@ describe("GroupManager: ", () => {
         }).length);
       });
 
-      console.log(tabs);
-
       let bestId = GroupManager.bestMatchGroup(tabs, [group]);
 
       expect(bestId).toEqual(id);
@@ -508,19 +506,18 @@ describe("GroupManager: ", () => {
         groupsLength: 4,
         tabsLength: 4,
       });
-      let groupsToReload = [];
-
       let saveGroups = await StorageManager.Local.loadGroups();
       await StorageManager.Local.saveGroups(groups);
 
-      /*
-      spyOn(StorageManager.Local, "loadGroups").and.callFake(async function(){
-        return Promise.resolve(groups);
+      await GroupManager.reloadGroupsFromDisk();
+      GroupManager.groups.forEach((group)=>{
+        group.index = -1;
+        group.position = -1;
+        TestManager.resetActiveProperties(group.tabs);
       });
-      */
 
-      await GroupManager.reloadGroupsFromDisk(groupsToReload);
-      expect(groupsToReload).toEqualGroups(groups);
+      expect(GroupManager.groups).toEqualGroups(groups);
+      GroupManager.groups = saveGroups;
       await StorageManager.Local.saveGroups(saveGroups);
     });
 
@@ -549,10 +546,10 @@ describe("GroupManager: ", () => {
 describe("Check Corrupted: ", ()=>{
   describe("Groups: ", ()=>{
     beforeAll(()=>{
-      Utils.DEBUG_MODE = false;
+      bg.Utils.DEBUG_MODE = false;
     });
     afterAll(()=>{
-      Utils.DEBUG_MODE = true;
+      bg.Utils.DEBUG_MODE = true;
     });
 
     beforeEach(function(){
@@ -567,7 +564,8 @@ describe("Check Corrupted: ", ()=>{
     });
 
     it("A  group is undefined", async function(){
-      await GroupManager.checkCorruptedGroups([undefined]);
+      let corrupted = await GroupManager.checkCorruptedGroups([undefined]);
+      expect(corrupted).toBe(true);
       expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(1);
     });
 
@@ -586,10 +584,10 @@ describe("Check Corrupted: ", ()=>{
 
   describe("Options: ", ()=>{
     beforeAll(()=>{
-      Utils.DEBUG_MODE = false;
+      bg.Utils.DEBUG_MODE = false;
     });
     afterAll(()=>{
-      Utils.DEBUG_MODE = true;
+      bg.Utils.DEBUG_MODE = true;
     });
 
     beforeEach(function(){

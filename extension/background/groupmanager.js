@@ -495,7 +495,7 @@ GroupManager.detachWindow = async function(windowId) {
     if (GroupManager.groups[groupIndex].incognito) {
       await GroupManager.removeGroupFromId(GroupManager.groups[groupIndex].id);
     } else {
-      WindowManager.desassociateGroupIdToWindow(windowId);
+      await WindowManager.desassociateGroupIdToWindow(windowId);
     }
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);

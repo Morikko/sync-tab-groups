@@ -444,7 +444,7 @@ WindowManager.isWindowIdOpen = async function(windowId) {
     return windows.filter(w => w.id === windowId).length>0;
 
   } catch (e) {
-    let msg = "WindowManager.desassociateGroupIdToWindow failed on window " + windowId + " and " + e;
+    let msg = "WindowManager.isWindowIdOpen failed on window " + windowId + " and " + e;
     console.error(msg);
     return false;
   }
@@ -457,7 +457,7 @@ WindowManager.isWindowIdOpen = async function(windowId) {
  */
 WindowManager.desassociateGroupIdToWindow = async function(windowId) {
     try {
-      if ( !WindowManager.isWindowIdOpen(windowId) ) {
+      if ( !(await WindowManager.isWindowIdOpen(windowId)) ) {
         return;
       }
       if ( Utils.isFF57() || Utils.isBeforeFF57() ) { //FF

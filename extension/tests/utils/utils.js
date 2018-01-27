@@ -2,30 +2,48 @@
 TestManager.DOUBLE_MONITORS = true;
 
 TestManager.splitOnHalfScreen = async function(windowId){
-  return browser.windows.update(windowId, {
-      left: TestManager.DOUBLE_MONITORS?window.screen.width:0,
-      top: 3,
-      width: Math.round(window.screen.width/2),
-      height: window.screen.height,
-  });
+  try {
+    return browser.windows.update(windowId, {
+        left: TestManager.DOUBLE_MONITORS?window.screen.width:0,
+        top: 3,
+        width: Math.round(window.screen.width/2),
+        height: window.screen.height,
+    });
+  } catch (e) {
+    let msg = "TestManager.splitOnHalfScreen failed on window " + windowId + " and " + e;
+    console.error(msg);
+    return msg;
+  }
 }
 
 TestManager.splitOnHalfTopScreen = async function(windowId){
-  return browser.windows.update(windowId, {
-      left: TestManager.DOUBLE_MONITORS?window.screen.width:0,
-      top: 1,
-      width: Math.round(window.screen.width/2),
-      height: Math.round(screen.width/2),
-  });
+  try {
+    return browser.windows.update(windowId, {
+        left: TestManager.DOUBLE_MONITORS?window.screen.width:0,
+        top: 1,
+        width: Math.round(window.screen.width/2),
+        height: Math.round(screen.width/2),
+    });
+  } catch (e) {
+    let msg = "TestManager.splitOnHalfTopScreen failed on window " + windowId + " and " + e;
+    console.error(msg);
+    return msg;
+  }
 }
 
 TestManager.splitOnHalfBottomScreen = async function(windowId){
-  return browser.windows.update(windowId, {
-      left: TestManager.DOUBLE_MONITORS?window.screen.width:0,
-      top: Math.round(screen.width/2),
-      width: Math.round(window.screen.width/2),
-      height: Math.round(screen.width/2),
-  });
+  try {
+    return browser.windows.update(windowId, {
+        left: TestManager.DOUBLE_MONITORS?window.screen.width:0,
+        top: Math.round(screen.width/2),
+        width: Math.round(window.screen.width/2),
+        height: Math.round(screen.width/2),
+    });
+  } catch (e) {
+    let msg = "TestManager.splitOnHalfBottomScreen failed on window " + windowId + " and " + e;
+    console.error(msg);
+    return msg;
+  }
 }
 
 TestManager.getGroup = (groups, id)=>{
