@@ -25,7 +25,7 @@
   },
 
   "synchronized_window": {
-    "message": "Fenster synchronisiert",
+    "message": "Fenster synchronisieren",
     "description": "Label for synchronizing window in popup"
   },
 
@@ -170,7 +170,7 @@
   },
 
   "bookmark_help_folder": {
-    "message": "Lesezeichen werden standardmäßig in WeitereLesezeichen/SyncTabGroups gespeichert.",
+    "message": "Lesezeichen werden standardmäßig in \"Weitere Lesezeichen\"/SyncTabGroups gespeichert.",
     "description": ""
   },
 
@@ -220,7 +220,162 @@
   },
 
   "import_export_help_support": {
-    "message": "Import unterstützt Sync Tab Gruppen und Tab Groups json Dateien.",
+    "message": "Import unterstützt Sync Tab Gruppen und Tab Groups JSON Dateien.",
+    "description": ""
+  },
+
+  "tab_information": {
+    "message": "Information über aktuellen Tab",
+    "description": ""
+  },
+
+  "tab_title": {
+    "message": "Titel",
+    "description": ""
+  },
+
+  "tab_address": {
+    "message": "URL",
+    "description": ""
+  },
+
+  "copy_url": {
+    "message": "URL in Zwischenablage kopieren",
+    "description": ""
+  },
+
+  "privileged_url": {
+    "message": "Über privilegierte URLs",
+    "description": ""
+  },
+
+  "privileged_url_help_reason": {
+    "message": "Sync Tab Groups kann privilegierte URLs aus Sicherheitsgründen nicht direkt öffnen:",
+    "description": ""
+  },
+
+  "open_url_help_method": {
+    "message": "Stattdessen können Sie diese öffnen:",
+    "description": ""
+  },
+
+  "open_url_help_method_part_1": {
+    "message": "Klicke auf die Schaltfläche",
+    "description": ""
+  },
+
+  "open_url_help_method_part_2": {
+    "message": "Füge die URL in die Adressleiste ein",
+    "description": ""
+  },
+
+  "open_url_help_method_part_3": {
+    "message": "Drücke Enter",
+    "description": ""
+  },
+
+  "privileged_url_help_warning": {
+    "message": "Warnung: Diese Adressen werden von Firefox automatisch geschlossen, wenn die Erweiterung aktualisiert oder deaktiviert wird.",
+    "description": ""
+  },
+
+  "shortcut_list": {
+    "message": "Shortcut Liste",
+    "description": ""
+  },
+
+  "command_description_swtich_next_group": {
+    "message": "Zur nächsten Gruppe wechseln.",
+    "description": ""
+  },
+
+  "command_description_swtich_previous_group": {
+    "message": "Zur vorherigen Gruppe wechseln.",
+    "description": ""
+  },
+
+  "command_description_create_group_swtich": {
+    "message": "Eine neue Gruppe erzeugen und dorthin wechseln.",
+    "description": ""
+  },
+
+  "command_description_focus_next_group": {
+    "message": "Fenster bei öffnen der nächsten Gruppe aktivieren.",
+    "description": ""
+  },
+
+  "command_description_focus_previous_group": {
+    "message": "Fenster bei öffnen der vorherigen Gruppe aktivieren.",
+    "description": ""
+  },
+
+  "command_description_remove_group_swtich": {
+    "message": "Aktuelle Gruppe im Fenster schließen, entfernen und zur nächsten Gruppe wechseln.",
+    "description": ""
+  },
+
+  "command_description__execute_browser_action": {
+    "message": "Öffne Sync Tab Groups Menü.",
+    "description": ""
+  },
+
+  "open_shortcut_list": {
+    "message": "Öffne Shortcut Liste",
+    "description": ""
+  },
+
+  "command_shortcuts": {
+    "message": "Shortcut",
+    "description": ""
+  },
+
+  "command_description": {
+    "message": "Beschreibung",
+    "description": ""
+  },
+
+  "toolbar_menu": {
+    "message": "Toolbar Menü",
+    "description": ""
+  },
+
+  "icon_option": {
+    "message": "Verwende weiße statt schwarzer Symbole",
+    "description": ""
+  },
+
+  "show_tabs_number": {
+    "message": "Hinter dem Gruppentitel die Anzahl der Tabs anzeigen",
+    "description": ""
+  },
+
+  "show_search_bar": {
+    "message": "Suchleiste anzeigen",
+    "description": ""
+  },
+
+  "shortcuts": {
+    "message": "Shortcuts",
+    "description": ""
+  },
+
+  "allow_global_shortcuts": {
+    "message": "Erlaube Shortcuts der Erweiterung überall im Browser",
+    "description": ""
+  },
+
+  "show_title_window": {
+    "message": "Name der Gruppe in allen Fenstern als Präfix des Titels anzeigen",
+    "description": ""
+  },
+
+  "group_name": {
+    "message": "Name",
+    "description": ""
+  },
+
+  "bookmarks_weak_help": {
+    "message": "Automatisches Speichern von Lesezeichen kann Probleme verursachen. Bis zur Problembehebung würde ich nicht empfehlen dieses zu verwenden.",
     "description": ""
   }
 }
