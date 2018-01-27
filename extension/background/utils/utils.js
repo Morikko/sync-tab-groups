@@ -434,14 +434,20 @@ Utils.openUrlOncePerWindow = async function(url) {
     const currentWindowId = (await browser.windows.getLastFocused({
       windowTypes: ['normal'],
     })).id;
+
+    let urlWithoutHash = url;
+    if ( urlWithoutHash.lastIndexOf("#") > -1)
+      urlWithoutHash = urlWithoutHash.substring(0,urlWithoutHash.lastIndexOf("#"))
+
     const tabs = await browser.tabs.query({
       windowId: currentWindowId,
-      url: url,
+      url: urlWithoutHash,
     });
 
     if (tabs.length) { // if tab is found
       browser.tabs.update(tabs[0].id, {
         active: true,
+        url: url, // update hash
       });
     } else {
       browser.tabs.create({

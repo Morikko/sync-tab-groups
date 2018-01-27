@@ -84,7 +84,7 @@ ContextMenu.createMoveTabMenu = async function() {
 ContextMenu.createSpecialActionMenu = function() {
   let contextManageGroups = {
     id: ContextMenu.SpecialActionMenu_ID + "manage_groups",
-    title: browser.i18n.getMessage("manage_groups"),
+    title: browser.i18n.getMessage("group_manager"),
     contexts: ['browser_action'],
 
   };
@@ -146,7 +146,7 @@ ContextMenu.createSpecialActionMenu = function() {
 
   let contextOpenPreferences = {
     id: ContextMenu.SpecialActionMenu_ID + "open_preferences",
-    title: browser.i18n.getMessage("open_preferences"),
+    title: browser.i18n.getMessage("contextmenu_preferences"),
     contexts: ['browser_action'],
   };
   if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
@@ -157,18 +157,18 @@ ContextMenu.createSpecialActionMenu = function() {
   }
   browser.contextMenus.create(contextOpenPreferences);
 
-  let contextOpenShortcuts = {
-    id: ContextMenu.SpecialActionMenu_ID + "open_shortcut_list",
-    title: browser.i18n.getMessage("open_shortcut_list"),
+  let contextGuide = {
+    id: ContextMenu.SpecialActionMenu_ID + "guide",
+    title: browser.i18n.getMessage("options_guide"),
     contexts: ['browser_action'],
   };
   if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
-    contextOpenShortcuts.icons = {
-      "64": "/share/icons/keyboard-64.png",
-      "32": "/share/icons/keyboard-32.png"
+    contextGuide.icons = {
+      "64": "/share/icons/info-64.png",
+      "32": "/share/icons/info-32.png"
     };
   }
-  browser.contextMenus.create(contextOpenShortcuts);
+  browser.contextMenus.create(contextGuide);
 }
 
 ContextMenu.MoveTabMenuListener = function(info, tab) {
@@ -213,11 +213,6 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
       case "open_preferences":
         browser.runtime.openOptionsPage();
         break;
-      case "open_shortcut_list":
-        Utils.openUrlOncePerWindow(browser.extension.getURL(
-          "/tabpages/shortcut-help/shortcut-help.html"
-        ));
-        break;
       case "manage_groups":
         Utils.openUrlOncePerWindow(browser.extension.getURL(
           "/tabpages/manage-groups/manage-groups.html"
@@ -225,6 +220,9 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         break;
       case "backup":
         StorageManager.Backup.backup("manual");
+        break;
+      case "guide":
+        Controller.onOpenGuide();
         break;
     }
   }

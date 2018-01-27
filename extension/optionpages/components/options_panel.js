@@ -22,8 +22,6 @@ class OptionsPanel extends React.Component {
         /* TODO: end of bookmark auto-save
         onBackUpClick: this.props.onBackUpClick*/ }),
       React.createElement(AboutSection, {
-        selected: this.props.selected }),
-      React.createElement(HelpSection, {
         selected: this.props.selected })
     );
   }

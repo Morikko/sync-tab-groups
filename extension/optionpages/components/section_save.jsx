@@ -1,10 +1,10 @@
 class SaveSection extends React.Component {
   render() {
     return (
-      <div className={"option-section " + (this.props.selected==="save"?
+      <div className={"option-section " + (this.props.selected==="groups"?
         "visible":"invisible")}>
         <h1 className="section-title">
-          Groups
+          {browser.i18n.getMessage("options_groups")}
         </h1>
         <SubSection
           title={browser.i18n.getMessage("import_export_title")}
@@ -30,42 +30,43 @@ class SaveSection extends React.Component {
           }
         />
         <SubSection
-          title={"Back Up"}
+          title={browser.i18n.getMessage("options_groups_backup")}
           tooltip={
             <ul>
-              <li>{"Behaviors"}</li>
+              <li>{browser.i18n.getMessage("options_groups_backup_behavior")}</li>
               <ul>
-                <li>{"Back Up is an automatic download of a file with all your groups."}</li>
-                <li>{"The download is visible in the download history (it can't be hidden)"}</li>
-                <li>{"Each specific timer is saved in a distinct file."}</li>
-                <li>{"However the same timer will overwrite its previous back up."}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_behavior_download")}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_behavior_invisible")}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_behavior_distinctfile")}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_behavior_overwritten")}</li>
               </ul>
-              <li>{"Back Up Location"}</li>
+              <li>{browser.i18n.getMessage("options_groups_backup_location")}</li>
               <ul>
-                <li>{"Back Up is done in the subfolder '"+ StorageManager.Backup.LOCATION+ "' in your browser download folder."}</li>
-                <li>{"The browser restricts it to be inside the browser download folder, so you can change the location."}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_location_subfolder", StorageManager.Backup.LOCATION)}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_location_restiction")}</li>
               </ul>
-              <li>{"Timer explanation"}</li>
+              <li>{browser.i18n.getMessage("options_groups_backup_timer")}</li>
               <ul>
-                <li>{"Timers are started when the extension is launched."}</li>
-                <li>{"Timers are reset to 0, when you restart the browser or disable the extension."}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_timer_start")}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_timer_done")}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_timer_reset")}</li>
               </ul>
-              <li>{"Manual Back Up"}</li>
+              <li>{browser.i18n.getMessage("options_groups_backup_manual")}</li>
               <ul>
-                <li>{"From the shortcuts menu (Right click on the extension icon)."}</li>
-                <li>{"The back up is in a distinct file but the behaviors are the same."}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_manual_button")}</li>
+                <li>{browser.i18n.getMessage("options_groups_backup_manual_file")}</li>
               </ul>
             </ul>
           }
           content = {
             <div>
               <OptionButton
-                title= {"Enable"}
+                title= {browser.i18n.getMessage("options_button_enable")}
                 onClick= {this.onEnableBackUp.bind(this)}
                 enabled={this.props.options.backup.enable}
               />
               <OptionButton
-                title= {"Disable"}
+                title= {browser.i18n.getMessage("options_button_disable")}
                 onClick= {this.onDisableBackUp.bind(this)}
                 enabled={!this.props.options.backup.enable}
               />
@@ -74,22 +75,13 @@ class SaveSection extends React.Component {
           }
         />
         <SubSection
-          title={"Cleaning (Dangerous)"}
+          title={browser.i18n.getMessage("options_groups_cleaning")}
           tooltip={
             <ul>
-              <li>{"Remove all groups:"}</li>
+              <li>{browser.i18n.getMessage("options_groups_cleaning_removeall")}</li>
               <ul>
-                <li>{"Once done, you can't recover your groups if you don't have export them manually."}</li>
+                <li>{browser.i18n.getMessage("options_groups_cleaning_removeall_warning")}</li>
               </ul>
-              {/* TODO: check if necessary to keep
-              <li>{"Reload your groups"}</li>
-              <ul>
-                <li>{"Load the groups saved on the disk and replace the one in memory (actually visible in your browser)."}</li>
-                <li>{"This function is only provided in error case, if your groups in memory have been corrupted."}</li>
-                <li>{"In any cases, it is better to contact me on Github or with a mail. In that case, reporting the error messages from the browser (Ctrl+Maj+J) will be greatly helpful."}</li>
-                <li>{"Be aware, that your groups in memory are overwritten and lost after this operation."}</li>
-              </ul>
-              */}
             </ul>
           }
           content = {
@@ -152,7 +144,8 @@ class SaveSection extends React.Component {
       checkboxes.push(
         <NiceCheckbox
           checked= {this.props.options.backup.time[time]}
-          label= {"Back up every " + time}
+          label= {browser.i18n.getMessage("options_groups_backup_every")
+                  + browser.i18n.getMessage("options_groups_backup_"+time)}
           onCheckChange= {this.props.onOptionChange}
           id={"backup-time-"+time}
           disabled={!this.props.options.backup.enable}

@@ -2,11 +2,11 @@ class SaveSection extends React.Component {
   render() {
     return React.createElement(
       "div",
-      { className: "option-section " + (this.props.selected === "save" ? "visible" : "invisible") },
+      { className: "option-section " + (this.props.selected === "groups" ? "visible" : "invisible") },
       React.createElement(
         "h1",
         { className: "section-title" },
-        "Groups"
+        browser.i18n.getMessage("options_groups")
       ),
       React.createElement(SubSection, {
         title: browser.i18n.getMessage("import_export_title"),
@@ -40,14 +40,14 @@ class SaveSection extends React.Component {
         )
       }),
       React.createElement(SubSection, {
-        title: "Back Up",
+        title: browser.i18n.getMessage("options_groups_backup"),
         tooltip: React.createElement(
           "ul",
           null,
           React.createElement(
             "li",
             null,
-            "Behaviors"
+            browser.i18n.getMessage("options_groups_backup_behavior")
           ),
           React.createElement(
             "ul",
@@ -55,28 +55,28 @@ class SaveSection extends React.Component {
             React.createElement(
               "li",
               null,
-              "Back Up is an automatic download of a file with all your groups."
+              browser.i18n.getMessage("options_groups_backup_behavior_download")
             ),
             React.createElement(
               "li",
               null,
-              "The download is visible in the download history (it can't be hidden)"
+              browser.i18n.getMessage("options_groups_backup_behavior_invisible")
             ),
             React.createElement(
               "li",
               null,
-              "Each specific timer is saved in a distinct file."
+              browser.i18n.getMessage("options_groups_backup_behavior_distinctfile")
             ),
             React.createElement(
               "li",
               null,
-              "However the same timer will overwrite its previous back up."
+              browser.i18n.getMessage("options_groups_backup_behavior_overwritten")
             )
           ),
           React.createElement(
             "li",
             null,
-            "Back Up Location"
+            browser.i18n.getMessage("options_groups_backup_location")
           ),
           React.createElement(
             "ul",
@@ -84,18 +84,18 @@ class SaveSection extends React.Component {
             React.createElement(
               "li",
               null,
-              "Back Up is done in the subfolder '" + StorageManager.Backup.LOCATION + "' in your browser download folder."
+              browser.i18n.getMessage("options_groups_backup_location_subfolder", StorageManager.Backup.LOCATION)
             ),
             React.createElement(
               "li",
               null,
-              "The browser restricts it to be inside the browser download folder, so you can change the location."
+              browser.i18n.getMessage("options_groups_backup_location_restiction")
             )
           ),
           React.createElement(
             "li",
             null,
-            "Timer explanation"
+            browser.i18n.getMessage("options_groups_backup_timer")
           ),
           React.createElement(
             "ul",
@@ -103,18 +103,23 @@ class SaveSection extends React.Component {
             React.createElement(
               "li",
               null,
-              "Timers are started when the extension is launched."
+              browser.i18n.getMessage("options_groups_backup_timer_start")
             ),
             React.createElement(
               "li",
               null,
-              "Timers are reset to 0, when you restart the browser or disable the extension."
+              browser.i18n.getMessage("options_groups_backup_timer_done")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_groups_backup_timer_reset")
             )
           ),
           React.createElement(
             "li",
             null,
-            "Manual Back Up"
+            browser.i18n.getMessage("options_groups_backup_manual")
           ),
           React.createElement(
             "ul",
@@ -122,12 +127,12 @@ class SaveSection extends React.Component {
             React.createElement(
               "li",
               null,
-              "From the shortcuts menu (Right click on the extension icon)."
+              browser.i18n.getMessage("options_groups_backup_manual_button")
             ),
             React.createElement(
               "li",
               null,
-              "The back up is in a distinct file but the behaviors are the same."
+              browser.i18n.getMessage("options_groups_backup_manual_file")
             )
           )
         ),
@@ -135,12 +140,12 @@ class SaveSection extends React.Component {
           "div",
           null,
           React.createElement(OptionButton, {
-            title: "Enable",
+            title: browser.i18n.getMessage("options_button_enable"),
             onClick: this.onEnableBackUp.bind(this),
             enabled: this.props.options.backup.enable
           }),
           React.createElement(OptionButton, {
-            title: "Disable",
+            title: browser.i18n.getMessage("options_button_disable"),
             onClick: this.onDisableBackUp.bind(this),
             enabled: !this.props.options.backup.enable
           }),
@@ -148,14 +153,14 @@ class SaveSection extends React.Component {
         )
       }),
       React.createElement(SubSection, {
-        title: "Cleaning (Dangerous)",
+        title: browser.i18n.getMessage("options_groups_cleaning"),
         tooltip: React.createElement(
           "ul",
           null,
           React.createElement(
             "li",
             null,
-            "Remove all groups:"
+            browser.i18n.getMessage("options_groups_cleaning_removeall")
           ),
           React.createElement(
             "ul",
@@ -163,7 +168,7 @@ class SaveSection extends React.Component {
             React.createElement(
               "li",
               null,
-              "Once done, you can't recover your groups if you don't have export them manually."
+              browser.i18n.getMessage("options_groups_cleaning_removeall_warning")
             )
           )
         ),
@@ -218,7 +223,7 @@ class SaveSection extends React.Component {
     for (let time in OptionManager.TIMERS) {
       checkboxes.push(React.createElement(NiceCheckbox, {
         checked: this.props.options.backup.time[time],
-        label: "Back up every " + time,
+        label: browser.i18n.getMessage("options_groups_backup_every") + browser.i18n.getMessage("options_groups_backup_" + time),
         onCheckChange: this.props.onOptionChange,
         id: "backup-time-" + time,
         disabled: !this.props.options.backup.enable,

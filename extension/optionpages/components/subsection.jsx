@@ -7,6 +7,12 @@ class SubSection extends React.Component {
         </h2>}
         {this.props.tooltip &&
           <div className="tooltiptext">
+            <h2>{
+              this.props.title
+            + " "
+            + browser.i18n.getMessage("options_help_title")
+            + ": "}
+            </h2>
           {this.props.tooltip}
           </div>}
         {this.props.content}

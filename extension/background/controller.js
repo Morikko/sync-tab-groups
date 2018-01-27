@@ -75,6 +75,12 @@ Controller.onOpenGroupInNewWindow = function(params) {
   WindowManager.openGroupInNewWindow(params.groupId);
 };
 
+Controller.onOpenGuide = function() {
+  Utils.openUrlOncePerWindow(browser.extension.getURL(
+    "https://morikko.github.io/synctabgroups/#guide"
+  ));
+}
+
 Controller.onGroupAdd = function(params) {
   try {
     GroupManager.addGroup(params.title || '');
@@ -362,6 +368,8 @@ Controller.optionMessenger = function(message) {
     case "Option:ReloadGroups":
       Controller.onReloadGroups();
       break;
+    case "Option:OpenGuide":
+      Controller.onOpenGuide();
   }
 }
 

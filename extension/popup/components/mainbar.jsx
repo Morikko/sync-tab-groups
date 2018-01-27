@@ -26,8 +26,11 @@ class MainBar extends React.Component {
 
     let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
 
-    let label = browser.i18n.getMessage(
+    let labelSynchronized = browser.i18n.getMessage(
       (this.props.isSync?"synchronized_window":"unsynchronized_window")
+    );
+    let titleSynchronized = browser.i18n.getMessage(
+      (this.props.isSync?"change_window_invisible":"change_window_visible")
     );
 
     return (
@@ -38,19 +41,21 @@ class MainBar extends React.Component {
           "group-visible": this.props.isSync,
           "incognito": this.props.isIncognito,
             })}
-          onClick={this.handleCheckChange}>
+          onClick={this.handleCheckChange}
+          title={titleSynchronized}>
           <i className={classNames({
             "app-pref": true,
             "fa fa-fw": true,
             "fa-check-square-o": this.props.isSync,
             "fa-square-o": !this.props.isSync,
           })}/>
-          <span>{label}</span>
+          <span>{labelSynchronized}</span>
         </div>
         <div className="manage-button"
-              onClick={this.handleClickManageButton}>
+              onClick={this.handleClickManageButton}
+              title={browser.i18n.getMessage("open_manager")}>
           <i className="fa fa-fw fa-list"/>
-          <span>Manage groups</span>
+          <span>{browser.i18n.getMessage("group_manager")}</span>
         </div>
         <div className="right-actions">
           <i

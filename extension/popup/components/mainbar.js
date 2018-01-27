@@ -26,7 +26,8 @@ class MainBar extends React.Component {
 
     let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
 
-    let label = browser.i18n.getMessage(this.props.isSync ? "synchronized_window" : "unsynchronized_window");
+    let labelSynchronized = browser.i18n.getMessage(this.props.isSync ? "synchronized_window" : "unsynchronized_window");
+    let titleSynchronized = browser.i18n.getMessage(this.props.isSync ? "change_window_invisible" : "change_window_visible");
 
     return React.createElement(
       "li",
@@ -39,7 +40,8 @@ class MainBar extends React.Component {
             "group-visible": this.props.isSync,
             "incognito": this.props.isIncognito
           }),
-          onClick: this.handleCheckChange },
+          onClick: this.handleCheckChange,
+          title: titleSynchronized },
         React.createElement("i", { className: classNames({
             "app-pref": true,
             "fa fa-fw": true,
@@ -49,18 +51,19 @@ class MainBar extends React.Component {
         React.createElement(
           "span",
           null,
-          label
+          labelSynchronized
         )
       ),
       React.createElement(
         "div",
         { className: "manage-button",
-          onClick: this.handleClickManageButton },
+          onClick: this.handleClickManageButton,
+          title: browser.i18n.getMessage("open_manager") },
         React.createElement("i", { className: "fa fa-fw fa-list" }),
         React.createElement(
           "span",
           null,
-          "Manage groups"
+          browser.i18n.getMessage("group_manager")
         )
       ),
       React.createElement(

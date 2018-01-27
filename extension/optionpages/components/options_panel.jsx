@@ -26,8 +26,6 @@ class OptionsPanel extends React.Component{
          onBackUpClick: this.props.onBackUpClick*//>
         <AboutSection
         selected={this.props.selected}/>
-        <HelpSection
-        selected={this.props.selected}/>
       </div>
     );
   }

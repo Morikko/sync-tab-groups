@@ -36,7 +36,7 @@ h1 {
 button {
   margin: auto;
 }
-
+/**** Shortcuts *****/
 table {
   border-collapse: collapse;
 }
@@ -57,7 +57,7 @@ tr>td {
   padding-left: 15px;
   border-left: 1px solid black;
 }
-
+/**** End Shortcuts *****/
 button {
   display: block;
   padding: 14px 45px;

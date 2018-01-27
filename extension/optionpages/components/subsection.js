@@ -11,6 +11,11 @@ class SubSection extends React.Component {
       this.props.tooltip && React.createElement(
         "div",
         { className: "tooltiptext" },
+        React.createElement(
+          "h2",
+          null,
+          this.props.title + " " + browser.i18n.getMessage("options_help_title") + ": "
+        ),
         this.props.tooltip
       ),
       this.props.content

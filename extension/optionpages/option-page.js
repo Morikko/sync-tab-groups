@@ -33,6 +33,10 @@ const Actions = {
   onReloadGroups: function( ) {
     Utils.sendMessage("Option:ReloadGroups", {});
   },
+
+  onOpenGuide: function() {
+    Utils.sendMessage("Option:OpenGuide", {});
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -49,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onExportClick: Actions.onExportAsk,
         onDeleteAllGroups: Actions.onDeleteAllGroups,
         onReloadGroups: Actions.onReloadGroups,
+        onOpenGuide: Actions.onOpenGuide,
       })
     ),
     document.getElementById("content")

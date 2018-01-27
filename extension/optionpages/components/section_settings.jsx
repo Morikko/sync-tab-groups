@@ -15,35 +15,34 @@ class SettingsSection extends React.Component {
         className={"option-section " + (this.props.selected==="settings"?
             "visible":"invisible")}>
             <h1 className="section-title">
-              Settings
+              {browser.i18n.getMessage("options_settings")}
             </h1>
             <SubSection
               title={browser.i18n.getMessage("state_new_normal_window")}
               tooltip={
-                  <div>
-                    <h2>Window Help:</h2>
-                    <ul>
-                      <li>Invisible</li>
+                    <div>
                       <ul>
-                        <li>New windows created without the Extension are Invisible.</li>
-                      </ul>
-                      <li>Visible</li>
+                      <li>{browser.i18n.getMessage("options_behaviors_help_title_invisible")}</li>
                       <ul>
-                        <li>New windows created without the Extension are Visible as a new unnamed group.</li>
+                        <li>{browser.i18n.getMessage("options_behaviors_help_invisible")}</li>
                       </ul>
-                      <li>Any window can be changed to visible/invisible from the Menu.</li>
+                      <li>{browser.i18n.getMessage("options_behaviors_help_title_visible")}</li>
+                      <ul>
+                        <li>{browser.i18n.getMessage("options_behaviors_help_visible_new")}</li>
+                      </ul>
+                      <li>{browser.i18n.getMessage("options_behaviors_help_change_visibility")}</li>
                     </ul>
                   </div>
               }
               content={
                 <div>
                   <OptionButton
-                    title= {"Visible"}
+                    title= {browser.i18n.getMessage("options_behaviors_help_title_visible")}
                     onClick= {this.clickOnVisible}
                     enabled={this.props.options.groups.syncNewWindow}
                   />
                   <OptionButton
-                    title= {"Invisible"}
+                    title= {browser.i18n.getMessage("options_behaviors_help_title_invisible")}
                     onClick= {this.clickOnInvisible}
                     enabled={!this.props.options.groups.syncNewWindow}
                   />
@@ -53,34 +52,33 @@ class SettingsSection extends React.Component {
             <SubSection
               title={browser.i18n.getMessage("pinned_tabs_title")}
               tooltip={
-                [
-                  <h2 key="help_pinned_title">Pinned Tabs Help:</h2>,
-                  <ul key="help_pinned_content">
-                    <li>Excluded</li>
+                  <div>
                     <ul>
-                      <li>Pinned tabs are not part of any groups.</li>
-                      <li>Switching/closing actions don't impact the pinned tabs.</li>
-                      <li>Use case: Global Tabs (Mail tab, Music tab...)</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded")}</li>
+                    <ul>
+                      <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_notpart")}</li>
+                      <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_switching")}</li>
+                      <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_usecase")}</li>
                     </ul>
-                    <li>Included</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_pinned_included")}</li>
                     <ul>
-                      <li>Pinned tabs are part of the group in the window.</li>
-                      <li>Switching/closing actions close and save the pinned tabs in the group.</li>
-                      <li>Use case: Important tabs for the group.</li>
+                      <li>{browser.i18n.getMessage("options_behaviors_pinned_included_part")}</li>
+                      <li>{browser.i18n.getMessage("options_behaviors_pinned_included_switching")}</li>
+                      <li>{browser.i18n.getMessage("options_behaviors_pinned_included_usecase")}</li>
                     </ul>
                   </ul>
-                ]
+                </div>
               }
               content={
                 [
                   <OptionButton
-                    title= {"Excluded"}
+                    title= {browser.i18n.getMessage("options_behaviors_pinned_excluded")}
                     onClick= {this.clickOnExcluded}
                     key="pinned-excluded"
                     enabled={!this.props.options.pinnedTab.sync}
                   />,
                   <OptionButton
-                    title= {"Included"}
+                    title= {browser.i18n.getMessage("options_behaviors_pinned_included")}
                     onClick= {this.clickOnIncluded}
                     key="pinned-included"
                     enabled={this.props.options.pinnedTab.sync}
@@ -89,35 +87,38 @@ class SettingsSection extends React.Component {
               }
             />
             <SubSection
-              title={"Tab Opening Behavior"}
+              title={browser.i18n.getMessage("options_behaviors_tabsopening")}
               tooltip={
+              <div>
                 <ul>
-                  <li>Discarded (Faster and Lighter)</li>
+                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}</li>
                   <ul>
-                    <li>Tabs are not fully loaded on opening.</li>
-                    <li>The tabs are only loaded once you click on it. After, they stay loaded.</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_lighter")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_notfullyloaded")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_loadedclick")}</li>
                   </ul>
-                  <li>Full</li>
+                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full")}</li>
                   <ul>
-                    <li>Tabs are completely loaded on opening.</li>
-                    <li>Consume more memory and network data.</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full_loadedopening")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full_heavier")}</li>
                   </ul>
-                  <li>Limits (In both cases)</li>
+                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits")}</li>
                   <ul>
-                    <li>Tabs History are not restored. (Limited by the browser)</li>
-                    <li>Temporary data (forms...) added before tabs were closed are lost. (Limited by the browser)</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits_history")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits_temporary")}</li>
                   </ul>
                 </ul>
+              </div>
               }
               content = {
                 [<OptionButton
-                  title= {"Discarded"}
+                  title= {browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}
                   onClick= {this.clickOnOpenDiscarded.bind(this)}
                   enabled={this.props.options.groups.discardedOpen}
                   key="opening-tab-discarded"
                 />,
                 <OptionButton
-                  title= {"Full"}
+                  title= {browser.i18n.getMessage("options_behaviors_tabsopening_full")}
                   onClick= {this.clickOnOpenFull.bind(this)}
                   enabled={!this.props.options.groups.discardedOpen}
                   key="opening-tab-full"
@@ -127,31 +128,33 @@ class SettingsSection extends React.Component {
             <SubSection
               title={browser.i18n.getMessage("private_window_title")}
               tooltip={
-                <ul>
-                  <li>Private (Respect the private behavior)</li>
+                <div>
                   <ul>
-                    <li>New private windows are visible as a new private groups</li>
-                    <li>Groups opened in private windows are private as well.</li>
-                    <li>Private groups are not saved on the disk</li>
-                    <li>A private group closed is automatically deleted.</li>
-                    <li>A restart of the browser will closed and deleted all the private groups.</li>
-                  </ul>
-                  <li>Invisible</li>
+                  <li>{browser.i18n.getMessage("options_behaviors_private")}</li>
                   <ul>
-                    <li>New private windows are visible as a new private groups</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_private_visible")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_private_groups")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_private_notsaved")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_private_autoremoved")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_private_restart")}</li>
                   </ul>
-                  <li>Any private window can be changed from private/invisible from the Menu.</li>
+                  <li>{browser.i18n.getMessage("options_behaviors_private_invisible")}</li>
+                  <ul>
+                    <li>{browser.i18n.getMessage("options_behaviors_private_invisible_creation")}</li>
+                  </ul>
+                  <li>{browser.i18n.getMessage("options_behaviors_private_changestate")}</li>
                 </ul>
+                </div>
               }
               content = {
                 [<OptionButton
-                  title= {"Private"}
+                  title= {browser.i18n.getMessage("options_behaviors_private")}
                   onClick= {this.clickOnPrivate}
                   enabled={this.props.options.privateWindow.sync}
                   key="private-window-private"
                 />,
                 <OptionButton
-                  title= {"Invisible"}
+                  title= {browser.i18n.getMessage("options_behaviors_private_invisible")}
                   onClick= {this.clickOnPrivateInvisible}
                   enabled={!this.props.options.privateWindow.sync}
                   key="private-window-invisible"
@@ -159,7 +162,7 @@ class SettingsSection extends React.Component {
               }
             />
             <h2>
-              Others
+              {browser.i18n.getMessage("options_settings_others")}
             </h2>
             <NiceCheckbox
               checked= {this.props.options.groups.removeEmptyGroup}
@@ -168,7 +171,6 @@ class SettingsSection extends React.Component {
               id= "groups-removeEmptyGroup"
             />
       </div>
-
     );
   }
 

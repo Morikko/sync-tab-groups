@@ -4,7 +4,7 @@ class InterfaceSection extends React.Component {
       <div className={"option-section " + (this.props.selected==="interface"?
         "visible":"invisible")}>
         <h1 className="section-title">
-          Interface
+          {browser.i18n.getMessage("options_interface")}
         </h1>
         <SubSection
           title={browser.i18n.getMessage("label_select_sorting_type")}
@@ -41,16 +41,16 @@ class InterfaceSection extends React.Component {
           }
           tooltip={
             <ul>
-              <li>Custom: Drag & Drop to position your groups</li>
-              <li>Alphabetical: Sort by Name</li>
-              <li>Last Accessed: Sort by last utilisation</li>
-              <li>Old Created First</li>
-              <li>Recent Created First</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_custom")}</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_alphabetical")}</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_last")}</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_old")}</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_recent")}</li>
             </ul>
           }
         />
         <SubSection
-          title="Groups"
+          title={browser.i18n.getMessage("options_interface_groups")}
           content={
             <div>
                 <NiceCheckbox
@@ -82,7 +82,7 @@ class InterfaceSection extends React.Component {
           }
         />
         <h2>
-          Windows
+          {browser.i18n.getMessage("options_interface_windows")}
         </h2>
         <NiceCheckbox
           checked={this.props.options.groups.showGroupTitleInWindow}

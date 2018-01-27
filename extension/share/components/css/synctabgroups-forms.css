@@ -59,7 +59,7 @@
 
 .button-file-label, .option-button {
   display: block;
-  padding: 14px 45px;
+  padding: 15px;
   background: var(--checked);
   color: #fff;
   font-size: 1em;

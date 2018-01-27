@@ -1,7 +1,6 @@
 {
   "manifest_version": 2,
   "version": "0.5",
-
   "name": "Sync Tab Groups",
   "description": "__MSG_extension_description__",
   "homepage_url": "https://github.com/Morikko/sync-tab-groups",
@@ -68,24 +67,10 @@
   },
 
   "commands": {
-
-    "focus_previous_group": {
-      "suggested_key": {
-        "default": "Alt+Shift+Down"
-      },
-      "description": "Focus Previous Group"
-    },
-
-    "remove_group_swtich": {
-      "suggested_key": {
-        "default": "Alt+Shift+Delete"
-      },
-      "description": "Remove current group"
-    },
-
     "_execute_browser_action": {
       "suggested_key": {
-        "default": "Alt+Shift+Space"
+        "default": "Ctrl+Shift+Space",
+        "mac": "MacCtrl+Shift+Space"
       },
       "description": "Open Menu"
     },
@@ -109,13 +94,6 @@
         "default": "Alt+Shift+Insert"
       },
       "description": "Add New Group and Switch"
-    },
-
-    "focus_next_group": {
-      "suggested_key": {
-        "default": "Alt+Shift+Up"
-      },
-      "description": "Focus Next Group"
     }
   }
 }

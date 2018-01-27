@@ -33,9 +33,6 @@ class OptionsMenu extends React.Component {
                 "tab": true,
                 "selected": tab.href === this.props.selected
               }) },
-            tab.title === "Guide" && React.createElement("i", {
-              className: "web-icon fa fa-fw fa-globe"
-            }),
             tab.title
           );
         })
@@ -47,6 +44,12 @@ class OptionsMenu extends React.Component {
   handleNavClick(event) {
     event.stopPropagation();
 
+    let href = event.target.href;
+    if (href[href.length - 1] === "#") {
+      // Open Guide
+      this.props.onOpenGuide();
+    }
+
     let box = document.getElementById('show-menu');
     if (box && box.checked) {
       box.click();
@@ -57,5 +60,6 @@ class OptionsMenu extends React.Component {
 OptionsMenu.propTypes = {
   tabs: PropTypes.object,
   selected: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  onOpenGuide: PropTypes.func
 };

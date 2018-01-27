@@ -10,6 +10,11 @@ html {
 }
 */
 
+.option-section {
+  max-width: 1000px;
+  margin: auto;
+}
+
 li, div span {
   font-size: 18px;
 }
@@ -70,6 +75,7 @@ li, div span {
   height: 50px;
   cursor: pointer;
   text-decoration: none;
+  outline: 0;
   color: #c4cdd4;
 }
 
@@ -165,7 +171,7 @@ input[type=checkbox]:checked ~ label{
 
 .option-button, .button-file {
   display: inline-block !important;
-  width: 220px;
+  width: 140px;
 }
 
 .option-button, .button-file {
@@ -243,3 +249,32 @@ input[type=checkbox]:checked ~ label{
 }
 
 /*** End Button in dangerous zone *****/
+
+/**** Shortcuts *****/
+.option-section.shortcuts table {
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-left: 30px;
+}
+
+.option-section.shortcuts tr>th {
+  padding-bottom: 10px;
+}
+
+.option-section.shortcuts tr>td {
+  padding-bottom: 5px;
+}
+
+.command_shortcuts {
+  padding-right: 15px;
+}
+
+.command_description {
+  padding-left: 15px;
+  border-left: 1px solid black;
+}
+/**** End Shortcuts *****/
+
+.option-section.about {
+  text-align: justify;
+}

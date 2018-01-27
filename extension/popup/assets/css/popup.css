@@ -52,7 +52,7 @@ body {
 
 .manage-button {
   height: 100%;
-  flex: 60;
+  flex: 45;
   display: flex;
   justify-content: center;
   text-align: center;
