@@ -211,7 +211,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         Controller.onBookmarkSave();
         break;
       case "open_preferences":
-        browser.runtime.openOptionsPage();
+        Controller.onOpenSettings();
         break;
       case "manage_groups":
         Utils.openUrlOncePerWindow(browser.extension.getURL(

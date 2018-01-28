@@ -79,9 +79,9 @@ Controller.onOpenGroupInNewWindow = function(params) {
 };
 
 Controller.onOpenGuide = function() {
-  Utils.openUrlOncePerWindow(browser.extension.getURL(
+  Utils.openUrlOncePerWindow(
     "https://morikko.github.io/synctabgroups/#guide"
-  ));
+  );
 }
 
 Controller.onGroupAdd = function(params) {
@@ -172,7 +172,9 @@ Controller.onBookmarkSave = function() {
 };
 
 Controller.onOpenSettings = function() {
-  browser.runtime.openOptionsPage();
+  Utils.openUrlOncePerWindow(browser.extension.getURL(
+    "/optionpages/option-page.html"
+  ));
 };
 
 Controller.onRemoveAllGroups = function() {
