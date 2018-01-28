@@ -128,11 +128,17 @@ TabManager.countPinnedTabs = function(tabs) {
 TabManager.openTab = async function(tab, windowId, index) {
   let url = tab.url;
 
-  if (Utils.isPrivilegedURL(url)) {
+  let incognitoAllowed = true;
+  if ( Utils.isChrome() ) {
+    incognitoAllowed = !(await browser.windows.get(windowId)).incognito;
+  }
+
+  if (Utils.isPrivilegedURL(url) && incognitoAllowed) {
     url = Utils.getPrivilegedURL(tab.title, url, tab.favIconUrl)
   }
 
-  if (OptionManager.options.groups.discardedOpen && !tab.active) {
+  if (OptionManager.options.groups.discardedOpen && !tab.active
+        && incognitoAllowed ) {
     url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
   }
 

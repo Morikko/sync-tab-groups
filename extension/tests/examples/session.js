@@ -290,7 +290,7 @@ Session.getRandomTab = function(tabs) {
 
 Session.newTab = {
     "title": "New Tab",
-    "url": "about:newtab",
+    "url": Utils.isChrome()?"chrome://newtab/":"about:newtab",
     "favIconUrl": "chrome://branding/content/icon32.png"
   };
 

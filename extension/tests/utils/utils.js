@@ -71,6 +71,15 @@ TestManager.resetIndexProperties = function (tabs) {
   });
 }
 
+TestManager.swapOptions = function (params) {
+  let previousValues = {};
+  for (let p in params ) {
+    previousValues[p] = OptionManager.getOptionValue(p);
+    OptionManager.updateOption(p, params[p]);
+  }
+  return previousValues;
+}
+
 /**
  * @param {Number} start
  * @param {Number} end

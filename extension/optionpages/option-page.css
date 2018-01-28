@@ -279,7 +279,7 @@ input[type=checkbox]:checked ~ label{
 
 .double-column-buttons {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-around;
 }
 

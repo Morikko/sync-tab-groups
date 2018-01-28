@@ -366,11 +366,22 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
       groupId
     );
-
     const w = await browser.windows.create({
       state: "maximized",
       incognito: GroupManager.groups[groupIndex].incognito,
+      focused: true,
     });
+
+    // TODO: security: might not be necessary
+    let count = 0;
+    while( !(await browser.windows.get(w.id)).focused ) {
+      console.log("NOT SYNCHRONIZED");
+      if ( count > 50 ) {
+        throw Error("WindowManager.openGroupInNewWindow was unable to focus the window.");
+      }
+      count++;
+      await Utils.wait(100);
+    }
 
     await WindowManager.switchGroup(groupId);
     return w.id;

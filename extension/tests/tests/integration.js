@@ -360,7 +360,7 @@ describe("Switch Group - ", ()=>{
     await browser.windows.remove(this.windowId);
     // Remove Group
     for (let group of this.groups ) {
-      GroupManager.removeGroupFromId(group.id);
+      await GroupManager.removeGroupFromId(group.id);
     }
   });
 
@@ -430,14 +430,14 @@ describe("WindowManager: ", ()=>{
       afterAll(async function(){
         if ( this.windowId )
           await browser.windows.remove(this.windowId);
-        if ( this.id )
-          GroupManager.removeGroupFromId(this.id);
+        if ( GroupManager.getGroupIndexFromGroupId(this.id, false) >= 0 )
+          await GroupManager.removeGroupFromId(this.id);
       });
 
       it("Desassociate Windows", async function(){
         let previousLength = GroupManager.groups.length;
 
-        GroupManager.removeGroupFromId(this.id);
+        await GroupManager.removeGroupFromId(this.id);
 
         let tabs = await TabManager.getTabsInWindowId(this.windowId);
 
@@ -467,7 +467,7 @@ describe("WindowManager: ", ()=>{
         expect(previousLength).toEqual(GroupManager.groups.length-1);
         expect(tabs).toEqualTabs(this.group.tabs);
 
-        GroupManager.removeGroupFromId(id);
+        await GroupManager.removeGroupFromId(id);
       });
     });
 
@@ -475,6 +475,7 @@ describe("WindowManager: ", ()=>{
       beforeAll(async function(){
         jasmine.addMatchers(tabGroupsMatchers);
         OptionManager.updateOption("privateWindow-sync", false);
+
         [this.id, this.group] = Session.createGroup({
             tabsLength: 5,
             global: true,
@@ -492,14 +493,14 @@ describe("WindowManager: ", ()=>{
       }, 10000);
 
       afterAll(async function(){
-        if ( this.windowId )
+        if ( await WindowManager.isWindowIdOpen(this.windowId) )
           await browser.windows.remove(this.windowId);
       });
 
       it("Desassociate Windows", async function(){
         let previousLength = GroupManager.groups.length;
 
-        GroupManager.removeGroupFromId(this.id);
+        await GroupManager.removeGroupFromId(this.id);
 
         let tabs = await TabManager.getTabsInWindowId(this.windowId);
 
@@ -530,7 +531,7 @@ describe("WindowManager: ", ()=>{
         expect(previousLength).toEqual(GroupManager.groups.length-1);
         expect(tabs).toEqualTabs(this.group.tabs);
 
-        GroupManager.removeGroupFromId(id);
+        await GroupManager.removeGroupFromId(id);
       });
     });
   });
@@ -545,7 +546,7 @@ describe("WindowManager: ", ()=>{
       if ( this.windowId !== browser.windows.WINDOW_ID_NONE ) {
         let id;
         if ( (id = GroupManager.getGroupIdInWindow(this.windowId, false)) >= 0 ) { // Remove group
-          GroupManager.removeGroupFromId(id);
+          await GroupManager.removeGroupFromId(id);
         }
         // Close window
         await browser.windows.remove(this.windowId);
@@ -632,7 +633,7 @@ describe("WindowManager: ", ()=>{
       // Close Window
       await WindowManager.closeWindowFromGroupId(this.id);
       // Remove Group
-      GroupManager.removeGroupFromId(this.id)
+      await GroupManager.removeGroupFromId(this.id)
     });
 
     it("Window is well associated with group", async function(){
@@ -686,7 +687,7 @@ describe("Select Groups - ", ()=>{
       await browser.windows.remove(this.windowId_bis);
     // Remove Group
     for (let group of this.groups ) {
-      GroupManager.removeGroupFromId(group.id);
+      await GroupManager.removeGroupFromId(group.id);
     }
   });
 
@@ -719,7 +720,7 @@ describe("Select Groups - ", ()=>{
 
     beforeAll(function (){
       this.lastSorting = OptionManager.options.groups.sortingType;
-      OptionManager.updateOption("groups-sortingType", OptionManager.SORT_ALPHABETICAL);
+      OptionManager.updateOption("groups-sortingType", OptionManager.SORT_OLD_RECENT);
     });
 
     afterAll(function (){
@@ -736,21 +737,23 @@ describe("Select Groups - ", ()=>{
     });
 
     it("Switch To Previous Open", async function(){
-      await WindowManager.selectNextGroup(
+      let nextGroupId = await WindowManager.selectNextGroup(
         -1, true, this.groups[1].id);
 
       let currentWindow = await browser.windows.getLastFocused();
 
+      expect(nextGroupId).toEqual(this.groups[0].id);
       expect(currentWindow.id).toEqual(GroupManager.groups[this.groups[0].groupIndex].windowId);
     });
 
     // Select Next Unopen
     it("Switch To Next Unopen", async function(){
-      await WindowManager.selectNextGroup(
+      let nextGroupId = await WindowManager.selectNextGroup(
         1, false, this.groups[0].id);
 
       let currentWindow = await browser.windows.getLastFocused();
 
+      expect(nextGroupId).toEqual(this.groups[2].id);
       expect(GroupManager.groups[this.groups[2].groupIndex].windowId).toEqual(currentWindow.id);
     }, 10000);
 
@@ -802,7 +805,7 @@ describe("End of Groups - ", ()=>{
     // Remove Group
     for (let group of this.groups ) {
       if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
-        GroupManager.removeGroupFromId(group.id);
+        await GroupManager.removeGroupFromId(group.id);
     }
   });
 
@@ -838,6 +841,7 @@ describe("End of Groups - ", ()=>{
         await Utils.wait(500);
 
         await WindowManager.closeGroup(this.groups[0].id);
+        await Utils.wait(500);
       } catch ( e ) {
         let msg = "Closing Another Window failed on window " + windowId + " and " + e;
         console.error(msg);
@@ -952,7 +956,7 @@ describe("Session: ", ()=>{
       // Close Window
       await WindowManager.closeWindowFromGroupId(this.id);
       // Remove Group
-      GroupManager.removeGroupFromId(this.id)
+      await GroupManager.removeGroupFromId(this.id)
     });
 
 
@@ -1012,7 +1016,7 @@ describe("TabManager", ()=>{
       // Close Window
       await WindowManager.closeWindowFromGroupId(this.id);
       // Remove Group
-      GroupManager.removeGroupFromId(this.id)
+      await GroupManager.removeGroupFromId(this.id)
     });
 
     describe("Group With No Pinned Tab", ()=>{
@@ -1188,6 +1192,13 @@ describe("TabManager", ()=>{
       jasmine.addMatchers(tabGroupsMatchers);
       this.length = 4;
       this.groups = [];
+
+      this.previousOptions = TestManager.swapOptions({
+        "groups-discardedOpen": true,
+      });
+
+      this.discardedOption = OptionManager.ma
+
       for( let i=0; i<2; i++) {
         let id, group;
         [id, group] = Session.createGroup({
@@ -1211,9 +1222,10 @@ describe("TabManager", ()=>{
         await browser.windows.remove(TestManager.getGroup(this.groups, 1).windowId);
       }
       for (let group of this.groups ) {
-        if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false) >= 0 )
-          GroupManager.removeGroupFromId(group.id);
+        if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
+          await GroupManager.removeGroupFromId(group.id);
       }
+      TestManager.swapOptions(this.previousOptions);
     });
 
     it("Open In New Window", async function(){
@@ -1307,7 +1319,7 @@ describe("TabManager", ()=>{
         // Remove Group
         for (let group of this.groups ) {
           if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
-            GroupManager.removeGroupFromId(group.id);
+            await GroupManager.removeGroupFromId(group.id);
         }
       });
 
@@ -1473,7 +1485,7 @@ describe("TabManager", ()=>{
           expect(hasSourceTabId).toBe(false);
           expect(hasTargetTabId).toBe(true);
 
-          GroupManager.removeGroupFromId(newId);
+          await GroupManager.removeGroupFromId(newId);
         });
 
       });
@@ -1537,6 +1549,8 @@ describe("TabManager", ()=>{
             this.groups[2].id,
           );
 
+          await Utils.wait(500); // Chrome don't wait for remove
+
           tabs = await TabManager.getTabsInWindowId(this.windowId_bis, true, true);
 
           let hasSourceTabId = tabs.reduce((acc, tab)=>{
@@ -1567,6 +1581,8 @@ describe("TabManager", ()=>{
             tabId
           );
 
+          await Utils.wait(500);
+
           let newGroupIndex = GroupManager.getGroupIndexFromGroupId(newId);
           tabs = await TabManager.getTabsInWindowId(this.windowId_bis, true, true);
 
@@ -1580,7 +1596,7 @@ describe("TabManager", ()=>{
           expect(Utils.extractTabUrl(GroupManager.groups[newGroupIndex].tabs[0].url))
             .toEqual(Utils.extractTabUrl(tabUrl));
 
-          GroupManager.removeGroupFromId(newId);
+          await GroupManager.removeGroupFromId(newId);
         });
       });
     });
@@ -1621,7 +1637,7 @@ describe("TabManager", ()=>{
       afterAll(async function(){
         for (let group of this.groups ) {
           if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false) >= 0 )
-            GroupManager.removeGroupFromId(group.id);
+            await GroupManager.removeGroupFromId(group.id);
         }
       });
 

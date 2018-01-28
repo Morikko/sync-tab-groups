@@ -74,6 +74,13 @@ OptionManager.updateOption = function(optionName, optionValue) {
   }
 }
 
+OptionManager.getOptionValue = function (optionName) {
+  let optionValue = optionName.split('-').reduce((a, b, index, array) => {
+    return a[b];
+  }, OptionManager.options);
+  return optionValue;
+}
+
 /**
   * Init or stop the automatic back up process
   */

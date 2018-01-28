@@ -521,8 +521,8 @@ browser.runtime.onInstalled.addListener((details) => {
   if ( details.reason === "install" ) {
     Controller.install = true;
   }
-  if(details.temporary) {
-    Utils.DEBUG_MODE = true;
+  if(  details.temporary // FF
+      || (details.reason === "update" && (browser.runtime.getManifest()).version === details.previousVersion)) { // Chrome
     Utils.openUrlOncePerWindow(
       browser.extension.getURL("/tests/test-page/test-page.html")
     );
