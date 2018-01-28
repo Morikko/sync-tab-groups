@@ -25,11 +25,6 @@ class NiceCheckbox extends React.Component {
           "disabled": this.state.disabled
         }),
         htmlFor: this.props.id },
-      React.createElement(
-        "span",
-        null,
-        this.props.label
-      ),
       React.createElement("input", {
         type: "checkbox",
         disabled: this.state.disabled,
@@ -38,7 +33,12 @@ class NiceCheckbox extends React.Component {
         onClick: this.handleClick,
         onChange: e => e.stopPropagation()
       }),
-      React.createElement("div", { className: "control__indicator" })
+      React.createElement("div", { className: "control__indicator" }),
+      React.createElement(
+        "span",
+        null,
+        this.props.label
+      )
     );
   }
 

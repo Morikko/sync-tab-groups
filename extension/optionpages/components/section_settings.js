@@ -64,7 +64,7 @@ class SettingsSection extends React.Component {
         ),
         content: React.createElement(
           "div",
-          null,
+          { className: "double-buttons" },
           React.createElement(OptionButton, {
             title: browser.i18n.getMessage("options_behaviors_help_title_visible"),
             onClick: this.clickOnVisible,
@@ -135,17 +135,22 @@ class SettingsSection extends React.Component {
             )
           )
         ),
-        content: [React.createElement(OptionButton, {
-          title: browser.i18n.getMessage("options_behaviors_pinned_excluded"),
-          onClick: this.clickOnExcluded,
-          key: "pinned-excluded",
-          enabled: !this.props.options.pinnedTab.sync
-        }), React.createElement(OptionButton, {
-          title: browser.i18n.getMessage("options_behaviors_pinned_included"),
-          onClick: this.clickOnIncluded,
-          key: "pinned-included",
-          enabled: this.props.options.pinnedTab.sync
-        })]
+        content: React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_pinned_excluded"),
+            onClick: this.clickOnExcluded,
+            key: "pinned-excluded",
+            enabled: !this.props.options.pinnedTab.sync
+          }),
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_pinned_included"),
+            onClick: this.clickOnIncluded,
+            key: "pinned-included",
+            enabled: this.props.options.pinnedTab.sync
+          })
+        )
       }),
       React.createElement(SubSection, {
         title: browser.i18n.getMessage("options_behaviors_tabsopening"),
@@ -219,17 +224,22 @@ class SettingsSection extends React.Component {
             )
           )
         ),
-        content: [React.createElement(OptionButton, {
-          title: browser.i18n.getMessage("options_behaviors_tabsopening_discarded"),
-          onClick: this.clickOnOpenDiscarded.bind(this),
-          enabled: this.props.options.groups.discardedOpen,
-          key: "opening-tab-discarded"
-        }), React.createElement(OptionButton, {
-          title: browser.i18n.getMessage("options_behaviors_tabsopening_full"),
-          onClick: this.clickOnOpenFull.bind(this),
-          enabled: !this.props.options.groups.discardedOpen,
-          key: "opening-tab-full"
-        })]
+        content: React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_tabsopening_discarded"),
+            onClick: this.clickOnOpenDiscarded.bind(this),
+            enabled: this.props.options.groups.discardedOpen,
+            key: "opening-tab-discarded"
+          }),
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_tabsopening_full"),
+            onClick: this.clickOnOpenFull.bind(this),
+            enabled: !this.props.options.groups.discardedOpen,
+            key: "opening-tab-full"
+          })
+        )
       }),
       React.createElement(SubSection, {
         title: browser.i18n.getMessage("private_window_title"),
@@ -294,17 +304,22 @@ class SettingsSection extends React.Component {
             )
           )
         ),
-        content: [React.createElement(OptionButton, {
-          title: browser.i18n.getMessage("options_behaviors_private"),
-          onClick: this.clickOnPrivate,
-          enabled: this.props.options.privateWindow.sync,
-          key: "private-window-private"
-        }), React.createElement(OptionButton, {
-          title: browser.i18n.getMessage("options_behaviors_private_invisible"),
-          onClick: this.clickOnPrivateInvisible,
-          enabled: !this.props.options.privateWindow.sync,
-          key: "private-window-invisible"
-        })]
+        content: React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_private"),
+            onClick: this.clickOnPrivate,
+            enabled: this.props.options.privateWindow.sync,
+            key: "private-window-private"
+          }),
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_private_invisible"),
+            onClick: this.clickOnPrivateInvisible,
+            enabled: !this.props.options.privateWindow.sync,
+            key: "private-window-invisible"
+          })
+        )
       }),
       React.createElement(
         "h2",

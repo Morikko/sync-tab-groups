@@ -13,7 +13,7 @@ class OptionButton extends React.Component {
         "disabled": !this.props.enabled,
       })}
       onClick={this.handleClick}>
-        {this.props.title}
+        <span>{this.props.title}</span>
       </button>);
   }
 

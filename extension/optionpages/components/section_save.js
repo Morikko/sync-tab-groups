@@ -26,7 +26,7 @@ class SaveSection extends React.Component {
         ),
         content: React.createElement(
           "div",
-          null,
+          { className: "double-column-buttons" },
           React.createElement(OptionButton, {
             title: browser.i18n.getMessage("export_groups"),
             onClick: this.props.onExportClick,
@@ -139,16 +139,20 @@ class SaveSection extends React.Component {
         content: React.createElement(
           "div",
           null,
-          React.createElement(OptionButton, {
-            title: browser.i18n.getMessage("options_button_enable"),
-            onClick: this.onEnableBackUp.bind(this),
-            enabled: this.props.options.backup.enable
-          }),
-          React.createElement(OptionButton, {
-            title: browser.i18n.getMessage("options_button_disable"),
-            onClick: this.onDisableBackUp.bind(this),
-            enabled: !this.props.options.backup.enable
-          }),
+          React.createElement(
+            "div",
+            { className: "double-buttons" },
+            React.createElement(OptionButton, {
+              title: browser.i18n.getMessage("options_button_enable"),
+              onClick: this.onEnableBackUp.bind(this),
+              enabled: this.props.options.backup.enable
+            }),
+            React.createElement(OptionButton, {
+              title: browser.i18n.getMessage("options_button_disable"),
+              onClick: this.onDisableBackUp.bind(this),
+              enabled: !this.props.options.backup.enable
+            })
+          ),
           this.createCheckBoxesForTimers()
         )
       }),

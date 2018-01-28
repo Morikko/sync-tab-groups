@@ -24,7 +24,6 @@ class NiceCheckbox extends React.Component {
         "disabled": this.state.disabled,
       })}
       htmlFor={this.props.id}>
-        <span>{this.props.label}</span>
         <input
           type="checkbox"
           disabled={this.state.disabled}
@@ -34,6 +33,7 @@ class NiceCheckbox extends React.Component {
           onChange={(e)=>e.stopPropagation()}
         />
         <div className="control__indicator"></div>
+        <span>{this.props.label}</span>
       </label>);
   }
 

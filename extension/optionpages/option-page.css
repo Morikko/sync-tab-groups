@@ -1,6 +1,7 @@
 html {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,Cantarell,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
 }
+
 
 /*
 .option-section:not([hidden])~.option-section {
@@ -10,13 +11,13 @@ html {
 }
 */
 
+body {
+  font-size: 17px;
+}
+
 .option-section {
   max-width: 1000px;
   margin: auto;
-}
-
-li, div span {
-  font-size: 18px;
 }
 
 .option-button, .option-input-text {
@@ -63,7 +64,9 @@ li, div span {
 
 .tabs {
   display: inline-block;
-  float: left;
+  float: left;.option-button, .button-file {
+  margin-right: 30px;
+}
 }
 
 .tab {
@@ -101,7 +104,6 @@ li, div span {
 
 /** Button for responsive design **/
 .show-menu {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-decoration: none;
     float: right;
     color: #fff;
@@ -172,10 +174,6 @@ input[type=checkbox]:checked ~ label{
 .option-button, .button-file {
   display: inline-block !important;
   width: 140px;
-}
-
-.option-button, .button-file {
-  margin-right: 30px;
 }
 
 /*** Tooltip ****/
@@ -277,4 +275,17 @@ input[type=checkbox]:checked ~ label{
 
 .option-section.about {
   text-align: justify;
+}
+
+.double-column-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.double-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 30px;
 }

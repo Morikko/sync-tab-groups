@@ -84,7 +84,7 @@
   background: var(--checked-hover);
 }
 
-.control, .button-file-label {
+.button-file-label {
   text-align: center;
 }
 
@@ -94,7 +94,8 @@
 
 .control {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
   width: -moz-max-content;
   padding-left: 30px;
   cursor: pointer;

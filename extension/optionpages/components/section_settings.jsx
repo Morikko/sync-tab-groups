@@ -35,7 +35,7 @@ class SettingsSection extends React.Component {
                   </div>
               }
               content={
-                <div>
+                <div className="double-buttons">
                   <OptionButton
                     title= {browser.i18n.getMessage("options_behaviors_help_title_visible")}
                     onClick= {this.clickOnVisible}
@@ -70,20 +70,20 @@ class SettingsSection extends React.Component {
                 </div>
               }
               content={
-                [
+                <div className="double-buttons">
                   <OptionButton
                     title= {browser.i18n.getMessage("options_behaviors_pinned_excluded")}
                     onClick= {this.clickOnExcluded}
                     key="pinned-excluded"
                     enabled={!this.props.options.pinnedTab.sync}
-                  />,
+                  />
                   <OptionButton
                     title= {browser.i18n.getMessage("options_behaviors_pinned_included")}
                     onClick= {this.clickOnIncluded}
                     key="pinned-included"
                     enabled={this.props.options.pinnedTab.sync}
-                  />,
-                ]
+                  />
+                </div>
               }
             />
             <SubSection
@@ -111,18 +111,20 @@ class SettingsSection extends React.Component {
               </div>
               }
               content = {
-                [<OptionButton
+                <div className="double-buttons">
+                <OptionButton
                   title= {browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}
                   onClick= {this.clickOnOpenDiscarded.bind(this)}
                   enabled={this.props.options.groups.discardedOpen}
                   key="opening-tab-discarded"
-                />,
+                />
                 <OptionButton
                   title= {browser.i18n.getMessage("options_behaviors_tabsopening_full")}
                   onClick= {this.clickOnOpenFull.bind(this)}
                   enabled={!this.props.options.groups.discardedOpen}
                   key="opening-tab-full"
-                />,]
+                />
+              </div>
               }
             />
             <SubSection
@@ -147,18 +149,20 @@ class SettingsSection extends React.Component {
                 </div>
               }
               content = {
-                [<OptionButton
+                <div className="double-buttons">
+                  <OptionButton
                   title= {browser.i18n.getMessage("options_behaviors_private")}
                   onClick= {this.clickOnPrivate}
                   enabled={this.props.options.privateWindow.sync}
                   key="private-window-private"
-                />,
+                />
                 <OptionButton
                   title= {browser.i18n.getMessage("options_behaviors_private_invisible")}
                   onClick= {this.clickOnPrivateInvisible}
                   enabled={!this.props.options.privateWindow.sync}
                   key="private-window-invisible"
-                />,]
+                />
+              </div>
               }
             />
             <h2>

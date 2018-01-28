@@ -14,7 +14,11 @@ class OptionButton extends React.Component {
           "disabled": !this.props.enabled
         }),
         onClick: this.handleClick },
-      this.props.title
+      React.createElement(
+        "span",
+        null,
+        this.props.title
+      )
     );
   }
 
