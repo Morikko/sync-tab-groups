@@ -140,7 +140,7 @@ class SaveSection extends React.Component {
 
   createCheckBoxesForTimers() {
     let checkboxes = [];
-    for(let time in OptionManager.TIMERS) {
+    for(let time in OptionManager.TIMERS()) {
       checkboxes.push(
         <NiceCheckbox
           checked= {this.props.options.backup.time[time]}

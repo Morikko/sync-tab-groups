@@ -1042,11 +1042,14 @@ GroupManager.bestMatchGroup = function(tabs, groups = GroupManager.groups) {
   });
 
   if ( !result.length ) {
+    let tabsWithoutExtTabs = Utils.getCopy(tabs).filter((tab)=>{
+        return !Utils.extractTabUrl(tab.url).includes(ext_page_prefix);
+    });
     result = groups.filter((group)=>{
-      let tabsWithoutExtTabs = Utils.getCopy(group.tabs).filter((tab)=>{
+      let groupTabsWithoutExtTabs = Utils.getCopy(group.tabs).filter((tab)=>{
           return !Utils.extractTabUrl(tab.url).includes(ext_page_prefix);
       });
-      return GroupManager.compareTabs(tabs, tabsWithoutExtTabs);
+      return GroupManager.compareTabs(tabsWithoutExtTabs, groupTabsWithoutExtTabs);
     });
   }
 

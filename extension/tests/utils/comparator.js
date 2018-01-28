@@ -38,11 +38,12 @@ TestManager.compareTabs = function(tabs, tabs_ref, full = false) {
         false,
         TestManager.compileErrorMsg(title, "Active", tabs[i].active, tabs_ref[i].active)
       ];
-    if (tabs[i].discarded !== tabs_ref[i].discarded)
+    if (!Utils.isBeforeFF57 && tabs[i].discarded !== tabs_ref[i].discarded) { // Incompatible FF56
       return [
         false,
         TestManager.compileErrorMsg(title, "Discarded", tabs[i].discarded, tabs_ref[i].discarded)
       ];
+    }
     if (tabs[i].index !== tabs_ref[i].index)
       return [
         false,
@@ -167,9 +168,14 @@ var tabGroupsMatchers = {
           result.message = "Wrong use of toEqualTabs on an undefined expected.";
         } else {
           [result.pass, result.message] = TestManager.compareTabs(actual, expected);
-          /*
-          result.message += "\nActual Group: \n" + JSON.stringify(actual) + "\n" + "Expected Group: \n" + expected + "\n";
-          */
+
+          if ( !result.pass ) {
+            console.error(result.message);
+            console.error("Actual Tabs");
+            console.error(actual);
+            console.error("Expected Tabs");
+            console.error(expected);
+          }
         }
         return result;
       }

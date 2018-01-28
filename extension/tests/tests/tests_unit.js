@@ -694,16 +694,16 @@ describe("Back Up: ", ()=>{
     let optionSave = OptionManager.options.backup;
     OptionManager.options.backup = Utils.getCopy(OptionManager.options.backup);
     OptionManager.options.backup.enable = true;
-    OptionManager.options.backup.time = Utils.setObjectPropertiesWith(OptionManager.TIMERS, false);
+    OptionManager.options.backup.time = Utils.setObjectPropertiesWith(OptionManager.TIMERS(), false);
 
     // Spy
     spyOn(StorageManager.Backup, "backup");
 
-    for (let time in OptionManager.TIMERS) {
+    for (let time in OptionManager.TIMERS()) {
       OptionManager.options.backup.time[time] = true;
       StorageManager.Backup.init();
       // Trigger timers
-      jasmine.clock().tick(OptionManager.TIMERS[time]+100);
+      jasmine.clock().tick(OptionManager.TIMERS()[time]+100);
 
       expect(StorageManager.Backup.backup).toHaveBeenCalledWith(time.substring(2));
 

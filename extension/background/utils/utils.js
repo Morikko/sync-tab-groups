@@ -45,7 +45,7 @@ var Utils = Utils || {};
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
  */
-Utils.DEGUG_MODE = false;
+Utils.DEGUG_MODE = true;
 Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
 Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
 Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";
@@ -67,12 +67,14 @@ OptionManager.SORT_RECENT_OLD = 1;
 OptionManager.SORT_ALPHABETICAL = 2;
 OptionManager.SORT_LAST_ACCESSED = 3;
 OptionManager.SORT_CUSTOM = 4;
-OptionManager.TIMERS = {
-  t_5mins: 5*60*1000,
-  t_1h: 60*60*1000,
-  t_4h: 4*60*60*1000,
-  t_1d: 24*60*60*1000,
-  t_1w: 7*24*60*60*1000,
+OptionManager.TIMERS = function() {
+  return {
+    t_5mins: 5*60*1000,
+    t_1h: 60*60*1000,
+    t_4h: 4*60*60*1000,
+    t_1d: 24*60*60*1000,
+    t_1w: 7*24*60*60*1000
+  }
 }
 
 OptionManager.TEMPLATE = function() {
@@ -80,7 +82,7 @@ OptionManager.TEMPLATE = function() {
     version: 0.1,
     privateWindow: {
       sync: true,
-      removeOnClose: true,
+      removeOnClose: true
     },
     pinnedTab: {
       sync: true
@@ -94,20 +96,20 @@ OptionManager.TEMPLATE = function() {
       removeEmptyGroup: false,
       showGroupTitleInWindow: false,
       sortingType: OptionManager.SORT_OLD_RECENT,
-      discardedOpen: true,
+      discardedOpen: true
     },
     popup: {
       maximized: false,
       whiteTheme: false,
       showTabsNumber: true,
-      showSearchBar: true,
+      showSearchBar: true
     },
     shortcuts: {
-      allowGlobal: false,
+      allowGlobal: false
     },
     backup: {
       enable: true,
-      time: Utils.setObjectPropertiesWith(OptionManager.TIMERS, true),
+      time: Utils.setObjectPropertiesWith(OptionManager.TIMERS(), true)
     }
   };
 };

@@ -1257,10 +1257,6 @@ describe("TabManager", ()=>{
 
   describe("Move Tab: ", ()=>{
 
-    beforeAll(function(){
-
-    });
-
     describe("Normal Tab", ()=>{
       beforeAll(async function(){
         OptionManager.updateOption("groups-syncNewWindow", false);
@@ -1310,7 +1306,7 @@ describe("TabManager", ()=>{
           await browser.windows.remove(this.windowId_bis);
         // Remove Group
         for (let group of this.groups ) {
-          if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false) >= 0 )
+          if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
             GroupManager.removeGroupFromId(group.id);
         }
       });

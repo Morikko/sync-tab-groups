@@ -88,7 +88,7 @@ ContextMenu.createSpecialActionMenu = function() {
     contexts: ['browser_action'],
 
   };
-  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
     contextManageGroups.icons = {
       "64": "/share/icons/list-64.png",
       "32": "/share/icons/list-32.png"
@@ -101,7 +101,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("export_groups"),
     contexts: ['browser_action'],
   };
-  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
     contextExportGroups.icons = {
       "64": "/share/icons/upload-64.png",
       "32": "/share/icons/upload-32.png"
@@ -114,7 +114,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("contextmenu_backup"),
     contexts: ['browser_action'],
   };
-  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
     contextBackUp.icons = {
       "64": "/share/icons/hdd-o-64.png",
       "32": "/share/icons/hdd-o-32.png"
@@ -149,7 +149,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("contextmenu_preferences"),
     contexts: ['browser_action'],
   };
-  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
     contextOpenPreferences.icons = {
       "64": "/share/icons/gear-64.png",
       "32": "/share/icons/gear-32.png"
@@ -162,7 +162,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("options_guide"),
     contexts: ['browser_action'],
   };
-  if (browser.sessions.getWindowValue !== undefined) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
     contextGuide.icons = {
       "64": "/share/icons/info-64.png",
       "32": "/share/icons/info-32.png"

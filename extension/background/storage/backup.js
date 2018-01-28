@@ -4,7 +4,7 @@
 var StorageManager = StorageManager || {};
 StorageManager.Backup = StorageManager.Backup || {};
 
-StorageManager.Backup.TIMERS = Utils.setObjectPropertiesWith(OptionManager.TIMERS, undefined);
+StorageManager.Backup.TIMERS = Utils.setObjectPropertiesWith(OptionManager.TIMERS(), undefined);
 
 
 StorageManager.Backup.init = function () {
@@ -47,7 +47,7 @@ StorageManager.Backup.startTimer = function (timer) {
   StorageManager.Backup.stopTimer(timer);
   StorageManager.Backup.TIMERS[timer] = setInterval(function(){
     StorageManager.Backup.backup(timer.substring(2));
-  }, OptionManager.TIMERS[timer]);
+  }, OptionManager.TIMERS()[timer]);
 }
 
 

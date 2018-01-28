@@ -220,7 +220,7 @@ class SaveSection extends React.Component {
 
   createCheckBoxesForTimers() {
     let checkboxes = [];
-    for (let time in OptionManager.TIMERS) {
+    for (let time in OptionManager.TIMERS()) {
       checkboxes.push(React.createElement(NiceCheckbox, {
         checked: this.props.options.backup.time[time],
         label: browser.i18n.getMessage("options_groups_backup_every") + browser.i18n.getMessage("options_groups_backup_" + time),
