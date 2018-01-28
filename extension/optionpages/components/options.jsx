@@ -29,7 +29,7 @@ class OptionsStandalone extends React.Component {
       new tab(browser.i18n.getMessage("shortcuts"), "shortcuts"),
       new tab(browser.i18n.getMessage("options_groups"), "groups"),
       new tab(browser.i18n.getMessage("options_about"), "about"),
-      new tab(browser.i18n.getMessage("options_guide"), ""),
+      //new tab(browser.i18n.getMessage("options_guide"), ""), // TODO: Add Guide
     ];
     return (
       <div>

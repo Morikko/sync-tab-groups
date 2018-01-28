@@ -295,7 +295,7 @@
   },
 
   "command_description_remove_group_swtich": {
-    "message": "Close and remove the current group in window and switch to next one.",
+    "message": "Close and remove the current group in window.",
     "description": ""
   },
 
@@ -450,8 +450,12 @@
   },
 
   "options_about_start": {
-    "message": "Welcome to Sync Tab Groups! I highly recommend you to start checking the different options. You will make Sync Tab Groups fit your expectation. Also, you will understand how to use the extension well, as each option is explained. For further information, check the guide (link in the navigation bar) on the Sync Tab Groups Website.",
-    "description": "Message in the about section of the Preferences"
+    "message": "Welcome to Sync Tab Groups! I highly recommend you to start checking the different options. You will make Sync Tab Groups fit your expectation. Also, you will understand how to use the extension well, as each option is explained."
+  },
+
+  "options_about_further": {
+    "message": "For further information, check the guide (link in the navigation bar) on the Sync Tab Groups Website.",
+    "description": "Not used yet!"
   },
 
   "options_about_enjoy": {

@@ -156,7 +156,7 @@ ContextMenu.createSpecialActionMenu = function() {
     };
   }
   browser.contextMenus.create(contextOpenPreferences);
-
+  /* TODO: Add Guide
   let contextGuide = {
     id: ContextMenu.SpecialActionMenu_ID + "guide",
     title: browser.i18n.getMessage("options_guide"),
@@ -169,6 +169,7 @@ ContextMenu.createSpecialActionMenu = function() {
     };
   }
   browser.contextMenus.create(contextGuide);
+  */
 }
 
 ContextMenu.MoveTabMenuListener = function(info, tab) {

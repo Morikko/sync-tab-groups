@@ -402,13 +402,13 @@ class AboutSection extends React.Component {
           React.createElement(
             "li",
             null,
-            "Alternative method for binding groups on load (cf Chrome and FF56)"
+            "Alternative method for binding groups on load (cf  FF56)"
           )
         ),
         React.createElement(
           "li",
           null,
-          "Chrome compatibility"
+          "Shortcuts:"
         ),
         React.createElement(
           "ul",
@@ -416,7 +416,50 @@ class AboutSection extends React.Component {
           React.createElement(
             "li",
             null,
-            "Add Browser Polyfill library"
+            "Shortcut for \"creating a new group and switching\" has been removed"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Change Open Menu: Alt+Shift+Space -> Ctrl+Shift+Space"
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              "Done with only one hand"
+            ),
+            React.createElement(
+              "li",
+              null,
+              "Better compatibility with Windows"
+            )
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Languages:"
+        ),
+        React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            "German: thanks bitkleberAST (0.4.1)"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Spanish: thanks lucas-mancini (0.4.1)"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Russian: thanks \u0410\u043B\u0435\u043A\u0441\u0430\u043D\u0434\u0440 (0.4.1)"
           )
         ),
         React.createElement(
@@ -482,17 +525,15 @@ class AboutSection extends React.Component {
   }
 
   createContactLink() {
-    return React.createElement(
-      "span",
-      null,
-      " (",
-      React.createElement(
-        "a",
-        { href: "https://morikko.github.io/synctabgroups/#contact" },
-        "Contact"
-      ),
-      ")"
-    );
+    return;
+    /* TODO add Guide
+    <span>
+        {" ("}
+        <a href="https://morikko.github.io/synctabgroups/#contact">
+        Contact</a>
+        {")"}
+    </span>
+    */
   }
 
   createExtensionsLink() {
@@ -505,14 +546,13 @@ class AboutSection extends React.Component {
         { href: "https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/" },
         "Firefox"
       ),
-      "/",
-      React.createElement(
-        "a",
-        { href: "https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/" },
-        "Chrome"
-      ),
       ")"
     );
+    /*
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/">Chrome</a>
+        {"/"}
+      </span>
+    */
   }
 
 };

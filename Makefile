@@ -38,6 +38,7 @@ release: clean
 	cp -r extension/ $(BUILD_DIR)/
 	# Change some code for the release
 	sed -i 's/.development./.production.min./g' $(BUILD_HTML)
+	sed -i 's/.development./.production.min./g' $(BUILD_DIR)/extension/manifest.json
 	sed -i 's/$(DEBUG_VAR)true;/$(DEBUG_VAR)false;/' $(BUILD_UTIL)
 	# Filter undesirable files
 	-rm -rf $(BUILD_DIR)/extension/tests

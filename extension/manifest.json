@@ -17,7 +17,6 @@
   },
 
   "permissions": [
-    "bookmarks",
     "tabs",
     "storage",
     "sessions",
@@ -89,11 +88,11 @@
       "description": "Switch Previous Group"
     },
 
-    "create_group_swtich": {
+    "remove_group_swtich": {
       "suggested_key": {
-        "default": "Alt+Shift+Insert"
+        "default": "Alt+Shift+Delete"
       },
-      "description": "Add New Group and Switch"
+      "description": "Remove current group"
     }
   }
 }

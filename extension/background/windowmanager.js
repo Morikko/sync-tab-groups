@@ -369,7 +369,6 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
     const w = await browser.windows.create({
       state: "maximized",
       incognito: GroupManager.groups[groupIndex].incognito,
-      focused: true,
     });
 
     // TODO: security: might not be necessary

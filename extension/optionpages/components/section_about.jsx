@@ -22,6 +22,7 @@ class AboutSection extends React.Component {
             Sync Tab Groups
           </h2>
           <p>
+            {/* TODO: Add Guide */}
             {browser.i18n.getMessage("options_about_start")}
           </p>
           <p>
@@ -126,11 +127,22 @@ class AboutSection extends React.Component {
                   <li>Automatic: To set in the Preferences (section Groups)</li>
                   <li>Manual: button on right click on the extension icon</li>
                 </ul>
-                <li>Alternative method for binding groups on load (cf Chrome and FF56)</li>
+                <li>Alternative method for binding groups on load (cf  FF56)</li>
               </ul>
-              <li>Chrome compatibility</li>
+              <li>Shortcuts:</li>
               <ul>
-                <li>Add Browser Polyfill library</li>
+                <li>Shortcut for "creating a new group and switching" has been removed</li>
+                <li>Change Open Menu: Alt+Shift+Space -> Ctrl+Shift+Space</li>
+                <ul>
+                  <li>Done with only one hand</li>
+                  <li>Better compatibility with Windows</li>
+                </ul>
+              </ul>
+              <li>Languages:</li>
+              <ul>
+                <li>German: thanks bitkleberAST (0.4.1)</li>
+                <li>Spanish: thanks lucas-mancini (0.4.1)</li>
+                <li>Russian: thanks Александр (0.4.1)</li>
               </ul>
               <li>Firefox 56 compatibility</li>
               <li>For Developers:</li>
@@ -153,22 +165,28 @@ class AboutSection extends React.Component {
   }
 
   createContactLink() {
-    return <span>
+    return;
+          /* TODO add Guide
+          <span>
               {" ("}
               <a href="https://morikko.github.io/synctabgroups/#contact">
               Contact</a>
               {")"}
           </span>
+          */
   }
 
   createExtensionsLink() {
     return <span>
                 {" ("}
               <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/">Firefox</a>
-              {"/"}
-              <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/">Chrome</a>
               {")"}
+          </span>
+          /*
+              <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/">Chrome</a>
+              {"/"}
             </span>
+          */
   }
 
 };
