@@ -26,7 +26,7 @@
  Put the window on the left of the screen
  If TestManager.DOUBLE_MONITORS is true, the screen is not the first one but the second one (the one the more on the right)
 **/
-TestManager.DOUBLE_MONITORS = true;
+TestManager.DOUBLE_MONITORS = false;
 
 TestManager.splitOnHalfScreen = async function(windowId){
   try {
@@ -35,6 +35,7 @@ TestManager.splitOnHalfScreen = async function(windowId){
         top: 3,
         width: Math.round(window.screen.width/2),
         height: window.screen.height,
+        state: "normal",
     });
   } catch (e) {
     let msg = "TestManager.splitOnHalfScreen failed on window " + windowId + " and " + e;

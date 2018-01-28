@@ -388,6 +388,10 @@ body {
   font-size: 20px;
   padding: 6px 0px;
 }
+/** Hide default cross on Chrome **/
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
 
 .searchbar {
   margin-top: 5px;

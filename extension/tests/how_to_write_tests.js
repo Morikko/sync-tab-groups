@@ -29,8 +29,6 @@
       title:"Examples",
     })
 
-    this.group
-
     // Open windows
     this.windowIds = (await browser.windows.create()).id;
     this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[1].id);

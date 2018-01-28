@@ -34,4 +34,5 @@ env.specFilter = function(spec) {
   TabManager = bg.TabManager;
   OptionManager = bg.OptionManager;
   StorageManager = bg.StorageManager;
+  Controller = bg.Controller;
 })()

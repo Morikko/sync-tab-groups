@@ -84,6 +84,10 @@ Session.createTabs = function(params){
     return tab;
   });
 
+  if (params.active === -1) {
+    tabs[tabs.length-1].active = true;
+  }
+
   // Pinned the first ones
   let safePinnedTabs = Math.min(params.pinnedTabs, params.tabsLength)
   for (let i = 0; i < safePinnedTabs; i++) {

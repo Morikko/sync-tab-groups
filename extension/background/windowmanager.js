@@ -380,7 +380,7 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
     WindowManager.WINDOW_EXCLUDED[w.id] = true;
 
     // TODO: security: might not be necessary
-    /*
+
     let count = 0;
     while( !(await browser.windows.get(w.id)).focused ) {
       console.log("NOT SYNCHRONIZED");
@@ -390,7 +390,7 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
       count++;
       await Utils.wait(100);
     }
-    */
+    
 
     await WindowManager.switchGroup(groupId);
     delete WindowManager.WINDOW_EXCLUDED[w.id];

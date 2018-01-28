@@ -1979,8 +1979,189 @@ describe("TabManager", ()=>{
         expect(hasSourceTabId).toBe(false);
         expect(hasTargetTabId).toBe(true);
       });
+    });
+  });
 
+  describe("Undiscard home made method - ", ()=>{
+    beforeAll(function(){
+      // Add tabs and groups matchers
+      jasmine.addMatchers(tabGroupsMatchers);
 
+      // Create Groups
+      [this.groupIds, this.groups] = Session.createArrayGroups({
+        groupsLength: 5,
+        tabsLength: [4,3,3,3,4],
+        lazyMode: false,
+        global: true,
+        active: -1,
+        title:"Undiscard",
+      })
+
+      this.previousOptions = TestManager.swapOptions({
+        "groups-discardedOpen": true,
+      })
+
+    });
+
+    afterAll(async function(){
+      await TestManager.removeGroups(this.groupIds)
+
+      TestManager.swapOptions(this.previousOptions);
+    });
+
+    it("On 4 tabs in 1 window", async function(){
+      try {
+        this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[0].id);
+        await TestManager.splitOnHalfScreen(this.windowIds);
+
+        let expectedTabs = Utils.getCopy(this.groups[0].tabs);
+        expectedTabs.forEach((tab)=>{
+          tab.url = Utils.extractLazyUrl(tab.url);
+          tab.discarded = !tab.active;
+        });
+
+        await Controller.undiscardAll();
+
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
+        let resultingTabs = await TabManager.getTabsInWindowId(
+          this.windowIds,
+          false,
+          true,
+        );
+
+        expect(resultingTabs).toEqualTabs(expectedTabs);
+
+      } catch(e) {
+        console.error(e);
+      } finally {
+        await TestManager.closeWindows(this.windowIds);
+      }
+    });
+
+    it("On 6 tabs in 2 window", async function(){
+      try {
+        let group1 = 1, group2 = 2;
+        let expectedTabs = [], resultingTabs = [];
+        this.windowIds = [0];
+
+        this.windowIds[0] = await WindowManager.openGroupInNewWindow(this.groups[group1].id);
+        this.windowIds[1] = await WindowManager.openGroupInNewWindow(this.groups[group2].id);
+
+        await TestManager.splitOnHalfScreen(this.windowIds[0]);
+        await TestManager.splitOnHalfScreen(this.windowIds[1]);
+
+        expectedTabs[0] = Utils.getCopy(this.groups[group1].tabs);
+        expectedTabs[0].forEach((tab)=>{
+          tab.url = Utils.extractLazyUrl(tab.url);
+          tab.discarded = !tab.active;
+        });
+        expectedTabs[1] = Utils.getCopy(this.groups[group2].tabs);
+        expectedTabs[1].forEach((tab)=>{
+          tab.url = Utils.extractLazyUrl(tab.url);
+          tab.discarded = !tab.active;
+        });
+
+        await Controller.undiscardAll();
+
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds[0]);
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds[1]);
+        resultingTabs[0] = await TabManager.getTabsInWindowId(
+          this.windowIds[0],
+          false,
+          true,
+        );
+        resultingTabs[1] = await TabManager.getTabsInWindowId(
+          this.windowIds[1],
+          false,
+          true,
+        );
+
+        expect(resultingTabs[0]).toEqualTabs(expectedTabs[0]);
+        expect(resultingTabs[1]).toEqualTabs(expectedTabs[1]);
+
+      } catch(e) {
+        console.error(e);
+      } finally {
+        await TestManager.closeWindows(this.windowIds);
+      }
+    });
+
+    it("Add new discarded tabs while undiscarding", async function(){
+      try {
+        this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[3].id);
+        await TestManager.splitOnHalfScreen(this.windowIds);
+
+        let newTab = Session.getRandomNormalTab();
+
+        let expectedTabs = Utils.getCopy(this.groups[3].tabs);
+        expectedTabs.push(newTab);
+        expectedTabs.forEach((tab, index)=>{
+          tab.url = Utils.extractLazyUrl(tab.url);
+          tab.discarded = !tab.active;
+          tab.index = index;
+        });
+
+        await Controller.undiscardAll(0, ()=>{
+          TabManager.openListOfTabs(
+            [newTab],
+            this.windowIds,
+            true,
+            false,
+          );
+        });
+
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
+        let resultingTabs = await TabManager.getTabsInWindowId(
+          this.windowIds,
+          false,
+          true,
+        );
+
+        expect(resultingTabs).toEqualTabs(expectedTabs);
+
+      } catch(e) {
+        console.error(e);
+      } finally {
+        await TestManager.closeWindows(this.windowIds);
+      }
+    });
+
+    it("While undiscarding, a tab in the queue is removed", async function(){
+      try {
+        this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[4].id);
+        await TestManager.splitOnHalfScreen(this.windowIds);
+
+        let newTab = Session.getRandomNormalTab();
+
+        let expectedTabs = Utils.getCopy(this.groups[4].tabs);
+        expectedTabs.splice(this.groups[4].tabs.length-2, 1);
+        expectedTabs.forEach((tab, index)=>{
+          tab.url = Utils.extractLazyUrl(tab.url);
+          tab.discarded = !tab.active;
+          tab.index = index;
+        });
+
+        await Controller.undiscardAll(0, ()=>{
+          GroupManager.removeTabFromIndexInGroupId(
+            this.groups[4].id,
+            this.groups[4].tabs.length-2
+          );
+        });
+
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
+        let resultingTabs = await TabManager.getTabsInWindowId(
+          this.windowIds,
+          false,
+          true,
+        );
+
+        expect(resultingTabs).toEqualTabs(expectedTabs);
+
+      } catch(e) {
+        console.error(e);
+      } finally {
+        await TestManager.closeWindows(this.windowIds);
+      }
     });
 
   });
