@@ -67,6 +67,7 @@ StorageManager.Backup.backup = async function (time, groups=GroupManager.groups)
     url: Utils.createGroupsJsonFile(),
     filename: StorageManager.Backup.LOCATION + "synctabgroups-backup-" + time + ".json",
     conflictAction: "overwrite",
+    saveAs: false,
   });
   await browser.downloads.erase({
     id:id

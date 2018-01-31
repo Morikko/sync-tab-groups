@@ -643,11 +643,6 @@
     "description": ""
   },
 
-  "options_behaviors_private_changestate": {
-    "message": "Any private window can be specifically changed from/to private/invisible from the Menu.",
-    "description": ""
-  },
-
   "options_settings_others": {
     "message": "Others",
     "description": "Subsection in settings"
