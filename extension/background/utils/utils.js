@@ -430,7 +430,7 @@ Utils.shuffleArray = function(a) {
  * Check if an url is already open in the focused window, if so it focuses the tab else it opens it
  * @param {String} url
  */
-Utils.openUrlOncePerWindow = async function(url) {
+Utils.openUrlOncePerWindow = async function(url, active=true) {
   try {
     const currentWindowId = (await browser.windows.getLastFocused({
       windowTypes: ['normal'],
@@ -447,12 +447,12 @@ Utils.openUrlOncePerWindow = async function(url) {
 
     if (tabs.length) { // if tab is found
       browser.tabs.update(tabs[0].id, {
-        active: true,
+        active: active,
         url: url, // update hash
       });
     } else {
       browser.tabs.create({
-        active: true,
+        active: active,
         url: url,
       });
     }

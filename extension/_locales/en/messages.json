@@ -882,6 +882,16 @@
   "options_shortcuts_global": {
     "message": "Global Shortcuts",
     "description": "Shortcuts available from anywhere in the browser"
+  },
+
+  "notification_update_title": {
+    "message": "Sync Tab Groups has been updated to version",
+    "description": "Title in the notification displayed when the extension is updated"
+  },
+
+  "notification_update_message": {
+    "message": "Click on this notification to see the changes.",
+    "description": "Message in the notification displayed when the extension is updated"
   }
 
 }

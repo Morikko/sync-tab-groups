@@ -40,6 +40,7 @@ TaskManager.fromUI = {
  * Only read groups data, never write directly
  */
 var Controller = Controller || {};
+Controller.updateNotificationId = "UPDATE_NOTIFICATION";
 
 Controller.init = async function() {
   await OptionManager.init();
@@ -171,10 +172,10 @@ Controller.onBookmarkSave = function() {
   StorageManager.Bookmark.backUp(GroupManager.getCopy(), true);
 };
 
-Controller.onOpenSettings = function() {
+Controller.onOpenSettings = function(active=true) {
   Utils.openUrlOncePerWindow(browser.extension.getURL(
     "/optionpages/option-page.html"
-  ));
+  ), active);
 };
 
 Controller.onRemoveAllGroups = function() {
@@ -521,12 +522,25 @@ browser.runtime.onInstalled.addListener((details) => {
   if ( details.reason === "install" ) {
     Controller.install = true;
   }
-  if(  (!Utils.isChrome() && details.temporary)  // FF
+  if( (!Utils.isChrome() && details.temporary)  // FF
       || (Utils.isChrome() && details.reason === "update" && (browser.runtime.getManifest()).version === details.previousVersion)) { // Chrome
     Utils.openUrlOncePerWindow(
-      browser.extension.getURL("/tests/test-page/test-page.html")
+      browser.extension.getURL("/tests/test-page/test-page.html"),
+      false,
     );
   } else {
-    Controller.onOpenSettings();
+    Controller.onOpenSettings(false);
+    // Focus Settings if click on notification
+    browser.notifications.onClicked.addListener((notificationId)=>{
+      if ( notificationId === Controller.updateNotificationId ) {
+        Controller.onOpenSettings(true);
+      }
+    });
+    browser.notifications.create(Controller.updateNotificationId, {
+      "type": "basic",
+      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+      "title": browser.i18n.getMessage("notification_update_title") + " " + browser.runtime.getManifest().version,
+      "message": browser.i18n.getMessage("notification_update_message"),
+    });
   }
 });
