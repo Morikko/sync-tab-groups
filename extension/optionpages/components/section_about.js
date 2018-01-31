@@ -50,6 +50,44 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.5.1)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Fix: Popup always displayed on backup (FF58)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "On update:"
+        ),
+        React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            "Only open the about tab (without focus)"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Show a notification with the new version number"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "A click on the notification focuses the opened about tab"
+          )
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.5.0)"
       ),
       React.createElement(
