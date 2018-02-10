@@ -1,7 +1,7 @@
 {
   "extension_description": {
     "message": "Sync Tab Groups sind eine einfache Möglichkeit, Ihre aktuellen Tabs nach Themen zu organisieren. Jede geöffnete Gruppe wird mit einem Fenster synchronisiert, so dass alle Änderungen an den Registerkarten gespeichert werden. Somit können Sie einen aktuellen Tabs-Flow schließen, während Sie einen anderen Tabs-Flow öffnen.",
-    "description": "Description of the extension"
+    "description": "Beschreibung der Erweiterung"
   },
 
   "add_group": {
@@ -27,11 +27,6 @@
   "synchronized_window": {
     "message": "Fenster synchronisieren",
     "description": "Label for synchronizing window in popup"
-  },
-
-  "open_preferences": {
-    "message": "Einstellungen öffnen",
-    "description": "Open Preferences"
   },
 
   "expand_menu": {
@@ -137,11 +132,6 @@
   "remove_empty_groups": {
     "message": "Gruppen ohne Tabs automatisch entfernen.",
     "description": "Label remove empty groups"
-  },
-
-  "private_window_title": {
-    "message": "Privates Fenster",
-    "description": "Option section title"
   },
 
   "new_private_window": {
@@ -254,11 +244,6 @@
     "description": ""
   },
 
-  "open_url_help_method": {
-    "message": "Stattdessen können Sie diese öffnen:",
-    "description": ""
-  },
-
   "open_url_help_method_part_1": {
     "message": "Klicke auf die Schaltfläche",
     "description": ""
@@ -319,11 +304,6 @@
     "description": ""
   },
 
-  "open_shortcut_list": {
-    "message": "Öffne Shortcut Liste",
-    "description": ""
-  },
-
   "command_shortcuts": {
     "message": "Shortcut",
     "description": ""
@@ -377,5 +357,541 @@
   "bookmarks_weak_help": {
     "message": "Automatisches Speichern von Lesezeichen kann Probleme verursachen. Bis zur Problembehebung würde ich nicht empfehlen dieses zu verwenden.",
     "description": ""
+  },
+
+  "label_sort_custom": {
+    "message": "Custom",
+    "description": "TODO"
+  },
+
+  "label_sort_old": {
+    "message": "Old Created First",
+    "description": "TODO"
+  },
+
+  "label_sort_recent": {
+    "message": "Recent Created First",
+    "description": "TODO"
+  },
+
+  "label_sort_alphabetical": {
+    "message": "Alphabetical",
+    "description": "TODO"
+  },
+
+  "label_sort_accessed": {
+    "message": "Last Accessed",
+    "description": "TODO Name of sorting in select in option page"
+  },
+
+  "unpin_tab": {
+    "message": "Unpin this tab",
+    "description": "TODO In context menu on tab in menu"
+  },
+
+  "pin_tab": {
+    "message": "Pin this tab",
+    "description": "TODO In context menu on tab in menu"
+  },
+
+  "open_group": {
+    "message": "Click to switch to this group in the current window.",
+    "description": "TODO Hover help for open group click"
+  },
+
+  "expand_all_groups": {
+    "message": "Expand all groups (see tabs)",
+    "description": "TODO Hover help for the button for expanding all groups (see tabs)"
+  },
+
+  "reduce_all_groups": {
+    "message": "Reduce all groups (hide tabs)",
+    "description": "TODO Hover help for the button for reducing all groups (hide tabs)"
+  },
+
+  "manage_groups": {
+    "message": "Manage Groups",
+    "description": "TODO "
+  },
+
+  "open_url_help_method": {
+    "message": "Stattdessen können Sie diese öffnen:",
+    "description": ""
+  },
+
+  "state_new_normal_window": {
+    "message": "New Windows",
+    "description": "TODO Setting title for the option if a new window is a visible or invisible group"
+  },
+
+  "private_window_title": {
+    "message": "Privates Fenster",
+    "description": "TODO Option section title"
+  },
+
+  "label_select_sorting_type": {
+    "message": "Group Names Sorting",
+    "description": "TODO "
+  },
+
+  "synchronized_window": {
+    "message": "Group Visible",
+    "description": "TODO Label for group visible in the popup"
+  },
+
+  "unsynchronized_window": {
+    "message": "Group Invisible",
+    "description": "Status in Mainbar (Menu) when a group is invisible"
+  },
+
+  "contextmenu_backup": {
+    "message": "Back Up (Manual)",
+    "description": "TODO Right click on extension icon, the title for doing a backup."
+  },
+
+  "options_about_start": {
+    "message": "TODO Welcome to Sync Tab Groups! I highly recommend you to start checking the different options. You will make Sync Tab Groups fit your expectation. Also, you will understand how to use the extension well, as each option is explained."
+  },
+
+  "options_about_further": {
+    "message": "For further information, check the guide (link in the navigation bar) on the Sync Tab Groups Website.",
+    "description": "TODO Not used yet!"
+  },
+
+  "options_about_enjoy": {
+    "message": "I hope you are loving your experience with Sync Tab Groups. If so, don't hesitate to add a nice review on the extension download page for sharing it.",
+    "description": "TODO Message in the about section of the Preferences"
+  },
+
+  "options_about_contribute": {
+    "message": "Beyond to use it, you can contribute. Like finding bugs, suggesting great new features to add or simply translating it in your language. For any reasons, don't hesitate to contact me.",
+    "description": "TODO Message in the about section of the Preferences"
+  },
+
+  "options_about_dev": {
+    "message": "Sync Tab Groups is an extension I am developing in my free time. I am doing everything to provide you the best extension. For those who came across bugs, I apologize for the disagreement.",
+    "description": "TODO Message in the about section of the Preferences"
+  },
+
+  "options_help_title": {
+    "message": "Help",
+    "description": ""
+  },
+
+  "options_behaviors_help_title_invisible": {
+    "message": "Invisible",
+    "description": "TODO "
+  },
+
+  "options_behaviors_help_invisible": {
+    "message": "New windows opened without Sync Tab Groups are Invisible.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_help_title_visible": {
+    "message": "Visible",
+    "description": "TODO "
+  },
+
+  "options_behaviors_help_visible_new": {
+    "message": "New windows opened without Sync Tab Groups are Visible as a new unnamed group.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_help_change_visibility": {
+    "message": "Any window can be specifically changed from/to visible/invisible from the Menu. (button at the bottom left)",
+    "description": "TODO "
+  },
+
+  "options_behaviors_pinned_excluded": {
+    "message": "Excluded",
+    "description": "TODO Pinned Tabs are not part of a group."
+  },
+
+  "options_behaviors_pinned_excluded_notpart": {
+    "message": "Pinned tabs are not part of any groups.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_pinned_excluded_switching": {
+    "message": "Switching/closing actions don't impact the pinned tabs.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_pinned_excluded_usecase": {
+    "message": "Use case: Global Tabs (Mail tab, Music tab...)",
+    "description": "TODO "
+  },
+
+  "options_behaviors_pinned_included": {
+    "message": "Included",
+    "description": "TODO Pinned are saved in the group"
+  },
+
+  "options_behaviors_pinned_included_part": {
+    "message": "Pinned tabs are part of the group in the window.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_pinned_included_switching": {
+    "message": "Switching/closing actions close and save the pinned tabs in the group.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_pinned_included_usecase": {
+    "message": "Use case: Important tabs for the group.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening": {
+    "message": "Tabs Opening",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening_discarded": {
+    "message": "Discarded",
+    "description": "TODO Tabs are not fully loaded on opening"
+  },
+
+  "options_behaviors_tabsopening_discarded_lighter": {
+    "message": "Faster and Lighter",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening_discarded_notfullyloaded": {
+    "message": "Tabs are not fully loaded on opening.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening_discarded_loadedclick": {
+    "message": "The tabs are only loaded once you active (click/focus) them. After, they stay loaded.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening_full": {
+    "message": "Full",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening_full_loadedopening": {
+    "message": "Tabs are completely loaded on opening.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening_full_heavier": {
+    "message": "Consume more memory and network data.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening_limits": {
+    "message": "Limits (In both cases)",
+    "description": "TODO Limits for tabs opening behavior"
+  },
+
+  "options_behaviors_tabsopening_limits_temporary": {
+    "message": "Temporary data (forms...) added before tabs were closed are lost. (Limited by the browser)",
+    "description": "TODO "
+  },
+
+  "options_behaviors_tabsopening_limits_history": {
+    "message": "Tabs History are not restored. (Limited by the browser)",
+    "description": "TODO TODO "
+  },
+
+  "options_behaviors_private": {
+    "message": "Private",
+    "description": "TODO Behavior of the Private windows"
+  },
+
+  "options_behaviors_private_visible": {
+    "message": "New private windows opened without Sync Tab Groups are visible as a new private groups.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_private_groups": {
+    "message": "Groups opened in private windows are private as well.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_private_notsaved": {
+    "message": "Private groups are not saved on the disk",
+    "description": "TODO "
+  },
+
+  "options_behaviors_private_autoremoved": {
+    "message": "A private group closed is automatically deleted.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_private_restart": {
+    "message": "A restart of the browser will closed and deleted all the private groups.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_private_invisible": {
+    "message": "Invisible",
+    "description": "TODO Behavior of the Private windows"
+  },
+
+  "options_behaviors_private_invisible_creation": {
+    "message": "New private windows opened without Sync Tab Groups are Invisible.",
+    "description": "TODO "
+  },
+
+  "options_behaviors_private_changestate": {
+    "message": "Any private window can be specifically changed from/to private/invisible from the Menu.",
+    "description": "TODO "
+  },
+
+  "options_settings_others": {
+    "message": "Others",
+    "description": "TODO Subsection in settings"
+  },
+
+  "options_settings": {
+    "message": "Settings",
+    "description": "TODO Option section for the groups settings (behavior)"
+  },
+
+  "options_interface": {
+    "message": "Interface",
+    "description": "TODO Option section for the groups interface"
+  },
+
+  "options_interface_windows": {
+    "message": "Windows",
+    "description": "TODO Option subsection for the groups interface"
+  },
+
+  "options_interface_groups": {
+    "message": "Groups",
+    "description": "TODO Option subsection for the groups interface"
+  },
+
+  "options_interface_sortexplanation_custom": {
+    "message": "Custom: Drag & Drop to position your groups",
+    "description": "TODO "
+  },
+
+  "options_interface_sortexplanation_alphabetical": {
+    "message": "Alphabetical: Sort by Name",
+    "description": "TODO "
+  },
+
+  "options_interface_sortexplanation_last": {
+    "message": "Last Accessed: Sort by last utilisation",
+    "description": "TODO "
+  },
+
+  "options_interface_sortexplanation_old": {
+    "message": "Old Created First",
+    "description": "TODO "
+  },
+
+  "options_interface_sortexplanation_recent": {
+    "message": "Recent Created First",
+    "description": "TODO "
+  },
+
+  "options_groups": {
+    "message": "Groups",
+    "description": "TODO Option section for the groups data"
+  },
+
+  "options_groups_backup": {
+    "message": "Back Up",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_behavior": {
+    "message": "Behavior",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_behavior_download": {
+    "message": "Automatic download of a file with all your groups. (except private ones)",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_behavior_invisible": {
+    "message": "The download is invisible in the download history.",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_behavior_distinctfile": {
+    "message": "Each specific timer is saved in a distinct file.",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_behavior_overwritten": {
+    "message": "However, the same timer will overwrite its previous back up.",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_location": {
+    "message": "Location",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_location_subfolder": {
+    "message": "Done in the subfolder '$FOLDER$' in your browser download folder.",
+    "description": "TODO ",
+    "placeholders": {
+      "folder" : {
+        "content": "$1",
+        "example": "backup/"
+      }
+    }
+  },
+
+  "options_groups_backup_location_restiction": {
+    "message": "The browser restricts it to be inside the browser download folder, so you can't change the location.",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_timer": {
+    "message": "Timers count explanation",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_timer_start": {
+    "message": "Timers start when the extension is launched or the back up is enabled, and back up when the time indicated is over.",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_timer_done": {
+    "message": "The save is done when the time indicated is over.",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_timer_reset": {
+    "message": "Timers reset to 0, when you restart the browser, disable the back up option or disable the extension.",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_manual": {
+    "message": "Manual Back Up",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_manual_button": {
+    "message": "From the shortcuts menu (Right click on the extension icon",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_manual_file": {
+    "message": "Saved in a distinct file, called manual, overwritten as well.",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_every": {
+    "message": "Done every ",
+    "description": "TODO See options_groups_backup_t_..."
+  },
+
+  "options_groups_backup_t_5mins": {
+    "message": "5 minutes",
+    "description": "TODO Follows options_groups_backup_every"
+  },
+
+  "options_groups_backup_t_1h": {
+    "message": "hour",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_t_4h": {
+    "message": "4 hours",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_t_1d": {
+    "message": "day",
+    "description": "TODO "
+  },
+
+  "options_groups_backup_t_1w": {
+    "message": "week",
+    "description": "TODO "
+  },
+
+  "options_groups_cleaning": {
+    "message": "Cleaning",
+    "description": "TODO "
+  },
+
+  "options_groups_cleaning_removeall": {
+    "message": "Remove all groups",
+    "description": "TODO "
+  },
+
+  "options_groups_cleaning_removeall_warning": {
+    "message": "Once done, you can't recover your groups!",
+    "description": "TODO "
+  },
+
+  "options_button_enable": {
+    "message": "Enable",
+    "description": "TODO Button Title"
+  },
+
+  "options_button_disable": {
+    "message": "Disable",
+    "description": "TODO Button Title"
+  },
+
+  "options_about": {
+    "message": "About",
+    "description": "TODO Option Section Title"
+  },
+
+  "options_guide": {
+    "message": "Guide",
+    "description": "TODO Option Section Title"
+  },
+
+  "change_window_invisible": {
+    "message": "Click for making the group invisible (removed)",
+    "description": "TODO Hover help for button in the bottom left of the menu"
+  },
+
+  "change_window_visible": {
+    "message": "Click for making the window visible (added as new group)",
+    "description": "TODO Hover help for button in the bottom left of the menu"
+  },
+
+  "open_manager": {
+    "message": "Open Tab with the Groups Manager",
+    "description": "TODO Hover help for button in the bottom of the menu"
+  },
+
+  "group_manager": {
+    "message": "Groups Manager",
+    "description": "TODO Tab name where you can organize your groups"
+  },
+
+  "group_manager_single_button": {
+    "message": "Single",
+    "description": "TODO Button in Groups Manager for showing only one side"
+  },
+
+  "group_manager_split_button": {
+    "message": "Split",
+    "description": "TODO Button in Groups Manager for showing 2 sides"
+  },
+
+  "options_shortcuts_global": {
+    "message": "Global Shortcuts",
+    "description": "TODO Shortcuts available from anywhere in the browser"
+  },
+
+  "notification_update_title": {
+    "message": "Sync Tab Groups has been updated to version",
+    "description": "TODO Title in the notification displayed when the extension is updated"
+  },
+
+  "notification_update_message": {
+    "message": "Click on this notification to see the changes.",
+    "description": "TODO Message in the notification displayed when the extension is updated"
   }
+
 }
