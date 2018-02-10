@@ -355,38 +355,38 @@
   },
 
   "label_sort_custom": {
-    "message": "Custom",
-    "description": "TODO"
+    "message": "Benutzerdefiniert",
+    "description": ""
   },
 
   "label_sort_old": {
-    "message": "Old Created First",
-    "description": "TODO"
+    "message": "Älteste zuerst",
+    "description": ""
   },
 
   "label_sort_recent": {
-    "message": "Recent Created First",
-    "description": "TODO"
+    "message": "Neueste zuerst",
+    "description": ""
   },
 
   "label_sort_alphabetical": {
-    "message": "Alphabetical",
-    "description": "TODO"
+    "message": "Alphabetisch",
+    "description": ""
   },
 
   "label_sort_accessed": {
-    "message": "Last Accessed",
-    "description": "TODO Name of sorting in select in option page"
+    "message": "Zuletzt verwendet",
+    "description": "Name of sorting in select in option page"
   },
 
   "unpin_tab": {
-    "message": "Unpin this tab",
-    "description": "TODO In context menu on tab in menu"
+    "message": "Diesen Tab ablösen",
+    "description": "In context menu on tab in menu"
   },
 
   "pin_tab": {
-    "message": "Pin this tab",
-    "description": "TODO In context menu on tab in menu"
+    "message": "Diesen Tab anheften",
+    "description": "In context menu on tab in menu"
   },
 
   "open_group": {
@@ -395,18 +395,18 @@
   },
 
   "expand_all_groups": {
-    "message": "Expand all groups (see tabs)",
-    "description": "TODO Hover help for the button for expanding all groups (see tabs)"
+    "message": "Alle Gruppen erweitern (Tabs zeigen)",
+    "description": "Hover help for the button for expanding all groups (see tabs)"
   },
 
   "reduce_all_groups": {
-    "message": "Reduce all groups (hide tabs)",
-    "description": "TODO Hover help for the button for reducing all groups (hide tabs)"
+    "message": "Alle Gruppen verkleinern (Tabs verstecken)",
+    "description": "Hover help for the button for reducing all groups (hide tabs)"
   },
 
   "manage_groups": {
-    "message": "Manage Groups",
-    "description": "TODO "
+    "message": "Gruppen verwalten",
+    "description": ""
   },
 
   "open_url_help_method": {
@@ -415,322 +415,322 @@
   },
 
   "state_new_normal_window": {
-    "message": "New Windows",
-    "description": "TODO Setting title for the option if a new window is a visible or invisible group"
+    "message": "Neue Fenster",
+    "description": "Setting title for the option if a new window is a visible or invisible group"
   },
 
   "private_window_title": {
     "message": "Privates Fenster",
-    "description": "TODO Option section title"
+    "description": "Option section title"
   },
 
   "label_select_sorting_type": {
-    "message": "Group Names Sorting",
-    "description": "TODO "
+    "message": "Sortierung nach Gruppennamen",
+    "description": ""
   },
 
   "synchronized_window": {
-    "message": "Group Visible",
-    "description": "TODO Label for group visible in the popup"
+    "message": "Gruppe sichtbar",
+    "description": "Label for group visible in the popup"
   },
 
   "unsynchronized_window": {
-    "message": "Group Invisible",
+    "message": "Gruppe unsichtbar",
     "description": "Status in Mainbar (Menu) when a group is invisible"
   },
 
   "contextmenu_backup": {
-    "message": "Back Up (Manual)",
-    "description": "TODO Right click on extension icon, the title for doing a backup."
+    "message": "Sicherung (Manuell)",
+    "description": "Right click on extension icon, the title for doing a backup."
   },
 
   "options_about_start": {
-    "message": "TODO Welcome to Sync Tab Groups! I highly recommend you to start checking the different options. You will make Sync Tab Groups fit your expectation. Also, you will understand how to use the extension well, as each option is explained."
+    "message": "Willkommen bei Sync Tab Groups! Ich empfehle Ihnen dringend, die verschiedenen Optionen anzusehen. Sie werden dafür sorgen, dass Sync Tab Groups Ihren Erwartungen entspricht. Außerdem werden Sie verstehen, wie Sie die Erweiterung gut nutzen können, da jede Option erklärt wird."
   },
 
   "options_about_further": {
-    "message": "For further information, check the guide (link in the navigation bar) on the Sync Tab Groups Website.",
-    "description": "TODO Not used yet!"
+    "message": "Weitere Informationen finden Sie in der Anleitung (Link in der Navigationsleiste) auf der Sync Tab Groups Website.",
+    "description": "Not used yet!"
   },
 
   "options_about_enjoy": {
-    "message": "I hope you are loving your experience with Sync Tab Groups. If so, don't hesitate to add a nice review on the extension download page for sharing it.",
-    "description": "TODO Message in the about section of the Preferences"
+    "message": "Ich hoffe Sie lieben die Erfahrung mit Sync Tab groups. falls das so ist, zögern Sie nicht für andere eine nette Rezension auf der Download Seite der Erweiterungen zu hinterlassen.",
+    "description": "Message in the about section of the Preferences"
   },
 
   "options_about_contribute": {
-    "message": "Beyond to use it, you can contribute. Like finding bugs, suggesting great new features to add or simply translating it in your language. For any reasons, don't hesitate to contact me.",
-    "description": "TODO Message in the about section of the Preferences"
+    "message": "Sie können über die Verwendung hinaus beitragen: Wie zum Beispiel das finden von Fehlern, vorschlagen großartiger neuer Funktionen oder es einfach in Ihre Sprache übersetzen. Aus welchen gRünden auch immer, zögern Sie nicht, mich zu kontaktieren.",
+    "description": "Message in the about section of the Preferences"
   },
 
   "options_about_dev": {
-    "message": "Sync Tab Groups is an extension I am developing in my free time. I am doing everything to provide you the best extension. For those who came across bugs, I apologize for the disagreement.",
-    "description": "TODO Message in the about section of the Preferences"
+    "message": "Sync Tab Groups ist eine Erweiterung, die ich in meiner Freizeit entwickle. Ich tue alles, um Ihnen die beste Erweiterung zu bieten. Für diejenigen, die auf Bugs gestoßen sind, entschuldige ich mich für die Unannhemlichkeiten.",
+    "description": "Message in the about section of the Preferences"
   },
 
   "options_help_title": {
-    "message": "Help",
+    "message": "Hife",
     "description": ""
   },
 
   "options_behaviors_help_title_invisible": {
-    "message": "Invisible",
-    "description": "TODO "
+    "message": "Unsichtbar",
+    "description": ""
   },
 
   "options_behaviors_help_invisible": {
-    "message": "New windows opened without Sync Tab Groups are Invisible.",
-    "description": "TODO "
+    "message": "Ohne Sync Tab Groups neu geöffnete Fenster sind unsichtbar.",
+    "description": ""
   },
 
   "options_behaviors_help_title_visible": {
-    "message": "Visible",
-    "description": "TODO "
+    "message": "Sichtbar",
+    "description": ""
   },
 
   "options_behaviors_help_visible_new": {
-    "message": "New windows opened without Sync Tab Groups are Visible as a new unnamed group.",
-    "description": "TODO "
+    "message": "Ohne Sync Tab Groups geöffnete Fenster werden als neue unbenannte Gruppe angezeigt.",
+    "description": ""
   },
 
   "options_behaviors_help_change_visibility": {
-    "message": "Any window can be specifically changed from/to visible/invisible from the Menu. (button at the bottom left)",
-    "description": "TODO "
+    "message": "Jedes Fenster kann im Menü einzeln (un)sichtbar gemacht werden. (Schaltfläche unten links)",
+    "description": ""
   },
 
   "options_behaviors_pinned_excluded": {
-    "message": "Excluded",
-    "description": "TODO Pinned Tabs are not part of a group."
+    "message": "Ausgeschlossen",
+    "description": "Angeheftete Tabs sind nicht Teil einer Gruppe."
   },
 
   "options_behaviors_pinned_excluded_notpart": {
-    "message": "Pinned tabs are not part of any groups.",
-    "description": "TODO "
+    "message": "Angeheftete Tabs sind nicht Teil irgendeiner Gruppe.",
+    "description": ""
   },
 
   "options_behaviors_pinned_excluded_switching": {
-    "message": "Switching/closing actions don't impact the pinned tabs.",
-    "description": "TODO "
+    "message": "Umschalten/Schließen beeinflusst angeheftete Tabs nicht.",
+    "description": ""
   },
 
   "options_behaviors_pinned_excluded_usecase": {
-    "message": "Use case: Global Tabs (Mail tab, Music tab...)",
-    "description": "TODO "
+    "message": "Anwendungsbeispiel: Globale Tabs (E-Mail, Musik, ...)",
+    "description": ""
   },
 
   "options_behaviors_pinned_included": {
-    "message": "Included",
-    "description": "TODO Pinned are saved in the group"
+    "message": "Eingeschlossen",
+    "description": "Pinned are saved in the group"
   },
 
   "options_behaviors_pinned_included_part": {
-    "message": "Pinned tabs are part of the group in the window.",
-    "description": "TODO "
+    "message": "Angeheftete Tabs sind Teil der Gruppe des Fensters.",
+    "description": ""
   },
 
   "options_behaviors_pinned_included_switching": {
-    "message": "Switching/closing actions close and save the pinned tabs in the group.",
-    "description": "TODO "
+    "message": "Umschalten/Schließen speichert und schließt angeheftete Tabs in der Gruppe.",
+    "description": ""
   },
 
   "options_behaviors_pinned_included_usecase": {
-    "message": "Use case: Important tabs for the group.",
-    "description": "TODO "
+    "message": "Anwendungsbeispiel: Wichtige Tabs für die Gruppe.",
+    "description": ""
   },
 
   "options_behaviors_tabsopening": {
-    "message": "Tabs Opening",
-    "description": "TODO "
+    "message": "Tabs öffnen",
+    "description": ""
   },
 
   "options_behaviors_tabsopening_discarded": {
-    "message": "Discarded",
-    "description": "TODO Tabs are not fully loaded on opening"
+    "message": "Verworfen",
+    "description": "Tabs are not fully loaded on opening"
   },
 
   "options_behaviors_tabsopening_discarded_lighter": {
-    "message": "Faster and Lighter",
-    "description": "TODO "
+    "message": "Schneller und leichter",
+    "description": ""
   },
 
   "options_behaviors_tabsopening_discarded_notfullyloaded": {
-    "message": "Tabs are not fully loaded on opening.",
-    "description": "TODO "
+    "message": "Tabs werden beim Öffnen nicht vollständig geladen.",
+    "description": ""
   },
 
   "options_behaviors_tabsopening_discarded_loadedclick": {
-    "message": "The tabs are only loaded once you active (click/focus) them. After, they stay loaded.",
-    "description": "TODO "
+    "message": "Die Tabs werden nur dann geladen, wenn diese aktiviert (durch Klick oder Fokus) werden. Danach bleiben sie geladen.",
+    "description": ""
   },
 
   "options_behaviors_tabsopening_full": {
-    "message": "Full",
-    "description": "TODO "
+    "message": "Vollständig",
+    "description": ""
   },
 
   "options_behaviors_tabsopening_full_loadedopening": {
-    "message": "Tabs are completely loaded on opening.",
-    "description": "TODO "
+    "message": "Tabs werden beim Öffnen vollständig geladen.",
+    "description": ""
   },
 
   "options_behaviors_tabsopening_full_heavier": {
-    "message": "Consume more memory and network data.",
-    "description": "TODO "
+    "message": "Verbraucht mehr Speicher und verursacht mehr Netzwerklast.",
+    "description": ""
   },
 
   "options_behaviors_tabsopening_limits": {
-    "message": "Limits (In both cases)",
-    "description": "TODO Limits for tabs opening behavior"
+    "message": "Einschränkungen (In beiden Fällen)",
+    "description": "Limits for tabs opening behavior"
   },
 
   "options_behaviors_tabsopening_limits_temporary": {
-    "message": "Temporary data (forms...) added before tabs were closed are lost. (Limited by the browser)",
-    "description": "TODO "
+    "message": "Temporäre Daten (Formulare...), die vor dem Schließen der Registerkarten hinzugefügt wurden, gehen verloren. (Beschränkt durch den Browser)",
+    "description": ""
   },
 
   "options_behaviors_tabsopening_limits_history": {
-    "message": "Tabs History are not restored. (Limited by the browser)",
-    "description": "TODO TODO "
+    "message": "Tab Historie wird nicht wiederhergestellt. (Beschränkt durch den Browser)",
+    "description": ""
   },
 
   "options_behaviors_private": {
-    "message": "Private",
-    "description": "TODO Behavior of the Private windows"
+    "message": "Privat",
+    "description": "Behavior of the Private windows"
   },
 
   "options_behaviors_private_visible": {
-    "message": "New private windows opened without Sync Tab Groups are visible as a new private groups.",
-    "description": "TODO "
+    "message": "Neue private Fenster, die ohne Sync Tab Groups geöffnet werden, sind als neue private Gruppen sichtbar.",
+    "description": ""
   },
 
   "options_behaviors_private_groups": {
-    "message": "Groups opened in private windows are private as well.",
-    "description": "TODO "
+    "message": "In privaten Fenstern geöffnete Gruppen sind ebenfalls privat.",
+    "description": ""
   },
 
   "options_behaviors_private_notsaved": {
-    "message": "Private groups are not saved on the disk",
-    "description": "TODO "
+    "message": "Private Gruppen werden nicht auf der Festplatte gespeichert",
+    "description": ""
   },
 
   "options_behaviors_private_autoremoved": {
-    "message": "A private group closed is automatically deleted.",
-    "description": "TODO "
+    "message": "Eine geschlossene private Gruppe wird automatisch gelöscht.",
+    "description": ""
   },
 
   "options_behaviors_private_restart": {
-    "message": "A restart of the browser will closed and deleted all the private groups.",
-    "description": "TODO "
+    "message": "Ein Neustart des Browsers wird alle privaten Gruppen schließen und löschen.",
+    "description": ""
   },
 
   "options_behaviors_private_invisible": {
-    "message": "Invisible",
-    "description": "TODO Behavior of the Private windows"
+    "message": "Unsichtbar",
+    "description": "Behavior of the Private windows"
   },
 
   "options_behaviors_private_invisible_creation": {
-    "message": "New private windows opened without Sync Tab Groups are Invisible.",
-    "description": "TODO "
+    "message": "Ohne Sync Tab Groups geöffnete neue private Fenster sind unsichtbar.",
+    "description": ""
   },
 
   "options_behaviors_private_changestate": {
-    "message": "Any private window can be specifically changed from/to private/invisible from the Menu.",
-    "description": "TODO "
+    "message": "Jedes private Fenster kann im Menü einzeln (un)sichtbar gemacht werden. (Schaltfläche unten links)",
+    "description": ""
   },
 
   "options_settings_others": {
-    "message": "Others",
-    "description": "TODO Subsection in settings"
+    "message": "Weiteres",
+    "description": "Subsection in settings"
   },
 
   "options_settings": {
-    "message": "Settings",
-    "description": "TODO Option section for the groups settings (behavior)"
+    "message": "Einstellungen",
+    "description": "Option section for the groups settings (behavior)"
   },
 
   "options_interface": {
-    "message": "Interface",
-    "description": "TODO Option section for the groups interface"
+    "message": "Oberfläche",
+    "description": "Option section for the groups interface"
   },
 
   "options_interface_windows": {
-    "message": "Windows",
-    "description": "TODO Option subsection for the groups interface"
+    "message": "Fenster",
+    "description": "Option subsection for the groups interface"
   },
 
   "options_interface_groups": {
-    "message": "Groups",
-    "description": "TODO Option subsection for the groups interface"
+    "message": "Gruppen",
+    "description": "Option subsection for the groups interface"
   },
 
   "options_interface_sortexplanation_custom": {
-    "message": "Custom: Drag & Drop to position your groups",
-    "description": "TODO "
+    "message": "Benutzerdefiniert: Drag & Drop zur Anordnung der Gruppen",
+    "description": ""
   },
 
   "options_interface_sortexplanation_alphabetical": {
-    "message": "Alphabetical: Sort by Name",
-    "description": "TODO "
+    "message": "Alphabetisch: Sortierung nach Name",
+    "description": ""
   },
 
   "options_interface_sortexplanation_last": {
-    "message": "Last Accessed: Sort by last utilisation",
-    "description": "TODO "
+    "message": "Zuletzt verwendet: Sortieren nach letzter Verwendung",
+    "description": ""
   },
 
   "options_interface_sortexplanation_old": {
-    "message": "Old Created First",
-    "description": "TODO "
+    "message": "Älteste zuerst",
+    "description": ""
   },
 
   "options_interface_sortexplanation_recent": {
-    "message": "Recent Created First",
-    "description": "TODO "
+    "message": "Neueste zuerst",
+    "description": ""
   },
 
   "options_groups": {
-    "message": "Groups",
-    "description": "TODO Option section for the groups data"
+    "message": "Gruppen",
+    "description": "Option section for the groups data"
   },
 
   "options_groups_backup": {
-    "message": "Back Up",
-    "description": "TODO "
+    "message": "Sicherung",
+    "description": ""
   },
 
   "options_groups_backup_behavior": {
-    "message": "Behavior",
-    "description": "TODO "
+    "message": "Verhalten",
+    "description": ""
   },
 
   "options_groups_backup_behavior_download": {
-    "message": "Automatic download of a file with all your groups. (except private ones)",
-    "description": "TODO "
+    "message": "Automatischer download einer Datei mit allen Gruppen. (Ausgenommen privater Gruppen)",
+    "description": ""
   },
 
   "options_groups_backup_behavior_invisible": {
-    "message": "The download is invisible in the download history.",
-    "description": "TODO "
+    "message": "Der download wird nicht im Download-Verlauf angezeigt.",
+    "description": ""
   },
 
   "options_groups_backup_behavior_distinctfile": {
-    "message": "Each specific timer is saved in a distinct file.",
-    "description": "TODO "
+    "message": "Jeder einzelne Timer wird in einer eigenen Datei gespeichert.",
+    "description": ""
   },
 
   "options_groups_backup_behavior_overwritten": {
-    "message": "However, the same timer will overwrite its previous back up.",
-    "description": "TODO "
+    "message": "Jedoch wird der selbe Timer seine zuvor angelegte Datei überschreiben.",
+    "description": ""
   },
 
   "options_groups_backup_location": {
-    "message": "Location",
-    "description": "TODO "
+    "message": "Speicherort",
+    "description": ""
   },
 
   "options_groups_backup_location_subfolder": {
-    "message": "Done in the subfolder '$FOLDER$' in your browser download folder.",
-    "description": "TODO ",
+    "message": "Abgelegt im Unterordner '$FOLDER$' in Ihrem Download Verzeichnis des Browsers.",
+    "description": "",
     "placeholders": {
       "folder" : {
         "content": "$1",
@@ -740,8 +740,8 @@
   },
 
   "options_groups_backup_location_restiction": {
-    "message": "The browser restricts it to be inside the browser download folder, so you can't change the location.",
-    "description": "TODO "
+    "message": "Durch den Browser auf ein Verzeichnis innerhalb seines Download Verzeichnisses beschränkt. Der Speicherort kann daher nicht geändert werden.",
+    "description": ""
   },
 
   "options_groups_backup_timer": {
@@ -755,8 +755,8 @@
   },
 
   "options_groups_backup_timer_done": {
-    "message": "The save is done when the time indicated is over.",
-    "description": "TODO "
+    "message": "Die Speicherung wird duchgeführt, wenn die angezeigte Zeit vorüber ist.",
+    "description": ""
   },
 
   "options_groups_backup_timer_reset": {
@@ -765,8 +765,8 @@
   },
 
   "options_groups_backup_manual": {
-    "message": "Manual Back Up",
-    "description": "TODO "
+    "message": "Manuelle Sicherung",
+    "description": ""
   },
 
   "options_groups_backup_manual_button": {
@@ -780,113 +780,113 @@
   },
 
   "options_groups_backup_every": {
-    "message": "Done every ",
-    "description": "TODO See options_groups_backup_t_..."
+    "message": "Ausgeführt alle ",
+    "description": "See options_groups_backup_t_..."
   },
 
   "options_groups_backup_t_5mins": {
-    "message": "5 minutes",
-    "description": "TODO Follows options_groups_backup_every"
+    "message": "5 Minuten",
+    "description": "Follows options_groups_backup_every"
   },
 
   "options_groups_backup_t_1h": {
-    "message": "hour",
-    "description": "TODO "
+    "message": "Stunde",
+    "description": ""
   },
 
   "options_groups_backup_t_4h": {
-    "message": "4 hours",
-    "description": "TODO "
+    "message": "4 Stunden",
+    "description": ""
   },
 
   "options_groups_backup_t_1d": {
-    "message": "day",
-    "description": "TODO "
+    "message": "Tag",
+    "description": ""
   },
 
   "options_groups_backup_t_1w": {
-    "message": "week",
-    "description": "TODO "
+    "message": "Woche",
+    "description": ""
   },
 
   "options_groups_cleaning": {
-    "message": "Cleaning",
-    "description": "TODO "
+    "message": "Bereinigung",
+    "description": ""
   },
 
   "options_groups_cleaning_removeall": {
-    "message": "Remove all groups",
-    "description": "TODO "
+    "message": "Alle Gruppen entfernen",
+    "description": ""
   },
 
   "options_groups_cleaning_removeall_warning": {
-    "message": "Once done, you can't recover your groups!",
-    "description": "TODO "
+    "message": "Gruppen können nach Ausführung nicht wiederhergestellt werden!",
+    "description": ""
   },
 
   "options_button_enable": {
-    "message": "Enable",
-    "description": "TODO Button Title"
+    "message": "Aktiv",
+    "description": "Button Title"
   },
 
   "options_button_disable": {
-    "message": "Disable",
-    "description": "TODO Button Title"
+    "message": "Inaktiv",
+    "description": "Button Title"
   },
 
   "options_about": {
-    "message": "About",
-    "description": "TODO Option Section Title"
+    "message": "Über",
+    "description": "Option Section Title"
   },
 
   "options_guide": {
-    "message": "Guide",
-    "description": "TODO Option Section Title"
+    "message": "Anleitung",
+    "description": "Option Section Title"
   },
 
   "change_window_invisible": {
-    "message": "Click for making the group invisible (removed)",
-    "description": "TODO Hover help for button in the bottom left of the menu"
+    "message": "Klicken, um die Gruppe unsichtbar zu machen (entfernt)",
+    "description": "Hover help for button in the bottom left of the menu"
   },
 
   "change_window_visible": {
-    "message": "Click for making the window visible (added as new group)",
-    "description": "TODO Hover help for button in the bottom left of the menu"
+    "message": "Klicken, um das Fenster sichtbar zu machen (hinzufügen als neue Gruppe)",
+    "description": "Hover help for button in the bottom left of the menu"
   },
 
   "open_manager": {
-    "message": "Open Tab with the Groups Manager",
-    "description": "TODO Hover help for button in the bottom of the menu"
+    "message": "Tab im Gruppenmanager öffnen",
+    "description": "Hover help for button in the bottom of the menu"
   },
 
   "group_manager": {
-    "message": "Groups Manager",
-    "description": "TODO Tab name where you can organize your groups"
+    "message": "Gruppen Manager",
+    "description": "Tab name where you can organize your groups"
   },
 
   "group_manager_single_button": {
-    "message": "Single",
-    "description": "TODO Button in Groups Manager for showing only one side"
+    "message": "Einfach",
+    "description": "Button in Groups Manager for showing only one side"
   },
 
   "group_manager_split_button": {
-    "message": "Split",
-    "description": "TODO Button in Groups Manager for showing 2 sides"
+    "message": "Geteilt",
+    "description": "Button in Groups Manager for showing 2 sides"
   },
 
   "options_shortcuts_global": {
-    "message": "Global Shortcuts",
-    "description": "TODO Shortcuts available from anywhere in the browser"
+    "message": "Globale Shortcuts",
+    "description": "Shortcuts available from anywhere in the browser"
   },
 
   "notification_update_title": {
-    "message": "Sync Tab Groups has been updated to version",
-    "description": "TODO Title in the notification displayed when the extension is updated"
+    "message": "Sync Tab Groups wurde aktualisiert zu Version",
+    "description": "Title in the notification displayed when the extension is updated"
   },
 
   "notification_update_message": {
-    "message": "Click on this notification to see the changes.",
-    "description": "TODO Message in the notification displayed when the extension is updated"
+    "message": "Auf diese Beanchrichtigung klicken, um die Änderungen anzuzeigen.",
+    "description": "Message in the notification displayed when the extension is updated"
   }
 
 }
