@@ -24,11 +24,6 @@
     "description": "Default name for unnamed group"
   },
 
-  "synchronized_window": {
-    "message": "Fenster synchronisieren",
-    "description": "Label for synchronizing window in popup"
-  },
-
   "expand_menu": {
     "message": "Menü erweitern",
     "description": "Expand Menu hover button"
