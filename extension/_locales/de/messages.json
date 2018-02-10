@@ -390,8 +390,8 @@
   },
 
   "open_group": {
-    "message": "Click to switch to this group in the current window.",
-    "description": "TODO Hover help for open group click"
+    "message": "Klicken, um die Gruppe in diesem Fenster anzuzeigen.",
+    "description": "Hover help for open group click"
   },
 
   "expand_all_groups": {
@@ -745,23 +745,23 @@
   },
 
   "options_groups_backup_timer": {
-    "message": "Timers count explanation",
-    "description": "TODO "
+    "message": "Erklärung der Timer",
+    "description": ""
   },
 
   "options_groups_backup_timer_start": {
-    "message": "Timers start when the extension is launched or the back up is enabled, and back up when the time indicated is over.",
-    "description": "TODO "
+    "message": "Timer starten sobald die Erweiterung gestartet oder die Sicherung aktiviert wurde, und die Sicherung wird ausgeführt, wenn die angezeigte Zeit vorüber ist.",
+    "description": ""
   },
 
   "options_groups_backup_timer_done": {
-    "message": "Die Speicherung wird duchgeführt, wenn die angezeigte Zeit vorüber ist.",
+    "message": "Die Sicherung wird duchgeführt, wenn die angezeigte Zeit vorüber ist.",
     "description": ""
   },
 
   "options_groups_backup_timer_reset": {
-    "message": "Timers reset to 0, when you restart the browser, disable the back up option or disable the extension.",
-    "description": "TODO "
+    "message": "Timer werden auf 0 zurückgesetzt, wenn Sie den Browser neu starten, die Sicherung oder die Erweiterung deaktivieren.",
+    "description": ""
   },
 
   "options_groups_backup_manual": {
@@ -770,13 +770,13 @@
   },
 
   "options_groups_backup_manual_button": {
-    "message": "From the shortcuts menu (Right click on the extension icon",
-    "description": "TODO "
+    "message": "Aus dem Shortcuts Menü (Rechtsklick auf das Erweiterungs Symbol)",
+    "description": ""
   },
 
   "options_groups_backup_manual_file": {
-    "message": "Saved in a distinct file, called manual, overwritten as well.",
-    "description": "TODO "
+    "message": "Gespeichert in einer eigenen Datei, manuell aufgerufen. Datei wird jeweils überschrieben.",
+    "description": ""
   },
 
   "options_groups_backup_every": {
