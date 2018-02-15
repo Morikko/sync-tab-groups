@@ -156,6 +156,7 @@ ContextMenu.createSpecialActionMenu = function() {
     };
   }
   browser.contextMenus.create(contextOpenPreferences);
+
   /* TODO: Add Guide
   let contextGuide = {
     id: ContextMenu.SpecialActionMenu_ID + "guide",
@@ -170,6 +171,14 @@ ContextMenu.createSpecialActionMenu = function() {
   }
   browser.contextMenus.create(contextGuide);
   */
+  if ( !Utils.DEBUG_MODE ) {
+    let contextTestPreferences = {
+      id: ContextMenu.SpecialActionMenu_ID + "open_tests",
+      title: "Tests",
+      contexts: ['browser_action'],
+    };
+    browser.contextMenus.create(contextTestPreferences);
+  }
 }
 
 ContextMenu.MoveTabMenuListener = function(info, tab) {
@@ -224,6 +233,12 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         break;
       case "guide":
         Controller.onOpenGuide();
+        break;
+      case "open_tests":
+        Utils.openUrlOncePerWindow(
+          browser.extension.getURL("/tests/test-page/test-page.html"),
+          true,
+        );
         break;
     }
   }

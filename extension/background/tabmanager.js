@@ -603,14 +603,17 @@ TabManager.removeTabsInWindow = async function(windowId, openBlankTab = false, r
     let survivorTab;
 
     // 1. Save a tab for letting the window open and return this tab
+    // Select the last tab, avoid switching tabs currently closing (create lag)
     if (!OptionManager.options.pinnedTab.sync && tabs[0].pinned) {
       // Kill all
+      await browser.tabs.update(tabs[0].id, {active: true});
     } else {
       if (openBlankTab) {
         survivorTab = (await TabManager.openListOfTabs([], windowId, true, true))[0];
       } else {
         survivorTab = tabs.shift();
       }
+      await browser.tabs.update(survivorTab.id, {active: true});
     }
 
     // 2. Remove previous tabs in window

@@ -45,7 +45,7 @@ var Utils = Utils || {};
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
  */
-Utils.DEGUG_MODE = true;
+Utils.DEGUG_MODE=true;
 Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
 Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
 Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";
@@ -436,8 +436,9 @@ Utils.openUrlOncePerWindow = async function(url, active=true) {
       windowTypes: ['normal'],
     })).id;
 
-    let urlWithoutHash = url;
-    if ( urlWithoutHash.lastIndexOf("#") > -1)
+    let urlWithoutHash = url,
+        hasHash = urlWithoutHash.lastIndexOf("#") > -1;
+    if ( hasHash )
       urlWithoutHash = urlWithoutHash.substring(0,urlWithoutHash.lastIndexOf("#"))
 
     const tabs = await browser.tabs.query({
@@ -446,10 +447,13 @@ Utils.openUrlOncePerWindow = async function(url, active=true) {
     });
 
     if (tabs.length) { // if tab is found
-      browser.tabs.update(tabs[0].id, {
+      let params = {
         active: active,
-        url: url, // update hash
-      });
+      }
+      if ( hasHash ) {
+        params.url = url;
+      }
+      browser.tabs.update(tabs[0].id, params);
     } else {
       browser.tabs.create({
         active: active,

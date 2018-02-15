@@ -402,6 +402,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
     GroupManager.groups[groupIndex].tabs = Utils.getCopy(tabs);
 
+    // TODO remove (do in prepare)
     if (OptionManager.options.groups.removeEmptyGroup) {
       GroupManager.removeEmptyGroup();
     }

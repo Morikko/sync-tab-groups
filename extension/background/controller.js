@@ -442,7 +442,7 @@ Controller.initWindowsEventListener = function() {
       if ( !WindowManager.WINDOW_CURRENTLY_SWITCHING[window.id] ) {
         WindowManager.integrateWindow(window.id);
       }
-    }, 400); // Below 400, it can fail
+    }, 600); // Below 400, it can fail
   });
   browser.windows.onRemoved.addListener((windowId) => {
     GroupManager.detachWindow(windowId);

@@ -88,3 +88,26 @@ TestManager.swapOptions = function (params) {
 TestManager.getRandom = function (start, end){
   return Math.floor((Math.random() * (end+1-start)) + start);
 }
+
+
+TestManager.waitAllTabsToBeLoadedInWindowId = async function ( windowId ) {
+  let WAIT_SECOND=10, LIMIT =WAIT_SECOND*2;
+  let i;
+  while( await hasLoadingTabs(windowId) ) {
+
+    await Utils.wait(500);
+    i++;
+
+    // Waited too much
+    if (i === LIMIT) {
+      console.error("TestManager.waitAllTabsToBeLoadedInWindowId: Waited too much...");
+      break;
+    }
+  }
+
+  async function hasLoadingTabs(windowId) {
+    // Get all tabs
+    let tabs = await TabManager.getTabsInWindowId(windowId, true, true);
+    return tabs.filter(tab => tab.status === "loading").length > 0;
+  }
+}

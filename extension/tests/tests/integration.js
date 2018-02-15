@@ -137,6 +137,8 @@ describe("Tabs Creation/Deletion - ", ()=>{
           this.windowId,
           false, // Let Blank tab
         );
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,
           true,
@@ -240,6 +242,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
           this.windowId,
           false, // Let Blank tab
         );
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,
@@ -262,6 +265,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
           this.windowId,
           false, // Let Blank tab
         );
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,
@@ -275,7 +279,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
         TestManager.resetActiveProperties(resultingTabs);
         TestManager.resetActiveProperties(expectedTabs);
-        TestManager.resetActiveProperties(expectedTabs);
+        TestManager.resetActiveProperties(survivorTab);
         expect(resultingTabs).toEqualTabs(survivorTab);
         expect(survivorTab).toEqualTabs(expectedTabs);
       });
@@ -307,6 +311,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
         false, //openAtLeastOne
         survivorTab, // tab to kill
       );
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
       let resultingTabs = await TabManager.getTabsInWindowId(
         this.windowId,
