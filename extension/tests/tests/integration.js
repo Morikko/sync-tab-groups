@@ -1223,8 +1223,8 @@ describe("TabManager", ()=>{
     });
 
     afterAll(async function(){
-      if ( TestManager.getGroup(this.groups, 1).windowId >= 0 ) {
-        await browser.windows.remove(TestManager.getGroup(this.groups, 1).windowId);
+      if ( TestManager.getGroupDeprecated(this.groups, 1).windowId >= 0 ) {
+        await browser.windows.remove(TestManager.getGroupDeprecated(this.groups, 1).windowId);
       }
       for (let group of this.groups ) {
         if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
@@ -1241,10 +1241,10 @@ describe("TabManager", ()=>{
         true,
       );
 
-      expect(TestManager.getGroup(this.groups, 0).windowId).not.toEqual(browser.windows.WINDOW_ID_NONE);
+      expect(TestManager.getGroupDeprecated(this.groups, 0).windowId).not.toEqual(browser.windows.WINDOW_ID_NONE);
 
-      await TestManager.splitOnHalfTopScreen(TestManager.getGroup(this.groups, 0).windowId);
-      let tabs = await TabManager.getTabsInWindowId(TestManager.getGroup(this.groups, 0).windowId);
+      await TestManager.splitOnHalfTopScreen(TestManager.getGroupDeprecated(this.groups, 0).windowId);
+      let tabs = await TabManager.getTabsInWindowId(TestManager.getGroupDeprecated(this.groups, 0).windowId);
 
       let nbrDiscarded = TestManager.countDiscardedTabs(tabs);
 
@@ -1260,10 +1260,10 @@ describe("TabManager", ()=>{
         false,
       );
 
-      expect(TestManager.getGroup(this.groups, 1).windowId).not.toEqual(browser.windows.WINDOW_ID_NONE);
-      expect(TestManager.getGroup(this.groups, 0).windowId).toEqual(browser.windows.WINDOW_ID_NONE);
+      expect(TestManager.getGroupDeprecated(this.groups, 1).windowId).not.toEqual(browser.windows.WINDOW_ID_NONE);
+      expect(TestManager.getGroupDeprecated(this.groups, 0).windowId).toEqual(browser.windows.WINDOW_ID_NONE);
 
-      let tabs = await TabManager.getTabsInWindowId(TestManager.getGroup(this.groups, 1).windowId);
+      let tabs = await TabManager.getTabsInWindowId(TestManager.getGroupDeprecated(this.groups, 1).windowId);
 
       let nbrDiscarded = TestManager.countDiscardedTabs(tabs);
 

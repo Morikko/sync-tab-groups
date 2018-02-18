@@ -9,6 +9,7 @@
  - setHeavySession TODO: Not implemented
 
  Tabs:
+ - createTabs
  - createTab
  - getRandomNormalTab
  - getRandomTab
@@ -72,6 +73,7 @@ Session.createTabs = function(params){
   // Set indexes
   tabs = tabs.map((tab, index)=>{
     tab.index = index;
+    tab.id = index; // Create different ids for tests compatibility
     if (index===params.active) {
       tab.active = true;
     } else {
@@ -302,7 +304,7 @@ Session.ListOfTabURLs = [
   },
   {
     "title": "Font Awesome Icons",
-    "url": "http://fontawesome.io/icons/",
+    "url": "https://fontawesome.com/icons?d=gallery",
     "favIconUrl": "http://fontawesome.io/assets/ico/favicon.ico",
   },
   {
