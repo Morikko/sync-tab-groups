@@ -180,15 +180,23 @@ class ManagePanelStandAlone extends React.Component {
   }
 
   onSearchLeftChange(searchValue) {
-    this.setState({
+    let stateToUpdate = {
       leftsearchfilter: searchValue
-    });
+    };
+    if (this.state.leftsearchfilter.length && !searchValue.length) {
+      stateToUpdate.leftForceReduce = true;
+    }
+    this.setState(stateToUpdate);
   }
 
   onSearchRightChange(searchValue) {
-    this.setState({
+    let stateToUpdate = {
       rightsearchfilter: searchValue
-    });
+    };
+    if (this.state.rightsearchfilter.length && !searchValue.length) {
+      stateToUpdate.rightForceReduce = true;
+    }
+    this.setState(stateToUpdate);
   }
 
   handleLeftForceExpand(event) {
