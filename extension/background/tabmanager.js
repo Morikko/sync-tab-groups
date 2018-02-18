@@ -208,6 +208,14 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
       ? tabs.length
       : indexPinnedOffset);
 
+    // Correct bias due to keeping tab
+    if (pendingTab) {
+      if ( pendingTab.pinned ) {
+        indexPinnedOffset--;
+        indexTabOffset--;
+      }
+    }
+
     let index = 0;
 
     // Extract active tab
@@ -233,6 +241,11 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
         // Save results
         createdTabs[index] = await TabManager.openTab(tab, windowId, currentIndex);
         tabIdsCrossRef[tab.id] = createdTabs[index].id;
+      } else {
+        // Special case: move active pinned tab
+        if (tab.pinned){
+          await browser.tabs.move(tabIdsCrossRef[tab.id], {index:indexPinnedOffset});
+        }
       }
 
       if ( pendingTab ) {
