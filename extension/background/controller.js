@@ -519,16 +519,23 @@ Controller.initCommandsEventListener = function() {
 };
 
 browser.runtime.onInstalled.addListener((details) => {
+  // Only when the extension is installed for the first time
   if ( details.reason === "install" ) {
     Controller.install = true;
   }
+
+  // Development mode detection
   if( (!Utils.isChrome() && details.temporary)  // FF
       || (Utils.isChrome() && details.reason === "update" && (browser.runtime.getManifest()).version === details.previousVersion)) { // Chrome
     Utils.openUrlOncePerWindow(
       browser.extension.getURL("/tests/test-page/test-page.html"),
       false,
     );
-  } else {
+  }
+
+  // Extension update detection
+  if ( details.reason === "update"
+      && (browser.runtime.getManifest()).version !== details.previousVersion ) {
     Controller.onOpenSettings(false);
     // Focus Settings if click on notification
     browser.notifications.onClicked.addListener((notificationId)=>{
@@ -536,6 +543,7 @@ browser.runtime.onInstalled.addListener((details) => {
         Controller.onOpenSettings(true);
       }
     });
+    // Generic message
     browser.notifications.create(Controller.updateNotificationId, {
       "type": "basic",
       "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
