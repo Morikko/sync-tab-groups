@@ -140,14 +140,18 @@ class PopupMenuStandAlone extends React.Component {
   componentDidMount() {
     document.querySelector('#search-input').focus();
 
+    Navigation.setTarget(document.getElementById("popup-menu"));
+
     if (this.props.options.shortcuts.navigation) {
       document.body.addEventListener("keydown", generalNavigationListener);
+      document.body.addEventListener("keydown", popupSpecialNavigationListener);
     }
   }
 
   componentWillUnmount() {
     if (this.props.options.shortcuts.navigation) {
       document.body.removeEventListener("keydown", generalNavigationListener);
+      document.body.removeEventListener("keydown", popupSpecialNavigationListener);
     }
   }
 

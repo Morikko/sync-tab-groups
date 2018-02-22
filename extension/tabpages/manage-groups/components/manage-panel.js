@@ -19,10 +19,20 @@ class ManagePanelStandAlone extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.update);
+
+    Navigation.setTarget(document.querySelector('.left-list'));
+
+    if (this.props.options.shortcuts.navigation) {
+      document.body.addEventListener("keydown", generalNavigationListener);
+    }
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.update);
+
+    if (this.props.options.shortcuts.navigation) {
+      document.body.removeEventListener("keydown", generalNavigationListener);
+    }
   }
 
   componentDidUpdate() {
@@ -66,17 +76,18 @@ class ManagePanelStandAlone extends React.Component {
             'div',
             { className: 'group-action left' },
             React.createElement('i', {
-              className: 'app-pref fa fa-fw fa-angle-double-down',
+              className: 'app-pref fa fa-fw fa-angle-double-down expand-groups',
               title: browser.i18n.getMessage("expand_all_groups"),
               onClick: this.handleLeftForceExpand.bind(this)
             }),
             React.createElement('i', {
-              className: 'app-pref fa fa-fw fa-angle-double-up',
+              className: 'app-pref fa fa-fw fa-angle-double-up reduce-groups',
               title: browser.i18n.getMessage("reduce_all_groups"),
               onClick: this.handleLeftForceReduce.bind(this)
             }),
             React.createElement(SearchBar, {
-              onSearchChange: this.onSearchLeftChange.bind(this) })
+              onSearchChange: this.onSearchLeftChange.bind(this),
+              hotkeysEnable: this.props.options.shortcuts.navigation })
           ),
           React.createElement(GroupList
           /*** Functions ***/
@@ -103,7 +114,8 @@ class ManagePanelStandAlone extends React.Component {
             searchfilter: this.state.leftsearchfilter,
             allowClickSwitch: false,
             stateless: true,
-            width: width
+            width: width,
+            hotkeysEnable: this.props.options.shortcuts.navigation
             /*** actions ***/
             , forceExpand: this.state.leftForceExpand,
             forceReduce: this.state.leftForceReduce
@@ -119,7 +131,8 @@ class ManagePanelStandAlone extends React.Component {
             'div',
             { className: 'group-action right' },
             React.createElement(SearchBar, {
-              onSearchChange: this.onSearchRightChange.bind(this) }),
+              onSearchChange: this.onSearchRightChange.bind(this),
+              hotkeysEnable: this.props.options.shortcuts.navigation }),
             React.createElement('i', {
               className: 'app-pref fa fa-fw fa-angle-double-down',
               title: browser.i18n.getMessage("expand_all_groups"),
@@ -156,7 +169,8 @@ class ManagePanelStandAlone extends React.Component {
             searchfilter: this.state.rightsearchfilter,
             allowClickSwitch: false,
             stateless: true,
-            width: width
+            width: width,
+            hotkeysEnable: this.props.options.shortcuts.navigation
             /*** actions ***/
             , forceExpand: this.state.rightForceExpand,
             forceReduce: this.state.rightForceReduce
@@ -172,7 +186,8 @@ class ManagePanelStandAlone extends React.Component {
           React.createElement(GroupAddButton, {
             onClick: this.props.onGroupAddClick,
             onDrop: this.props.onGroupAddDrop,
-            currentlySearching: false
+            currentlySearching: false,
+            hotkeysEnable: this.props.options.shortcuts.navigation
           })
         )
       )

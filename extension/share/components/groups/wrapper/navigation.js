@@ -40,7 +40,7 @@ var Navigation = Navigation || {};
 Navigation.Target = document;
 
 Navigation.setTarget = function (id) {
-  Navigation.Target = document.getElementById("popup-menu")
+  Navigation.Target = id;
 }
 
 /** DOM change **/
@@ -70,11 +70,11 @@ Navigation.isTab = function(element=document.activeElement) {
 }
 
 Navigation.focusFirstGroup = function() {
-  document.querySelector('.group:not(.hiddenBySearch)').focus();
+  Navigation.Target.querySelector('.group:not(.hiddenBySearch)').focus();
 }
 
 Navigation.focusLastGroup = function() {
-  let groups = document.querySelectorAll('.group:not(.hiddenBySearch)');
+  let groups = Navigation.Target.querySelectorAll('.group:not(.hiddenBySearch)');
   groups[groups.length-1].focus();
 }
 
@@ -92,7 +92,7 @@ Navigation.focusLastTab = function(element) {
 }
 
 Navigation.focusNext = function() {
-  let results = document.querySelectorAll('.group:not(.hiddenBySearch), .tab-list:not(.hiddenBySearch) .tab:not(.hiddenBySearch)')
+  let results = Navigation.Target.querySelectorAll('.group:not(.hiddenBySearch), .tab-list:not(.hiddenBySearch) .tab:not(.hiddenBySearch)')
 
   if ( !results.length ) {
     return;
@@ -108,7 +108,7 @@ Navigation.focusNext = function() {
 }
 
 Navigation.focusPrevious = function() {
-  let results = document.querySelectorAll('.group:not(.hiddenBySearch), .tab-list:not(.hiddenBySearch) .tab:not(.hiddenBySearch)')
+  let results = Navigation.Target.querySelectorAll('.group:not(.hiddenBySearch), .tab-list:not(.hiddenBySearch) .tab:not(.hiddenBySearch)')
 
   if ( !results.length ) {
     return;
@@ -175,12 +175,15 @@ var generalNavigationListener = Navigation.navigationFactory({
     e.preventDefault();
     Navigation.focusLastTab(document.activeElement.parentElement)
   },
-  "shift+pageup": () => document.getElementById("reduce-groups").click(),
-  "shift+pagedown": () => document.getElementById("expand-groups").click(),
+  "shift+pageup": () => Navigation.Target.querySelector(".reduce-groups").click(),
+  "shift+pagedown": () => Navigation.Target.querySelector(".expand-groups").click(),
   "ctrl+f": (e) => {
     e.preventDefault();
-    document.getElementById('search-input').focus()
+    Navigation.Target.querySelector('.search-input').focus()
   },
+});
+
+var popupSpecialNavigationListener = Navigation.navigationFactory({
   "ctrl+m": (e) => {
     e.preventDefault();
     document.getElementById('open-manager').click()
@@ -197,7 +200,7 @@ var generalNavigationListener = Navigation.navigationFactory({
     e.preventDefault();
     document.getElementById('maximize-popup').click()
   },
-});
+})
 
 var groupNavigationListener = function(group) {
   return Navigation.navigationFactory({

@@ -14,7 +14,7 @@ class SearchBar extends React.Component {
       placeholder: browser.i18n.getMessage('search'),
       onChange: this.handleSearchChange,
       value: this.state.value,
-      id: 'search-input',
+      className: 'search-input',
       onKeyDown: Utils.doActivateHotkeys(searchBarNavigationListener(this), this.props.hotkeysEnable),
       autoFocus: true });
 

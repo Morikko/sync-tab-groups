@@ -19,10 +19,20 @@ class ManagePanelStandAlone extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.update);
+
+    Navigation.setTarget(document.querySelector('.left-list'));
+
+    if ( this.props.options.shortcuts.navigation ) {
+      document.body.addEventListener("keydown", generalNavigationListener);
+    }
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.update);
+
+    if ( this.props.options.shortcuts.navigation ) {
+      document.body.removeEventListener("keydown", generalNavigationListener);
+    }
   }
 
   componentDidUpdate() {
@@ -60,18 +70,19 @@ class ManagePanelStandAlone extends React.Component {
             "half": !this.props.singleMode,})}>
             <div className="group-action left">
                 <i
-                  className="app-pref fa fa-fw fa-angle-double-down"
+                  className="app-pref fa fa-fw fa-angle-double-down expand-groups"
                   title={browser.i18n.getMessage("expand_all_groups")}
                   onClick={this.handleLeftForceExpand.bind(this)}
                 />
                 <i
-                  className="app-pref fa fa-fw fa-angle-double-up"
+                  className="app-pref fa fa-fw fa-angle-double-up reduce-groups"
                   title={browser.i18n.getMessage("reduce_all_groups")}
                   onClick={this.handleLeftForceReduce.bind(this)}
                 />
               {
                 <SearchBar
-                    onSearchChange={this.onSearchLeftChange.bind(this)} />
+                    onSearchChange={this.onSearchLeftChange.bind(this)}
+                    hotkeysEnable={this.props.options.shortcuts.navigation}/>
               }
             </div>
             <GroupList
@@ -100,6 +111,7 @@ class ManagePanelStandAlone extends React.Component {
               allowClickSwitch={false}
               stateless={true}
               width={width}
+              hotkeysEnable={this.props.options.shortcuts.navigation}
               /*** actions ***/
               forceExpand={this.state.leftForceExpand}
               forceReduce={this.state.leftForceReduce}
@@ -112,7 +124,8 @@ class ManagePanelStandAlone extends React.Component {
             <div className="group-action right">
               {
                 <SearchBar
-                    onSearchChange={this.onSearchRightChange.bind(this)} />
+                    onSearchChange={this.onSearchRightChange.bind(this)}
+                    hotkeysEnable={this.props.options.shortcuts.navigation} />
               }
               <i
                 className="app-pref fa fa-fw fa-angle-double-down"
@@ -151,6 +164,7 @@ class ManagePanelStandAlone extends React.Component {
               allowClickSwitch={false}
               stateless={true}
               width={width}
+              hotkeysEnable={this.props.options.shortcuts.navigation}
               /*** actions ***/
               forceExpand={this.state.rightForceExpand}
               forceReduce={this.state.rightForceReduce}
@@ -163,6 +177,7 @@ class ManagePanelStandAlone extends React.Component {
                 onClick= {this.props.onGroupAddClick}
                 onDrop= {this.props.onGroupAddDrop}
                 currentlySearching= {false}
+                hotkeysEnable={this.props.options.shortcuts.navigation}
             />
           </div>
         </li>

@@ -72,14 +72,12 @@ class MainBar extends React.Component {
         "div",
         { className: "right-actions" },
         React.createElement("i", {
-          id: "expand-groups",
-          className: "app-pref fa fa-fw fa-angle-double-down",
+          className: "app-pref fa fa-fw fa-angle-double-down expand-groups",
           title: browser.i18n.getMessage("expand_all_groups"),
           onClick: this.handleOpenAllExpand
         }),
         React.createElement("i", {
-          id: "reduce-groups",
-          className: "app-pref fa fa-fw fa-angle-double-up",
+          className: "app-pref fa fa-fw fa-angle-double-up reduce-groups",
           title: browser.i18n.getMessage("reduce_all_groups"),
           onClick: this.handleCloseAllExpand
         }),
