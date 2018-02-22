@@ -59,7 +59,6 @@ Navigation.focusParent = function(toElement, element=document.activeElement) {
     }
   }
   return false;
-  Navigation.focusFirstGroup();
 }
 
 Navigation.isGroup = function(element=document.activeElement) {
@@ -71,78 +70,56 @@ Navigation.isTab = function(element=document.activeElement) {
 }
 
 Navigation.focusFirstGroup = function() {
-  document.querySelector('.group').focus();
-}
-
-Navigation.focusFirstTab = function() {
-  if ( Navigation.isTab() ) {
-    document.activeElement.parentElement.firstChild.focus()
-  }
-}
-
-Navigation.focusLastTab = function() {
-  if ( Navigation.isTab() ) {
-    document.activeElement.parentElement.lastChild.focus()
-  }
+  document.querySelector('.group:not(.hiddenBySearch)').focus();
 }
 
 Navigation.focusLastGroup = function() {
-  let groups = document.querySelectorAll('.group');
+  let groups = document.querySelectorAll('.group:not(.hiddenBySearch)');
   groups[groups.length-1].focus();
 }
 
-Navigation.focusNextGroup = function() {
-  if (Navigation.isGroup()) {
-    let activeChildren = document.activeElement.childNodes;
-    if ( activeChildren.length >= 2
-      && !activeChildren[1].className.includes("hiddenBySearch") ) { // Go lower to tab
-      activeChildren[1].firstChild.focus()
-    } // Next Group
-    else if ( document.activeElement.nextSibling ) {
-      document.activeElement.nextSibling.focus();
-    }
-  }
-
-  else if (Navigation.isTab()) {
-    if ( document.activeElement.nextSibling ) { // Next tab
-      document.activeElement.nextSibling.focus();
-    }else { // Next group
-      let parentGroup = document.activeElement.parentElement.parentElement;
-      if ( parentGroup.nextSibling ) {
-        parentGroup.nextSibling.focus()
-      }
-    }
-  }
-
-  else { // First Group
-    Navigation.focusFirstGroup()
+Navigation.focusFirstTab = function(element) {
+  if ( Navigation.isTab() ) {
+    element.querySelector('.tab:not(.hiddenBySearch)').focus()
   }
 }
 
-Navigation.focusPrevGroup = function() {
-  if (Navigation.isGroup()) {
-    if ( document.activeElement.previousSibling ) {
-      let activeChildren = document.activeElement.previousSibling.childNodes;
-      if (activeChildren.length >= 2
-        && !activeChildren[1].className.includes("hiddenBySearch") ) { // Go lower to last tab
-        activeChildren[1].lastChild.focus()
-      }
-      else { // Previous group
-        document.activeElement.previousSibling.focus();
-      }
-    }
+Navigation.focusLastTab = function(element) {
+  if ( Navigation.isTab() ) {
+    let tabs = element.querySelectorAll('.tab:not(.hiddenBySearch)');
+    tabs[tabs.length-1].focus();
+  }
+}
+
+Navigation.focusNext = function() {
+  let results = document.querySelectorAll('.group:not(.hiddenBySearch), .tab-list:not(.hiddenBySearch) .tab:not(.hiddenBySearch)')
+
+  if ( !results.length ) {
+    return;
   }
 
-  else if (Navigation.isTab()) {
-    if ( document.activeElement.previousSibling ) { // Previous tab
-      document.activeElement.previousSibling.focus();
-    }else { // Group of the tab
-      document.activeElement.parentElement.parentElement.focus()
-    }
+  let index = [].indexOf.call(results, document.activeElement)
+
+  if ( index > -1 && index < results.length-1) {
+    results[index+1].focus();
+  } else {
+    results[0].focus();
+  }
+}
+
+Navigation.focusPrevious = function() {
+  let results = document.querySelectorAll('.group:not(.hiddenBySearch), .tab-list:not(.hiddenBySearch) .tab:not(.hiddenBySearch)')
+
+  if ( !results.length ) {
+    return;
   }
 
-  else { // Last group
-    Navigation.focusLastGroup()
+  let index = [].indexOf.call(results, document.activeElement)
+
+  if ( index-1 > -1) {
+    results[index-1].focus();
+  } else {
+    results[results.length-1].focus();
   }
 }
 
@@ -167,15 +144,20 @@ Navigation.navigationFactory = function(params) {
 var generalNavigationListener = Navigation.navigationFactory({
   "up": (e) => {
     e.preventDefault();
-    Navigation.focusPrevGroup()
+    Navigation.focusPrevious()
   },
   "down": (e) => {
     e.preventDefault();
-    Navigation.focusNextGroup()
+    Navigation.focusNext()
   },
   "insert": (e) => {
     e.preventDefault();
-    document.querySelector('.addButton').click()
+    let input = document.querySelector('.addButton input');
+    if ( input ) {
+      input.focus();
+    } else {
+      document.querySelector('.addButton').click();
+    }
   },
   "home": (e) => {
     e.preventDefault();
@@ -187,11 +169,11 @@ var generalNavigationListener = Navigation.navigationFactory({
   },
   "pageup": (e) => {
     e.preventDefault();
-    Navigation.focusFirstTab()
+    Navigation.focusFirstTab(document.activeElement.parentElement)
   },
   "pagedown": (e) => {
     e.preventDefault();
-    Navigation.focusLastTab()
+    Navigation.focusLastTab(document.activeElement.parentElement)
   },
   "shift+pageup": () => document.getElementById("reduce-groups").click(),
   "shift+pagedown": () => document.getElementById("expand-groups").click(),
@@ -199,10 +181,22 @@ var generalNavigationListener = Navigation.navigationFactory({
     e.preventDefault();
     document.getElementById('search-input').focus()
   },
-  "ctrl+m": () => document.getElementById("open-manager").click(),
-  "ctrl+p": () => document.getElementById("open-preferences").click(),
-  "ctrl+o": () => document.getElementById("change-visibility").click(),
-  "ctrl+l": () => document.getElementById("maximize-popup").click(),
+  "ctrl+m": (e) => {
+    e.preventDefault();
+    document.getElementById('open-manager').click()
+  },
+  "ctrl+p": (e) => {
+    e.preventDefault();
+    document.getElementById('open-preferences').click()
+  },
+  "ctrl+o": (e) => {
+    e.preventDefault();
+    document.getElementById('change-visibility').click()
+  },
+  "ctrl+l": (e) => {
+    e.preventDefault();
+    document.getElementById('maximize-popup').click()
+  },
 });
 
 var groupNavigationListener = function(group) {
@@ -299,7 +293,7 @@ var addButtonNavigationListener = function(addbutton) {
     },
     "enter": ()=>{
       Navigation.focusParent('addButton', document.activeElement);
-      addbutton.handleGroupTitleInputKey();
+      addbutton.onTitleSet();
     },
   })
 }

@@ -18,7 +18,6 @@ class GroupAddButton extends React.Component{
 
     this.onEditAbort = this.onEditAbort.bind(this);
     this.onTitleSet = this.onTitleSet.bind(this);
-    this.handleGroupTitleInputKey = this.handleGroupTitleInputKey.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleGroupDragOver = this.handleGroupDragOver.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
@@ -112,7 +111,9 @@ class GroupAddButton extends React.Component{
   }
 
   onTitleSet(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     if (this.state.tabIndex >= 0 && this.state.sourceGroup >= 0) {
       this.props.onDrop(
         this.state.newTitle,
@@ -123,13 +124,6 @@ class GroupAddButton extends React.Component{
       this.props.onClick(this.state.newTitle);
     }
     this.resetButton();
-  }
-
-  handleGroupTitleInputKey(event) {
-    event.stopPropagation();
-    if (event.keyCode === 13) { // Enter key
-      this.onTitleSet(event);
-    }
   }
 
   handleClick(event) {

@@ -54,10 +54,7 @@ class PopupMenuStandAlone extends React.Component {
     return (
       <ul
           id="popup-menu"
-          className={menuClasses}
-          onKeyDown={Utils.doActivateHotkeys(
-            generalNavigationListener,
-            this.props.options.shortcuts.navigation)}>
+          className={menuClasses}>
           <li>
             {searchbar}
           </li>
@@ -139,6 +136,16 @@ class PopupMenuStandAlone extends React.Component {
 
   componentDidMount() {
     document.querySelector('#search-input').focus();
+
+    if ( this.props.options.shortcuts.navigation ) {
+      document.body.addEventListener("keydown", generalNavigationListener);
+    }
+  }
+
+  componentWillUnmount() {
+    if ( this.props.options.shortcuts.navigation ) {
+      document.body.removeEventListener("keydown", generalNavigationListener);
+    }
   }
 
 };

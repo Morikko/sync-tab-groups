@@ -130,7 +130,6 @@ li {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 0px 2px;
 }
 
 .group:not(.expanded) {
@@ -345,16 +344,6 @@ body {
   padding: 6px 0px;
 }
 /** End Add Button **/
-
-/*
-.group:nth-child(odd), .group:nth-child(odd) .tab-list {
-  background-color: var(--group-odd);
-}
-
-.group:nth-child(even), .group:nth-child(even) .tab-list {
-  background-color: var(--group-even);
-}
-*/
 
 /** Drag & Drop **/
 .dragTopBorder {
