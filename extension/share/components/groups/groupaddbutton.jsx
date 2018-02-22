@@ -53,7 +53,6 @@ class GroupAddButton extends React.Component{
           onFocus={(e) => {
             e.target.select();
           }}
-          onKeyUp={this.handleGroupTitleInputKey}
         />
         <span
           className="groupadd-controls">
@@ -83,6 +82,10 @@ class GroupAddButton extends React.Component{
           onDragOver={this.handleGroupDragOver}
           onDragEnter={this.handleDragEnter}
           onDragLeave={this.handleDragLeave}
+          onKeyDown={Utils.doActivateHotkeys(
+            addButtonNavigationListener(this),
+            this.props.hotkeysEnable)}
+          tabIndex="0"
         >
         {button}
       </div>
@@ -90,7 +93,9 @@ class GroupAddButton extends React.Component{
   }
 
   onEditAbort(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.setState({
       editing: false,
       newTitle: '',

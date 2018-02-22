@@ -18,6 +18,14 @@ li {
 .group, .tab, .addButton {
   cursor: pointer;
 }
+
+.group:focus .group-title, .tab:focus .tab-title {
+  font-weight: bold;
+}
+
+.group:focus, .tab:focus {
+  outline: 0;
+}
 /* Group in window and active tab */
 
 
@@ -31,10 +39,11 @@ li {
   color: #333;
 }
 
-.group:hover, .tab:hover, .group:focus, .tab:focus {
+.group:hover, .tab:hover {
   background-color: var(--group-hover) !important;
   color: #fff !important;
 }
+
 
 .group.incognito {
   background-color: var(--private-debug);
@@ -118,7 +127,10 @@ li {
   min-width: 350px;
   color: #444;
   box-sizing: border-box;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0px 2px;
 }
 
 .group:not(.expanded) {

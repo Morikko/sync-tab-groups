@@ -111,6 +111,7 @@ class GroupList extends React.Component {
               allowClickSwitch={this.props.allowClickSwitch}
               stateless={this.props.stateless}
               width={this.props.width}
+              hotkeysEnable={this.props.hotkeysEnable}
               /*** actions ***/
               forceExpand={this.props.forceExpand}
               forceReduce={this.props.forceReduce}

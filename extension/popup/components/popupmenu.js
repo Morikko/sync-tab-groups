@@ -33,7 +33,8 @@ class PopupMenuStandAlone extends React.Component {
     let searchbar = [];
     if (this.props.options.popup.showSearchBar) {
       searchbar = React.createElement(SearchBar, {
-        onSearchChange: this.onSearchChange.bind(this) });
+        onSearchChange: this.onSearchChange.bind(this),
+        hotkeysEnable: this.props.options.shortcuts.navigation });
     }
 
     for (let i = 0; i < this.props.groups.length; i++) {
@@ -54,7 +55,7 @@ class PopupMenuStandAlone extends React.Component {
       {
         id: "popup-menu",
         className: menuClasses,
-        onKeyDown: generalNavigationListener },
+        onKeyDown: Utils.doActivateHotkeys(generalNavigationListener, this.props.options.shortcuts.navigation) },
       React.createElement(
         "li",
         null,
@@ -84,6 +85,7 @@ class PopupMenuStandAlone extends React.Component {
         , id: "popup",
         searchfilter: this.state.searchfilter,
         allowClickSwitch: true,
+        hotkeysEnable: this.props.options.shortcuts.navigation,
         stateless: false,
         width: width
         /*** actions ***/
@@ -96,7 +98,8 @@ class PopupMenuStandAlone extends React.Component {
         React.createElement(GroupAddButton, {
           onClick: this.props.onGroupAddClick,
           onDrop: this.props.onGroupAddDrop,
-          currentlySearching: this.state.searchfilter.length > 0
+          currentlySearching: this.state.searchfilter.length > 0,
+          hotkeysEnable: this.props.options.shortcuts.navigation
         })
       ),
       React.createElement(MainBar, {

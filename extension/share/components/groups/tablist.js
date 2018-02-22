@@ -25,7 +25,8 @@ class TabList extends React.Component {
           searchTabResult: this.props.searchTabsResults ? this.props.searchTabsResults[index] : true,
           groups: this.props.groups,
           onChangePinState: this.props.onChangePinState,
-          allowClickSwitch: this.props.allowClickSwitch
+          allowClickSwitch: this.props.allowClickSwitch,
+          hotkeysEnable: this.props.hotkeysEnable
         });
       })
     );

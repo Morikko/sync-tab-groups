@@ -105,7 +105,8 @@ OptionManager.TEMPLATE = function() {
       showSearchBar: true
     },
     shortcuts: {
-      allowGlobal: false
+      allowGlobal: false,
+      navigation: true,
     },
     backup: {
       enable: true,
@@ -560,4 +561,12 @@ Utils.timerDecorator = function(func, name="Perf", times=1) {
     let t1 = performance.now();
     console.log(name + ": " + (t1 - t0)/times + " milliseconds.")
   };
+}
+
+Utils.doActivateHotkeys = function (listener, bool) {
+  if (bool) {
+    return listener;
+  } else {
+    return ()=>false;
+  }
 }

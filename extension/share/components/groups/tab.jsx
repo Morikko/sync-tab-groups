@@ -17,7 +17,7 @@ class Tab extends React.Component{
     this.handleOnMoveTabNewMenuClick = this.handleOnMoveTabNewMenuClick.bind(this);
     this.handleOnMoveTabMenuClick = this.handleOnMoveTabMenuClick.bind(this);
     this.handleTabClick = this.handleTabClick.bind(this);
-    this.onClickOpenTab = this.onClickOpenTab.bind(this);
+    this.handleOpenTabClick = this.handleOpenTabClick.bind(this);
     this.handleChangePin = this.handleChangePin.bind(this);
     this.handleCloseTabClick = this.handleCloseTabClick.bind(this);
     this.handleTabDrop = this.handleTabDrop.bind(this);
@@ -82,6 +82,9 @@ class Tab extends React.Component{
           onMouseLeave={this.removeMenuItem}
           contextMenu={"moveTabSubMenu" + this.props.tab.id}
           tabIndex="0"
+          onKeyDown={Utils.doActivateHotkeys(
+            tabNavigationListener(this),
+            this.props.hotkeysEnable)}
         >
         {!Utils.isChrome() && this.state.waitFirstMount && this.createContextMenuTab()}
         {this.props.tab.pinned && <i
@@ -97,7 +100,7 @@ class Tab extends React.Component{
       <TabControls
           opened={this.props.opened}
           onCloseTab={this.handleCloseTabClick}
-          onOpenTab={this.onClickOpenTab}
+          onOpenTab={this.handleOpenTabClick}
         />
     </li>);
   }
@@ -144,7 +147,7 @@ class Tab extends React.Component{
           <menuitem
             type={"context"}
             icon={"/share/icons/plus-32.png"}
-            onClick={this.onClickOpenTab}
+            onClick={this.handleOpenTabClick}
             label={browser.i18n.getMessage("open_tab")}
           ></menuitem>
       </menu>);
@@ -166,7 +169,6 @@ class Tab extends React.Component{
     event.stopPropagation();
 
     let targetGroupId = parseInt(Utils.getParameterByName("groupId", event.target.className), 10);
-    console.log(targetGroupId);
 
     if (targetGroupId >= 0) {
       this.props.onGroupDrop(
@@ -178,26 +180,32 @@ class Tab extends React.Component{
   }
 
   handleTabClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
 
+    this.onTabClick((event && event.button === 1)); // Middle
+  }
+
+  onTabClick(newWindow) {
     if ( this.props.allowClickSwitch ) {
       let group = this.props.group;
       let tab = this.props.tab;
       this.props.onTabClick(
         group.id,
         this.props.tabIndex,
-        (event.button === 1), // Middle
+        newWindow,
       );
       window.close();
     }
   }
 
-  onClickOpenTab( event ) {
+  handleOpenTabClick( event ) {
     event.stopPropagation();
-    this.handleOpenTabClick();
+    this.onClickOpenTab();
   }
 
-  handleOpenTabClick() {
+  onClickOpenTab() {
     let tab = this.props.tab;
     this.props.onOpenTab(
       tab
@@ -205,7 +213,9 @@ class Tab extends React.Component{
   }
 
   handleChangePin(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
 
     let tab = this.props.tab;
     this.props.onChangePinState(
@@ -215,7 +225,9 @@ class Tab extends React.Component{
   }
 
   handleCloseTabClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
 
     let group = this.props.group;
     let tab = this.props.tab;

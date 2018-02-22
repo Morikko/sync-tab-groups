@@ -1,4 +1,41 @@
+/***
+ Navigation
+ ...
+
+ Target
+ ...
+
+ Bottleneck
+ ...
+
+ Global var:
+  - Target
+  - keyCodes
+
+ Functions:
+ TARGET
+  - setTarget
+  DOM
+  - isGroup
+  - isTab
+  - focusFirstGroup
+  - focusLastGroup
+  - focusFirstTab
+  - focusLastTab
+  - focusNextGroup
+  - focusPrevGroup
+  FACTORY
+  - navigationFactory
+  - generalNavigationListener
+  - groupNavigationListener
+  - tabNavigationListener
+  - searchBarNavigationListener
+
+**/
+
 var Navigation = Navigation || {};
+
+/** Targetting **/
 
 Navigation.Target = document;
 
@@ -6,12 +43,31 @@ Navigation.setTarget = function (id) {
   Navigation.Target = document.getElementById("popup-menu")
 }
 
-Navigation.isGroup = function() {
-  return document.activeElement.className.includes("group");
+/** DOM change **/
+// Avoid hidden :not(.expanded)
+
+Navigation.isElement = function(element, wantedClass) {
+  return element.className.split(" ").includes(wantedClass)
 }
 
-Navigation.isTab = function() {
-  return document.activeElement.className.includes("tab");
+Navigation.focusParent = function(toElement, element=document.activeElement) {
+  while (element.parentElement) {
+    element = element.parentElement;
+    if (Navigation.isElement(element, toElement)) {
+      element.focus()
+      return true;
+    }
+  }
+  return false;
+  Navigation.focusFirstGroup();
+}
+
+Navigation.isGroup = function(element=document.activeElement) {
+  return Navigation.isElement(element, 'group');
+}
+
+Navigation.isTab = function(element=document.activeElement) {
+  return Navigation.isElement(element, 'tab');
 }
 
 Navigation.focusFirstGroup = function() {
@@ -35,10 +91,8 @@ Navigation.focusLastGroup = function() {
   groups[groups.length-1].focus();
 }
 
-
 Navigation.focusNextGroup = function() {
   if (Navigation.isGroup()) {
-    console.log(document.activeElement.childNodes)
     let activeChildren = document.activeElement.childNodes;
     if ( activeChildren.length >= 2
       && !activeChildren[1].className.includes("hiddenBySearch") ) { // Go lower to tab
@@ -67,13 +121,15 @@ Navigation.focusNextGroup = function() {
 
 Navigation.focusPrevGroup = function() {
   if (Navigation.isGroup()) {
-    let activeChildren = document.activeElement.previousSibling.childNodes;
-    if (activeChildren.length >= 2
-      && !activeChildren[1].className.includes("hiddenBySearch") ) { // Go lower to last tab
-      activeChildren[1].lastChild.focus()
-    }
-    else if ( document.activeElement.previousSibling ) { // Previous group
-      document.activeElement.previousSibling.focus();
+    if ( document.activeElement.previousSibling ) {
+      let activeChildren = document.activeElement.previousSibling.childNodes;
+      if (activeChildren.length >= 2
+        && !activeChildren[1].className.includes("hiddenBySearch") ) { // Go lower to last tab
+        activeChildren[1].lastChild.focus()
+      }
+      else { // Previous group
+        document.activeElement.previousSibling.focus();
+      }
     }
   }
 
@@ -90,6 +146,8 @@ Navigation.focusPrevGroup = function() {
   }
 }
 
+/** Listeners Factory **/
+
 Navigation.navigationFactory = function(params) {
   return function(e) {
     let command = Navigation.keyCodes[e.keyCode];
@@ -100,29 +158,153 @@ Navigation.navigationFactory = function(params) {
       command = "shift+" + command
     }
     if ( params[command] ) {
-      params[command]()
+      params[command](e)
       e.stopPropagation();
-      e.preventDefault();
     }
   }
 }
 
 var generalNavigationListener = Navigation.navigationFactory({
-  "up": () => Navigation.focusPrevGroup(),
-  "down": () => Navigation.focusNextGroup(),
-  "insert": () => document.querySelector('.addButton').click(),
-  "home": () => Navigation.focusFirstGroup(),
-  "end": () => Navigation.focusLastGroup(),
-  "pageup": () => Navigation.focusFirstTab(),
-  "pagedown": () => Navigation.focusLastTab(),
+  "up": (e) => {
+    e.preventDefault();
+    Navigation.focusPrevGroup()
+  },
+  "down": (e) => {
+    e.preventDefault();
+    Navigation.focusNextGroup()
+  },
+  "insert": (e) => {
+    e.preventDefault();
+    document.querySelector('.addButton').click()
+  },
+  "home": (e) => {
+    e.preventDefault();
+    Navigation.focusFirstGroup()
+  },
+  "end": (e) => {
+    e.preventDefault();
+    Navigation.focusLastGroup()
+  },
+  "pageup": (e) => {
+    e.preventDefault();
+    Navigation.focusFirstTab()
+  },
+  "pagedown": (e) => {
+    e.preventDefault();
+    Navigation.focusLastTab()
+  },
   "shift+pageup": () => document.getElementById("reduce-groups").click(),
   "shift+pagedown": () => document.getElementById("expand-groups").click(),
-  "ctrl+f": () => document.querySelector('#search-input').focus(),
+  "ctrl+f": (e) => {
+    e.preventDefault();
+    document.getElementById('search-input').focus()
+  },
   "ctrl+m": () => document.getElementById("open-manager").click(),
   "ctrl+p": () => document.getElementById("open-preferences").click(),
   "ctrl+o": () => document.getElementById("change-visibility").click(),
   "ctrl+l": () => document.getElementById("maximize-popup").click(),
 });
+
+var groupNavigationListener = function(group) {
+  return Navigation.navigationFactory({
+      "spacebar": (e)=>{
+        e.preventDefault();
+        if (!group.state.editing) {
+          group.handleGroupExpandClick();
+        }
+      },
+      "enter": ()=>{
+        if (group.state.editing) {
+          Navigation.focusParent('group', document.activeElement);
+          group.handleGroupEditSaveClick();
+        } else {
+          group.handleGroupClick()
+        }
+      },
+      "shift+enter": group.handleOpenInNewWindowClick,
+      "delete": ()=>{
+        if (!group.state.editing) {
+          group.handleGroupCloseClick();
+        }
+      },
+      "shift+delete": group.handleGroupRemoveClick,
+      "backspace": ()=>{
+        if (!group.state.editing) {
+          group.handleGroupCloseAbortClick();
+        }
+      },
+      "ctrl+e": group.handleGroupEditClick,
+      "shift+backspace": ()=>{
+        Navigation.focusParent('group', document.activeElement);
+        group.handleGroupEditAbortClick();
+      },
+      "shift+up": ()=>{
+        group.props.onGroupChangePosition(
+          group.props.group.id,
+          group.props.group.position-1,
+        );
+      },
+      "shift+down": ()=>{
+        group.props.onGroupChangePosition(
+          group.props.group.id,
+          group.props.group.position+2,
+        );
+      },
+    })
+}
+
+var tabNavigationListener = function(tab) {
+  return Navigation.navigationFactory({
+      "enter": ()=>tab.onTabClick(false),
+      "shift+enter": ()=>tab.onTabClick(true),
+      "spacebar": (e)=>{
+        e.preventDefault();
+        document.activeElement.parentElement.parentElement.focus()
+      },
+      "delete": tab.handleCloseTabClick,
+      "ctrl+enter": tab.handleOpenTabClick,
+      "shift+p": tab.handleChangePin,
+      "shift+up": ()=>{
+        tab.props.onGroupDrop(
+          tab.props.group.id,
+          tab.props.tabIndex,
+          tab.props.group.id,
+          tab.props.tabIndex-1,
+        );
+        document.activeElement.previousSibling.focus();
+      },
+      "shift+down": ()=>{
+        tab.props.onGroupDrop(
+          tab.props.group.id,
+          tab.props.tabIndex,
+          tab.props.group.id,
+          tab.props.tabIndex+2,
+        );
+        document.activeElement.nextSibling.focus();
+      },
+    })
+}
+
+var searchBarNavigationListener = function(searchbar) {
+  return Navigation.navigationFactory({
+    "shift+backspace": searchbar.clearSearchBar,
+  })
+}
+
+var addButtonNavigationListener = function(addbutton) {
+  return Navigation.navigationFactory({
+    "shift+backspace": ()=>{
+      Navigation.focusParent('addButton', document.activeElement);
+      addbutton.onEditAbort();
+    },
+    "enter": ()=>{
+      Navigation.focusParent('addButton', document.activeElement);
+      addbutton.handleGroupTitleInputKey();
+    },
+  })
+}
+
+/** Utils **/
 
 Navigation.keyCodes = {
   0 : "That key has no keycode",

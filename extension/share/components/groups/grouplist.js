@@ -112,7 +112,8 @@ class GroupList extends React.Component {
           groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
           allowClickSwitch: this.props.allowClickSwitch,
           stateless: this.props.stateless,
-          width: this.props.width
+          width: this.props.width,
+          hotkeysEnable: this.props.hotkeysEnable
           /*** actions ***/
           , forceExpand: this.props.forceExpand,
           forceReduce: this.props.forceReduce

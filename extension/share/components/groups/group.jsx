@@ -178,15 +178,9 @@ class Group extends React.Component {
           title={groupTitle}
           style={{width: this.props.width}}
           tabIndex="0"
-          onKeyDown={Navigation.navigationFactory({
-            "spacebar": this.handleGroupExpandClick,
-            /*
-            "enter": ...,
-            "shift+enter": ...,
-            "delete": ...,
-            "shift+delete": ...,
-            */
-          })}
+          onKeyDown={Utils.doActivateHotkeys(
+            groupNavigationListener(this),
+            this.props.hotkeysEnable)}
         >
         <span
             className={"group-title"}
@@ -222,17 +216,22 @@ class Group extends React.Component {
             onChangePinState= {this.props.onChangePinState}
             visible={this.state.expanded}
             allowClickSwitch={this.props.allowClickSwitch}
+            hotkeysEnable={this.props.hotkeysEnable}
           />}
     </li>);
   }
 
   handleOpenInNewWindowClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.props.onOpenInNewWindowClick(this.props.group.id);
   }
 
   handleGroupRemoveClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.setState({
       editing: false,
       closing: false
@@ -255,11 +254,15 @@ class Group extends React.Component {
   }
 
   handleGroupCloseClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.setState({
       editing: false,
       removing: false
     });
+
+
 
     // Already click once, do it now
     if (this.state.closing) {
@@ -278,7 +281,9 @@ class Group extends React.Component {
   }
 
   handleGroupCloseAbortClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
 
     this.props.onGroupCloseClick(TaskManager.CANCEL, this.props.group.id);
     this.props.onGroupRemoveClick(TaskManager.CANCEL, this.props.group.id);
@@ -290,11 +295,14 @@ class Group extends React.Component {
   }
 
   handleGroupClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+
     if ( this.props.allowClickSwitch ) {
       if (this.props.currentWindowId !== this.props.group.windowId) {
         // Close and middle click
-        if ( event.button === 1 &&  this.props.group.windowId === browser.windows.WINDOW_ID_NONE) {
+        if ( event && event.button === 1 &&  this.props.group.windowId === browser.windows.WINDOW_ID_NONE) {
           this.props.onOpenInNewWindowClick(this.props.group.id);
         } else {
           this.props.onGroupClick(this.props.group.id);
@@ -307,14 +315,27 @@ class Group extends React.Component {
   }
 
   handleGroupEditClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+
+    if (this.state.editing) { // Useless
+      return;
+    }
+
     this.setState({
-      editing: !this.state.editing
+      editing: true
     });
   }
 
   handleGroupEditAbortClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!this.state.editing) { // Useless
+      return;
+    }
+
     this.setState({
       editing: false,
       newTitle: Utils.getGroupTitle(this.props.group)
@@ -322,7 +343,12 @@ class Group extends React.Component {
   }
 
   handleGroupEditSaveClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!this.state.editing) { // Useless
+      return;
+    }
     this.setState({
       editing: false,
       newTitle: Utils.getGroupTitle(this.props.group)
@@ -331,8 +357,9 @@ class Group extends React.Component {
   }
 
   handleGroupExpandClick(event) {
-    if( event !== undefined )
+    if (event) {
       event.stopPropagation();
+    }
     if ( !this.props.stateless ) {
       this.props.onChangeExpand([this.props.group.id],  !this.state.expanded)
     }

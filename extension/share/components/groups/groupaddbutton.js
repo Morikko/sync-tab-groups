@@ -55,8 +55,7 @@ class GroupAddButton extends React.Component {
           },
           onFocus: e => {
             e.target.select();
-          },
-          onKeyUp: this.handleGroupTitleInputKey
+          }
         }),
         React.createElement(
           "span",
@@ -92,14 +91,18 @@ class GroupAddButton extends React.Component {
         onDrop: this.handleDrop,
         onDragOver: this.handleGroupDragOver,
         onDragEnter: this.handleDragEnter,
-        onDragLeave: this.handleDragLeave
+        onDragLeave: this.handleDragLeave,
+        onKeyDown: Utils.doActivateHotkeys(addButtonNavigationListener(this), this.props.hotkeysEnable),
+        tabIndex: "0"
       },
       button
     );
   }
 
   onEditAbort(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.setState({
       editing: false,
       newTitle: ''

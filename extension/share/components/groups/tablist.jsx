@@ -26,6 +26,7 @@ class TabList extends React.Component{
             groups={this.props.groups}
             onChangePinState={this.props.onChangePinState}
             allowClickSwitch={this.props.allowClickSwitch}
+            hotkeysEnable={this.props.hotkeysEnable}
           />
         })}
       </ul>

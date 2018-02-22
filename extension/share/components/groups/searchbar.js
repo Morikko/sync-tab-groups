@@ -15,6 +15,7 @@ class SearchBar extends React.Component {
       onChange: this.handleSearchChange,
       value: this.state.value,
       id: 'search-input',
+      onKeyDown: Utils.doActivateHotkeys(searchBarNavigationListener(this), this.props.hotkeysEnable),
       autoFocus: true });
 
     return React.createElement(
@@ -36,7 +37,9 @@ class SearchBar extends React.Component {
   }
 
   clearSearchBar(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.setState({
       value: ''
     });
