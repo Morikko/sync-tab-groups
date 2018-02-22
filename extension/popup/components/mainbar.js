@@ -35,6 +35,7 @@ class MainBar extends React.Component {
       React.createElement(
         "div",
         {
+          id: "change-visibility",
           className: classNames({
             "grouped-button": true,
             "group-visible": this.props.isSync,
@@ -57,6 +58,7 @@ class MainBar extends React.Component {
       React.createElement(
         "div",
         { className: "manage-button",
+          id: "open-manager",
           onClick: this.handleClickManageButton,
           title: browser.i18n.getMessage("open_manager") },
         React.createElement("i", { className: "fa fa-fw fa-list" }),
@@ -70,21 +72,25 @@ class MainBar extends React.Component {
         "div",
         { className: "right-actions" },
         React.createElement("i", {
+          id: "expand-groups",
           className: "app-pref fa fa-fw fa-angle-double-down",
           title: browser.i18n.getMessage("expand_all_groups"),
           onClick: this.handleOpenAllExpand
         }),
         React.createElement("i", {
+          id: "reduce-groups",
           className: "app-pref fa fa-fw fa-angle-double-up",
           title: browser.i18n.getMessage("reduce_all_groups"),
           onClick: this.handleCloseAllExpand
         }),
         React.createElement("i", {
+          id: "maximize-popup",
           className: maximizerClasses,
           title: title_expand,
           onClick: this.props.onClickMaximize
         }),
         React.createElement("i", {
+          id: "open-preferences",
           className: "app-pref fa fa-fw fa-gear",
           title: browser.i18n.getMessage("contextmenu_preferences"),
           onClick: this.handleClickPref

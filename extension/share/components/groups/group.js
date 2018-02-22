@@ -171,7 +171,17 @@ class Group extends React.Component {
         onDragStart: this.handleGroupDragStart,
         onDrop: this.handleGroupDrop,
         title: groupTitle,
-        style: { width: this.props.width }
+        style: { width: this.props.width },
+        tabIndex: "0",
+        onKeyDown: Navigation.navigationFactory({
+          "spacebar": this.handleGroupExpandClick
+          /*
+          "enter": ...,
+          "shift+enter": ...,
+          "delete": ...,
+          "shift+delete": ...,
+          */
+        })
       },
       React.createElement(
         "span",

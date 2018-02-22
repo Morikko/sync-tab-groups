@@ -31,7 +31,7 @@ li {
   color: #333;
 }
 
-.group:hover, .tab:hover {
+.group:hover, .tab:hover, .group:focus, .tab:focus {
   background-color: var(--group-hover) !important;
   color: #fff !important;
 }

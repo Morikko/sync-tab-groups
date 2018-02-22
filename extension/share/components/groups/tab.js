@@ -80,7 +80,8 @@ class Tab extends React.Component {
         draggable: true,
         onMouseEnter: this.addMenuItem,
         onMouseLeave: this.removeMenuItem,
-        contextMenu: "moveTabSubMenu" + this.props.tab.id
+        contextMenu: "moveTabSubMenu" + this.props.tab.id,
+        tabIndex: "0"
       },
       !Utils.isChrome() && this.state.waitFirstMount && this.createContextMenuTab(),
       this.props.tab.pinned && React.createElement("i", {

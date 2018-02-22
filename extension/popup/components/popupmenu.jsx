@@ -51,7 +51,10 @@ class PopupMenuStandAlone extends React.Component {
 
     let width = this.state.maximized?800:450;
     return (
-      <ul className={menuClasses}>
+      <ul
+          id="popup-menu"
+          className={menuClasses}
+          onKeyDown={generalNavigationListener}>
           <li>
             {searchbar}
           </li>
@@ -130,67 +133,7 @@ class PopupMenuStandAlone extends React.Component {
   }
 
   componentDidMount() {
-    /* TODO: window not focus by default
-    var body = document.querySelector('body');
-
-    // Give the document focus
-    window.focus();
-
-    // Remove focus from any focused element
-    if (document.activeElement) {
-        document.activeElement.blur();
-    }
-
     document.querySelector('#search-input').focus();
-
-    body.onkeydown = function(e) {
-      if (!e.metaKey) {
-        e.preventDefault();
-      }
-
-      console.log("Key from body");
-
-      // Add new group
-      if (e.keyCode === 45) { // Insert
-        document.querySelector('.addButton').click();
-      }
-      // From Tab: Up tab Or group if first
-      // From Group: Up Group Or last tab
-      if (e.keyCode === 38) { // Up
-        document.querySelector('.addButton');
-      }
-      // From Tab: Down tab Or next group if last
-      // From Group: Down Group or first tab
-      if (e.keyCode === 40) { // Down
-        document.querySelector('body');
-      }
-      // Only up group
-      if (e.keyCode === 33) { // Page up
-        document.querySelector('body');
-      }
-
-      // Only down group
-      if (e.keyCode === 33) { // Page down
-        document.querySelector('body');
-      }
-
-      // Go first group
-      if (e.keyCode === 36) { // Home (First)
-        document.querySelector('body');
-      }
-
-      // Go last group
-      if (e.keyCode === 35) { // End
-        document.querySelector('body');
-      }
-
-      // Focus the search bar
-      if ( e.ctrlKey && e.keyCode === 70 ) { // Ctrl + F
-        document.querySelector('#search-input').focus();
-      }
-
-    };
-    */
   }
 
 };
