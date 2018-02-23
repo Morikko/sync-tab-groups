@@ -86,7 +86,8 @@ class Tab extends React.Component{
             tabNavigationListener(this),
             this.props.hotkeysEnable)}
         >
-        {!Utils.isChrome() && this.state.waitFirstMount && this.createContextMenuTab()}
+
+        {this.state.waitFirstMount && this.createContextMenuTab()}
         {this.props.tab.pinned && <i
           className="pinned-icon fa fa-fw fa-thumb-tack"
         ></i>}
@@ -101,11 +102,15 @@ class Tab extends React.Component{
           opened={this.props.opened}
           onCloseTab={this.handleCloseTabClick}
           onOpenTab={this.handleOpenTabClick}
+          onPinChange={this.handleChangePin}
+          isPinned={this.props.tab.pinned}
         />
     </li>);
   }
 
   createContextMenuTab() {
+    // Create groups ...
+    /*
     let subMenusMoveTab = [];
     let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
     for (let i of sortedIndex) {
@@ -128,31 +133,48 @@ class Tab extends React.Component{
         onClick={this.handleOnMoveTabNewMenuClick}
         label={browser.i18n.getMessage("add_group")}>
       </menuitem>);
+    */
+    let id = "tooltip-" + this.props.group.id + "-" + this.props.tab.id;
 
     let contextMenuTab = (
+      <div class={id}>
+        <span
+          onClick={this.handleChangePin}>
+          <img src="/share/icons/pin-32.png" />
+          {browser.i18n.getMessage(this.props.tab.pinned ? "unpin_tab" : "pin_tab")}
+        </span>
+        <span
+          onClick={this.handleOpenTabClick}>
+          <img src="/share/icons/plus-32.png" />
+          {browser.i18n.getMessage("open_tab")}
+        </span>
+      </div>
+    );
+      /*
       <menu
         type={"context"}
         id={"moveTabSubMenu" + this.props.tab.id}>
           <menu
             label={browser.i18n.getMessage("move_tab_group")}
-            icon={"/share/icons/tabspace-active-32.png"/* doesn't work on menu parent*/}>
+            icon={"/share/icons/tabspace-active-32.png"/}>
            {subMenusMoveTab}
           </menu>
            <menuitem
             type={"context"}
-            icon={"/share/icons/pin-32.png"}
-            label={browser.i18n.getMessage(this.props.tab.pinned ? "unpin_tab" : "pin_tab")}
+            icon={}
+            label=
             onClick={this.handleChangePin}
           ></menuitem>
           <menuitem
             type={"context"}
-            icon={"/share/icons/plus-32.png"}
-            onClick={this.handleOpenTabClick}
-            label={browser.i18n.getMessage("open_tab")}
-          ></menuitem>
-      </menu>);
+            icon={}
 
-    return contextMenuTab;
+
+          ></menuitem>
+      </menu>*/
+
+
+    //return contextMenuTab;
   }
 
   handleOnMoveTabNewMenuClick(event) {

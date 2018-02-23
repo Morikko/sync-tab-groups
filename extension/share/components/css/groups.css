@@ -3,11 +3,74 @@ ul, li {
   margin: 0;
   padding: 0;
 }
+.tooltip {
+    position: relative;
+}
+
+.tooltip .tooltipmenu {
+    visibility: hidden;
+    width: 300px;
+    background-color: black;
+    border-radius: 6px;
+    margin: 0px 10px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    right: 110%;
+    color: #000;
+    background-color: #f1f1f1;
+    box-shadow: 1px 1px 4px #555;
+}
+.tooltipmenu.top {
+    top: -5px;
+}
+.tooltipmenu.bottom {
+    bottom: -5px;
+}
+
+.tooltip .tooltipmenu::after {
+    content: "";
+    position: absolute;
+    left: 100%;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #f1f1f1;
+}
+.tooltipmenu.top::after {
+    top: 22px;
+    margin-top: -5px;
+}
+.tooltipmenu.bottom::after {
+    bottom: 22px;
+    margin-bottom: -5px;
+}
+
+.tooltipmenu.show {
+    visibility: visible;
+}
+
+.tooltipmenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.tooltipmenu .row {
+  text-align: start;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.tooltipmenu .row:hover {
+  background-color: #ccc;
+}
 
 li {
   list-style-type: none;
   cursor: move;
-  overflow: hidden;
+  /*overflow: hidden; TODO not dangerous*/
 }
 
 .empty-list {

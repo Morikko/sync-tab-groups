@@ -84,7 +84,7 @@ class Tab extends React.Component {
         tabIndex: "0",
         onKeyDown: Utils.doActivateHotkeys(tabNavigationListener(this), this.props.hotkeysEnable)
       },
-      !Utils.isChrome() && this.state.waitFirstMount && this.createContextMenuTab(),
+      this.state.waitFirstMount && this.createContextMenuTab(),
       this.props.tab.pinned && React.createElement("i", {
         className: "pinned-icon fa fa-fw fa-thumb-tack"
       }),
@@ -100,58 +100,79 @@ class Tab extends React.Component {
       React.createElement(TabControls, {
         opened: this.props.opened,
         onCloseTab: this.handleCloseTabClick,
-        onOpenTab: this.handleOpenTabClick
+        onOpenTab: this.handleOpenTabClick,
+        onPinChange: this.handleChangePin,
+        isPinned: this.props.tab.pinned
       })
     );
   }
 
   createContextMenuTab() {
+    // Create groups ...
+    /*
     let subMenusMoveTab = [];
     let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
     for (let i of sortedIndex) {
       let g = this.props.groups[i];
-      subMenusMoveTab.push(React.createElement("menuitem", {
-        key: this.props.tab.id + "-" + g.id,
-        disabled: g.id === this.props.group.id,
-        className: "?groupId=" + g.id,
-        onClick: this.handleOnMoveTabMenuClick,
-        label: Utils.getGroupTitle(g) }));
+      subMenusMoveTab.push(
+        <menuitem
+        key={this.props.tab.id+"-"+g.id}
+        disabled={g.id === this.props.group.id}
+        className={"?groupId=" + g.id}
+        onClick={this.handleOnMoveTabMenuClick}
+        label={Utils.getGroupTitle(g)}>
+        </menuitem>);
     }
-
-    subMenusMoveTab.push(React.createElement("hr", { key: this.props.tab.id + "-separator" }));
-
-    subMenusMoveTab.push(React.createElement("menuitem", {
-      key: this.props.tab.id + "-addgroup",
-      onClick: this.handleOnMoveTabNewMenuClick,
-      label: browser.i18n.getMessage("add_group") }));
+     subMenusMoveTab.push(<hr key={this.props.tab.id+"-separator"}/>);
+     subMenusMoveTab.push(
+      <menuitem
+        key={this.props.tab.id+"-addgroup"}
+        onClick={this.handleOnMoveTabNewMenuClick}
+        label={browser.i18n.getMessage("add_group")}>
+      </menuitem>);
+    */
+    let id = "tooltip-" + this.props.group.id + "-" + this.props.tab.id;
 
     let contextMenuTab = React.createElement(
-      "menu",
-      {
-        type: "context",
-        id: "moveTabSubMenu" + this.props.tab.id },
+      "div",
+      { "class": id },
       React.createElement(
-        "menu",
+        "span",
         {
-          label: browser.i18n.getMessage("move_tab_group"),
-          icon: "/share/icons/tabspace-active-32.png" /* doesn't work on menu parent*/ },
-        subMenusMoveTab
+          onClick: this.handleChangePin },
+        React.createElement("img", { src: "/share/icons/pin-32.png" }),
+        browser.i18n.getMessage(this.props.tab.pinned ? "unpin_tab" : "pin_tab")
       ),
-      React.createElement("menuitem", {
-        type: "context",
-        icon: "/share/icons/pin-32.png",
-        label: browser.i18n.getMessage(this.props.tab.pinned ? "unpin_tab" : "pin_tab"),
-        onClick: this.handleChangePin
-      }),
-      React.createElement("menuitem", {
-        type: "context",
-        icon: "/share/icons/plus-32.png",
-        onClick: this.handleOpenTabClick,
-        label: browser.i18n.getMessage("open_tab")
-      })
+      React.createElement(
+        "span",
+        {
+          onClick: this.handleOpenTabClick },
+        React.createElement("img", { src: "/share/icons/plus-32.png" }),
+        browser.i18n.getMessage("open_tab")
+      )
     );
+    /*
+    <menu
+      type={"context"}
+      id={"moveTabSubMenu" + this.props.tab.id}>
+        <menu
+          label={browser.i18n.getMessage("move_tab_group")}
+          icon={"/share/icons/tabspace-active-32.png"/}>
+         {subMenusMoveTab}
+        </menu>
+         <menuitem
+          type={"context"}
+          icon={}
+          label=
+          onClick={this.handleChangePin}
+        ></menuitem>
+        <menuitem
+          type={"context"}
+          icon={}
+          ></menuitem>
+    </menu>*/
 
-    return contextMenuTab;
+    //return contextMenuTab;
   }
 
   handleOnMoveTabNewMenuClick(event) {
