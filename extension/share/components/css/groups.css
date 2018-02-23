@@ -61,6 +61,7 @@ ul, li {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  height: 34px;
 }
 
 .tooltipmenu .row:hover {
@@ -70,7 +71,7 @@ ul, li {
 li {
   list-style-type: none;
   cursor: move;
-  /*overflow: hidden; TODO not dangerous*/
+  overflow: hidden;
 }
 
 .empty-list {
@@ -225,13 +226,19 @@ li {
 }
 
 .group-controls {
-  margin: auto 0;
   align-self: flex-end;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: 100%;
+  min-height: 34px;
 }
 
 .group-controls i {
   font-size: 20px;
-  padding: 7px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .group-title input {
@@ -253,7 +260,7 @@ li {
 }
 
 .group:hover .group-controls .group-close, .group:hover .group-controls .group-edit {
-  display: inline-block;
+  display: flex;
 }
 
 .group.removing:hover .group-controls .group-undo, .group.closing:hover .group-controls .group-undo {
@@ -290,6 +297,7 @@ li {
   display: flex;
   height: 34px;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .tab-title {
@@ -315,13 +323,11 @@ li {
 }
 
 .tab-controls {
-  margin: auto 0;
   align-self: flex-end;
   height: 100%;
-}
-
-.tab-controls i {
-  padding: 9px 0px;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
 }
 
 .tab .tab-controls .tab-edit {
@@ -329,8 +335,11 @@ li {
 }
 
 .tab:hover .tab-controls .tab-edit {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
+
 /*** End Tab ***/
 
 /**** Search Bar ***/

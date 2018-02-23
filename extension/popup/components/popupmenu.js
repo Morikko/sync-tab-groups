@@ -138,7 +138,7 @@ class PopupMenuStandAlone extends React.Component {
   }
 
   componentDidMount() {
-    document.querySelector('#search-input').focus();
+    //document.querySelector('#search-input').focus();
 
     Navigation.setTarget(document.getElementById("popup-menu"));
 

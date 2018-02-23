@@ -7,6 +7,7 @@ class TabControls extends React.Component {
         title: "Tooltip",
         className: "tab-edit fa fa-fw fa-exchange tooltip",
         onClick: e => {
+          e.stopPropagation();
           let onTop = !(e.pageY > window.innerHeight / 2);
           e.target.querySelector('.tooltipmenu').classList.toggle('bottom', !onTop);
           e.target.querySelector('.tooltipmenu').classList.toggle('top', onTop);
