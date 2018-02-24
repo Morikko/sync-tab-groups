@@ -76,7 +76,7 @@ Controller.refreshUi = function() {
 };
 
 Controller.onOpenGroupInNewWindow = function(params) {
-  WindowManager.openGroupInNewWindow(params.groupId);
+  WindowManager.selectGroup(params.groupId, true);
 };
 
 Controller.onOpenGuide = function() {
@@ -147,7 +147,8 @@ Controller.onGroupRename = function(params) {
 
 Controller.onGroupSelect = function(params) {
   WindowManager.selectGroup(
-    params.groupId
+    params.groupId,
+    false
   );
 };
 
@@ -439,10 +440,10 @@ Controller.initWindowsEventListener = function() {
 
     // Let time for opening well and be sure it is a new one
     setTimeout(() => {
-      if ( !WindowManager.WINDOW_CURRENTLY_SWITCHING[window.id] ) {
+      if ( !WindowManager.WINDOW_EXCLUDED[window.id] ) {
         WindowManager.integrateWindow(window.id);
       }
-    }, 600); // Below 400, it can fail
+    }, 300); // Below 400, it can fail
   });
   browser.windows.onRemoved.addListener((windowId) => {
     GroupManager.detachWindow(windowId);

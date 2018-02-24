@@ -286,7 +286,10 @@ GroupManager.changeExpandState = function(groupIds, expandState, groups = GroupM
   }
 }
 
-GroupManager.changeGroupPosition = function(groupId, position, groups = GroupManager.groups) {
+GroupManager.changeGroupPosition = function(groupId, position
+  , groups = GroupManager.groups
+  , allow=OptionManager.options.groups.sortingType=== OptionManager.SORT_CUSTOM)
+  {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, true, groups);
 
@@ -401,11 +404,6 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
     GroupManager.groups[groupIndex].tabs = Utils.getCopy(tabs);
-
-    // TODO remove (do in prepare)
-    if (OptionManager.options.groups.removeEmptyGroup) {
-      GroupManager.removeEmptyGroup();
-    }
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
@@ -551,7 +549,7 @@ GroupManager.removeGroupFromId = async function(groupId) {
   }
 }
 
-GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, changeBrowser = true) {
+GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, changeBrowser = true, fireEvent=true) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
@@ -565,11 +563,9 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, cha
       GroupManager.groups[groupIndex].tabs.splice(tabIndex, 1);
     }
 
-    if (OptionManager.options.groups.removeEmptyGroup) {
-      GroupManager.removeEmptyGroup();
+    if ( fireEvent ) {
+      GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
     }
-
-    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 
     return "GroupManager.removeTabFromIndexInGroupId done!";
 
@@ -581,7 +577,14 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, cha
 
 }
 
-GroupManager.addTabInGroupId = async function(groupId, tab, targetIndex = -1) {
+GroupManager.moveTabBetweenGroups = async function(tab, sourceGroupId, sourceTabIndex, targetGroupId, targetTabIndex = -1) {
+  await GroupManager.addTabInGroupId(targetGroupId, tab, targetTabIndex, false);
+  await GroupManager.removeTabFromIndexInGroupId(sourceGroupId, sourceTabIndex, true, false);
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+}
+
+
+GroupManager.addTabInGroupId = async function(groupId, tab, targetIndex = -1, fireEvent=true) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
@@ -594,7 +597,9 @@ GroupManager.addTabInGroupId = async function(groupId, tab, targetIndex = -1) {
       GroupManager.groups[groupIndex].tabs.splice(realIndex, 0, tab);
     }
 
-    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+    if ( fireEvent ) {
+      GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+    }
 
     return "GroupManager.addTabInGroupId done!";
 
@@ -724,13 +729,15 @@ GroupManager.removeUnopenGroups = function() {
 /**
  *
  */
-GroupManager.removeEmptyGroup = function() {
+GroupManager.removeEmptyGroup = function(fireEvent=false) {
   for (let i = GroupManager.groups.length - 1; i >= 0; i--) {
     if (GroupManager.groups[i].tabs.length === 0) {
       GroupManager.groups.splice(i, 1);
     }
   }
-  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  if(fireEvent) {
+    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  }
 }
 
 /******** OTHER *********/
@@ -834,6 +841,10 @@ GroupManager.initEventListener = function() {
 
   // Done after a group modification to assure integrity
   GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE, () => {
+    if (OptionManager.options.groups.removeEmptyGroup) {
+      GroupManager.removeEmptyGroup();
+    }
+
     GroupManager.setAllIndexes(GroupManager.groups);
     GroupManager.setAllPositions(GroupManager.groups, OptionManager.options.groups.sortingType);
     GroupManager.coherentActiveTabInGroups(GroupManager.groups);

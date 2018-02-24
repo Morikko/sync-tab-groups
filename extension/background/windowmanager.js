@@ -32,9 +32,9 @@ var WindowManager = WindowManager || {};
 
 WindowManager.WINDOW_GROUPID = "groupId";
 
-WindowManager.WINDOW_CURRENTLY_SWITCHING = {
-
-};
+WindowManager.WINDOW_CURRENTLY_SWITCHING = {};
+// Window ids not taken in account when a new window is created
+WindowManager.WINDOW_EXCLUDED = {};
 
 /**
  * Close all the current tabs and open the tabs from the selected group
@@ -125,6 +125,9 @@ WindowManager.closeGroup = async function(groupId, close_window = false) {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
       groupId
     );
+    if ( !GroupManager.isGroupIndexInOpenWindow(groupIndex) ) { // Security
+      return;
+    }
     let windowId = GroupManager.getWindowIdFromGroupId(
       groupId
     );
@@ -211,7 +214,7 @@ WindowManager.decoratorCurrentlyChanging = function (func) {
  * @param {Number} newGroupId - the group id
  * @return {Promise}
  */
-WindowManager.selectGroup = async function(newGroupId) {
+WindowManager.selectGroup = async function(newGroupId, newWindow=false) {
   try {
     let newGroupIndex = GroupManager.getGroupIndexFromGroupId(
       newGroupId
@@ -226,7 +229,11 @@ WindowManager.selectGroup = async function(newGroupId) {
     }
     // Case 2: switch group
     else {
-      await WindowManager.switchGroup(newGroupId);
+      if ( newWindow ) {
+        await WindowManager.openGroupInNewWindow(newGroupId);
+      } else {
+        await WindowManager.switchGroup(newGroupId);
+      }
     }
     return "WindowManager.selectGroup done!";
   } catch (e) {
@@ -370,6 +377,7 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
       state: "maximized",
       incognito: GroupManager.groups[groupIndex].incognito,
     });
+    WindowManager.WINDOW_EXCLUDED[w.id] = true;
 
     // TODO: security: might not be necessary
     /*
@@ -385,6 +393,8 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
     */
 
     await WindowManager.switchGroup(groupId);
+    delete WindowManager.WINDOW_EXCLUDED[w.id];
+
     return w.id;
 
   } catch (e) {

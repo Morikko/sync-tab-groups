@@ -438,8 +438,7 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex, 
         if (targetTabIndex < sourceTabIndex)
           sourceTabIndex++;
       }
-      await GroupManager.addTabInGroupId(targetGroupId, tab, targetTabIndex);
-      await GroupManager.removeTabFromIndexInGroupId(sourceGroupId, sourceTabIndex);
+      await GroupManager.moveTabBetweenGroups(tab, sourceGroupId, sourceTabIndex, targetGroupId, targetTabIndex);
     }
     return "TabManager.moveTabBetweenGroups done!";
 

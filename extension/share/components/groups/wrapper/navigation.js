@@ -175,8 +175,14 @@ var generalNavigationListener = Navigation.navigationFactory({
     e.preventDefault();
     Navigation.focusLastTab(document.activeElement.parentElement)
   },
-  "shift+pageup": () => Navigation.Target.querySelector(".reduce-groups").click(),
-  "shift+pagedown": () => Navigation.Target.querySelector(".expand-groups").click(),
+  "shift+pageup": (e) => {
+    e.preventDefault();
+    Navigation.Target.querySelector(".reduce-groups").click();
+  },
+  "shift+pagedown": (e) => {
+    e.preventDefault();
+    Navigation.Target.querySelector(".expand-groups").click();
+  },
   "ctrl+f": (e) => {
     e.preventDefault();
     Navigation.Target.querySelector('.search-input').focus()
@@ -237,13 +243,21 @@ var groupNavigationListener = function(group) {
         Navigation.focusParent('group', document.activeElement);
         group.handleGroupEditAbortClick();
       },
-      "shift+up": ()=>{
+      "shift+up": (e)=>{
+        e.preventDefault();
+        if ( !group.props.groupDraggable ) {
+          return;
+        }
         group.props.onGroupChangePosition(
           group.props.group.id,
           group.props.group.position-1,
         );
       },
-      "shift+down": ()=>{
+      "shift+down": (e)=>{
+        e.preventDefault();
+        if ( !group.props.groupDraggable ) {
+          return;
+        }
         group.props.onGroupChangePosition(
           group.props.group.id,
           group.props.group.position+2,
@@ -263,7 +277,8 @@ var tabNavigationListener = function(tab) {
       "delete": tab.handleCloseTabClick,
       "ctrl+enter": tab.handleOpenTabClick,
       "shift+p": tab.handleChangePin,
-      "shift+up": ()=>{
+      "shift+up": (e)=>{
+        e.preventDefault();
         tab.props.onGroupDrop(
           tab.props.group.id,
           tab.props.tabIndex,
@@ -272,7 +287,8 @@ var tabNavigationListener = function(tab) {
         );
         document.activeElement.previousSibling.focus();
       },
-      "shift+down": ()=>{
+      "shift+down": (e)=>{
+        e.preventDefault();
         tab.props.onGroupDrop(
           tab.props.group.id,
           tab.props.tabIndex,

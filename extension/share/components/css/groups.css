@@ -173,8 +173,11 @@ li {
 
 .group.closing .group-title, .group.removing .group-title {
   color: #bbb;
-  text-decoration: line-through;
   background-color: var(--not-checked);
+}
+
+.group.closing .group-title-text, .group.removing .group-title-text {
+  text-decoration: line-through;
 }
 
 .group.closing i:hover, .group.removing i:hover {

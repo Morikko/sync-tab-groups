@@ -257,12 +257,15 @@ class Group extends React.Component {
     if (event) {
       event.stopPropagation();
     }
+
+    if (!this.state.opened){
+      return;
+    }
+
     this.setState({
       editing: false,
       removing: false
     });
-
-
 
     // Already click once, do it now
     if (this.state.closing) {
@@ -283,6 +286,10 @@ class Group extends React.Component {
   handleGroupCloseAbortClick(event) {
     if (event) {
       event.stopPropagation();
+    }
+
+    if (!this.state.removing && !this.state.closing) {
+      return;
     }
 
     this.props.onGroupCloseClick(TaskManager.CANCEL, this.props.group.id);
