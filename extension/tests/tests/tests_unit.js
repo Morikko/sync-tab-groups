@@ -396,6 +396,16 @@ describe("GroupManager: ", () => {
       expect(bestId).toEqual(-1);
     });
 
+    it("Match reject diverge on incognito", ()=>{
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2, incognito: true});
+      let tabs = Utils.getCopy(group.tabs);
+
+
+      let bestId = GroupManager.bestMatchGroup(tabs, [group]);
+
+      expect(bestId).toEqual(-1);
+    });
+
     it("Match reject URL", ()=>{
       let id = 122;
       let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});

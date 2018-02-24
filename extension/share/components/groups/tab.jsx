@@ -112,7 +112,9 @@ class Tab extends React.Component{
   }
 
   handleOnMoveTabNewMenuClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
 
     this.props.onMoveTabToNewGroup(
       '',
@@ -122,7 +124,9 @@ class Tab extends React.Component{
   }
 
   handleOnMoveTabMenuClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
 
     let targetGroupId = parseInt(Utils.getParameterByName("groupId", event.target.className), 10);
 
@@ -157,7 +161,9 @@ class Tab extends React.Component{
   }
 
   handleOpenTabClick( event ) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.onClickOpenTab();
   }
 
@@ -236,13 +242,11 @@ class Tab extends React.Component{
   handleTabDragOver(event) {
     event.preventDefault();
 
-    if (event.dataTransfer.getData("type") === "tab") {
+    if (DRAG_TYPE === "tab") {
       event.stopPropagation();
       let pos = event.pageY // Position of the cursor
-          // Compare to the Body
-          - event.currentTarget.offsetTop
-          // Invisible scroll offset to remove
-          + event.currentTarget.parentElement.parentElement.parentElement.scrollTop
+          - Utils.getOffset(event.currentTarget);
+
       let height = event.currentTarget.offsetHeight;
       // Bottom
       if (pos > height / 2 && pos <= height) {
@@ -275,6 +279,9 @@ class Tab extends React.Component{
 
     let group = this.props.group;
     let tab = this.props.tab;
+
+    DRAG_TYPE = "tab";
+
     event.dataTransfer.setData("type", "tab");
     event.dataTransfer.setData("tab/index", this.props.tabIndex);
     event.dataTransfer.setData("tab/group", group.id);

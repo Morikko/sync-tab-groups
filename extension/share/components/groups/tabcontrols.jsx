@@ -6,6 +6,7 @@ class TabControls extends React.Component{
       top: false,
       show: false,
       panel: "main",
+      waitFirstMount: false,
     };
   }
 
@@ -16,8 +17,8 @@ class TabControls extends React.Component{
         title={browser.i18n.getMessage("tab_show_actions_menu")}
         className="tab-edit fa fa-fw fa-exchange tab-actions"
         onClick={this.handleOpenExtraActions.bind(this)}
-        onMouseLeave={this.handleCloseExtraActions.bind(this)}>
-        {this.createExtraActionsMenu()}
+        onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}>
+        {this.state.waitFirstMount && this.createExtraActionsMenu()}
       </i>,
       <i
         key="close"
@@ -30,6 +31,22 @@ class TabControls extends React.Component{
     return (<span className="tab-controls">
               {controls}
             </span>);
+  }
+
+  componentDidMount() {
+    if ( !this.state.waitFirstMount ) {
+      this.differedTimeOut = setTimeout((()=>{
+        this.setState({
+          waitFirstMount: true,
+        });
+      }).bind(this), 500);
+    }
+  }
+
+  componentWillUnmount() {
+    if ( this.differedTimeOut ) {
+      clearTimeout(this.differedTimeOut);
+    }
   }
 
   createExtraActionsMenu() {
@@ -60,13 +77,19 @@ class TabControls extends React.Component{
         </span>
         <span
           className="row"
-          onClick={this.props.onOpenTab}>
+          onClick={(()=>{
+            this.props.onOpenTab();
+            this.closeExtraActions();
+          }).bind(this)}>
           <i className="fa fa-fw fa-plus" />
           {browser.i18n.getMessage("open_tab")}
         </span>
         <span
           className="row"
-          onClick={this.props.onPinChange}>
+          onClick={(()=>{
+            this.props.onPinChange();
+            this.closeExtraActions();
+          }).bind(this)}>
           <i className="fa fa-fw fa-thumb-tack" />
           {browser.i18n.getMessage(this.props.isPinned ? "unpin_tab" : "pin_tab")}
         </span>
@@ -85,7 +108,10 @@ class TabControls extends React.Component{
           key={this.props.tab.id+"-"+g.id}
           disabled={g.id === this.props.group.id}
           className={"?groupId=" + g.id + " row"}
-          onClick={this.props.handleOnMoveTabMenuClick}>
+          onClick={((e)=>{
+            this.props.handleOnMoveTabMenuClick(e);
+            this.closeExtraActions();
+          }).bind(this)}>
           {Utils.getGroupTitle(g)}
         </span>);
     }
@@ -107,7 +133,10 @@ class TabControls extends React.Component{
         <span className="separator"></span>
         <span
           className="row"
-          onClick={this.props.handleOnMoveTabNewMenuClick}>
+          onClick={((e)=>{
+            this.props.handleOnMoveTabNewMenuClick(e);
+            this.closeExtraActions();
+          }).bind(this)}>
           <i className="fa fa-fw fa-plus" />
           {browser.i18n.getMessage("add_group")}
         </span>
@@ -148,12 +177,16 @@ class TabControls extends React.Component{
     })
   }
 
-  handleCloseExtraActions(event) {
+  handleMouseLeaveExtraActions(event) {
     //return; // For debug
+    this.closeExtraActions();
+  }
+
+  closeExtraActions() {
     this.setState({
       show: false,
       panel: "main",
-    })
+    });
   }
 };
 

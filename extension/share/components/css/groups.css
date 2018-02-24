@@ -10,6 +10,7 @@ ul, li {
 }
 
 .tab-actions .tab-actions-menu {
+    display: none;
     visibility: hidden;
     opacity: 0;
     width: 300px;
@@ -49,6 +50,7 @@ ul, li {
 }
 
 .tab-actions-menu.show {
+    display: block;
     visibility: visible;
     opacity: 1;
     transition: opacity 0.5s;

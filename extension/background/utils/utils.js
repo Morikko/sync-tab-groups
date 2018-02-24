@@ -563,6 +563,27 @@ Utils.timerDecorator = function(func, name="Perf", times=1) {
   };
 }
 
+Utils.getOffset = function( el ) {
+  let top = 0;
+
+  // Get offset of the current element
+  let offsetEl = el;
+  do {
+      top += offsetEl.offsetTop;
+      offsetEl = offsetEl.offsetParent;
+
+  } while( offsetEl !== document.body && !isNaN( offsetEl.offsetTop ) );
+
+  // Remove all the scroll offset from the parent
+  let scrollEl = el;
+  while( scrollEl && !isNaN( scrollEl.offsetTop ) ) {
+    top -= scrollEl.scrollTop;
+    scrollEl = scrollEl.parentElement;
+  }
+
+  return top;
+}
+
 Utils.doActivateHotkeys = function (listener, bool) {
   if (bool) {
     return listener;

@@ -305,7 +305,7 @@ Session.ListOfTabURLs = [
   {
     "title": "Font Awesome Icons",
     "url": "https://fontawesome.com/icons?d=gallery",
-    "favIconUrl": "http://fontawesome.io/assets/ico/favicon.ico",
+    "favIconUrl": "https://fontawesome.com/images/favicons/favicon-32x32.png",
   },
   {
     "title": "Debugging - Mozilla | MDN",
@@ -372,6 +372,7 @@ Session.createTab = function(
     discarded: false,
     favIconUrl: "",
     index: -1,
+    incognito: false,
   })
 };
 

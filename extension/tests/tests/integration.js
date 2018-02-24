@@ -1,3 +1,6 @@
+TestManager.TIMEOUT = 30000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = TestManager.TIMEOUT;
+
 describe("Tabs Creation/Deletion - ", ()=>{
 
   beforeAll(async function(){
@@ -390,7 +393,7 @@ describe("Switch Group - ", ()=>{
       expect(GroupManager.groups[this.groups[0].groupIndex].windowId).toEqual(this.windowId);
       // Tabs correspond
       expect(currentTabs).toEqualTabs(previoustabs);
-    }, 10000);
+    }, TestManager.TIMEOUT);
 
     it("From Group To Group - ", async function (){
       // Open
@@ -410,7 +413,7 @@ describe("Switch Group - ", ()=>{
       expect(GroupManager.groups[this.groups[0].groupIndex].windowId).toEqual(browser.windows.WINDOW_ID_NONE);
       // Tabs correspond
       expect(currentTabs).toEqualTabs(previoustabs);
-    }, 10000);
+    }, TestManager.TIMEOUT);
   });
 
   describe("Keep order", ()=>{
@@ -480,7 +483,7 @@ describe("Switch Group - ", ()=>{
           TestManager.setActiveProperties(previousTabs, targetTabIndex);
 
           expect(resultingTabs).toEqualTabs(previousTabs)
-        }, 10000);
+        }, TestManager.TIMEOUT);
 
         it("Pinned tab active keep his position", async function(){
           let targetGroupIndex = 2,
@@ -504,7 +507,7 @@ describe("Switch Group - ", ()=>{
           TestManager.setActiveProperties(previousTabs, targetTabIndex);
 
           expect(resultingTabs).toEqualTabs(previousTabs)
-        }, 10000);
+        }, TestManager.TIMEOUT);
       });
 
       describe("To Groups without pinned tabs", function(){
@@ -550,7 +553,7 @@ describe("Switch Group - ", ()=>{
           TestManager.setActiveProperties(previousTabs, targetTabIndex);
 
           expect(resultingTabs).toEqualTabs(previousTabs)
-        }, 10000);
+        }, TestManager.TIMEOUT);
       });
     });
   });
@@ -578,7 +581,7 @@ describe("WindowManager: ", ()=>{
          await TestManager.splitOnHalfScreen(this.windowId);
 
          await Utils.wait(500);
-      }, 10000);
+      }, TestManager.TIMEOUT);
 
       afterAll(async function(){
         if ( this.windowId )
@@ -643,7 +646,7 @@ describe("WindowManager: ", ()=>{
          await TestManager.splitOnHalfScreen(this.windowId);
 
          await Utils.wait(500);
-      }, 10000);
+      }, TestManager.TIMEOUT);
 
       afterAll(async function(){
         if ( await WindowManager.isWindowIdOpen(this.windowId) )
@@ -830,7 +833,7 @@ describe("Select Groups - ", ()=>{
 
     this.windowId_bis = (await browser.windows.create()).id;
     await TestManager.splitOnHalfScreen(this.windowId_bis);
-  }, 10000);
+  }, TestManager.TIMEOUT);
 
   afterAll(async function(){
     // Close Window
@@ -855,7 +858,7 @@ describe("Select Groups - ", ()=>{
       expect(GroupManager.groups.length).toEqual(previousLength);
       // group is associated with OPEN window
       expect(GroupManager.groups[this.groups[1].groupIndex].windowId).toEqual(this.windowId_bis);
-    }, 10000);
+    }, TestManager.TIMEOUT);
 
     it("Switch with Change Focus of Window", async function(){
       let previousLength = GroupManager.groups.length;
@@ -865,7 +868,7 @@ describe("Select Groups - ", ()=>{
       let currentWindow = await browser.windows.getLastFocused();
       // group is associated with OPEN window
       expect(currentWindow.id).toEqual(GroupManager.groups[this.groups[0].groupIndex].windowId);
-    }, 10000);
+    }, TestManager.TIMEOUT);
 
   });
 
@@ -908,7 +911,7 @@ describe("Select Groups - ", ()=>{
 
       expect(nextGroupId).toEqual(this.groups[2].id);
       expect(GroupManager.groups[this.groups[2].groupIndex].windowId).toEqual(currentWindow.id);
-    }, 10000);
+    }, TestManager.TIMEOUT);
 
     // Select Previous Unopen
     it("Switch To Previous Unopen", async function(){
@@ -918,7 +921,7 @@ describe("Select Groups - ", ()=>{
       let currentWindow = await browser.windows.getLastFocused();
 
       expect(GroupManager.groups[this.groups[0].groupIndex].windowId).toEqual(currentWindow.id);
-    }, 10000);
+    }, TestManager.TIMEOUT);
 
   });
 });
@@ -949,7 +952,7 @@ describe("End of Groups - ", ()=>{
 
     this.windowId = await WindowManager.openGroupInNewWindow(this.groups[0].id);
     await TestManager.splitOnHalfScreen(this.windowId);
-  }, 10000);
+  }, TestManager.TIMEOUT);
 
   afterAll(async function(){
     // Close Window
@@ -1003,7 +1006,7 @@ describe("End of Groups - ", ()=>{
       expect(previousLength).toEqual(GroupManager.groups.length);
       expect(windowsNumber).toEqual((await browser.windows.getAll()).length+1);
       expect(GroupManager.groups[this.groups[0].groupIndex].windowId).toEqual(browser.windows.WINDOW_ID_NONE);
-    }, 10000);
+    }, TestManager.TIMEOUT);
 
     // With Pinned Tabs not to close ..
     it("With Pinned Tabs To Keep", async function(){
@@ -1016,6 +1019,7 @@ describe("End of Groups - ", ()=>{
       await WindowManager.switchGroup(this.groups[1].id);
       await WindowManager.closeGroup(this.groups[1].id);
 
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
       let tabs = await TabManager.getTabsInWindowId(this.windowId, true, true);
 
       TestManager.resetActiveProperties(tabs);
@@ -1046,6 +1050,7 @@ describe("End of Groups - ", ()=>{
         console.error(msg);
       }
 
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
       let tabs = await TabManager.getTabsInWindowId(this.windowId);
 
       let blank = [Session.createTab(Session.newTab)];
@@ -1056,7 +1061,7 @@ describe("End of Groups - ", ()=>{
       expect(tabs).toEqualTabs(blank);
       expect(previousLength).toEqual(GroupManager.groups.length+1);
       expect(GroupManager.getGroupIndexFromGroupId(this.groups[0].id, false)).toEqual(-1);
-    }, 10000);
+    }, TestManager.TIMEOUT);
 
     it("Another Window", async function(){
       let windowId = await WindowManager.openGroupInNewWindow(this.groups[1].id);
@@ -1083,7 +1088,7 @@ describe("End of Groups - ", ()=>{
         await browser.windows.remove(windowId);
       }
 
-    }, 10000);
+    }, TestManager.TIMEOUT);
   });
 });
 
@@ -1461,7 +1466,7 @@ describe("TabManager", ()=>{
             pinned?tabs.filter(tab=>tab.pinned)-inPlace.length:tabs.length-inPlace
           );
         };
-      }, 10000);
+      }, TestManager.TIMEOUT);
 
       afterAll(async function(){
         // Close Window
@@ -1785,7 +1790,7 @@ describe("TabManager", ()=>{
             pinned?tabs.filter(tab=>tab.pinned).length-inPlace:tabs.length-inPlace
           );
         };
-      }, 10000);
+      }, TestManager.TIMEOUT);
 
       afterAll(async function(){
         for (let group of this.groups ) {

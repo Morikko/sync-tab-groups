@@ -418,26 +418,17 @@ class Group extends React.Component {
     }
   }
 
-  getOffset(el) {
-    var _x = 0;
-    var _y = 0;
-    while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-      _x += el.offsetLeft - el.scrollLeft;
-      _y += el.offsetTop - el.scrollTop;
-      el = el.offsetParent;
-    }
-    return { top: _y, left: _x };
-  }
-
   handleGroupDragOver(event) {
     event.stopPropagation();
     event.preventDefault();
-    if (event.dataTransfer.getData("type") === "group") {
+
+    if (DRAG_TYPE === "group") {
       // Position of main group-list
-      let pos = event.pageY - ( // Event loc Full page
-      event.currentTarget.offsetTop // Group dist
-      - event.currentTarget.parentElement.scrollTop); // Remove scroll grouplist
+      let pos = event.pageY - // Event loc Full page
+      Utils.getOffset(event.currentTarget);
+
       let height = event.currentTarget.offsetHeight;
+
       // Bottom
       if (pos > height / 2 && pos <= height) {
         if (this.state.dragOnTop || !this.state.dragOnBottom) {
@@ -462,7 +453,7 @@ class Group extends React.Component {
         }
       }
     }
-    if (event.dataTransfer.getData("type") === "tab") {
+    if (DRAG_TYPE === "tab") {
       this.setState({
         draggingOver: true
       });
@@ -472,7 +463,7 @@ class Group extends React.Component {
   handleGroupDragEnter(event) {
     event.preventDefault();
 
-    if (event.dataTransfer.getData("type") === "tab" && event.target.className.includes("group")) {
+    if (DRAG_TYPE === "tab" && event.target.className.includes("group")) {
       event.stopPropagation();
 
       this.setState({
@@ -507,10 +498,14 @@ class Group extends React.Component {
   handleGroupDragStart(event) {
     event.stopPropagation();
 
+    DRAG_TYPE = "group";
+
     event.dataTransfer.setData("type", "group");
     event.dataTransfer.setData("group/id", this.props.group.id);
   }
 };
+
+var DRAG_TYPE = "";
 
 Group.propTypes = {
   group: PropTypes.object.isRequired,

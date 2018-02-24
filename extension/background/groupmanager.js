@@ -1049,6 +1049,10 @@ GroupManager.bestMatchGroup = function(tabs, groups = GroupManager.groups) {
     */
   let ext_page_prefix = browser.runtime.getURL("");
 
+  groups = groups.filter((group)=>{
+    return (tabs.length && tabs[0].incognito === group.incognito );
+  });
+
   let result = groups.filter((group)=>{
     return GroupManager.compareTabs(tabs, group.tabs);
   });
