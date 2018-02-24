@@ -205,8 +205,8 @@ var popupSpecialNavigationListener = Navigation.navigationFactory({
 var groupNavigationListener = function(group) {
   return Navigation.navigationFactory({
       "spacebar": (e)=>{
-        e.preventDefault();
         if (!group.state.editing) {
+          e.preventDefault();
           group.handleGroupExpandClick();
         }
       },
@@ -219,14 +219,16 @@ var groupNavigationListener = function(group) {
         }
       },
       "shift+enter": group.handleOpenInNewWindowClick,
-      "delete": ()=>{
+      "delete": (e)=>{
         if (!group.state.editing) {
+          e.preventDefault();
           group.handleGroupCloseClick();
         }
       },
       "shift+delete": group.handleGroupRemoveClick,
-      "backspace": ()=>{
+      "backspace": (e)=>{
         if (!group.state.editing) {
+          e.preventDefault();
           group.handleGroupCloseAbortClick();
         }
       },

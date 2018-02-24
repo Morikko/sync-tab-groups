@@ -894,8 +894,190 @@
     "description": "Message in the notification displayed when the extension is updated"
   },
 
-  "tab_show_actions_menu": {
-    "message": "Show Tab Actions Menu",
-    "description": "Hover help"
+  "options_shortcuts_navigation": {
+    "message": "Navigation",
+    "description": "Shortcuts available from the groups interface (Popup & manager)"
+  },
+
+  "options_shortcuts_navigation_allow": {
+    "message": "Allow navigation shortcuts from the groups interface",
+    "description": ""
+  },
+
+  "command_description_general_down": {
+    "message": "Next group/tab (or first)",
+    "description": ""
+  },
+
+  "command_description_general_up": {
+    "message": "Previous group/tab (or last)",
+    "description": ""
+  },
+
+  "command_description_general_insert": {
+    "message": "Create a new group (accept name with enter)",
+    "description": ""
+  },
+
+  "command_description_general_escape": {
+    "message": "Close the popup (default behavior)",
+    "description": ""
+  },
+
+  "command_description_general_home": {
+    "message": "First group",
+    "description": ""
+  },
+
+  "command_description_general_end": {
+    "message": "Last group",
+    "description": ""
+  },
+
+  "command_description_general_pageup": {
+    "message": "Select first tab (if tab selected)",
+    "description": ""
+  },
+
+  "command_description_general_pagedown": {
+    "message": "Select last tab (if tab selected)",
+    "description": ""
+  },
+
+  "command_description_general_shift_pageup": {
+    "message": "Reduce all tabs",
+    "description": ""
+  },
+
+  "command_description_general_shift_pagedown": {
+    "message": "Expand all groups",
+    "description": ""
+  },
+
+  "command_description_general_ctrl_f": {
+    "message": "Focus the search bar",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_m": {
+    "message": "Open Manager",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_p": {
+    "message": "Open Preferences",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_o": {
+    "message": "Make the group visible/invisible",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_l": {
+    "message": "Change popup size (small/large)",
+    "description": ""
+  },
+
+  "command_description_group_space": {
+    "message": "Show/hide tabs",
+    "description": ""
+  },
+
+  "command_description_group_enter": {
+    "message": "Open the group (or focus)",
+    "description": ""
+  },
+
+  "command_description_group_shift_enter": {
+    "message": "Open the group in a new window (or focus)",
+    "description": ""
+  },
+
+  "command_description_group_delete": {
+    "message": "Close the group (or force)",
+    "description": ""
+  },
+
+  "command_description_group_shift_delete": {
+    "message": "Remove the group (or force)",
+    "description": ""
+  },
+
+  "command_description_group_backspace": {
+    "message": "Undo the close or remove action",
+    "description": ""
+  },
+
+  "command_description_group_ctrl_e": {
+    "message": "Edit the name of the group (enter to accept) (Shift+Backspace to this.commandFactory(cancel)",
+    "description": ""
+  },
+
+  "command_description_group_shift_up": {
+    "message": "Move the group to the position before (if custom sort selected)",
+    "description": ""
+  },
+
+  "command_description_group_shift_down": {
+    "message": "Move the group to the position after (if custom sort selected)",
+    "description": ""
+  },
+
+  "command_description_tab_enter": {
+    "message": "Open the tab (or focus)",
+    "description": ""
+  },
+
+  "command_description_tab_shift_enter": {
+    "message": "Open the tab in a new window (or focus)",
+    "description": ""
+  },
+
+  "command_description_tab_space": {
+    "message": "Focus the parent group (then press again to hide the tabs)",
+    "description": ""
+  },
+
+  "command_description_tab_delete": {
+    "message": "Close the tab",
+    "description": ""
+  },
+
+  "command_description_tab_ctrl_enter": {
+    "message": "Open a similar tab in the current window",
+    "description": ""
+  },
+
+  "command_description_tab_shift_p": {
+    "message": "Pin/Unpin the tab",
+    "description": ""
+  },
+
+  "command_description_tab_shift_up": {
+    "message": "Move the tab to the position before",
+    "description": ""
+  },
+
+  "command_description_tab_shift_down": {
+    "message": "Move the tab to the position after",
+    "description": ""
+  },
+
+  "command_description_searchbar_shift_backspace": {
+    "message": "Clear the search value",
+    "description": ""
+  },
+
+  "command_description_addbutton_shift_backspace": {
+    "message": "Cancel the creation",
+    "description": ""
+  },
+
+  "command_description_addbutton_enter": {
+    "message": "Accept the name and create the group",
+    "description": ""
   }
+
+
 }

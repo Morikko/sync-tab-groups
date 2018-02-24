@@ -285,12 +285,12 @@ li {
   display: none;
 }
 
-.group:hover .group-controls .group-close, .group:hover .group-controls .group-edit {
+.group:hover .group-controls .group-control {
   display: flex;
 }
 
 .group.removing:hover .group-controls .group-undo, .group.closing:hover .group-controls .group-undo {
-  display: inline-block;
+  display: flex;
 }
 
 /*** End Group ***/
