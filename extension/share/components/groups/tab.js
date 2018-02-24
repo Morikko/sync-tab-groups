@@ -84,7 +84,6 @@ class Tab extends React.Component {
         tabIndex: "0",
         onKeyDown: Utils.doActivateHotkeys(tabNavigationListener(this), this.props.hotkeysEnable)
       },
-      this.state.waitFirstMount && this.createContextMenuTab(),
       this.props.tab.pinned && React.createElement("i", {
         className: "pinned-icon fa fa-fw fa-thumb-tack"
       }),
@@ -102,77 +101,14 @@ class Tab extends React.Component {
         onCloseTab: this.handleCloseTabClick,
         onOpenTab: this.handleOpenTabClick,
         onPinChange: this.handleChangePin,
-        isPinned: this.props.tab.pinned
+        isPinned: this.props.tab.pinned,
+        groups: this.props.groups,
+        group: this.props.group,
+        tab: this.props.tab,
+        handleOnMoveTabMenuClick: this.handleOnMoveTabMenuClick,
+        handleOnMoveTabNewMenuClick: this.handleOnMoveTabNewMenuClick
       })
     );
-  }
-
-  createContextMenuTab() {
-    // Create groups ...
-    /*
-    let subMenusMoveTab = [];
-    let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
-    for (let i of sortedIndex) {
-      let g = this.props.groups[i];
-      subMenusMoveTab.push(
-        <menuitem
-        key={this.props.tab.id+"-"+g.id}
-        disabled={g.id === this.props.group.id}
-        className={"?groupId=" + g.id}
-        onClick={this.handleOnMoveTabMenuClick}
-        label={Utils.getGroupTitle(g)}>
-        </menuitem>);
-    }
-     subMenusMoveTab.push(<hr key={this.props.tab.id+"-separator"}/>);
-     subMenusMoveTab.push(
-      <menuitem
-        key={this.props.tab.id+"-addgroup"}
-        onClick={this.handleOnMoveTabNewMenuClick}
-        label={browser.i18n.getMessage("add_group")}>
-      </menuitem>);
-    */
-    let id = "tooltip-" + this.props.group.id + "-" + this.props.tab.id;
-
-    let contextMenuTab = React.createElement(
-      "div",
-      { "class": id },
-      React.createElement(
-        "span",
-        {
-          onClick: this.handleChangePin },
-        React.createElement("img", { src: "/share/icons/pin-32.png" }),
-        browser.i18n.getMessage(this.props.tab.pinned ? "unpin_tab" : "pin_tab")
-      ),
-      React.createElement(
-        "span",
-        {
-          onClick: this.handleOpenTabClick },
-        React.createElement("img", { src: "/share/icons/plus-32.png" }),
-        browser.i18n.getMessage("open_tab")
-      )
-    );
-    /*
-    <menu
-      type={"context"}
-      id={"moveTabSubMenu" + this.props.tab.id}>
-        <menu
-          label={browser.i18n.getMessage("move_tab_group")}
-          icon={"/share/icons/tabspace-active-32.png"/}>
-         {subMenusMoveTab}
-        </menu>
-         <menuitem
-          type={"context"}
-          icon={}
-          label=
-          onClick={this.handleChangePin}
-        ></menuitem>
-        <menuitem
-          type={"context"}
-          icon={}
-          ></menuitem>
-    </menu>*/
-
-    //return contextMenuTab;
   }
 
   handleOnMoveTabNewMenuClick(event) {
@@ -317,30 +253,31 @@ class Tab extends React.Component {
     event.dataTransfer.setData("tab/index", this.props.tabIndex);
     event.dataTransfer.setData("tab/group", group.id);
   }
-
+  /* TODO to correct or to remove (doesn't update on group rename)
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.searchTabResult !== this.props.searchTabResult) {
+    if ( nextProps.searchTabResult !== this.props.searchTabResult  ){
       return true;
     }
-
-    if (nextProps.tab.pinned !== this.props.tab.pinned || nextProps.tab.index !== this.props.tab.index || nextProps.tab.url !== this.props.tab.url || nextProps.tab.active !== this.props.tab.active || nextProps.tab.title !== this.props.tab.title) {
+     if ( nextProps.tab.pinned !== this.props.tab.pinned
+    || nextProps.tab.index !== this.props.tab.index
+    || nextProps.tab.url !== this.props.tab.url
+    || nextProps.tab.active !== this.props.tab.active
+    || nextProps.tab.title !== this.props.tab.title ) {
       return true;
     }
-
-    if (this.state.dragOnTop !== nextState.dragOnTop || this.state.dragOnBottom !== nextState.dragOnBottom) {
+     if ( this.state.dragOnTop !== nextState.dragOnTop
+    || this.state.dragOnBottom !== nextState.dragOnBottom ){
       return true;
     }
-
-    if (nextProps.groups.length !== this.props.groups.length) {
+     if ( nextProps.groups.length !== this.props.groups.length ) {
       return true;
     }
-
-    if (this.state.waitFirstMount !== nextState.waitFirstMount) {
+     if ( this.state.waitFirstMount !== nextState.waitFirstMount ) {
       return true;
     }
-
-    return false;
+     return false;
   }
+  */
 };
 
 Tab.propTypes = {

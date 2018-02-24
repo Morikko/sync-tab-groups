@@ -10,18 +10,18 @@ class GroupControls extends React.Component {
     if (this.props.editing) {
       controls = [React.createElement("i", {
         key: "rename_agree",
-        className: "group-edit fa fa-fw fa-check",
+        className: "group-edit group-control fa fa-fw fa-check",
         onClick: this.props.onEditSave
       }), React.createElement("i", {
         key: "rename_abort",
-        className: "group-edit fa fa-fw fa-ban",
+        className: "group-edit group-control fa fa-fw fa-ban",
         onClick: this.props.onEditAbort
       })];
     } else {
       controls = React.createElement("i", {
         key: "rename",
         title: browser.i18n.getMessage("rename_group"),
-        className: "group-edit fa fa-fw fa-pencil",
+        className: "group-edit group-control fa fa-fw fa-pencil",
         onClick: this.props.onEdit
       });
     }
@@ -39,7 +39,7 @@ class GroupControls extends React.Component {
     return [React.createElement("i", {
       title: overHelp,
       key: "undo",
-      className: "group-undo fa fa-fw fa-undo",
+      className: "group-undo group-control fa fa-fw fa-undo",
       onClick: this.props.onUndoCloseClick
     })];
   }
@@ -55,7 +55,7 @@ class GroupControls extends React.Component {
       if (!this.props.opened && !this.props.closing && !this.props.removing) {
         controls.push(React.createElement("i", {
           key: "open_window",
-          className: "group-edit fa fa-fw fa-window-maximize",
+          className: "group-edit group-control fa fa-fw fa-window-maximize",
           title: browser.i18n.getMessage("open_window_group"),
           onClick: this.props.onOpenInNewWindow
         }));
@@ -77,7 +77,7 @@ class GroupControls extends React.Component {
         controls.push(React.createElement("i", {
           key: "close",
           title: overHelp,
-          className: "group-close fa fa-fw fa-times",
+          className: "group-close group-control fa fa-fw fa-times",
           onClick: this.props.onClose
         }));
       }
@@ -92,7 +92,7 @@ class GroupControls extends React.Component {
         controls.push(React.createElement("i", {
           key: "remove",
           title: overHelp,
-          className: "group-close fa fa-fw fa-trash",
+          className: "group-close group-control fa fa-fw fa-trash",
           onClick: this.props.onRemove
         }));
       }
@@ -104,6 +104,7 @@ class GroupControls extends React.Component {
 
     let expanderClasses = classNames({
       "group-expand": true,
+      "group-control": true,
       "fa": true,
       "fa-fw": true,
       "fa-chevron-down": !this.props.expanded,

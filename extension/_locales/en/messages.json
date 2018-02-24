@@ -892,6 +892,10 @@
   "notification_update_message": {
     "message": "Click on this notification to see the changes.",
     "description": "Message in the notification displayed when the extension is updated"
-  }
+  },
 
+  "tab_show_actions_menu": {
+    "message": "Show Tab Actions Menu",
+    "description": "Hover help"
+  }
 }

@@ -3,16 +3,19 @@ ul, li {
   margin: 0;
   padding: 0;
 }
-.tooltip {
+
+/** Tab Actions Menu **/
+.tab-actions {
     position: relative;
 }
 
-.tooltip .tooltipmenu {
+.tab-actions .tab-actions-menu {
     visibility: hidden;
+    opacity: 0;
     width: 300px;
     background-color: black;
     border-radius: 6px;
-    margin: 0px 10px;
+    margin: 0px 5px;
     padding: 5px 0;
     position: absolute;
     z-index: 1;
@@ -21,14 +24,14 @@ ul, li {
     background-color: #f1f1f1;
     box-shadow: 1px 1px 4px #555;
 }
-.tooltipmenu.top {
+.tab-actions-menu.top {
     top: -5px;
 }
-.tooltipmenu.bottom {
+.tab-actions-menu.bottom {
     bottom: -5px;
 }
 
-.tooltip .tooltipmenu::after {
+.tab-actions .tab-actions-menu::after {
     content: "";
     position: absolute;
     left: 100%;
@@ -36,37 +39,59 @@ ul, li {
     border-style: solid;
     border-color: transparent transparent transparent #f1f1f1;
 }
-.tooltipmenu.top::after {
+.tab-actions-menu.top::after {
     top: 22px;
     margin-top: -5px;
 }
-.tooltipmenu.bottom::after {
+.tab-actions-menu.bottom::after {
     bottom: 22px;
     margin-bottom: -5px;
 }
 
-.tooltipmenu.show {
+.tab-actions-menu.show {
     visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s;
 }
 
-.tooltipmenu {
+.tab-actions-menu {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
+  min-height: 30px;
 }
 
-.tooltipmenu .row {
+.tab-actions-menu .row {
   text-align: start;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   height: 34px;
+  padding: 0 5px;
 }
 
-.tooltipmenu .row:hover {
+.tab-move-to-group-panel{
+  max-height: 180px; /* 5*34 + 2*5 */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tab-actions-menu .separator {
+  border-bottom: 1px solid #ccc;
+  display: block;
+}
+
+.tab-actions-menu .row img {
+  height: 20px;
+  width: 20px;
+  padding: 3px;
+}
+
+.tab-actions-menu .row:hover {
   background-color: #ccc;
 }
+/** END Tab Actions Menu **/
 
 li {
   list-style-type: none;
@@ -125,11 +150,11 @@ li {
   color: #fff  !important;
 }
 
-.group-list i:hover {
+.group-control:hover, .tab-edit:hover {
   background-color: var(--action-hover);
 }
 
-.group-list .incognito i:hover {
+.incognito .group-control:hover, .incognito .tab-edit:hover {
   background-color: var(--private-open);
 }
 
@@ -194,6 +219,7 @@ li {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  overflow: visible;
 }
 
 .group:not(.expanded) {

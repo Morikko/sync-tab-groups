@@ -1,42 +1,24 @@
 class TabControls extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      top: false,
+      show: false,
+      panel: "main"
+    };
+  }
+
   render() {
     let controls = [React.createElement(
       "i",
       {
         key: "tooltip",
-        title: "Tooltip",
-        className: "tab-edit fa fa-fw fa-exchange tooltip",
-        onClick: e => {
-          e.stopPropagation();
-          let onTop = !(e.pageY > window.innerHeight / 2);
-          e.target.querySelector('.tooltipmenu').classList.toggle('bottom', !onTop);
-          e.target.querySelector('.tooltipmenu').classList.toggle('top', onTop);
-          e.target.querySelector('.tooltipmenu').classList.toggle('show');
-        },
-        onMouseLeave: e => {
-          e.target.querySelector('.tooltipmenu').classList.toggle('show', false);
-        }
-      },
-      React.createElement(
-        "div",
-        { className: "tooltipmenu" },
-        React.createElement(
-          "span",
-          {
-            className: "row",
-            onClick: this.props.onPinChange },
-          React.createElement("i", { className: "pinned-icon fa fa-fw fa-thumb-tack" }),
-          browser.i18n.getMessage(this.props.isPinned ? "unpin_tab" : "pin_tab")
-        ),
-        React.createElement(
-          "span",
-          {
-            className: "row",
-            onClick: this.props.onOpenTab },
-          React.createElement("i", { className: "pinned-icon fa fa-fw fa-plus" }),
-          browser.i18n.getMessage("open_tab")
-        )
-      )
+        title: browser.i18n.getMessage("tab_show_actions_menu"),
+        className: "tab-edit fa fa-fw fa-exchange tab-actions",
+        onClick: this.handleOpenExtraActions.bind(this),
+        onMouseLeave: this.handleCloseExtraActions.bind(this) },
+      this.createExtraActionsMenu()
     ), React.createElement("i", {
       key: "close",
       title: browser.i18n.getMessage("close_tab"),
@@ -50,11 +32,141 @@ class TabControls extends React.Component {
       controls
     );
   }
-  /*
-  shouldComponentUpdate(nextProps, nextState) {
-    return false;
+
+  createExtraActionsMenu() {
+    return React.createElement(
+      "div",
+      { className: classNames({
+          "tab-actions-menu": true,
+          "top": this.state.top,
+          "bottom": !this.state.top,
+          "show": this.state.show
+        }) },
+      this.createTabActionsPanel(),
+      this.createMoveTabToGroupPanel()
+    );
   }
-  */
+
+  createTabActionsPanel() {
+    return React.createElement(
+      "div",
+      { className: classNames({
+          "tab-actions-panel": true,
+          "hiddenBySearch": this.state.panel !== "main"
+        }) },
+      React.createElement(
+        "span",
+        {
+          className: "row",
+          onClick: this.handleSwitchToMoveTabToGroupPanel.bind(this) },
+        React.createElement("img", { src: "/share/icons/tabspace-active-32.png" }),
+        browser.i18n.getMessage("move_tab_group")
+      ),
+      React.createElement(
+        "span",
+        {
+          className: "row",
+          onClick: this.props.onOpenTab },
+        React.createElement("i", { className: "fa fa-fw fa-plus" }),
+        browser.i18n.getMessage("open_tab")
+      ),
+      React.createElement(
+        "span",
+        {
+          className: "row",
+          onClick: this.props.onPinChange },
+        React.createElement("i", { className: "fa fa-fw fa-thumb-tack" }),
+        browser.i18n.getMessage(this.props.isPinned ? "unpin_tab" : "pin_tab")
+      )
+    );
+  }
+
+  createMoveTabToGroupPanel() {
+    let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
+    let subMenusMoveTab = [];
+
+    for (let i of sortedIndex) {
+      let g = this.props.groups[i];
+      subMenusMoveTab.push(React.createElement(
+        "span",
+        {
+          key: this.props.tab.id + "-" + g.id,
+          disabled: g.id === this.props.group.id,
+          className: "?groupId=" + g.id + " row",
+          onClick: this.props.handleOnMoveTabMenuClick },
+        Utils.getGroupTitle(g)
+      ));
+    }
+
+    return React.createElement(
+      "div",
+      { className: classNames({
+          "tab-move-to-group-panel": true,
+          "hiddenBySearch": this.state.panel !== "move"
+        }),
+        style: { maxHeight: window.innerHeight / 2 } },
+      React.createElement(
+        "span",
+        {
+          className: "row",
+          onClick: this.handleSwitchToTabActionsPanel.bind(this) },
+        React.createElement("i", { className: "fa fa-fw fa-chevron-left" }),
+        "Back"
+      ),
+      React.createElement("span", { className: "separator" }),
+      subMenusMoveTab,
+      React.createElement("span", { className: "separator" }),
+      React.createElement(
+        "span",
+        {
+          className: "row",
+          onClick: this.props.handleOnMoveTabNewMenuClick },
+        React.createElement("i", { className: "fa fa-fw fa-plus" }),
+        browser.i18n.getMessage("add_group")
+      )
+    );
+  }
+
+  handleSwitchToMoveTabToGroupPanel(event) {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    this.setState({
+      panel: "move"
+    });
+  }
+
+  handleSwitchToTabActionsPanel(event) {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    this.setState({
+      panel: "main"
+    });
+  }
+
+  handleOpenExtraActions(event) {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    let onTop = !(event.pageY > window.innerHeight / 2);
+    this.setState({
+      top: onTop,
+      show: !this.state.show,
+      panel: "main"
+    });
+  }
+
+  handleCloseExtraActions(event) {
+    //return; // For debug
+    this.setState({
+      show: false,
+      panel: "main"
+    });
+  }
 };
 
 TabControls.propTypes = {

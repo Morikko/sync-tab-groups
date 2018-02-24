@@ -11,12 +11,12 @@ class GroupControls extends React.Component {
       controls = [
         <i
           key="rename_agree"
-          className="group-edit fa fa-fw fa-check"
+          className="group-edit group-control fa fa-fw fa-check"
           onClick={this.props.onEditSave}
         ></i>,
         <i
           key="rename_abort"
-          className="group-edit fa fa-fw fa-ban"
+          className="group-edit group-control fa fa-fw fa-ban"
           onClick={this.props.onEditAbort}
         ></i>
       ];
@@ -24,7 +24,7 @@ class GroupControls extends React.Component {
       controls = (<i
         key="rename"
         title={browser.i18n.getMessage("rename_group")}
-        className={"group-edit fa fa-fw fa-pencil"}
+        className={"group-edit group-control fa fa-fw fa-pencil"}
         onClick={this.props.onEdit}
       ></i>);
     }
@@ -43,7 +43,7 @@ class GroupControls extends React.Component {
       <i
         title={overHelp}
         key="undo"
-        className="group-undo fa fa-fw fa-undo"
+        className="group-undo group-control fa fa-fw fa-undo"
         onClick={this.props.onUndoCloseClick}
       ></i>
     ];
@@ -63,7 +63,7 @@ class GroupControls extends React.Component {
         controls.push(
           <i
             key="open_window"
-            className="group-edit fa fa-fw fa-window-maximize"
+            className="group-edit group-control fa fa-fw fa-window-maximize"
             title={browser.i18n.getMessage("open_window_group")}
             onClick={this.props.onOpenInNewWindow}
           ></i>
@@ -87,7 +87,7 @@ class GroupControls extends React.Component {
           <i
             key="close"
             title={overHelp}
-            className="group-close fa fa-fw fa-times"
+            className="group-close group-control fa fa-fw fa-times"
             onClick={this.props.onClose}
           ></i>
         );
@@ -104,7 +104,7 @@ class GroupControls extends React.Component {
           <i
             key="remove"
             title={overHelp}
-            className="group-close fa fa-fw fa-trash"
+            className="group-close group-control fa fa-fw fa-trash"
             onClick={this.props.onRemove}
           ></i>
         );
@@ -117,6 +117,7 @@ class GroupControls extends React.Component {
 
     let expanderClasses = classNames({
       "group-expand": true,
+      "group-control": true,
       "fa": true,
       "fa-fw": true,
       "fa-chevron-down": !this.props.expanded,
