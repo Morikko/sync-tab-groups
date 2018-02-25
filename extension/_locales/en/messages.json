@@ -1077,7 +1077,53 @@
   "command_description_addbutton_enter": {
     "message": "Accept the name and create the group",
     "description": ""
-  }
+  },
+
+  "options_behaviors_tabsopening_recommendation": {
+    "message": "Chrome Recommendation",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_recommendation_state": {
+    "message": "All tabs unloaded are closed when the extension is disabled, uninstalled or updated. (Chrome only)",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_recommendation_button": {
+    "message": "The button `$BUTTON$` load all the tabs (one by one) not opened yet and discard them with the browser method.",
+    "description": "",
+    "placeholders": {
+      "button" : {
+        "content" : "$1",
+        "example" : "Title of the button in this section (see options_behaviors_tabsopening_reload)"
+      }
+    }
+  },
+
+  "options_behaviors_tabsopening_recommendation_update": {
+    "message": "The loading tabs action is done automatically before an automatic update of the extension. (Chrome only)",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_reload": {
+    "message": "Load discarded opened tabs",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_confirm_reload": {
+    "message": "Do you want to load all the tabs in extension discarded mode ?",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_nothing_reload": {
+    "message": "There is no tab in extension discarded mode.",
+    "description": ""
+  },
+
+  "options_remove_groups_confirm": {
+    "message": "Are you sure you want to remove all the groups?",
+    "description": ""
+  },
 
 
 }

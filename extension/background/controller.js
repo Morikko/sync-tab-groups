@@ -377,6 +377,10 @@ Controller.optionMessenger = function(message) {
       break;
     case "Option:OpenGuide":
       Controller.onOpenGuide();
+      break;
+    case "Option:UndiscardLazyTabs":
+      Controller.undiscardAll();
+      break;
   }
 }
 
@@ -554,7 +558,9 @@ browser.runtime.onInstalled.addListener((details) => {
   }
 });
 
-browser.runtime.onUpdateAvailable.addListener(Controller.undiscardAll);
+if (Utils.isChrome()) {
+  browser.runtime.onUpdateAvailable.addListener(Controller.undiscardAll);
+}
 
 Controller.undiscardAll = async function (globalCount = 0, callbackAfterFirstUndiscard=undefined) {
   return new Promise(async function(resolve, reject){
@@ -575,7 +581,7 @@ Controller.undiscardAll = async function (globalCount = 0, callbackAfterFirstUnd
             await browser.tabs.update(tab.id, {
               url: Utils.extractTabUrl(tab.url)
             });
-            console.log("Update tab: " + tab.id);
+            //console.log("Update tab: " + tab.id);
             if ( callbackAfterFirstUndiscard ) { // For tests purpose
               callbackAfterFirstUndiscard();
               callbackAfterFirstUndiscard = undefined;

@@ -221,23 +221,56 @@ class SettingsSection extends React.Component {
                 null,
                 browser.i18n.getMessage("options_behaviors_tabsopening_limits_temporary")
               )
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_recommendation")
+            ),
+            React.createElement(
+              "ul",
+              null,
+              React.createElement(
+                "li",
+                null,
+                browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_button", [browser.i18n.getMessage("options_behaviors_tabsopening_reload")])
+              ),
+              React.createElement(
+                "li",
+                null,
+                browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_state")
+              ),
+              React.createElement(
+                "li",
+                null,
+                browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_update")
+              )
             )
           )
         ),
         content: React.createElement(
           "div",
-          { className: "double-buttons" },
+          { className: "subsection-left" },
+          React.createElement(
+            "div",
+            { className: "double-buttons" },
+            React.createElement(OptionButton, {
+              title: browser.i18n.getMessage("options_behaviors_tabsopening_discarded"),
+              onClick: this.clickOnOpenDiscarded.bind(this),
+              enabled: this.props.options.groups.discardedOpen,
+              key: "opening-tab-discarded"
+            }),
+            React.createElement(OptionButton, {
+              title: browser.i18n.getMessage("options_behaviors_tabsopening_full"),
+              onClick: this.clickOnOpenFull.bind(this),
+              enabled: !this.props.options.groups.discardedOpen,
+              key: "opening-tab-full"
+            })
+          ),
           React.createElement(OptionButton, {
-            title: browser.i18n.getMessage("options_behaviors_tabsopening_discarded"),
-            onClick: this.clickOnOpenDiscarded.bind(this),
-            enabled: this.props.options.groups.discardedOpen,
-            key: "opening-tab-discarded"
-          }),
-          React.createElement(OptionButton, {
-            title: browser.i18n.getMessage("options_behaviors_tabsopening_full"),
-            onClick: this.clickOnOpenFull.bind(this),
-            enabled: !this.props.options.groups.discardedOpen,
-            key: "opening-tab-full"
+            title: browser.i18n.getMessage("options_behaviors_tabsopening_reload"),
+            onClick: this.handleClickOnUndiscardAllTabs.bind(this),
+            enabled: true
           })
         )
       }),
@@ -333,6 +366,30 @@ class SettingsSection extends React.Component {
         id: "groups-removeEmptyGroup"
       })
     );
+  }
+
+  async handleClickOnUndiscardAllTabs() {
+
+    let tabs = await browser.tabs.query({}),
+        hadDiscarded = false;
+    tabs.forEach(async tab => {
+      if (tab.url.includes(Utils.LAZY_PAGE_URL)) {
+        hadDiscarded = true;
+      }
+    });
+
+    if (hadDiscarded) {
+      if (confirm(browser.i18n.getMessage("options_behaviors_tabsopening_confirm_reload"))) {
+        this.props.onUndiscardLazyTabs();
+      }
+    } else {
+      browser.notifications.create("RELOAD_TABS", {
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+        "title": "Sync Tab Groups",
+        "message": browser.i18n.getMessage("options_behaviors_tabsopening_nothing_reload")
+      });
+    }
   }
 
   clickOnVisible() {

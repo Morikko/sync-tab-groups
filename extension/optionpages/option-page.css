@@ -182,6 +182,13 @@ input[type=checkbox]:checked ~ label{
   width: 50%;
 }
 
+.subsection-left {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .tooltip {
     position: relative;
     /*display: inline-block;*/
@@ -294,4 +301,18 @@ input[type=checkbox]:checked ~ label{
   align-items: center;
   justify-content: flex-start;
   margin-left: 30px;
+}
+
+.double-buttons .option-button {
+  border-radius: 3px;
+}
+
+.double-buttons .option-button:first-child {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.double-buttons .option-button:last-child {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
 }

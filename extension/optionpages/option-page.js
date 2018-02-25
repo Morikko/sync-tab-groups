@@ -37,6 +37,10 @@ const Actions = {
   onOpenGuide: function() {
     Utils.sendMessage("Option:OpenGuide", {});
   },
+
+  onUndiscardLazyTabs: function() {
+    Utils.sendMessage("Option:UndiscardLazyTabs", {});
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -54,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onDeleteAllGroups: Actions.onDeleteAllGroups,
         onReloadGroups: Actions.onReloadGroups,
         onOpenGuide: Actions.onOpenGuide,
+        onUndiscardLazyTabs: Actions.onUndiscardLazyTabs,
       })
     ),
     document.getElementById("content")

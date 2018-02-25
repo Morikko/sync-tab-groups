@@ -107,24 +107,37 @@ class SettingsSection extends React.Component {
                     <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits_history")}</li>
                     <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits_temporary")}</li>
                   </ul>
+                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation")}</li>
+                  <ul>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_button", [browser.i18n.getMessage("options_behaviors_tabsopening_reload")])}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_state")}</li>
+                    <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_update")}</li>
+                  </ul>
                 </ul>
               </div>
               }
               content = {
-                <div className="double-buttons">
+                <div className="subsection-left">
+                  <div className="double-buttons">
+                  <OptionButton
+                    title= {browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}
+                    onClick= {this.clickOnOpenDiscarded.bind(this)}
+                    enabled={this.props.options.groups.discardedOpen}
+                    key="opening-tab-discarded"
+                  />
+                  <OptionButton
+                    title= {browser.i18n.getMessage("options_behaviors_tabsopening_full")}
+                    onClick= {this.clickOnOpenFull.bind(this)}
+                    enabled={!this.props.options.groups.discardedOpen}
+                    key="opening-tab-full"
+                  />
+                </div>
                 <OptionButton
-                  title= {browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}
-                  onClick= {this.clickOnOpenDiscarded.bind(this)}
-                  enabled={this.props.options.groups.discardedOpen}
-                  key="opening-tab-discarded"
+                  title= {browser.i18n.getMessage("options_behaviors_tabsopening_reload")}
+                  onClick= {this.handleClickOnUndiscardAllTabs.bind(this)}
+                  enabled={true}
                 />
-                <OptionButton
-                  title= {browser.i18n.getMessage("options_behaviors_tabsopening_full")}
-                  onClick= {this.clickOnOpenFull.bind(this)}
-                  enabled={!this.props.options.groups.discardedOpen}
-                  key="opening-tab-full"
-                />
-              </div>
+                </div>
               }
             />
             <SubSection
@@ -176,6 +189,33 @@ class SettingsSection extends React.Component {
             />
       </div>
     );
+  }
+
+
+
+  async handleClickOnUndiscardAllTabs() {
+
+    let tabs = await browser.tabs.query({}),
+      hadDiscarded = false;
+    tabs.forEach(async (tab)=>{
+        if( tab.url.includes(Utils.LAZY_PAGE_URL)) {
+          hadDiscarded = true;
+        }
+      });
+
+    if( hadDiscarded ) {
+      if (confirm(browser.i18n.getMessage("options_behaviors_tabsopening_confirm_reload"))) {
+          this.props.onUndiscardLazyTabs();
+      }
+    } else {
+      browser.notifications.create("RELOAD_TABS", {
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+        "title": "Sync Tab Groups",
+        "message": browser.i18n.getMessage("options_behaviors_tabsopening_nothing_reload"),
+      });
+    }
+
   }
 
   clickOnVisible() {

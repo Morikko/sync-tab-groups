@@ -25,7 +25,7 @@ class OptionsStandalone extends React.Component {
       this.href = href;
       this.title = title;
     };
-    let tabs = [new tab(browser.i18n.getMessage("options_settings"), "settings"), new tab(browser.i18n.getMessage("options_interface"), "interface"), new tab(browser.i18n.getMessage("shortcuts"), "shortcuts"), new tab(browser.i18n.getMessage("options_groups"), "groups"), new tab(browser.i18n.getMessage("options_about"), "about")];
+    let tabs = [new tab(browser.i18n.getMessage("options_settings"), "settings"), new tab(browser.i18n.getMessage("options_interface"), "interface"), new tab(browser.i18n.getMessage("shortcuts"), "shortcuts"), new tab(browser.i18n.getMessage("options_groups"), "groups"), new tab(browser.i18n.getMessage("options_about"), "about"), new tab(browser.i18n.getMessage("options_guide"), "")];
     return React.createElement(
       "div",
       null,

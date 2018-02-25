@@ -4,11 +4,7 @@ class OptionsPanel extends React.Component{
       <div id="panel">
         <SettingsSection
           options={this.props.options} onOptionChange={this.props.onOptionChange}
-          selected={this.props.selected}/>
-        {/*<AdvSettingsSection
-          options={this.props.options.groups} onOptionChange={this.props.onOptionChange}
-          selected={this.props.selected}/>
-        */}
+          selected={this.props.selected} onUndiscardLazyTabs={this.props.onUndiscardLazyTabs}/>
         <ShortcutsSection
           options={this.props.options} onOptionChange={this.props.onOptionChange}
         selected={this.props.selected}/>

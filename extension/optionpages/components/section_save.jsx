@@ -167,7 +167,7 @@ class SaveSection extends React.Component {
   }
 
   handleClickOnRemoveAllGroups() {
-    if (confirm("Are you sure you want to remove all the groups?")) {
+  if (confirm(browser.i18n.getMessage("options_remove_groups_confirm"))) {
         this.props.onDeleteAllGroups();
     }
   }
