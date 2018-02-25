@@ -21,21 +21,34 @@ class AboutSection extends React.Component {
           <h2>
             Sync Tab Groups
           </h2>
-          <p>
-            {/* TODO: Add Guide */}
-            {browser.i18n.getMessage("options_about_start")}
-          </p>
-          <p>
-            {browser.i18n.getMessage("options_about_enjoy")}
-            {this.createExtensionsLink()}
-          </p>
-          <p>
-            {browser.i18n.getMessage("options_about_contribute")}
-            {this.createContactLink()}
-          </p>
-          <p>
-            {browser.i18n.getMessage("options_about_dev")}
-          </p>
+          <div className="row-about">
+            <div>
+              <h3>{browser.i18n.getMessage("options_about_start_title")}</h3>
+              <p>{browser.i18n.getMessage("options_about_start")}</p>
+            </div>
+            <div>
+              <h3>{browser.i18n.getMessage("options_about_enjoy_title")}</h3>
+              <p>{browser.i18n.getMessage("options_about_enjoy")}</p>
+            </div>
+            <div>
+              <h3>{browser.i18n.getMessage("options_about_contribute_title")}</h3>
+              <p>{browser.i18n.getMessage("options_about_contribute")}</p>
+            </div>
+            <div>
+              <h3>{browser.i18n.getMessage("options_about_dev_title")}</h3>
+              <p>{browser.i18n.getMessage("options_about_dev")}</p>
+            </div>
+          </div>
+          <div className="row-about-center">
+              <a href="https://morikko.github.io/synctabgroups"
+                  title="Sync Tab Groups website">
+                <img src="/share/icons/sync-tab-groups.png" alt="extension icon"/>
+              </a>
+              <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/"
+                  title="Firefox Add-On page">
+              <img src="/share/icons/firefox.png" alt=""/>
+            </a>
+          </div>
           <h2>
             Release Notes (0.5.1)
           </h2>
@@ -183,19 +196,6 @@ class AboutSection extends React.Component {
               Contact</a>
               {")"}
           </span>
-          */
-  }
-
-  createExtensionsLink() {
-    return <span>
-                {" ("}
-              <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/">Firefox</a>
-              {")"}
-          </span>
-          /*
-              <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/">Chrome</a>
-              {"/"}
-            </span>
           */
   }
 

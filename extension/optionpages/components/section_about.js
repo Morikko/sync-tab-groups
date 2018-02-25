@@ -26,26 +26,80 @@ class AboutSection extends React.Component {
         "Sync Tab Groups"
       ),
       React.createElement(
-        "p",
-        null,
-        browser.i18n.getMessage("options_about_start")
+        "div",
+        { className: "row-about" },
+        React.createElement(
+          "div",
+          null,
+          React.createElement(
+            "h3",
+            null,
+            browser.i18n.getMessage("options_about_start_title")
+          ),
+          React.createElement(
+            "p",
+            null,
+            browser.i18n.getMessage("options_about_start")
+          )
+        ),
+        React.createElement(
+          "div",
+          null,
+          React.createElement(
+            "h3",
+            null,
+            browser.i18n.getMessage("options_about_enjoy_title")
+          ),
+          React.createElement(
+            "p",
+            null,
+            browser.i18n.getMessage("options_about_enjoy")
+          )
+        ),
+        React.createElement(
+          "div",
+          null,
+          React.createElement(
+            "h3",
+            null,
+            browser.i18n.getMessage("options_about_contribute_title")
+          ),
+          React.createElement(
+            "p",
+            null,
+            browser.i18n.getMessage("options_about_contribute")
+          )
+        ),
+        React.createElement(
+          "div",
+          null,
+          React.createElement(
+            "h3",
+            null,
+            browser.i18n.getMessage("options_about_dev_title")
+          ),
+          React.createElement(
+            "p",
+            null,
+            browser.i18n.getMessage("options_about_dev")
+          )
+        )
       ),
       React.createElement(
-        "p",
-        null,
-        browser.i18n.getMessage("options_about_enjoy"),
-        this.createExtensionsLink()
-      ),
-      React.createElement(
-        "p",
-        null,
-        browser.i18n.getMessage("options_about_contribute"),
-        this.createContactLink()
-      ),
-      React.createElement(
-        "p",
-        null,
-        browser.i18n.getMessage("options_about_dev")
+        "div",
+        { className: "row-about-center" },
+        React.createElement(
+          "a",
+          { href: "https://morikko.github.io/synctabgroups",
+            title: "Sync Tab Groups website" },
+          React.createElement("img", { src: "/share/icons/sync-tab-groups.png", alt: "extension icon" })
+        ),
+        React.createElement(
+          "a",
+          { href: "https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/",
+            title: "Firefox Add-On page" },
+          React.createElement("img", { src: "/share/icons/firefox.png", alt: "" })
+        )
       ),
       React.createElement(
         "h2",
@@ -571,25 +625,6 @@ class AboutSection extends React.Component {
         Contact</a>
         {")"}
     </span>
-    */
-  }
-
-  createExtensionsLink() {
-    return React.createElement(
-      "span",
-      null,
-      " (",
-      React.createElement(
-        "a",
-        { href: "https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/" },
-        "Firefox"
-      ),
-      ")"
-    );
-    /*
-        <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/">Chrome</a>
-        {"/"}
-      </span>
     */
   }
 

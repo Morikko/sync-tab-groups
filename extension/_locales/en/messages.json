@@ -1125,5 +1125,25 @@
     "description": ""
   },
 
+  "options_about_start_title": {
+    "message": "Welcome",
+    "description": ""
+  },
+
+  "options_about_enjoy_title": {
+    "message": "Share",
+    "description": ""
+  },
+
+  "options_about_contribute_title": {
+    "message": "Contribute",
+    "description": ""
+  },
+
+  "options_about_dev_title": {
+    "message": "Thanks",
+    "description": ""
+  }
+
 
 }

@@ -316,3 +316,32 @@ input[type=checkbox]:checked ~ label{
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
 }
+
+.row-about {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.row-about div {
+  min-width:200px;
+  max-width:300px;
+  padding: 0 20px;
+}
+
+.row-about-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.row-about-center img {
+  padding: 0 30px;
+  height: 92px;
+  width: 92px;
+  cursor: pointer;
+}
