@@ -104,6 +104,55 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.0)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Add Chrome compatibility (63+)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Improve closing function for avoiding switching recursively"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Groups are reduced when search is ended in Groups Manager"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Preferences automatically opened when the browser restarted"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Update German translation (thanks @bitkleberAST)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Tabs order with pin tabs included (Issue: #68)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add Navigation Shortcuts (see Shorcuts section in Preferences)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Change extra actions menu on tab (Context -> Tooltip)"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.5.1)"
       ),
       React.createElement(

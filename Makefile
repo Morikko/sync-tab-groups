@@ -8,12 +8,13 @@ HTML:=$(shell find extension -name *.html)
 BUILD_HTML:=$(HTML:%=$(BUILD_DIR)/%)
 UTIL:=$(shell find extension -name utils.js)
 BUILD_UTIL:=$(UTIL:%=$(BUILD_DIR)/%)
+MANIFEST:=$(shell find extension -name manifest.json)
+BUILD_MANIFEST:=$(MANIFEST:%=$(BUILD_DIR)/%)
 JS_DEV_LIB:=$(shell find extension -name *.development.js)
 BUILD_JS_DEV_LIB:=$(JS_DEV_LIB:%=$(BUILD_DIR)/%)
 JS := $(JSX:%.jsx=%.js)
 
-DEBUG_VAR:=Utils.DEGUG_MODE=
-
+DEBUG_VAR:=Utils.DEBUG_MODE=
 
 all: $(JS) release
 
@@ -38,8 +39,12 @@ release: clean
 	cp -r extension/ $(BUILD_DIR)/
 	# Change some code for the release
 	sed -i 's/.development./.production.min./g' $(BUILD_HTML)
-	sed -i 's/.development./.production.min./g' $(BUILD_DIR)/extension/manifest.json
+	sed -i 's/.development./.production.min./g' $(BUILD_MANIFEST)
 	sed -i 's/$(DEBUG_VAR)true;/$(DEBUG_VAR)false;/' $(BUILD_UTIL)
+ifdef CHROME
+	sed -i 's/"strict_min_version": "56.0"/"strict_min_version": "63.0"/' $(BUILD_MANIFEST)
+endif
+
 	# Filter undesirable files
 	-rm -rf $(BUILD_DIR)/extension/tests
 	-rm $(BUILD_JSX)

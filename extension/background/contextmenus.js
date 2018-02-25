@@ -171,7 +171,7 @@ ContextMenu.createSpecialActionMenu = function() {
   }
   browser.contextMenus.create(contextGuide);
   */
-  if ( !Utils.DEBUG_MODE ) {
+  if ( Utils.DEBUG_MODE ) {
     let contextTestPreferences = {
       id: ContextMenu.SpecialActionMenu_ID + "open_tests",
       title: "Tests",

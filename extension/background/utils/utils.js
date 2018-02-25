@@ -46,8 +46,8 @@ var TabManager = TabManager || {};
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
  */
-Utils.DEGUG_MODE=true;
-Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
+Utils.DEBUG_MODE=true;
+Utils.UTILS_SHOW_MESSAGES = Utils.DEBUG_MODE;
 Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
 Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";
 

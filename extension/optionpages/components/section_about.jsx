@@ -50,6 +50,19 @@ class AboutSection extends React.Component {
             </a>
           </div>
           <h2>
+            Release Notes (0.6.0)
+          </h2>
+          <ul>
+            <li>Add Chrome compatibility (63+)</li>
+            <li>Improve closing function for avoiding switching recursively</li>
+            <li>Fix: Groups are reduced when search is ended in Groups Manager</li>
+            <li>Fix: Preferences automatically opened when the browser restarted</li>
+            <li>Update German translation (thanks @bitkleberAST)</li>
+            <li>Fix: Tabs order with pin tabs included (Issue: #68)</li>
+            <li>Add Navigation Shortcuts (see Shorcuts section in Preferences)</li>
+            <li>Change extra actions menu on tab (Context -> Tooltip)</li>
+          </ul>
+          <h2>
             Release Notes (0.5.1)
           </h2>
           <ul>

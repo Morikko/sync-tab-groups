@@ -890,7 +890,7 @@
   },
 
   "notification_update_message": {
-    "message": "Click on this notification to see the changes.",
+    "message": "Click here to see the changes provided by the new version.",
     "description": "Message in the notification displayed when the extension is updated"
   },
 
@@ -1143,7 +1143,11 @@
   "options_about_dev_title": {
     "message": "Thanks",
     "description": ""
-  }
+  },
 
+  "tab_show_actions_menu": {
+    "message": "Open extra actions menu",
+    "description": ""
+  }
 
 }

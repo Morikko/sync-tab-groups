@@ -527,6 +527,7 @@ browser.runtime.onInstalled.addListener((details) => {
   // Only when the extension is installed for the first time
   if ( details.reason === "install" ) {
     Controller.install = true;
+    Controller.onOpenSettings(false);
   }
 
   // Development mode detection
@@ -541,7 +542,6 @@ browser.runtime.onInstalled.addListener((details) => {
   // Extension update detection
   if ( details.reason === "update"
       && (browser.runtime.getManifest()).version !== details.previousVersion ) {
-    Controller.onOpenSettings(false);
     // Focus Settings if click on notification
     browser.notifications.onClicked.addListener((notificationId)=>{
       if ( notificationId === Controller.updateNotificationId ) {
@@ -568,7 +568,7 @@ Controller.undiscardAll = async function (globalCount = 0, callbackAfterFirstUnd
 
     let hadDiscarded = false;
 
-    console.log("Clean: " + globalCount);
+    //console.log("Clean: " + globalCount);
     let tabs = await browser.tabs.query({});
     tabs.forEach(async (tab)=>{
       queue = queue.then(async function(){
@@ -616,7 +616,7 @@ Controller.undiscardAll = async function (globalCount = 0, callbackAfterFirstUnd
       } else {
         //browser.runtime.reload();
         resolve();
-        console.log("Done!");
+        //console.log("Done!");
       }
     });
   });
