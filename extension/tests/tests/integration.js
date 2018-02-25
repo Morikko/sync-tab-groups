@@ -35,6 +35,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
           false, // Last pos
           true, //openAtLeastOne
         );
+        await Utils.wait(3000)
 
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,

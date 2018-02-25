@@ -293,48 +293,45 @@ describe("GroupManager: ", () => {
 
     beforeEach(function() {
       jasmine.addMatchers(tabGroupsMatchers);
-      this.groups = [Session.createGroup({
+      this.groups = Session.createArrayGroups({
+          groupsLength: 3,
           tabsLength: 5,
           global: false,
           pinnedTabs: 1,
           privilegedLength: 0,
           extensionUrlLength: 0,
           incognito: false,
-          active: -1,
+          active: [-1, 3, 2],
           title: "Debug coherentActiveTabInGroups"
-        })];
+        });
     });
 
     it("No active in group", function () {
-      let good_groups = Utils.getCopy(this.groups);
-      good_groups[0].tabs[good_groups[0].tabs.length-1].active = true;
+      let good_groups = Utils.getCopy(this.groups[0]);
+      TestManager.resetActiveProperties(this.groups[0].tabs);
 
-      GroupManager.coherentActiveTabInGroups(this.groups);
+      GroupManager.coherentActiveTabInGroups(this.groups[0]);
 
-      expect(this.groups).toEqualGroups(good_groups);
+      expect(this.groups[0]).toEqualGroups(good_groups);
     });
 
     it("1 active in group", function() {
-      this.groups[0].tabs[3].active = true;
-      let good_groups = Utils.getCopy(this.groups);
+      let good_groups = Utils.getCopy(this.groups[1]);
 
-      GroupManager.coherentActiveTabInGroups(this.groups);
+      GroupManager.coherentActiveTabInGroups(this.groups[1]);
 
-      expect(this.groups).toEqualGroups(good_groups);
+      expect(this.groups[1]).toEqualGroups(good_groups);
     });
 
     it("3 active in group", function() {
-      let good_groups = Utils.getCopy(this.groups);
+      let good_groups = Utils.getCopy(this.groups[2]);
 
-      this.groups[0].tabs[3].active = true;
-      this.groups[0].tabs[2].active = true;
-      this.groups[0].tabs[4].active = true;
+      this.groups[2].tabs[3].active = true;
+      this.groups[2].tabs[4].active = true;
 
-      good_groups[0].tabs[2].active = true;
+      GroupManager.coherentActiveTabInGroups(this.groups[2]);
 
-      GroupManager.coherentActiveTabInGroups(this.groups);
-
-      expect(this.groups).toEqualGroups(good_groups);
+      expect(this.groups[2]).toEqualGroups(good_groups);
     });
 
     it("Empty Group", function() {
@@ -523,7 +520,6 @@ describe("GroupManager: ", () => {
       GroupManager.groups.forEach((group)=>{
         group.index = -1;
         group.position = -1;
-        TestManager.resetActiveProperties(group.tabs);
       });
 
       expect(GroupManager.groups).toEqualGroups(groups);

@@ -15,7 +15,7 @@ StorageManager.File.exportGroups = function(groups) {
       let export_tab = {
         id: tab.id || -1,
         title: tab.title || "New Tab",
-        url: tab.url || "about:newtab",
+        url: tab.url || TabManager.NEW_TAB,
         pinned: tab.pinned || false,
         active: tab.active || false,
         discarded: tab.discarded || false,

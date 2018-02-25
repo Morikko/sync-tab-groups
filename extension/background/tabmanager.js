@@ -142,7 +142,7 @@ TabManager.openTab = async function(tab, windowId, index) {
     url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
   }
 
-  if (url === "about:privatebrowsing" || url === "about:newtab") {
+  if (url === "about:privatebrowsing" || url === TabManager.NEW_TAB) {
     url = undefined;
   }
 
@@ -177,7 +177,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
     // Look if has Tab in tabs
     if (tabsToOpen.length === 0) {
       if (openAtLeastOne) {
-        tabsToOpen.push({url: "about:newtab", active: true, pinned: false});
+        tabsToOpen.push({url: TabManager.NEW_TAB, active: true, pinned: false});
       } else {
         // tabsToOpen was empty, no tab to open
         return [];
@@ -187,9 +187,11 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
     const tabs = await TabManager.getTabsInWindowId(windowId, false, true);
 
     // Don't Reopen only a new tab
-    if (tabsToOpen.length === 1 && tabsToOpen[0].url === "about:newtab") {
+    if (tabsToOpen.length === 1
+      && (tabsToOpen[0].url === TabManager.NEW_TAB )
+      ) {
       let notPinnedTabs = tabs.filter(tab => !tab.pinnded);
-      if (notPinnedTabs.length === 1 && notPinnedTabs[0].url === "about:newtab") {
+      if (notPinnedTabs.length === 1 && notPinnedTabs[0].url === TabManager.NEW_TAB) {
         // open only a new tab that was already open
         return [];
       }

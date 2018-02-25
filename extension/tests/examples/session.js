@@ -84,7 +84,7 @@ Session.createTabs = function(params){
     return tab;
   });
 
-  if (params.active === -1) {
+  if (tabs.length && params.active === -1) {
     tabs[tabs.length-1].active = true;
   }
 
@@ -296,7 +296,7 @@ Session.getRandomTab = function(tabs) {
 
 Session.newTab = {
     "title": "New Tab",
-    "url": Utils.isChrome()?"chrome://newtab/":"about:newtab",
+    "url": TabManager.NEW_TAB,
     "favIconUrl": "chrome://branding/content/icon32.png"
   };
 
@@ -369,7 +369,7 @@ Session.createTab = function(
   params
 ) {
   return Utils.mergeObject(params, {
-    url: "about:newtab",
+    url: TabManager.NEW_TAB,
     title: "No title",
     pinned: false,
     active: false,

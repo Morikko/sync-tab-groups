@@ -646,7 +646,7 @@ GroupManager.addGroup = function(title = "", windowId = browser.windows.WINDOW_I
     return;
   let tabs = [
     {
-      url: "about:newtab",
+      url: TabManager.NEW_TAB,
       title: "New Tab",
       active: true
     }

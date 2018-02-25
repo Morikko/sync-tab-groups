@@ -41,6 +41,7 @@ Objects:
 
  */
 var Utils = Utils || {};
+var TabManager = TabManager || {};
 /**
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
@@ -365,7 +366,7 @@ Utils.getPrivilegedURL = function(title, url, favIconUrl) {
 }
 
 Utils.getDiscardedURL = function(title, url, favIconUrl) {
-  if (url === "about:newtab" || url === "about:blank" || url.includes("chrome://newtab")) {
+  if (url === TabManager.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab")) {
     return url;
   } else {
     return browser.extension.getURL(Utils.LAZY_PAGE_URL) + "?" +
@@ -385,7 +386,7 @@ Utils.getDiscardedURL = function(title, url, favIconUrl) {
  * @returns {boolean}
  */
 Utils.isPrivilegedURL = function(url) {
-  if (url === "about:newtab" || url === "about:blank" || url.includes("chrome://newtab"))
+  if (url === TabManager.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab"))
     return false;
   if (url.startsWith("chrome:") ||
     url.startsWith("javascript:") ||
@@ -591,3 +592,5 @@ Utils.doActivateHotkeys = function (listener, bool) {
     return ()=>false;
   }
 }
+
+TabManager.NEW_TAB = (Utils.isChrome()?"chrome://newtab/":"about:newtab");
