@@ -39,6 +39,9 @@ Objects:
  - StorageManager.File.readJsonFile
  - GroupManager.getIndexSortByPosition
  - createGroupsJsonFile
+ - windowExists
+ - doActivateHotkeys
+ - getOffset
 
  */
 const WINDOW_ID_NONE = browser.windows.WINDOW_ID_NONE;
@@ -73,6 +76,9 @@ OptionManager.SORT_RECENT_OLD = 1;
 OptionManager.SORT_ALPHABETICAL = 2;
 OptionManager.SORT_LAST_ACCESSED = 3;
 OptionManager.SORT_CUSTOM = 4;
+OptionManager.CLOSE_NORMAL = 0;
+OptionManager.CLOSE_ALIVE = 1;
+OptionManager.CLOSE_HIDDEN = 2;
 OptionManager.TIMERS = function() {
   return {
     t_5mins: 5*60*1000,
@@ -102,7 +108,8 @@ OptionManager.TEMPLATE = function() {
       removeEmptyGroup: false,
       showGroupTitleInWindow: false,
       sortingType: OptionManager.SORT_OLD_RECENT,
-      discardedOpen: true
+      discardedOpen: true,
+      closingState: OptionManager.CLOSE_NORMAL,
     },
     popup: {
       maximized: false,
@@ -612,6 +619,16 @@ Utils.waitDownload = async function(downloadId, waitingTime=6){
   }
 }
 
+/*
+ * Return true if the windowId is in an opened window
+ */
+Utils.windowExists = async function(windowId) {
+  if ( windowId === WINDOW_ID_NONE || windowId < 0) {
+    return false
+  }
+  return (await browser.windows.getAll()).filter((w)=> w.id===TabAlive.WINDOW_ID).length > 0;
+}
+
 Utils.timerDecorator = function(func, {
   name="Perf",
   times=1
@@ -638,6 +655,10 @@ Utils.getParentElement = function (el, className) {
   throw Error("[Utils.getParentElement] Element nof found: " + className);
 }
 
+
+/**
+ * Compute the offset of the element (el) from the top of the page (remove scroll)
+ */
 Utils.getOffset = function( el, ref=document.body ) {
   let top = 0;
 
@@ -659,6 +680,10 @@ Utils.getOffset = function( el, ref=document.body ) {
   return top;
 }
 
+/**
+ * Return the lister if bool is true
+ * Else return an useless function
+ */
 Utils.doActivateHotkeys = function (listener, bool) {
   if (bool) {
     return listener;

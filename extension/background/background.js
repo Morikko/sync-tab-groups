@@ -69,6 +69,8 @@ Background.init = async function() {
   Background.refreshUi();
   Background.refreshOptionsUI();
 
+  await TabAlive.init();
+
   await Utils.wait(2000);
   StorageManager.Local.planBackUp();
   StorageManager.Backup.init();

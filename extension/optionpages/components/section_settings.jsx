@@ -17,186 +17,251 @@ class SettingsSection extends React.Component {
         <h1 className="section-title">
           {browser.i18n.getMessage("options_settings")}
         </h1>
-        <SubSection
-          title={browser.i18n.getMessage("state_new_normal_window")}
-          tooltip={
-            <div>
-              <ul>
-                <li>{browser.i18n.getMessage("options_behaviors_help_title_invisible")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_help_invisible")}</li>
-                </ul>
-                <li>{browser.i18n.getMessage("options_behaviors_help_title_visible")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_help_visible_new")}</li>
-                </ul>
-                <li>{browser.i18n.getMessage("options_behaviors_help_change_visibility")}</li>
-              </ul>
-            </div>
-          }
-          content={
-            <div className="double-buttons">
-              <OptionButton
-                title= {browser.i18n.getMessage("options_behaviors_help_title_visible")}
-                onClick= {this.clickOnVisible}
-                highlight={this.props.options.groups.syncNewWindow}
-              />
-              <OptionButton
-                title= {browser.i18n.getMessage("options_behaviors_help_title_invisible")}
-                onClick= {this.clickOnInvisible}
-                highlight={!this.props.options.groups.syncNewWindow}
-              />
-            </div>
-          }
-        />
-        <SubSection
-          title={browser.i18n.getMessage("pinned_tabs_title")}
-          tooltip={
-            <div>
-              <ul>
-                <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_notpart")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_switching")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_usecase")}</li>
-                </ul>
-                <li>{browser.i18n.getMessage("options_behaviors_pinned_included")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_pinned_included_part")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_pinned_included_switching")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_pinned_included_usecase")}</li>
-                </ul>
-              </ul>
-            </div>
-          }
-          content={
-            <div className="double-buttons">
-              <OptionButton
-                title= {browser.i18n.getMessage("options_behaviors_pinned_excluded")}
-                onClick= {this.clickOnExcluded}
-                key="pinned-excluded"
-                highlight={!this.props.options.pinnedTab.sync}
-              />
-              <OptionButton
-                title= {browser.i18n.getMessage("options_behaviors_pinned_included")}
-                onClick= {this.clickOnIncluded}
-                key="pinned-included"
-                highlight={this.props.options.pinnedTab.sync}
-              />
-            </div>
-          }
-        />
-        <SubSection
-          title={browser.i18n.getMessage("options_behaviors_tabsopening")}
-          tooltip={
-            <div>
-              <ul>
-                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_lighter")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_notfullyloaded")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_loadedclick")}</li>
-                </ul>
-                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full_loadedopening")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full_heavier")}</li>
-                </ul>
-                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits_history")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits_temporary")}</li>
-                </ul>
-                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_button", [browser.i18n.getMessage("options_behaviors_tabsopening_reload")])}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_state")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_update")}</li>
-                </ul>
-              </ul>
-            </div>
-          }
-          content = {
-            <div className="subsection-left">
-              <div className="double-buttons">
-                <OptionButton
-                  title= {browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}
-                  onClick= {this.clickOnOpenDiscarded.bind(this)}
-                  highlight={this.props.options.groups.discardedOpen}
-                  key="opening-tab-discarded"
-                />
-                <OptionButton
-                  title= {browser.i18n.getMessage("options_behaviors_tabsopening_full")}
-                  onClick= {this.clickOnOpenFull.bind(this)}
-                  highlight={!this.props.options.groups.discardedOpen}
-                  key="opening-tab-full"
-                />
-              </div>
-              <div className="double-buttons">
-                <OptionButton
-                  title= {browser.i18n.getMessage("options_behaviors_tabsopening_reload")}
-                  onClick= {this.handleClickOnUndiscardAllTabs.bind(this)}
-                  highlight={true}
-                />
-              </div>
-            </div>
-          }
-        />
-        <SubSection
-          title={browser.i18n.getMessage("private_window_title")}
-          tooltip={
-            <div>
-              <ul>
-                <li>{browser.i18n.getMessage("options_behaviors_private")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_private_visible")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_private_groups")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_private_notsaved")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_private_autoremoved")}</li>
-                  <li>{browser.i18n.getMessage("options_behaviors_private_restart")}</li>
-                </ul>
-                <li>{browser.i18n.getMessage("options_behaviors_private_invisible")}</li>
-                <ul>
-                  <li>{browser.i18n.getMessage("options_behaviors_private_invisible_creation")}</li>
-                </ul>
-                <li>{browser.i18n.getMessage("options_behaviors_private_changestate")}</li>
-              </ul>
-            </div>
-          }
-          content = {
-            <div className="double-buttons">
-              <OptionButton
-                title= {browser.i18n.getMessage("options_behaviors_private")}
-                onClick= {this.clickOnPrivate}
-                highlight={this.props.options.privateWindow.sync}
-                key="private-window-private"
-              />
-              <OptionButton
-                title= {browser.i18n.getMessage("options_behaviors_private_invisible")}
-                onClick= {this.clickOnPrivateInvisible}
-                highlight={!this.props.options.privateWindow.sync}
-                key="private-window-invisible"
-              />
-            </div>
-          }
-        />
-        <SubSection
-          title={browser.i18n.getMessage("options_settings_others")}
-          tooltip={undefined}
-          content = {
-            <NiceCheckbox
-              checked= {this.props.options.groups.removeEmptyGroup}
-              label= {browser.i18n.getMessage("remove_empty_groups")}
-              onCheckChange= {this.props.onOptionChange}
-              id= "groups-removeEmptyGroup"
-            />
-          }
-        />
+        {this.getWindowsSubsection()}
+        {this.getPinnedSubsection()}
+        {this.getOpeningSubsection()}
+        {this.getClosingSubsection()}
+        {this.getPrivateWindowsSubsection()}
+        {this.getOthersSubsection()}
       </div>
     );
   }
 
+  getWindowsSubsection() {
+    return (
+      <SubSection
+        title={browser.i18n.getMessage("state_new_normal_window")}
+        tooltip={
+          <div>
+            <ul>
+              <li>{browser.i18n.getMessage("options_behaviors_help_title_invisible")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_help_invisible")}</li>
+              </ul>
+              <li>{browser.i18n.getMessage("options_behaviors_help_title_visible")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_help_visible_new")}</li>
+              </ul>
+              <li>{browser.i18n.getMessage("options_behaviors_help_change_visibility")}</li>
+            </ul>
+          </div>
+        }
+        content={
+          <div className="double-buttons">
+            <OptionButton
+              title= {browser.i18n.getMessage("options_behaviors_help_title_visible")}
+              onClick= {this.clickOnVisible}
+              highlight={this.props.options.groups.syncNewWindow}
+            />
+            <OptionButton
+              title= {browser.i18n.getMessage("options_behaviors_help_title_invisible")}
+              onClick= {this.clickOnInvisible}
+              highlight={!this.props.options.groups.syncNewWindow}
+            />
+          </div>
+        }
+      />
+    );
+  }
 
+  getPinnedSubsection() {
+    return (
+      <SubSection
+        title={browser.i18n.getMessage("pinned_tabs_title")}
+        tooltip={
+          <div>
+            <ul>
+              <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_notpart")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_switching")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_pinned_excluded_usecase")}</li>
+              </ul>
+              <li>{browser.i18n.getMessage("options_behaviors_pinned_included")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_pinned_included_part")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_pinned_included_switching")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_pinned_included_usecase")}</li>
+              </ul>
+            </ul>
+          </div>
+        }
+        content={
+          <div className="double-buttons">
+            <OptionButton
+              title= {browser.i18n.getMessage("options_behaviors_pinned_excluded")}
+              onClick= {this.clickOnExcluded}
+              key="pinned-excluded"
+              highlight={!this.props.options.pinnedTab.sync}
+            />
+            <OptionButton
+              title= {browser.i18n.getMessage("options_behaviors_pinned_included")}
+              onClick= {this.clickOnIncluded}
+              key="pinned-included"
+              highlight={this.props.options.pinnedTab.sync}
+            />
+          </div>
+        }
+      />
+    );
+  }
+
+  getOpeningSubsection() {
+    return (
+      <SubSection
+        title={browser.i18n.getMessage("options_behaviors_tabsopening")}
+        tooltip={
+          <div>
+            <ul>
+              <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_lighter")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_notfullyloaded")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_discarded_loadedclick")}</li>
+              </ul>
+              <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full_loadedopening")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_full_heavier")}</li>
+              </ul>
+              <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits_history")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_limits_temporary")}</li>
+              </ul>
+              <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_button", [browser.i18n.getMessage("options_behaviors_tabsopening_reload")])}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_state")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_update")}</li>
+              </ul>
+            </ul>
+          </div>
+        }
+        content = {
+          <div className="subsection-left">
+            <div className="double-buttons">
+              <OptionButton
+                title= {browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}
+                onClick= {this.clickOnOpenDiscarded.bind(this)}
+                highlight={this.props.options.groups.discardedOpen}
+                key="opening-tab-discarded"
+              />
+              <OptionButton
+                title= {browser.i18n.getMessage("options_behaviors_tabsopening_full")}
+                onClick= {this.clickOnOpenFull.bind(this)}
+                highlight={!this.props.options.groups.discardedOpen}
+                key="opening-tab-full"
+              />
+            </div>
+            <div className="double-buttons">
+              <OptionButton
+                title= {browser.i18n.getMessage("options_behaviors_tabsopening_reload")}
+                onClick= {this.handleClickOnUndiscardAllTabs.bind(this)}
+                highlight={true}
+              />
+            </div>
+          </div>
+        }
+      />
+    );
+  }
+
+  getClosingSubsection() {
+    return (
+      <SubSection
+        title={"Closing Behavior"}
+        tooltip={
+          <div>
+            <ul>
+            </ul>
+          </div>
+        }
+        content={
+          <div className="double-buttons">
+            <OptionButton
+              title= {"Close"}
+              onClick= {this.clickOnClosingClose.bind(this)}
+              key="closing-close"
+              enabled={this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL}
+            />
+            <OptionButton
+              title= {"Alive"}
+              onClick= {this.clickOnClosingAlive.bind(this)}
+              key="closing-alive"
+              enabled={this.props.options.groups.closingState === OptionManager.CLOSE_ALIVE}
+            />
+            <OptionButton
+              title= {"Hidden"}
+              onClick= {this.clickOnClosingHidden.bind(this)}
+              key="closing-hidden"
+              enabled={this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN}
+            />
+          </div>
+        }
+      />
+    );
+  }
+
+  getPrivateWindowsSubsection() {
+    return (
+      <SubSection
+        title={browser.i18n.getMessage("private_window_title")}
+        tooltip={
+          <div>
+            <ul>
+              <li>{browser.i18n.getMessage("options_behaviors_private")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_private_visible")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_private_groups")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_private_notsaved")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_private_autoremoved")}</li>
+                <li>{browser.i18n.getMessage("options_behaviors_private_restart")}</li>
+              </ul>
+              <li>{browser.i18n.getMessage("options_behaviors_private_invisible")}</li>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_private_invisible_creation")}</li>
+              </ul>
+              <li>{browser.i18n.getMessage("options_behaviors_private_changestate")}</li>
+            </ul>
+          </div>
+        }
+        content = {
+          <div className="double-buttons">
+            <OptionButton
+              title= {browser.i18n.getMessage("options_behaviors_private")}
+              onClick= {this.clickOnPrivate}
+              highlight={this.props.options.privateWindow.sync}
+              key="private-window-private"
+            />
+            <OptionButton
+              title= {browser.i18n.getMessage("options_behaviors_private_invisible")}
+              onClick= {this.clickOnPrivateInvisible}
+              highlight={!this.props.options.privateWindow.sync}
+              key="private-window-invisible"
+            />
+          </div>
+        }
+      />
+    );
+  }
+
+  getOthersSubsection() {
+    return (
+      <SubSection
+        title={browser.i18n.getMessage("options_settings_others")}
+        tooltip={undefined}
+        content = {
+          <NiceCheckbox
+            checked= {this.props.options.groups.removeEmptyGroup}
+            label= {browser.i18n.getMessage("remove_empty_groups")}
+            onCheckChange= {this.props.onOptionChange}
+            id= "groups-removeEmptyGroup"
+          />
+        }
+      />
+    );
+  }
 
   async handleClickOnUndiscardAllTabs() {
 
@@ -253,6 +318,18 @@ class SettingsSection extends React.Component {
 
   clickOnOpenDiscarded() {
     this.props.onOptionChange("groups-discardedOpen", true);
+  }
+
+  clickOnClosingClose(){
+    this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_NORMAL);
+  }
+
+  clickOnClosingAlive(){
+    this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_ALIVE);
+  }
+
+  clickOnClosingHidden(){
+    this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_HIDDEN);
   }
 };
 

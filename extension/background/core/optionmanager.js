@@ -88,7 +88,9 @@ OptionManager.updateOption = async function(optionName, optionValue) {
     case "backup-local-maxSave":
       await StorageManager.Local.respectMaxBackUp();
       break;
-
+    case "groups-closingState":
+      OptionManager.onClosingStateChange(optionValue);
+      break;
   }
   if ( optionName.startsWith("backup-time-") ) {
     OptionManager.onBackUpTimerChange(
@@ -105,6 +107,24 @@ OptionManager.getOptionValue = function (optionName) {
   }, OptionManager.options);
   return optionValue;
 }
+
+/**
+  * Init or stop the automatic back up process
+  */
+OptionManager.onClosingStateChange = function(value) {
+  switch(value) {
+    case OptionManager.CLOSE_NORMAL:
+      TabAlive.start();
+      break;
+    case OptionManager.CLOSE_ALIVE:
+      TabAlive.init();
+      break;
+    case OptionManager.CLOSE_HIDDEN:
+      TabAlive.stop();
+      break;
+  }
+}
+
 
 /**
   * Init or stop the automatic back up process
