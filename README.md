@@ -4,16 +4,16 @@ Sync Tab Groups is an easy way to manage all your tabs. You organize them depend
 
 Check the [website](https://morikko.github.io/synctabgroups/) for more information (video, explanations, guides...)
 
-[Try it now on Firefox](https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/)
+[![Try it now on Firefox](https://user-images.githubusercontent.com/7831572/36659929-7ecb2042-1ad6-11e8-82a4-0628702e354e.png)](https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/)
 
-# Limitations (Important for not losing data)
-
- - Tabs in closed group are REALLY closed
- - Switching to a group, close all the current tabs in the window
- - Previous sessions (back button) are lost when closing a group
- - Temporary data like forms are lost when closing a group
- - All tabs are loaded when a group is opened (Will be fixed with Firefox 58 on January) ([More info](https://github.com/Morikko/sync-tab-groups/issues/5#issuecomment-344753295))
+[![Try it now on Chrome](https://user-images.githubusercontent.com/7831572/36659935-8402879e-1ad6-11e8-83f7-d645a108696a.png)](https://chrome.google.com/webstore/detail/sync-tab-groups/gbkddinkjahdfhaiifploahejhmaaeoa)
  
+ 
+
+
+
+
+
 # Contributing
 
 I would gladly accept other translations. Add it in `_locales/`, while following the en (English) file. Change message and description parts only.
@@ -29,6 +29,7 @@ If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-gr
 - `make watch REBUILD=` Idem as previous but recompile all .jsx files first
 - `make stop-watch` kill previous daemon
 - `make release` Create the extension in release mode, a zip and a xpi in build/
+- `make release CHROME=1` idem but for chrome purpose
 - `make` or `make all` Compile all .jsx and export the release
 - `make clean` Remove files built in build/ only
 

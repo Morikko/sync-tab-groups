@@ -64,9 +64,7 @@ body {
 
 .tabs {
   display: inline-block;
-  float: left;.option-button, .button-file {
-  margin-right: 30px;
-}
+  float: left;
 }
 
 .tab {

@@ -1,6 +1,6 @@
 {
   "extension_description": {
-    "message": "Sync Tab Groups are an easy way to organize your current tabs depending on a topic. Each open group is synchronized with a window so that all tabs change are saved. Hence, you can close a current tabs-flow while opening another one.",
+    "message": "Sync Tab Groups is an easy way to manage all your tabs. You group, organize, search and active them easily.",
     "description": "Description of the extension"
   },
 
@@ -401,12 +401,12 @@
 
   "expand_all_groups": {
     "message": "Expand all groups (see tabs)",
-    "description": "Hover help for the button for expanding all groups (see tabs)"
+    "description": "Hover help the button expanding all groups (see tabs)"
   },
 
   "reduce_all_groups": {
     "message": "Reduce all groups (hide tabs)",
-    "description": "Hover help for the button for reducing all groups (hide tabs)"
+    "description": "Hover help for button reducing all groups (hide tabs)"
   },
 
   "manage_groups": {
@@ -421,7 +421,7 @@
 
   "state_new_normal_window": {
     "message": "New Windows",
-    "description": "Setting title for the option if a new window is a visible or invisible group"
+    "description": ""
   },
 
   "private_window_title": {
@@ -450,7 +450,8 @@
   },
 
   "options_about_start": {
-    "message": "Welcome to Sync Tab Groups! I highly recommend you to start checking the different options. You will make Sync Tab Groups fit your expectation. Also, you will understand how to use the extension well, as each option is explained."
+    "message": "Welcome to Sync Tab Groups! I highly recommend you to start checking the different options. You will make Sync Tab Groups fit your expectation. Also, you will understand how to use the extension well, as each option is explained.",
+    "description": ""
   },
 
   "options_about_further": {
