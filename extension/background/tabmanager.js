@@ -70,11 +70,16 @@ TabManager.getTabsInWindowId = async function(windowId, withoutRealUrl = true, w
  */
 TabManager.updateTabsInGroup = async function(windowId) {
   try {
-    const allWindows = await browser.windows.getAll();
 
     if (WindowManager.WINDOW_CURRENTLY_SWITCHING[windowId]) {
       return "Doesn't update the groups while it is changed by the extension."
     }
+
+    if (WindowManager.WINDOW_CURRENTLY_CLOSING[windowId]) {
+      return "Doesn't update the groups as the window is going to close."
+    }
+
+    const allWindows = await browser.windows.getAll();
 
     let window;
     for (let w of allWindows) {
@@ -99,6 +104,11 @@ TabManager.updateTabsInGroup = async function(windowId) {
 
     var groupId = GroupManager.getGroupIdInWindow(windowId);
     const tabs = await TabManager.getTabsInWindowId(windowId);
+
+    // In case of delay
+    if (WindowManager.WINDOW_CURRENTLY_CLOSING[windowId]) {
+      return "Doesn't update the groups as the window is going to close."
+    }
 
     GroupManager.setTabsInGroupId(groupId, tabs);
     return "TabManager.updateTabsInGroup done on window id " + windowId;

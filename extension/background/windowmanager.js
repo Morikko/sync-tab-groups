@@ -33,6 +33,7 @@ var WindowManager = WindowManager || {};
 WindowManager.WINDOW_GROUPID = "groupId";
 
 WindowManager.WINDOW_CURRENTLY_SWITCHING = {};
+WindowManager.WINDOW_CURRENTLY_CLOSING = {};
 // Window ids not taken in account when a new window is created
 WindowManager.WINDOW_EXCLUDED = {};
 
@@ -390,7 +391,7 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
       count++;
       await Utils.wait(100);
     }
-    
+
 
     await WindowManager.switchGroup(groupId);
     delete WindowManager.WINDOW_EXCLUDED[w.id];

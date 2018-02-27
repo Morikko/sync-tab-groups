@@ -404,7 +404,11 @@ Controller.initDataEventListener = function() {
 /**** Event about tabs *****/
 Controller.initTabsEventListener = function() {
   browser.tabs.onActivated.addListener(async (activeInfo) => {
-    TabManager.updateTabsInGroup(activeInfo.windowId);
+    // Necessary for Chrome, this event is fired before the onRemovedWindow event
+    // Else the group is finally updated with empty tabs.
+    setTimeout(() => {
+      TabManager.updateTabsInGroup(activeInfo.windowId);
+    }, 300);
   });
   browser.tabs.onCreated.addListener((tab) => {
     TabManager.updateTabsInGroup(tab.windowId);
@@ -415,8 +419,9 @@ Controller.initTabsEventListener = function() {
      * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
      */
     setTimeout(() => {
-      // TODO: do not fire if window doesn't exist
-      TabManager.updateTabsInGroup(removeInfo.windowId);
+      if ( !removeInfo.isWindowClosing ) {
+        TabManager.updateTabsInGroup(removeInfo.windowId);
+      }
     }, 300);
   });
   browser.tabs.onMoved.addListener((tabId, moveInfo) => {
@@ -449,7 +454,14 @@ Controller.initWindowsEventListener = function() {
       }
     }, 300); // Below 400, it can fail
   });
+
   browser.windows.onRemoved.addListener((windowId) => {
+    WindowManager.WINDOW_CURRENTLY_CLOSING[windowId] = true;
+
+    setTimeout(()=>{
+      delete WindowManager.WINDOW_CURRENTLY_CLOSING[windowId];
+    }, 5000);
+
     GroupManager.detachWindow(windowId);
   });
   /* TODO: doenst update context menu well if right click on a tab from another window
