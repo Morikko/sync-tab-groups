@@ -2,8 +2,6 @@ var TabAlive = TabAlive || {};
 
 TabAlive.WINDOW_ID = WINDOW_ID_NONE;
 
-
-
 TabAlive.init = async function(){
   if ( OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE) {
     await TabAlive.start();
@@ -39,9 +37,11 @@ TabAlive.stop = async function() {
 
 // TODO
 TabAlive.createWindow = async function(){
-  TabAlive.WINDOW_ID = await browser.windows.create({
+  let newWindow = await browser.windows.create({
     state: "minimized",
   });
+
+  TabAlive.WINDOW_ID = newWindow.id;
 }
 
 // TODO
@@ -50,24 +50,63 @@ TabAlive.keepWindowOpened = async function(windowId){
 }
 
 // TODO
-TabAlive.sleepTab = async function(groupId, tabIndex) {
-  // Get tab
+TabAlive.sleepTab = async function(tab) {
+  await TabAlive.start();
 
   // Move
+  let newTab = await browser.tabs.move(tab.id, {
+    windowId: TabAlive.WINDOW_ID,
+    index: -1,
+  });
 
-  // Update Id
+  if ( newTab.length ) {
+    newTab = newTab[0];
+  }
 
+  let groupId = GroupManager.getGroupIdFromTabId(tab.id);
+  let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
+
+  GroupManager.groups[groupIndex].tabs.forEach((tabInGroup)=>{
+    if ( tabInGroup.id === tab.id ) {
+      tabInGroup.id = newTab.id;
+    }
+  });
 }
 
-TabAlive.containTab = async function(groupId, tabIndex) {
+TabAlive.containTab = async function(tab) {
   // Search tabId
-
+  try {
+    let fetchedTab = await browser.tabs.get(tab.id);
+    if ( fetchedTab.windowId === TabAlive.WINDOW_ID) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch(e) {
+    return false;
+  }
 }
 
 // TODO
-TabAlive.wakeupTab = async function(groupId, tabIndex) {
+TabAlive.wakeupTab = async function(tab, targetWindowId, targetIndex) {
   // Move back
+  let newTab = await browser.tabs.move(tab.id, {
+    windowId: targetWindowId,
+    index: targetIndex,
+  });
 
-  // Update Id
+  if ( newTab.length ) {
+    newTab = newTab[0];
+  }
 
+  let groupId = GroupManager.getGroupIdFromTabId(tab.id);
+  let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
+
+  GroupManager.groups[groupIndex].tabs.forEach((tabInGroup)=>{
+    if ( tabInGroup.id === tab.id ) {
+      tabInGroup.id = newTab.id;
+    }
+  });
+
+  return newTab;
 }

@@ -117,15 +117,11 @@ describe("TabManager", ()=>{
         // Add 2 Pinned Tabs
         await Session.addTabToGroup(
           this.id,
-          Session.getRandomNormalTab({
-            pinned:true,
-          })
+          Session.getFakeTab()
         );
         await Session.addTabToGroup(
           this.id,
-          Session.getRandomNormalTab({
-            pinned:true,
-          })
+          Session.getFakeTab()
         );
         await Utils.wait(400);
       });
@@ -1006,7 +1002,7 @@ describe("TabManager", ()=>{
         this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[4].id);
         await TestManager.splitOnHalfScreen(this.windowIds);
 
-        let newTab = Session.getRandomNormalTab();
+        let newTab = Session.getFakeTab();
 
         let expectedTabs = Utils.getCopy(this.groups[4].tabs);
         expectedTabs.splice(this.groups[4].tabs.length-2, 1);

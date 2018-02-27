@@ -29,7 +29,7 @@ describe("Session: ", ()=>{
 
 
     it("Add Normal Tab To Open Group", async function(){
-      let tab = Session.getRandomNormalTab();
+      let tab = Session.getFakeTab();
 
       let group = GroupManager.groups[this.groupIndex];
       let previousLength = group.tabs.length;
@@ -42,7 +42,7 @@ describe("Session: ", ()=>{
 
     it("Add Pinned Tab To Open Group", async function(){
       OptionManager.updateOption("pinnedTab-sync", true);
-      let tab = Session.getRandomNormalTab();
+      let tab = Session.getFakeTab();
       tab.pinned = true;
 
       let group = GroupManager.groups[this.groupIndex];

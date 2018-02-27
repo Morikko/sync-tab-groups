@@ -1,6 +1,6 @@
 # Sync Tab Groups
 
-Sync Tab Groups is an easy way to manage all your tabs. You organize them depending on a topic by group. Groups can be closed and reopend without caring about your session. Moreover, you can esily search, active, move, save and remove your groups and tabs.
+Sync Tab Groups is an easy way to manage all your tabs. You organize them depending on a topic by group. Groups can be closed and reopened without caring about your session. Moreover, you can easily search, active, move, save and remove your groups and tabs.
 
 Check the [website](https://morikko.github.io/synctabgroups/) for more information (video, explanations, guides...)
 

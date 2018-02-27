@@ -13,6 +13,7 @@
  - createTab
  - getRandomNormalTab
  - getRandomTab
+ - getFakeTab
 
  Ressources:
  - ListOfTabURLs
@@ -352,6 +353,31 @@ Session.ListOfTabURLs = [
     favIconUrl: "https://static-cdn.arte.tv/guide/favicons/favicon-16x16.png",
     title: "ARTE : chaîne télé culturelle franco-allemande - TV direct & replay",
     url: "https://www.arte.tv/fr/"
+  },
+  {
+    "title": "Sync Tab Groups",
+    "url": "https://morikko.github.io/synctabgroups/",
+    "favIconUrl": "https://morikko.github.io/synctabgroups/img/synctabgroups-64.png"
+  },
+  {
+    "title": "Duolingo: Apprenez l'anglais, l'espagnol et + gratuitement",
+    "url": "https://fr.duolingo.com/",
+    "favIconUrl": "https://fr.duolingo.com/images/favicon.ico?v=3"
+  },
+  {
+    "title": "Medium – Read, write and share stories that matter",
+    "url": "https://medium.com/",
+    "favIconUrl": "https://cdn-static-1.medium.com/_/fp/icons/favicon-rebrand-medium.3Y6xpZ-0FSdWDnPM3hSBIA.ico"
+  },
+  {
+    "title": "Cours de guitare et tablatures guitare acoustique",
+    "url": "https://www.tabs4acoustic.com/",
+    "favIconUrl": "https://www.tabs4acoustic.com/images/favicon.ico"
+  },
+  {
+    "title": "BetterExplained – Math lessons for lasting insight.",
+    "url": "https://betterexplained.com/",
+    "favIconUrl": "https://betterexplained.com/favicon.ico"
   },
   {
     "title": "HTML Color Picker",
