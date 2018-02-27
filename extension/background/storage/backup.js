@@ -59,17 +59,31 @@ StorageManager.Backup.startTimer = function (timer) {
  * A download is immediately removed from the history.
  */
 StorageManager.Backup.backup = async function (time, groups=GroupManager.groups) {
-  // Avoid corrupted backup
-  if ( GroupManager.checkCorruptedGroups(groups) ) {
-    return;
+  try {
+    // Avoid corrupted backup
+    if ( GroupManager.checkCorruptedGroups(groups) ) {
+      return;
+    }
+
+    let url = Utils.createGroupsJsonFile(
+      GroupManager.getGroupsWithoutPrivate(groups)
+    );
+
+    let id = await browser.downloads.download({
+      url: url,
+      filename: StorageManager.Backup.LOCATION + "synctabgroups-backup-" + time + ".json",
+      conflictAction: "overwrite",
+      saveAs: false,
+    });
+
+    // Wait complete download for Chrome
+    await Utils.waitDownload(id);
+
+    await browser.downloads.erase({
+      id:id
+    });
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error("StorageManager.Backup.backup: " + e);
   }
-  let id = await browser.downloads.download({
-    url: Utils.createGroupsJsonFile(),
-    filename: StorageManager.Backup.LOCATION + "synctabgroups-backup-" + time + ".json",
-    conflictAction: "overwrite",
-    saveAs: false,
-  });
-  await browser.downloads.erase({
-    id:id
-  });
 }

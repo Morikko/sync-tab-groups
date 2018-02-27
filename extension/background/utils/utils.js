@@ -552,6 +552,18 @@ Utils.createGroupsJsonFile = function (groups=GroupManager.groups) {
   }))
 }
 
+/**
+ * Wait download with downloadId to complete or fail within waitingTime seconds
+ */
+Utils.waitDownload = async function(downloadId, waitingTime=6){
+  for(let i=0; i<waitingTime*4; i++) {
+    if ( (await browser.downloads.search({id: downloadId}))[0].state !== "in_progress" ) {
+      break;
+    }
+    await Utils.wait(250);
+  }
+}
+
 Utils.timerDecorator = function(func, name="Perf", times=1) {
   return async function() {
 

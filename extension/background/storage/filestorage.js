@@ -4,41 +4,49 @@
 var StorageManager = StorageManager || {};
 StorageManager.File = StorageManager.File || {};
 
-StorageManager.File.exportGroups = function(groups) {
-  let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
+StorageManager.File.exportGroups = async function(groups) {
+  try {
+    let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
 
-  // Clean tabs
-  export_groups = export_groups.map((group)=>{
-    let export_group = Utils.getCopy(group);
-    export_group.tabs = export_group.tabs.map((tab)=>{
-      // Filter values to export
-      let export_tab = {
-        id: tab.id || -1,
-        title: tab.title || "New Tab",
-        url: tab.url || TabManager.NEW_TAB,
-        pinned: tab.pinned || false,
-        active: tab.active || false,
-        discarded: tab.discarded || false,
-        favIconUrl: tab.favIconUrl || "chrome://branding/content/icon32.png",
-      };
-      if (tab.hasOwnProperty("openerTabId")) {
-        export_tab["openerTabId"] = tab["openerTabId"];
-      }
+    // Clean tabs
+    export_groups = export_groups.map((group)=>{
+      let export_group = Utils.getCopy(group);
+      export_group.tabs = export_group.tabs.map((tab)=>{
+        // Filter values to export
+        let export_tab = {
+          id: tab.id || -1,
+          title: tab.title || "New Tab",
+          url: tab.url || TabManager.NEW_TAB,
+          pinned: tab.pinned || false,
+          active: tab.active || false,
+          discarded: tab.discarded || false,
+          favIconUrl: tab.favIconUrl || "chrome://branding/content/icon32.png",
+        };
+        if (tab.hasOwnProperty("openerTabId")) {
+          export_tab["openerTabId"] = tab["openerTabId"];
+        }
 
-      return export_tab;
+        return export_tab;
+      });
+      return export_group;
     });
-    return export_group;
-  });
 
-  let d = new Date();
-  let url = Utils.createGroupsJsonFile();
-  let filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
+    let d = new Date();
+    let url = Utils.createGroupsJsonFile(export_groups);
+    let filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
 
-  browser.downloads.download({
-    url: url,
-    filename: filename,
-    saveAs: true
-  });
+    let id = await browser.downloads.download({
+      url: url,
+      filename: filename,
+      saveAs: true
+    });
+
+    await Utils.waitDownload(id);
+
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error("StorageManager.File.exportGroups: " + e);
+  }
 }
 
 StorageManager.File.importGroups = function(content_file) {
