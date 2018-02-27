@@ -41,10 +41,6 @@ release: clean
 	sed -i 's/.development./.production.min./g' $(BUILD_HTML)
 	sed -i 's/.development./.production.min./g' $(BUILD_MANIFEST)
 	sed -i 's/$(DEBUG_VAR)true;/$(DEBUG_VAR)false;/' $(BUILD_UTIL)
-ifdef CHROME
-	sed -i 's/"strict_min_version": "56.0"/"strict_min_version": "63.0"/' $(BUILD_MANIFEST)
-endif
-
 	# Filter undesirable files
 	-rm -rf $(BUILD_DIR)/extension/tests
 	-rm $(BUILD_JSX)

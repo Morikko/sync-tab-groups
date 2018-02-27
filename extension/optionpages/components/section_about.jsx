@@ -40,6 +40,10 @@ class AboutSection extends React.Component {
             </div>
           </div>
           <div className="row-about-center">
+                <a href="https://chrome.google.com/webstore/detail/sync-tab-groups/gbkddinkjahdfhaiifploahejhmaaeoa"
+                    title="Chrome Add-On page">
+                <img src="/share/icons/chrome.png" alt=""/>
+              </a>
               <a href="https://morikko.github.io/synctabgroups"
                   title="Sync Tab Groups website">
                 <img src="/share/icons/sync-tab-groups.png" alt="extension icon"/>
@@ -49,6 +53,13 @@ class AboutSection extends React.Component {
               <img src="/share/icons/firefox.png" alt=""/>
             </a>
           </div>
+          <h2>
+            Release Notes (0.6.1)
+          </h2>
+          <ul>
+            <li>Improve download backup (work on Chrome and clear ressource after usage) #79</li>
+            <li>Fix: Close windows from the cross in the titlebar remove the tabs in the group (Chrome only) #80</li>
+          </ul>
           <h2>
             Release Notes (0.6.0)
           </h2>

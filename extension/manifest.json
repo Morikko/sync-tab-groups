@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "version": "0.6.0",
+  "version": "0.6.1",
   "name": "Sync Tab Groups",
   "description": "__MSG_extension_description__",
-  "homepage_url": "https://github.com/Morikko/sync-tab-groups",
+  "homepage_url": "https://morikko.github.io/synctabgroups/",
   "icons": {
     "64": "/share/icons/tabspace-active-64.png",
     "32": "/share/icons/tabspace-active-32.png"
@@ -15,6 +15,7 @@
       "strict_min_version": "56.0"
     }
   },
+  "minimum_chrome_version": "63",
 
   "permissions": [
     "tabs",

@@ -90,6 +90,12 @@ class AboutSection extends React.Component {
         { className: "row-about-center" },
         React.createElement(
           "a",
+          { href: "https://chrome.google.com/webstore/detail/sync-tab-groups/gbkddinkjahdfhaiifploahejhmaaeoa",
+            title: "Chrome Add-On page" },
+          React.createElement("img", { src: "/share/icons/chrome.png", alt: "" })
+        ),
+        React.createElement(
+          "a",
           { href: "https://morikko.github.io/synctabgroups",
             title: "Sync Tab Groups website" },
           React.createElement("img", { src: "/share/icons/sync-tab-groups.png", alt: "extension icon" })
@@ -99,6 +105,25 @@ class AboutSection extends React.Component {
           { href: "https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/",
             title: "Firefox Add-On page" },
           React.createElement("img", { src: "/share/icons/firefox.png", alt: "" })
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
+        "Release Notes (0.6.1)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Improve download backup (work on Chrome and clear ressource after usage) #79"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Close windows from the cross in the titlebar remove the tabs in the group (Chrome only) #80"
         )
       ),
       React.createElement(
