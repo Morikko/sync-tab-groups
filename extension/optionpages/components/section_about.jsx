@@ -57,7 +57,7 @@ class AboutSection extends React.Component {
             Release Notes (0.6.1)
           </h2>
           <ul>
-            <li>Improve download backup (work on Chrome and clear ressource after usage) #79</li>
+            <li>Improve download backup (work on Chrome and clear data after usage) #79</li>
             <li>Fix: Close windows from the cross in the titlebar remove the tabs in the group (Chrome only) #80</li>
           </ul>
           <h2>

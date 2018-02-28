@@ -115,7 +115,8 @@ class GroupControls extends React.Component {
     return React.createElement(
       "span",
       {
-        className: "group-controls" },
+        className: "group-controls",
+        onMouseUp: e => e.stopPropagation() },
       controls,
       React.createElement("i", {
         className: expanderClasses,

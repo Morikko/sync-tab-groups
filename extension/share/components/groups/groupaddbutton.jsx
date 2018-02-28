@@ -46,15 +46,15 @@ class GroupAddButton extends React.Component{
               newTitle: event.target.value
             });
           }}
-          onClick= {(event) => {
-            event.stopPropagation();
-          }}
+          onClick={(e)=>e.stopPropagation()}
+          onMouseUp={(e)=>e.stopPropagation()}
           onFocus={(e) => {
             e.target.select();
           }}
         />
         <span
-          className="groupadd-controls">
+          className="groupadd-controls"
+          onMouseUp={(e)=>e.stopPropagation()}>
           <i
             className="group-edit fa fa-fw fa-check"
             onClick={this.onTitleSet}
@@ -76,7 +76,7 @@ class GroupAddButton extends React.Component{
     return (
       <div
           className={buttonClasses}
-          onClick={this.handleClick}
+          onMouseUp={this.handleClick}
           onDrop={this.handleDrop}
           onDragOver={this.handleGroupDragOver}
           onDragEnter={this.handleDragEnter}

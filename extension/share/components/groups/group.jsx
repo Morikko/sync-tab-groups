@@ -168,7 +168,7 @@ class Group extends React.Component {
     return (
       <li
           className={groupClasses}
-          onClick={this.handleGroupClick}
+          onMouseUp={this.handleGroupClick}
           draggable={this.props.groupDraggable}
           onDragOver={this.handleGroupDragOver}
           onDragEnter={this.handleGroupDragEnter}

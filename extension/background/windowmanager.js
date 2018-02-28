@@ -392,16 +392,15 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
       await Utils.wait(100);
     }
 
-
     await WindowManager.switchGroup(groupId);
-    delete WindowManager.WINDOW_EXCLUDED[w.id];
-
     return w.id;
 
   } catch (e) {
     let msg = "WindowManager.openGroupInNewWindow failed; " + e;
     console.error(msg);
     return msg;
+  } finally {
+    delete WindowManager.WINDOW_EXCLUDED[w.id];
   }
 }
 

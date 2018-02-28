@@ -76,7 +76,7 @@ class Tab extends React.Component{
           onDragOver={this.handleTabDragOver}
           onDragLeave={this.handleTabDragLeave}
           onDrop={this.handleTabDrop}
-          onClick={this.handleTabClick}
+          onMouseUp={this.handleTabClick}
           draggable={true}
           onMouseEnter={this.addMenuItem}
           onMouseLeave={this.removeMenuItem}

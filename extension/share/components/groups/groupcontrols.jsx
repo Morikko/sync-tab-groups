@@ -127,7 +127,8 @@ class GroupControls extends React.Component {
     let expand_title = this.props.expanded ? browser.i18n.getMessage("hide_tabs") : browser.i18n.getMessage("show_tabs");
     return (
       <span
-        className="group-controls">
+        className="group-controls"
+        onMouseUp={(e)=>e.stopPropagation()}>
       {controls}
       <i
         className={expanderClasses}

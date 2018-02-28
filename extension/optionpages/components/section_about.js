@@ -118,7 +118,7 @@ class AboutSection extends React.Component {
         React.createElement(
           "li",
           null,
-          "Improve download backup (work on Chrome and clear ressource after usage) #79"
+          "Improve download backup (work on Chrome and clear data after usage) #79"
         ),
         React.createElement(
           "li",

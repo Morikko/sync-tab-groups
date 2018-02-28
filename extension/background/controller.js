@@ -53,6 +53,11 @@ Controller.init = async function() {
 
   browser.runtime.onMessage.addListener(Controller.popupMessenger);
   browser.runtime.onMessage.addListener(Controller.optionMessenger);
+  browser.runtime.onMessage.addListener((message)=>{
+    if (Utils.UTILS_SHOW_MESSAGES) {
+      console.log(message);
+    }
+  });
 
   StorageManager.Backup.init();
 
@@ -287,9 +292,6 @@ Controller.init();
 
 // Event from: popup
 Controller.popupMessenger = function(message) {
-  if (Utils.UTILS_SHOW_MESSAGES) {
-    console.log(message);
-  }
   switch (message.task) {
     case "Group:Add":
       Controller.onGroupAdd(message.params);
@@ -348,9 +350,6 @@ Controller.popupMessenger = function(message) {
 
 // Event from: option
 Controller.optionMessenger = function(message) {
-  if (Utils.UTILS_SHOW_MESSAGES) {
-    console.log(message);
-  }
   switch (message.task) {
     case "Option:Ask":
       Controller.refreshOptionsUI();

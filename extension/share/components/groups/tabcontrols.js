@@ -29,7 +29,8 @@ class TabControls extends React.Component {
 
     return React.createElement(
       "span",
-      { className: "tab-controls" },
+      { className: "tab-controls",
+        onMouseUp: e => e.stopPropagation() },
       controls
     );
   }
@@ -83,7 +84,10 @@ class TabControls extends React.Component {
         "span",
         {
           className: "row",
-          onClick: (() => {
+          onClick: (event => {
+            if (event) {
+              event.stopPropagation();
+            }
             this.props.onOpenTab();
             this.closeExtraActions();
           }).bind(this) },
@@ -94,7 +98,10 @@ class TabControls extends React.Component {
         "span",
         {
           className: "row",
-          onClick: (() => {
+          onClick: (event => {
+            if (event) {
+              event.stopPropagation();
+            }
             this.props.onPinChange();
             this.closeExtraActions();
           }).bind(this) },
@@ -117,6 +124,9 @@ class TabControls extends React.Component {
           disabled: g.id === this.props.group.id,
           className: "?groupId=" + g.id + " row",
           onClick: (e => {
+            if (e) {
+              e.stopPropagation();
+            }
             this.props.handleOnMoveTabMenuClick(e);
             this.closeExtraActions();
           }).bind(this) },
@@ -147,6 +157,9 @@ class TabControls extends React.Component {
         {
           className: "row",
           onClick: (e => {
+            if (e) {
+              e.stopPropagation();
+            }
             this.props.handleOnMoveTabNewMenuClick(e);
             this.closeExtraActions();
           }).bind(this) },
