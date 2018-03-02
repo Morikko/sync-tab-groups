@@ -407,7 +407,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    let msg = "GroupManager.detachWindow failed; " + e.message;
+    let msg = "GroupManager.setTabsInGroupId failed; " + e.message;
     console.error(msg);
   }
 }

@@ -470,19 +470,7 @@ Controller.initWindowsEventListener = function() {
 
     try {
       const w = await browser.windows.getLastFocused();
-      ContextMenu.MoveTabMenuIds.map((id) => {
-        let order = id.substring(ContextMenu.MoveTabMenu_ID.length);
-        let groupId = parseInt(order);
-        if (groupId >= 0) {
-          let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, false);
-          if ( groupIndex >= 0 ) {
-            browser.contextMenus.update(
-              id, {
-                enabled: w.id !== GroupManager.groups[groupIndex].windowId
-              });
-          }
-        }
-      });
+      await ContextMenu.updateMoveFocus(w.id);
 
       let groupId = GroupManager.getGroupIdInWindow(windowId, false);
       if (groupId >= 0) { // Only grouped window

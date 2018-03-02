@@ -8,8 +8,21 @@ ContextMenu.SpecialActionMenuIds = [];
 
 ContextMenu.repeatedtask = new TaskManager.RepeatedTask(1000);
 
+ContextMenu.occupied = false;
+ContextMenu.again = false;
+
 ContextMenu.createMoveTabMenu = async function() {
   try {
+    if ( GroupManager.groups.length === ContextMenu.MoveTabMenuIds.length-3 ) {
+      // No change nothing to do
+      return;
+    }
+    if ( ContextMenu.occupied ) {
+        ContextMenu.again = true;
+        return;
+    }
+    ContextMenu.occupied = true;
+
     if ( Utils.isChrome() ) { // Incompatible Chrome: "tab" in context menus
       return "";
     }
@@ -33,19 +46,11 @@ ContextMenu.createMoveTabMenu = async function() {
       },
     });
 
-    /*
-    ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-1");
-    await browser.contextMenus.create({
-      id: ContextMenu.MoveTabMenu_ID + "separator-1",
-      type: "separator",
-      contexts: contexts,
-      parentId: parentId
-    });
-    */
 
     let currentWindow = await browser.windows.getLastFocused({
       windowTypes: ['normal']
     });
+
     let groups = GroupManager.getCopy();
     let sortedIndex = GroupManager.getIndexSortByPosition(groups);
     for (let i of sortedIndex) {
@@ -55,7 +60,7 @@ ContextMenu.createMoveTabMenu = async function() {
         title: Utils.getGroupTitle(groups[i]),
         contexts: contexts,
         parentId: parentId,
-        enabled: currentWindow.id !== groups[i].windowId
+        enabled: currentWindow.id !== groups[i].windowId,
       });
     }
 
@@ -74,12 +79,54 @@ ContextMenu.createMoveTabMenu = async function() {
       contexts: contexts,
       parentId: parentId
     });
+
+    if ( ContextMenu.again ) {
+      setTimeout(
+        ContextMenu.repeatedtask.add(
+          () => {
+            ContextMenu.createMoveTabMenu();
+          }
+        ), 0);
+      ContextMenu.again = false;
+    }
   } catch (e) {
     let msg = "ContextMenu.createMoveTabMenu failed " + e;
     console.error(msg);
     return msg;
+  } finally {
+    ContextMenu.occupied = false;
   }
 };
+
+ContextMenu.updateMoveFocus = async function(disabledId) {
+  try {
+    if ( ContextMenu.occupied ) {
+        //ContextMenu.again = true;
+        return;
+    }
+    ContextMenu.occupied = true;
+
+    return Promise.all(ContextMenu.MoveTabMenuIds.map((id) => {
+      let order = id.substring(ContextMenu.MoveTabMenu_ID.length);
+      let groupId = parseInt(order);
+      if (groupId >= 0) {
+        let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, false);
+        if ( groupIndex >= 0 ) {
+          return browser.contextMenus.update(
+            id, {
+              enabled: disabledId !== GroupManager.groups[groupIndex].windowId
+            });
+        }
+      }
+      return Promise.resolve();
+    }));
+  } catch (e) {
+    let msg = "ContextMenu.updateFocus failed " + e;
+    console.error(msg);
+  } finally {
+    ContextMenu.occupied = false;
+  }
+}
 
 ContextMenu.createSpecialActionMenu = function() {
   let contextManageGroups = {
@@ -243,6 +290,8 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
     }
   }
 };
+
+
 browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
 browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
 GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
