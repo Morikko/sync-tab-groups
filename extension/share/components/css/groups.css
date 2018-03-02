@@ -31,6 +31,9 @@ ul, li {
 .tab-actions-menu.bottom {
     bottom: -5px;
 }
+.tab-actions-menu.middle {
+    bottom: -50px;
+}
 
 .tab-actions .tab-actions-menu::after {
     content: "";
@@ -41,12 +44,13 @@ ul, li {
     border-color: transparent transparent transparent #f1f1f1;
 }
 .tab-actions-menu.top::after {
-    top: 22px;
-    margin-top: -5px;
+    top: 17px;
 }
 .tab-actions-menu.bottom::after {
-    bottom: 22px;
-    margin-bottom: -5px;
+    bottom: 17px;
+}
+.tab-actions-menu.middle::after {
+    bottom: 62px;
 }
 
 .tab-actions-menu.show {

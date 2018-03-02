@@ -576,7 +576,18 @@ Utils.timerDecorator = function(func, name="Perf", times=1) {
   };
 }
 
-Utils.getOffset = function( el ) {
+Utils.getParentElement = function (el, className) {
+  do {
+    if ( el.classList.contains(className) ) {
+      return el;
+    }
+    el = el.parentElement;
+  } while(el !== undefined );
+
+  throw Error("[Utils.getParentElement] Element nof found: " + className);
+}
+
+Utils.getOffset = function( el, ref=document.body ) {
   let top = 0;
 
   // Get offset of the current element

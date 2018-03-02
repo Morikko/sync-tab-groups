@@ -3,11 +3,14 @@ class TabControls extends React.Component {
     super(props);
 
     this.state = {
-      top: false,
+      menuPosition: TabControls.POSITION.MIDDLE,
       show: false,
       panel: "main",
-      waitFirstMount: false
+      waitFirstMount: false,
+      maxHeight: window.innerHeight / 2
     };
+
+    this.closeMenuTimeout = undefined;
   }
 
   render() {
@@ -18,7 +21,8 @@ class TabControls extends React.Component {
         title: browser.i18n.getMessage("tab_show_actions_menu"),
         className: "tab-edit fa fa-fw fa-exchange tab-actions",
         onClick: this.handleOpenExtraActions.bind(this),
-        onMouseLeave: this.handleMouseLeaveExtraActions.bind(this) },
+        onMouseLeave: this.handleMouseLeaveExtraActions.bind(this),
+        onMouseEnter: this.handleMouseEnterExtraActions.bind(this) },
       this.state.waitFirstMount && this.createExtraActionsMenu()
     ), React.createElement("i", {
       key: "close",
@@ -56,8 +60,9 @@ class TabControls extends React.Component {
       "div",
       { className: classNames({
           "tab-actions-menu": true,
-          "top": this.state.top,
-          "bottom": !this.state.top,
+          "top": this.state.menuPosition === TabControls.POSITION.TOP,
+          "bottom": this.state.menuPosition === TabControls.POSITION.BOTTOM,
+          "middle": this.state.menuPosition === TabControls.POSITION.MIDDLE,
           "show": this.state.show
         }) },
       this.createTabActionsPanel(),
@@ -140,7 +145,7 @@ class TabControls extends React.Component {
           "tab-move-to-group-panel": true,
           "hiddenBySearch": this.state.panel !== "move"
         }),
-        style: { maxHeight: window.innerHeight / 2 } },
+        style: { maxHeight: this.state.maxHeight } },
       React.createElement(
         "span",
         {
@@ -194,17 +199,45 @@ class TabControls extends React.Component {
       event.stopPropagation();
     }
 
-    let onTop = !(event.pageY > window.innerHeight / 2);
+    let parentGroupList = Utils.getParentElement(event.target, "group-list");
+
+    let pos = Utils.getOffset(event.target, parentGroupList),
+        height = parentGroupList.clientHeight;
+
+    let menuPosition = TabControls.POSITION.MIDDLE;
+
+    if (pos < height / 2 + 34) {
+      menuPosition = TabControls.POSITION.TOP;
+    } else {
+      menuPosition = TabControls.POSITION.BOTTOM;
+    }
+
     this.setState({
-      top: onTop,
+      menuPosition: menuPosition,
       show: !this.state.show,
-      panel: "main"
+      panel: "main",
+      maxHeight: height / 2
     });
   }
 
   handleMouseLeaveExtraActions(event) {
     //return; // For debug
-    this.closeExtraActions();
+    this.closeMenuTimeout = setTimeout(() => {
+      this.closeExtraActions();
+      this.closeMenuTimeout = undefined;
+    }, 500);
+  }
+
+  handleMouseEnterExtraActions(event) {
+    if (this.closeMenuTimeout) {
+      clearTimeout(this.closeMenuTimeout);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.closeMenuTimeout) {
+      clearTimeout(this.closeMenuTimeout);
+    }
   }
 
   closeExtraActions() {
@@ -220,3 +253,9 @@ TabControls.propTypes = {
   onCloseTab: PropTypes.func,
   onOpenTab: PropTypes.func
 };
+
+TabControls.POSITION = Object.freeze({
+  TOP: Symbol("TOP"),
+  MIDDLE: Symbol("Middle"),
+  BOTTOM: Symbol("BOTTOM")
+});
