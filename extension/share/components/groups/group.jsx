@@ -82,6 +82,7 @@ class Group extends React.Component {
       opened: openWindow,
       expanded: expanded_state,
       currentlySearching: nextProps.currentlySearching,
+      newTitle: Utils.getGroupTitle(nextProps.group),
     });
   }
 
@@ -120,9 +121,8 @@ class Group extends React.Component {
               newTitle: event.target.value
             });
           }).bind(this)}
-          onClick={(event) => {
-            event.stopPropagation();
-          }}
+          onMouseUp={(e)=>e.stopPropagation()}
+          onClick={(e)=>e.stopPropagation()}
           onFocus={(e) => {
             e.target.select();
           }}
