@@ -206,6 +206,9 @@ var popupSpecialNavigationListener = Navigation.navigationFactory({
     e.preventDefault();
     document.getElementById('maximize-popup').click()
   },
+  "escape": (e) => {
+    window.close();
+  }
 })
 
 var groupNavigationListener = function(group) {
