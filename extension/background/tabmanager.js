@@ -58,7 +58,7 @@ TabManager.getTabsInWindowId = async function(windowId, withoutRealUrl = true, w
   } catch (e) {
     let msg = "TabManager.getTabsInWindowId failed on window " + windowId + " with " + e;
     console.error(msg);
-    return msg;
+    throw Error(msg);
   }
 }
 
@@ -102,7 +102,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
       return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window is not synchronized";
     }
 
-    var groupId = GroupManager.getGroupIdInWindow(windowId);
+    let groupId = GroupManager.getGroupIdInWindow(windowId);
     const tabs = await TabManager.getTabsInWindowId(windowId);
 
     // In case of delay

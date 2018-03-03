@@ -226,13 +226,14 @@ StorageManager.File.readJsonFile = async function(file) {
  * Parse the get parameters from the URL, return the value of name
  * @param {String} name - the value to return
  * @param {String} url - string to analyse, if not given, take the one from the web page
+ * @return {String} the value found or '' if nothing
  */
 Utils.getParameterByName = function(name, url) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, "\\$&");
   var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
     results = regex.exec(url);
-  if (!results) return null;
+  if (!results) return '';
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
@@ -340,7 +341,7 @@ Utils.isBeforeFF57 = function() {
  * @param {String} url
  * @return {String} new_url
  */
-Utils.extractTabUrl = function(url) {
+Utils.extractTabUrl = function(url="") {
   let new_url = url;
   if (new_url.includes(Utils.LAZY_PAGE_URL)) {
     new_url = Utils.getParameterByName('url', new_url)
@@ -348,9 +349,11 @@ Utils.extractTabUrl = function(url) {
   if (new_url.includes(Utils.PRIV_PAGE_URL)) {
     new_url = Utils.getParameterByName('url', new_url)
   }
-  return new_url;
+  // If new_url failed return a new tab
+  return new_url===""?TabManager.NEW_TAB:new_url;
 }
-Utils.extractLazyUrl = function(url) {
+
+Utils.extractLazyUrl = function(url="") {
   let new_url = url;
   if (new_url.includes(Utils.LAZY_PAGE_URL)) {
     new_url = Utils.getParameterByName('url', new_url)
