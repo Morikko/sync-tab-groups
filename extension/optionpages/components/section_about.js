@@ -110,6 +110,50 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.2)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Fix: Mouse middle click on Chrome"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Move Tab menu on Tab bar improved"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Re-edit on group title, provided the old name"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Escape close window popup on Chrome"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Tab Actions Menu is better placed for not overflowing"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Extract URL on Lazy tab with no value (Issue 82)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Update: French Translation"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.1)"
       ),
       React.createElement(

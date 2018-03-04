@@ -182,6 +182,7 @@ input[type=checkbox]:checked ~ label{
 
 .subsection-left {
   width: fit-content;
+  width: -moz-fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;

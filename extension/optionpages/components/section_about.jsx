@@ -54,6 +54,18 @@ class AboutSection extends React.Component {
             </a>
           </div>
           <h2>
+            Release Notes (0.6.2)
+          </h2>
+          <ul>
+            <li>Fix: Mouse middle click on Chrome</li>
+            <li>Fix: Move Tab menu on Tab bar improved</li>
+            <li>Fix: Re-edit on group title, provided the old name</li>
+            <li>Add: Escape close window popup on Chrome</li>
+            <li>Fix: Tab Actions Menu is better placed for not overflowing</li>
+            <li>Fix: Extract URL on Lazy tab with no value (Issue 82)</li>
+            <li>Update: French Translation</li>
+          </ul>
+          <h2>
             Release Notes (0.6.1)
           </h2>
           <ul>

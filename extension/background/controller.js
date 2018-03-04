@@ -601,6 +601,7 @@ Controller.undiscardAll = async function (globalCount = 0, callbackAfterFirstUnd
 
           } catch ( e ) { // Tab has changed (closed, moved, actived...)
             // Do nothing but avoid a crash
+            //console.log("Error in Controller.undiscardAll: " + e)
           }
 
         }
