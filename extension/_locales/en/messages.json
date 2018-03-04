@@ -946,7 +946,7 @@
   },
 
   "command_description_general_shift_pageup": {
-    "message": "Reduce all tabs",
+    "message": "Reduce all groups",
     "description": ""
   },
 
@@ -1011,7 +1011,7 @@
   },
 
   "command_description_group_ctrl_e": {
-    "message": "Edit the name of the group (enter to accept) (Shift+Backspace to this.commandFactory(cancel)",
+    "message": "Edit the name of the group (enter to accept) (Shift+Backspace to cancel)",
     "description": ""
   },
 
@@ -1071,7 +1071,7 @@
   },
 
   "command_description_addbutton_shift_backspace": {
-    "message": "Cancel the creation",
+    "message": "Cancel the group creation",
     "description": ""
   },
 
