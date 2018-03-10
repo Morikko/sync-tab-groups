@@ -23,7 +23,8 @@
     "sessions",
     "downloads",
     "notifications",
-    "contextMenus"
+    "contextMenus",
+    "unlimitedStorage"
   ],
 
   "background": {

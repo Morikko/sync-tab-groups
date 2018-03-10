@@ -26,13 +26,9 @@ StorageManager.Local.saveGroups = async function(groups) {
  */
 StorageManager.Local.loadGroups = async function( ) {
   try {
-    const local = await browser.storage.local.get(
-      "groups"
-    );
-    if ( local.groups === undefined )
-      return [];
-    else
-      return local.groups;
+    return (await browser.storage.local.get({
+      "groups": []
+    })).groups;
   } catch ( e ) {
     return "StorageManager.Local.loadGroups failed... " + e ;
   }
@@ -62,22 +58,81 @@ StorageManager.Local.saveOptions = function(options) {
  */
 StorageManager.Local.loadOptions = async function( ) {
   try {
-    const local = await browser.storage.local.get(
-      "options"
-    );
-    if ( local.options === undefined )
-      return OptionManager.TEMPLATE();
-    else
-      return local.options;
+    return (await browser.storage.local.get({
+      "options": OptionManager.TEMPLATE()
+    })).options;
   } catch ( e ) {
     return "StorageManager.Local.loadOptions failed... " + e ;
   }
 }
 
-
 /**
  * Remove the saved options from the local storage (this computer, this session, this extension)
  */
-StorageManager.Local.cleanOptions = function() {
+StorageManager.Local.cleanOptions = async function() {
   return browser.storage.local.remove("options");
+}
+
+StorageManager.Local.addBackup = async function(groups=GroupManager.groups) {
+  // Get list
+  let backupList = await StorageManager.Local.getBackUpList();
+
+  // Add list
+  let date = new Date(),
+      id = "backup-" + date.getTime();
+  backupList[id] = {
+    date: date.getTime()
+  };
+
+  // Save list
+  await StorageManager.Local.setBackUpList(backupList);
+
+  // save groups
+  let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
+  await browser.storage.local.set({
+    [id]: export_groups
+  });
+
+  return id;
+}
+
+StorageManager.Local.removeBackup = async function(id) {
+  // Get list
+  let backupList = await StorageManager.Local.getBackUpList();
+
+  // Remove list
+  delete backupList[id];
+
+  // Save list
+  await StorageManager.Local.setBackUpList(backupList);
+
+  // Remove groups
+  await browser.storage.local.remove(id);
+}
+
+StorageManager.Local.getBackUpList = async function() {
+  // Get List
+  return (await browser.storage.local.get({
+    backupList: {}
+  })).backupList;
+}
+
+StorageManager.Local.setBackUpList = async function(backupList={}) {
+  return browser.storage.local.set({
+    backupList: backupList
+  });
+}
+
+StorageManager.Local.getBackUp = async function(id) {
+  // Get Groups
+  return (await browser.storage.local.get(id))[id];
+}
+
+StorageManager.Local.clearBackups = async function() {
+  const backupList = await StorageManager.Local.getBackUpList();
+
+  for (let backup in backupList ) {
+    await browser.storage.local.remove(backup);
+  }
+  await StorageManager.Local.setBackUpList();
 }

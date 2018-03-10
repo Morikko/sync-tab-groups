@@ -65,6 +65,8 @@ Controller.init = async function() {
 
   Controller.refreshUi();
   Controller.refreshOptionsUI();
+
+  Controller.install = false;
 };
 
 Controller.refreshOptionsUI = function() {

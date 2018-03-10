@@ -134,6 +134,19 @@ TestManager.swapOptions = function (params) {
   return previousValues;
 }
 
+TestManager.swapLocalStorage = async function (params, reset=false) {
+  let previousValues = await browser.storage.local.get(null);
+  if ( reset ) {
+    await browser.storage.local.clear();
+  }
+  for (let p in params ) {
+    await browser.storage.local.set({
+      [p]: params[p]
+    });
+  }
+  return previousValues;
+}
+
 /**
  * @param {Number} start
  * @param {Number} end

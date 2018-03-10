@@ -1,3 +1,4 @@
+// TODO: put in a special file for tests Initialization
 TestManager.TIMEOUT = 30000;
 jasmine.DEFAULT_TIMEOUT_INTERVAL = TestManager.TIMEOUT;
 

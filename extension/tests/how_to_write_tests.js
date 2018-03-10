@@ -1,9 +1,16 @@
 // Tests best practices:
+/*
+  * 1. Keep extension state: Save previous states (option, storage...), restore them after
+  TODO: each it or deeper describe ???
+  * 2. Each test can be launched lonely (else it should be precised)
+  * 3. Success 10 times in a row (not lucky success)
+  * 4. Respect the following structure for clarity
+*/
 
 {
   /** BEFORE **/
   beforeAll(function(){
-    // Add tabs and groups matchers
+    // Done at the rootest describe
     jasmine.addMatchers(tabGroupsMatchers);
   });
   {
