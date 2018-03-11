@@ -110,8 +110,15 @@ OptionManager.TEMPLATE = function() {
       navigation: true,
     },
     backup: {
-      enable: true,
-      time: Utils.setObjectPropertiesWith(OptionManager.TIMERS(), true)
+      download: {
+        enable: false,
+        time: Utils.setObjectPropertiesWith(OptionManager.TIMERS(), true)
+      },
+      local: {
+        enable: true,
+        intervalTime: 1,
+        maxSave: 48,
+      }
     }
   };
 };

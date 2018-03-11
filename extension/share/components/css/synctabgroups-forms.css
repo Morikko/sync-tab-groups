@@ -52,7 +52,7 @@
   top: 0;
   left: 0;
   width: 225px;
-  padding: 14px 0;
+  padding: 0;
   opacity: 0;
   cursor: pointer;
 }
@@ -275,9 +275,19 @@
 
 /**** Input text *****/
 
+.option-input-text {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .option-input-text-help {
   margin-left: 10px;
   color: var(--not-checked-hover);
+}
+
+.option-input-text input {
+  text-align: end;
 }
 
 /**** End Input text *****/

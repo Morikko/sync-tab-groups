@@ -63,6 +63,10 @@ Controller.init = async function() {
 
   Utils.setBrowserActionIcon(OptionManager.options.popup.whiteTheme);
 
+  Controller.prepareExtensionForUpdate(
+    Controller.lastVersion,
+    (browser.runtime.getManifest()).version);
+
   Controller.refreshUi();
   Controller.refreshOptionsUI();
 
@@ -543,6 +547,7 @@ browser.runtime.onInstalled.addListener((details) => {
   // Extension update detection
   if ( details.reason === "update"
       && (browser.runtime.getManifest()).version !== details.previousVersion ) {
+    Controller.lastVersion = details.previousVersion;
     // Focus Settings if click on notification
     browser.notifications.onClicked.addListener((notificationId)=>{
       if ( notificationId === Controller.updateNotificationId ) {
@@ -561,6 +566,65 @@ browser.runtime.onInstalled.addListener((details) => {
 
 if (Utils.isChrome()) {
   browser.runtime.onUpdateAvailable.addListener(Controller.undiscardAll);
+}
+
+Controller.isVersionBelow = function(version, reference) {
+  let splitVersion = version.split('.').map(n => parseInt(n,10)),
+      splitReference = reference.split('.').map(n => parseInt(n,10));
+
+  if ( splitVersion[0] < splitReference[0] ) {
+    return true;
+  }
+  if ( splitVersion[0] > splitReference[0] ) {
+    return false;
+  }
+
+  if ( splitVersion[1] < splitReference[1] ) {
+    return true;
+  }
+  if ( splitVersion[1] > splitReference[1] ) {
+    return false;
+  }
+
+  if ( splitVersion[2] < splitReference[2] ) {
+    return true;
+  }
+  if ( splitVersion[2] > splitReference[2] ) {
+    return false;
+  }
+  // Equal
+  return true;
+}
+
+/**
+ * Recpect order version increasing
+ */
+Controller.prepareExtensionForUpdate = function(lastVersion, newVersion) {
+  if ( !lastVersion ) {
+    return;
+  }
+
+  if (isVersionBelow(lastVersion, "0.6.2")
+        && !isVersionBelow(newVersion, "0.6.2") ){
+    Controller.updateFromBelow_0_6_2();
+  }
+}
+
+Controller.updateFromBelow_0_6_2 = function (options=OptionManager.options) {
+  // Move OptionManager.options.backup -> OptionManager.options.backup.download
+  if (options.hasOwnProperty("backup")){
+    if ( !options.backup.hasOwnProperty("download") ) {
+      options.backup.download = {};
+    }
+    if ( options.backup.hasOwnProperty("enable")) {
+        options.backup.download["enable"] = options.backup.enable;
+        delete options.backup.enable;
+    }
+    if ( options.backup.hasOwnProperty("time")) {
+        options.backup.download["time"] = options.backup.time;
+        delete options.backup.time;
+    }
+  }
 }
 
 Controller.undiscardAll = async function (globalCount = 0, callbackAfterFirstUndiscard=undefined) {
