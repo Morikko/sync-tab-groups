@@ -155,7 +155,7 @@ class Group extends React.Component {
     });
 
     let groupTitle;
-    if (Utils.DEGUG_MODE) {
+    if (Utils.DEBUG_MODE) {
       groupTitle = "Group Id: " + this.props.group.id + "\n";
       groupTitle += "Group Index: " + this.props.group.index + "\n";
       groupTitle += "Group Window: " + this.props.group.windowId + "\n";

@@ -21,7 +21,6 @@
 
 */
 
-
 /**
  Put the window on the left of the screen
  If TestManager.DOUBLE_MONITORS is true, the screen is not the first one but the second one (the one the more on the right)
@@ -212,4 +211,115 @@ TestManager.removeGroups = async function(groupIds) {
       }
     }
   }
+}
+
+TestManager.getRandomGroupId = function(groups) {
+  let index = TestManager.getRandom(0, groups.length-1);
+
+  if (!groups[index]) {
+    console.log(index);
+  }
+  return groups[
+    index
+  ].id;
+}
+
+TestManager.getRandomTabIndex = function(
+  groups,
+  groupId=TestManager.getRandomGroupId(groups))
+{
+  let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, groups);
+  return TestManager.getRandom(0, groups[groupIndex].tabs.length-1);
+}
+
+TestManager.getRandomGroupPosition = function(groups) {
+  return groups[
+    TestManager.getRandom(0, groups.length-1)
+  ].position;
+}
+
+TestManager.getRandomAction = function() {
+  return TestManager.getRandom(0, ACTIONS.length-1);
+}
+
+const ACTIONS = [
+  // MOVE
+  async (groups) =>{
+    if (!groups.length) return;
+    await Controller.onGroupChangePosition({
+      groupId: TestManager.getRandomGroupId(groups),
+      position: TestManager.getRandomGroupPosition(groups),
+    })
+  },
+  async (groups) =>{
+    if (!groups.length) return;
+    let sourceGroupId = TestManager.getRandomGroupId(groups);
+    let targetGroupId = TestManager.getRandomGroupId(groups);
+    await Controller.onMoveTabToGroup({
+      sourceGroupId: sourceGroupId,
+      sourceTabIndex: TestManager.getRandomTabIndex(groups, sourceGroupId),
+      targetGroupId: targetGroupId,
+      targetTabIndex: TestManager.getRandomTabIndex(groups, targetGroupId),
+    })
+  },
+  // TAB CHANGE
+  async (groups) =>{
+    if (!groups.length) return;
+    let groupId = TestManager.getRandomGroupId(groups);
+    await GroupManager.addTabInGroupId(
+      groupId,
+      Session.getRandomNormalTab(),
+      TestManager.getRandomTabIndex(groups, groupId)
+    );
+  },
+  async (groups) =>{
+    if (!groups.length) return;
+    let groupId = TestManager.getRandomGroupId(groups);
+    await Controller.onTabClose({
+      groupId: groupId,
+      tabIndex: TestManager.getRandomTabIndex(groups, groupId),
+    })
+  },
+  async (groups) =>{
+    if (!groups.length) return;
+    let groupId = TestManager.getRandomGroupId(groups);
+    await Controller.onTabChangePin({
+      groupId: groupId,
+      tabIndex: TestManager.getRandomTabIndex(groups, groupId),
+    })
+  },
+  // GROUP CHANGE
+  async (groups) =>{
+    if (!groups.length) return;
+    await Controller.onGroupRemove({
+      groupId: TestManager.getRandomGroupId(groups),
+      taskRef: TaskManager.FORCE,
+    })
+  },
+  async (groups) =>{
+    let tabs = [];
+    for(let i=0; i<TestManager.getRandom(1,15); i++) {
+      tabs.push(Session.getRandomNormalTab());
+    }
+    GroupManager.addGroupWithTab(
+      tabs,
+      -1,
+      Date.now().toString(),
+      false,
+    );
+  },
+  async (groups) =>{
+    if (!groups.length) return;
+    await Controller.onGroupRename({
+      groupId: TestManager.getRandomGroupId(groups),
+      title: Date.now().toString(),
+    });
+  },
+]
+
+TestManager.changeGroups = async function(
+  groups=GroupManager.groups,
+  actionIndex=TestManager.getRandomAction())
+{
+  await ACTIONS[actionIndex](groups);
 }

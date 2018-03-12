@@ -276,13 +276,13 @@ Session.setHeavySession = function() {
 
 }
 
-Session.getRandomNormalTab = function(params) {
+Session.getRandomNormalTab = function(params={}) {
+  Object.assign(params, {
+    pinned: false,
+    id: TestManager.getRandom(1000,999999999) // Fake id...
+  })
   let tab = Session.getRandomTab(Session.ListOfTabURLs);
-  for ( let k in params ) {
-    if ( k in tab ) {
-      tab[k] = params[k];
-    }
-  }
+  Object.assign(tab, params);
   return tab;
 }
 

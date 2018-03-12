@@ -135,18 +135,21 @@ Controller.onGroupClose = function(params) {
   );
 };
 
-Controller.onGroupRemove = function(params) {
-  var delayedFunction = () => {
-    WindowManager.removeGroup(
-      params.groupId
-    );
-  };
+Controller.onGroupRemove = async function(params) {
+  return new Promise((resolve, reject)=>{
+    let delayedFunction = async () => {
+      await WindowManager.removeGroup(
+        params.groupId
+      );
+      resolve();
+    };
 
-  TaskManager.fromUI[TaskManager.REMOVE_REFERENCE].manage(
-    params.taskRef,
-    delayedFunction,
-    params.groupId,
-  );
+    TaskManager.fromUI[TaskManager.REMOVE_REFERENCE].manage(
+      params.taskRef,
+      delayedFunction,
+      params.groupId,
+    );
+  })
 };
 
 Controller.onGroupRename = function(params) {
@@ -171,8 +174,8 @@ Controller.onTabSelect = function(params) {
   );
 };
 
-Controller.onMoveTabToGroup = function(params) {
-  TabManager.moveTabBetweenGroups(
+Controller.onMoveTabToGroup = async function(params) {
+  await TabManager.moveTabBetweenGroups(
     params.sourceGroupId,
     params.sourceTabIndex,
     params.targetGroupId,
@@ -272,15 +275,15 @@ Controller.onExportGroups = function() {
   StorageManager.File.exportGroups(GroupManager.getCopy());
 };
 
-Controller.onGroupChangePosition = function(params) {
-  GroupManager.changeGroupPosition(
+Controller.onGroupChangePosition = async function(params) {
+  await GroupManager.changeGroupPosition(
     params.groupId,
     params.position
   );
 };
 
-Controller.onTabChangePin = function(params) {
-  TabManager.changePinState(
+Controller.onTabChangePin = async function(params) {
+  await TabManager.changePinState(
     params.groupId,
     params.tabIndex,
   );

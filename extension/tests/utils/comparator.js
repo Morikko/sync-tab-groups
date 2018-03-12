@@ -114,7 +114,7 @@ var tabGroupsMatchers = {
    */
   toEqualGroups: function(util, customEqualityTesters) {
     return {
-      compare: function(actual, expected) {
+      compare: function(actual, expected, msg="") {
         let result = {};
 
         if (expected === undefined || actual === undefined) {
@@ -123,6 +123,7 @@ var tabGroupsMatchers = {
         } else {
           [result.pass, result.message] = TestManager.compareGroups(actual, expected);
         }
+        result.message += msg;
         return result;
       }
     }

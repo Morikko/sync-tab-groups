@@ -58,7 +58,7 @@ class Tab extends React.Component {
     });
 
     let tabTitle;
-    if (Utils.DEGUG_MODE) {
+    if (Utils.DEBUG_MODE) {
       tabTitle = "Tab Id: " + this.props.tab.id + "\n";
       tabTitle += "Tab Url: " + this.props.tab.url + "\n";
       tabTitle += "Tab Title: " + this.props.tab.title + "\n";
