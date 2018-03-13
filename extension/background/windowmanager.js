@@ -54,7 +54,10 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
     let blank_tab = await TabManager.removeTabsInWindow(windowId);
 
     await TabManager.openListOfTabs(
-      GroupManager.groups[newGroupIndex].tabs, windowId, false, true, blank_tab);
+      GroupManager.groups[newGroupIndex].tabs, windowId, {
+        openAtLeastOne: true,
+        pendingTab: blank_tab,
+    });
 
     await GroupManager.attachWindowWithGroupId(newGroupId, windowId);
 
@@ -121,7 +124,7 @@ WindowManager.closeWindowFromGroupId = async function(groupId) {
  * @param {Number} groupId
  * @return {Promise}
  */
-WindowManager.closeGroup = async function(groupId, close_window = false) {
+WindowManager.closeGroup = async function(groupId, {close_window = false}={}) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
       groupId
@@ -154,7 +157,9 @@ WindowManager.closeGroup = async function(groupId, close_window = false) {
       await WindowManager.closeWindowFromGroupId(groupId);
     } else {
       await GroupManager.detachWindowFromGroupId(groupId);
-      await TabManager.removeTabsInWindow(windowId, true);
+      await TabManager.removeTabsInWindow(windowId, {
+        openBlankTab: true,
+      });
     }
 
     return "WindowManager.closeGroup done!";
@@ -215,7 +220,7 @@ WindowManager.decoratorCurrentlyChanging = function (func) {
  * @param {Number} newGroupId - the group id
  * @return {Promise}
  */
-WindowManager.selectGroup = async function(newGroupId, newWindow=false) {
+WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
   try {
     let newGroupIndex = GroupManager.getGroupIndexFromGroupId(
       newGroupId
@@ -253,7 +258,11 @@ WindowManager.selectGroup = async function(newGroupId, newWindow=false) {
  * @param {Number} direction -- default:1
  * @return {Promise}
  */
-WindowManager.selectNextGroup = async function(direction = 1, open = false, refGroupId = -1) {
+WindowManager.selectNextGroup = async function({
+  direction = 1,
+  open = false,
+  refGroupId = -1
+}={}) {
   try {
     let nextGroupId = -1;
     let sourceGroupIndex;
@@ -441,7 +450,7 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
       if (OptionManager.options.groups.showGroupTitleInWindow) {
         let group = GroupManager.groups[
           GroupManager.getGroupIndexFromGroupId(
-            groupId, false
+            groupId, {error: false}
           )
         ];
         WindowManager.setWindowPrefixGroupTitle(windowId, group);
@@ -517,7 +526,10 @@ WindowManager.addGroupFromWindow = async function(windowId) {
     const tabs = await TabManager.getTabsInWindowId(windowId);
     const w = await browser.windows.get(windowId);
 
-    let newGroupId = GroupManager.addGroupWithTab(tabs, windowId, "", w.incognito);
+    let newGroupId = GroupManager.addGroupWithTab(tabs, {
+      windowId,
+      incognito: w.incognito
+    });
     await WindowManager.associateGroupIdToWindow(
       windowId,
       newGroupId
@@ -533,8 +545,9 @@ WindowManager.addGroupFromWindow = async function(windowId) {
 /**
   * @return {Number} groupId matched or -1
   */
-WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
-  even_new_one = OptionManager.options.groups.syncNewWindow) {
+WindowManager.integrateWindowWithTabsComparaison = async function(windowId, {
+  even_new_one = OptionManager.options.groups.syncNewWindow
+}={}) {
     try {
       // Get tabs
       const tabs = await TabManager.getTabsInWindowId(windowId);
@@ -558,8 +571,9 @@ WindowManager.integrateWindowWithTabsComparaison = async function(windowId,
 /**
   * @return {Number} groupId matched or -1
   */
-WindowManager.integrateWindowWithSession = async function(windowId,
-  even_new_one = OptionManager.options.groups.syncNewWindow) {
+WindowManager.integrateWindowWithSession = async function(windowId, {
+  even_new_one = OptionManager.options.groups.syncNewWindow
+}={}) {
     try {
       const key = await browser.sessions.getWindowValue(
         windowId, // integer
@@ -567,7 +581,7 @@ WindowManager.integrateWindowWithSession = async function(windowId,
       );
 
       let id = -1;
-      if (key !== undefined && GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), false) !== -1) { // Update Group
+      if (key !== undefined && GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), {error: false}) !== -1) { // Update Group
         await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
         id = parseInt(key, 10);
       }
@@ -586,9 +600,9 @@ WindowManager.integrateWindowWithSession = async function(windowId,
  * @param {Boolean} even_new_one - Normally user preference, if true window will be created for sure, if false won't
  * @return {Number} groupId created or -1
  */
-WindowManager.integrateWindow = async function(windowId,
+WindowManager.integrateWindow = async function(windowId, {
   even_new_one = OptionManager.options.groups.syncNewWindow,
-  allow_creation) {
+}={}) {
   try {
     const window = await browser.windows.get(windowId);
 
@@ -608,12 +622,12 @@ WindowManager.integrateWindow = async function(windowId,
     if ( Utils.isFF57() ) { // FF57+
       id = await WindowManager.integrateWindowWithSession(
         windowId,
-        even_new_one
+        {even_new_one}
       )
     } else { // Others
       id = await WindowManager.integrateWindowWithTabsComparaison(
         windowId,
-        even_new_one
+        {even_new_one}
       )
     }
 

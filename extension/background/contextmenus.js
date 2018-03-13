@@ -110,7 +110,9 @@ ContextMenu.updateMoveFocus = async function(disabledId) {
       let order = id.substring(ContextMenu.MoveTabMenu_ID.length);
       let groupId = parseInt(order);
       if (groupId >= 0) {
-        let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, false);
+        let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, {
+          error: false
+        });
         if ( groupIndex >= 0 ) {
           return browser.contextMenus.update(
             id, {

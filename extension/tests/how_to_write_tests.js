@@ -59,10 +59,10 @@
     await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
     let resultingTabs = await TabManager.getTabsInWindowId(
-      this.windowId,
-      true,
-      true,
-    );
+      this.windowId, {
+        withoutRealUrl: false,
+        withPinned: true,
+      });
 
     // Don't care about some values
     TestManager.resetActiveProperties(tabs)

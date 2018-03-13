@@ -83,7 +83,10 @@ TestManager.getGroupDeprecated = (groups, id)=>{
 };
 
 TestManager.getGroup = (groups, id)=>{
-  let index = GroupManager.getGroupIndexFromGroupId(id, true, groups);
+  let index = GroupManager.getGroupIndexFromGroupId(id, {
+    error: true,
+    groups: groups
+  });
   return groups[index];
 };
 
@@ -173,7 +176,9 @@ TestManager.waitAllTabsToBeLoadedInWindowId = async function ( windowId ) {
 
   async function hasLoadingTabs(windowId) {
     // Get all tabs
-    let tabs = await TabManager.getTabsInWindowId(windowId, true, true);
+    let tabs = await TabManager.getTabsInWindowId(windowId, {
+      withPinned: true,
+    });
     return tabs.filter(tab => tab.status === "loading").length > 0;
   }
 }
@@ -202,7 +207,7 @@ TestManager.removeGroups = async function(groupIds) {
   }
 
   for (let groupId of groupIds) {
-    if ( GroupManager.getGroupIndexFromGroupId(groupId, false) >= 0 ) {
+    if ( GroupManager.getGroupIndexFromGroupId(groupId, {error: false}) >= 0 ) {
       try {
         await GroupManager.removeGroupFromId(groupId);
       } catch(e) {
@@ -228,7 +233,7 @@ TestManager.getRandomTabIndex = function(
   groups,
   groupId=TestManager.getRandomGroupId(groups))
 {
-  let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, groups);
+  let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, {groups: groups});
   return TestManager.getRandom(0, groups[groupIndex].tabs.length-1);
 }
 
@@ -302,11 +307,9 @@ const ACTIONS = [
       tabs.push(Session.getRandomNormalTab());
     }
     GroupManager.addGroupWithTab(
-      tabs,
-      -1,
-      Date.now().toString(),
-      false,
-    );
+      tabs, {
+        title: Date.now().toString()
+    });
   },
   async (groups) =>{
     if (!groups.length) return;

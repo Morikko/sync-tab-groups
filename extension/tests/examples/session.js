@@ -26,22 +26,20 @@
 var Session = Session || {};
 
 /**
- * @param {Object} params
  * @return {Array[Tab]} tabs
  */
-Session.createTabs = function(params){
-  Utils.mergeObject(params, {
-    tabsLength: 0,
-    pinnedTabs: 0,
-    lazyMode: false, // Note: Real Groups never have this types (urls are filtered)
-    privilegedLength: 0,
-    openPrivileged: false, // Note: Real Groups never have this types (urls are filtered)
-    extensionUrlLength: 0,
-  });
-
+Session.createTabs = function({
+  tabsLength= 0,
+  pinnedTabs= 0,
+  lazyMode= false, // Note= Real Groups never have this types (urls are filtered)
+  privilegedLength= 0,
+  openPrivileged= false, // Note= Real Groups never have this types (urls are filtered)
+  extensionUrlLength= 0,
+  active=-1,
+}={}){
   let tabs = [];
   let index = 0;
-  let normalTabsLength = params.tabsLength-params.privilegedLength-params.extensionUrlLength;
+  let normalTabsLength = tabsLength-privilegedLength-extensionUrlLength;
   for (let i = 0; i < normalTabsLength; i++) {
     let tab = Session.getRandomTab(Session.ListOfTabURLs)
     index++;
@@ -49,9 +47,9 @@ Session.createTabs = function(params){
       tab
     );
   }
-  for (let i = 0; i < params.privilegedLength && index<params.tabsLength; i++) {
+  for (let i = 0; i < privilegedLength && index<tabsLength; i++) {
     let tab = Session.getRandomTab(Session.ListOfPrivTabURLs)
-    if ( params.openPrivileged ) {
+    if ( openPrivileged ) {
       tab.url = Utils.getPrivilegedURL(tab.title, tab.url, tab.favIconUrl);
     }
     index++;
@@ -59,7 +57,7 @@ Session.createTabs = function(params){
       tab
     );
   }
-  for (let i = 0; i < params.extensionUrlLength && index<params.tabsLength; i++) {
+  for (let i = 0; i < extensionUrlLength && index<tabsLength; i++) {
     let tab = Session.getRandomTab(Session.ListOfExtensionTabURLs)
     index++;
     tabs.push(
@@ -74,22 +72,22 @@ Session.createTabs = function(params){
   tabs = tabs.map((tab, index)=>{
     tab.index = index;
     tab.id = index; // Create different ids for tests compatibility
-    if (index===params.active) {
+    if (index===active) {
       tab.active = true;
     } else {
-      if ( params.lazyMode ) {
+      if ( lazyMode ) {
         tab.url = Utils.getDiscardedURL(tab.title, tab.url, tab.favIconUrl);
       }
     }
     return tab;
   });
 
-  if (tabs.length && params.active === -1) {
+  if (tabs.length && active === -1) {
     tabs[tabs.length-1].active = true;
   }
 
   // Pinned the first ones
-  let safePinnedTabs = Math.min(params.pinnedTabs, params.tabsLength)
+  let safePinnedTabs = Math.min(pinnedTabs, tabsLength)
   for (let i = 0; i < safePinnedTabs; i++) {
     tabs[i].pinned = true;
   }
@@ -101,32 +99,37 @@ Session.createTabs = function(params){
  * @return {Array} [Group id, Group Object] if global true
  * @return {Group} [Group Object] if global false
  */
-Session.createGroup = function(
-  params
-) {
-  Utils.mergeObject(params, {
-    tabsLength: 0,
-    pinnedTabs: 0,
-    lazyMode: false,
-    privilegedLength: 0,
-    openPrivileged: false,
-    extensionUrlLength: 0,
-    global: false,
-    incognito: false,
-    active: -1,
-    title:"",
+Session.createGroup = function({
+    tabsLength= 0,
+    pinnedTabs= 0,
+    lazyMode= false,
+    privilegedLength= 0,
+    openPrivileged= false,
+    extensionUrlLength= 0,
+    global= false,
+    incognito= false,
+    active= -1,
+    title="",
+}={}) {
+  let tabs = Session.createTabs({
+    tabsLength,
+    pinnedTabs,
+    lazyMode,
+    privilegedLength,
+    openPrivileged,
+    extensionUrlLength,
+    incognito,
+    active,
   });
-
-  let tabs = Session.createTabs(params);
 
   let group = new GroupManager.Group(
     id = GroupManager.createUniqueGroupId(),
-    title = params.title,
+    title = title,
     tabs = tabs,
     windowId = browser.windows.WINDOW_ID_NONE,
-    incognito = params.incognito,
+    incognito = incognito,
   );
-  if ( params.global ) {
+  if ( global ) {
     return [GroupManager.addGroups([
       group
     ])[0], group];
@@ -145,8 +148,8 @@ Session.createGroup = function(
       - groups{Array} if params.global to false
       - [ids{Array}, groups{Array}]  if params.global to true
  */
-Session.createArrayGroups = function(params) {
-  Utils.mergeObject(params, {
+Session.createArrayGroups = function(params={}) {
+  params : Object.assign({
     groupsLength: 0,
     tabsLength: 0,
     pinnedTabs: 0,
@@ -158,7 +161,7 @@ Session.createArrayGroups = function(params) {
     incognito: false,
     active: -1,
     title:"",
-  });
+  }, params);
 
   // Prepare params
   for(let pro in params) {
@@ -212,7 +215,7 @@ Session.addTabToGroup = async function (group, tab_params) {
     group.tabs.splice(realIndex, 0, tab);
   } else { // Global
     let id = group;
-    await GroupManager.addTabInGroupId(id, tab, tab.index);
+    await GroupManager.addTabInGroupId(id, tab, {targetIndex: tab.index});
   }
 }
 
@@ -276,13 +279,8 @@ Session.setHeavySession = function() {
 
 }
 
-Session.getRandomNormalTab = function(params={}) {
-  Object.assign(params, {
-    pinned: false,
-    id: TestManager.getRandom(1000,999999999) // Fake id...
-  })
+Session.getRandomNormalTab = function() {
   let tab = Session.getRandomTab(Session.ListOfTabURLs);
-  Object.assign(tab, params);
   return tab;
 }
 
@@ -360,15 +358,13 @@ Session.ListOfExtensionTabURLs = [{
   "favIconUrl": "/share/icons/tabspace-active-64.png"
 }];
 
-
-
 /**
  *
  */
 Session.createTab = function(
   params
 ) {
-  return Utils.mergeObject(params, {
+  return Object.assign({
     url: TabManager.NEW_TAB,
     title: "No title",
     pinned: false,
@@ -377,7 +373,8 @@ Session.createTab = function(
     favIconUrl: "",
     index: -1,
     incognito: false,
-  })
+    id: TestManager.getRandom(1000,999999999), // Fake id...
+  }, params)
 };
 
 /**

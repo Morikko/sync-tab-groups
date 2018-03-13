@@ -86,8 +86,8 @@ Controller.refreshUi = function() {
   });
 };
 
-Controller.onOpenGroupInNewWindow = function(params) {
-  WindowManager.selectGroup(params.groupId, true);
+Controller.onOpenGroupInNewWindow = function({groupId}) {
+  WindowManager.selectGroup(groupId, {newWindow: true});
 };
 
 Controller.onOpenGuide = function() {
@@ -96,28 +96,35 @@ Controller.onOpenGuide = function() {
   );
 }
 
-Controller.onGroupAdd = function(params) {
+Controller.onGroupAdd = function({title}) {
   try {
-    GroupManager.addGroup(params.title || '');
+    GroupManager.addGroup({title: title});
   } catch (e) {
     console.error("Controller - onGroupAdd failed: " + e);
   }
 };
 
-Controller.onGroupAddWithTab = function(params) {
+Controller.onGroupAddWithTab = function({
+  title,
+  sourceGroupId,
+  tabIndex,
+}) {
   TabManager.moveTabToNewGroup(
-    params.title || '',
-    params.sourceGroupId,
-    params.tabIndex
+    sourceGroupId,
+    tabIndex,
+    title,
   );
 };
 
-Controller.onGroupClose = function(params) {
+Controller.onGroupClose = function({
+  groupId,
+  taskRef
+}) {
   var delayedFunction = async () => {
     try {
       await WindowManager.closeGroup(
-        params.groupId,
-        false
+        groupId,
+        {close_window: false}
       );
       Controller.refreshUi();
       return "Controller.onGroupClose done!";
@@ -129,57 +136,72 @@ Controller.onGroupClose = function(params) {
   };
 
   TaskManager.fromUI[TaskManager.CLOSE_REFERENCE].manage(
-    params.taskRef,
+    taskRef,
     delayedFunction,
-    params.groupId,
+    groupId,
   );
 };
 
-Controller.onGroupRemove = async function(params) {
+Controller.onGroupRemove = async function({
+  groupId,
+  taskRef
+}) {
   return new Promise((resolve, reject)=>{
     let delayedFunction = async () => {
       await WindowManager.removeGroup(
-        params.groupId
+        groupId
       );
       resolve();
     };
 
     TaskManager.fromUI[TaskManager.REMOVE_REFERENCE].manage(
-      params.taskRef,
+      taskRef,
       delayedFunction,
-      params.groupId,
+      groupId,
     );
   })
 };
 
-Controller.onGroupRename = function(params) {
+Controller.onGroupRename = function({
+  groupId,
+  title
+}) {
   GroupManager.renameGroup(
-    GroupManager.getGroupIndexFromGroupId(params.groupId),
-    params.title
+    GroupManager.getGroupIndexFromGroupId(groupId),
+    title
   );
 };
 
-Controller.onGroupSelect = function(params) {
+Controller.onGroupSelect = function({groupId}) {
   WindowManager.selectGroup(
-    params.groupId,
-    false
+    groupId,
+    {newWindow: false}
   );
 };
 
-Controller.onTabSelect = function(params) {
+Controller.onTabSelect = function({
+  tabIndex,
+  groupId,
+  newWindow,
+}) {
   TabManager.selectTab(
-    params.tabIndex,
-    params.groupId,
-    params.newWindow,
+    tabIndex,
+    groupId,
+    newWindow,
   );
 };
 
-Controller.onMoveTabToGroup = async function(params) {
+Controller.onMoveTabToGroup = async function({
+  sourceGroupId,
+  sourceTabIndex,
+  targetGroupId,
+  targetTabIndex,
+}) {
   await TabManager.moveTabBetweenGroups(
-    params.sourceGroupId,
-    params.sourceTabIndex,
-    params.targetGroupId,
-    params.targetTabIndex,
+    sourceGroupId,
+    sourceTabIndex,
+    targetGroupId,
+    targetTabIndex,
   );
 };
 
@@ -201,13 +223,16 @@ Controller.onReloadGroups = function() {
   GroupManager.reloadGroupsFromDisk();
 };
 
-Controller.changeSynchronizationStateOfWindow = function(params) {
-  if (params.isSync) {
-    WindowManager.integrateWindow(params.windowId, true);
+Controller.changeSynchronizationStateOfWindow = function({
+  isSync,
+  windowId
+}) {
+  if (isSync) {
+    WindowManager.integrateWindow(windowId, {even_new_one: true});
   } else {
     try {
       let currentGroupId = GroupManager.getGroupIdInWindow(
-        params.windowId
+        windowId
       );
       GroupManager.removeGroupFromId(currentGroupId);
     } catch (e) {
@@ -218,11 +243,14 @@ Controller.changeSynchronizationStateOfWindow = function(params) {
   }
 };
 
-Controller.onTabClose = async function(params) {
+Controller.onTabClose = async function({
+  groupId,
+  tabIndex,
+}) {
   try {
     await GroupManager.removeTabFromIndexInGroupId(
-      params.groupId,
-      params.tabIndex
+      groupId,
+      tabIndex
     );
   } catch (e) {
     let msg = "Controller.onTabClose failed; " + e;
@@ -231,15 +259,16 @@ Controller.onTabClose = async function(params) {
   }
 };
 
-Controller.onTabOpen = async function(params) {
+Controller.onTabOpen = async function({
+  tab,
+}) {
   try {
     const currentWindow = await browser.windows.getLastFocused();
     await TabManager.openListOfTabs(
-      [params.tab],
-      currentWindow.id,
-      true,
-      false,
-    )
+      [tab],
+      currentWindow.id, {
+        inLastPos: true,
+    })
   } catch (e) {
     let msg = "Controller.onTabOpen failed; " + e;
     console.error(msg);
@@ -247,9 +276,11 @@ Controller.onTabOpen = async function(params) {
   }
 };
 
-Controller.onImportGroups = function(params) {
+Controller.onImportGroups = function({
+  content_file
+}) {
   try {
-    let groups = StorageManager.File.importGroups(params.content_file);
+    let groups = StorageManager.File.importGroups(content_file);
     GroupManager.addGroups(groups);
 
     browser.notifications.create({
@@ -275,24 +306,33 @@ Controller.onExportGroups = function() {
   StorageManager.File.exportGroups(GroupManager.getCopy());
 };
 
-Controller.onGroupChangePosition = async function(params) {
+Controller.onGroupChangePosition = async function({
+  groupId,
+  position,
+}) {
   await GroupManager.changeGroupPosition(
-    params.groupId,
-    params.position
+    groupId,
+    position
   );
 };
 
-Controller.onTabChangePin = async function(params) {
+Controller.onTabChangePin = async function({
+  groupId,
+  tabIndex,
+}) {
   await TabManager.changePinState(
-    params.groupId,
-    params.tabIndex,
+    groupId,
+    tabIndex,
   );
 };
 
-Controller.onChangeExpand = function(params) {
+Controller.onChangeExpand = function({
+  groupId,
+  expand,
+}) {
   GroupManager.changeExpandState(
-    params.groupId,
-    params.expand,
+    groupId,
+    expand,
   );
 };
 
@@ -481,7 +521,7 @@ Controller.initWindowsEventListener = function() {
       const w = await browser.windows.getLastFocused();
       await ContextMenu.updateMoveFocus(w.id);
 
-      let groupId = GroupManager.getGroupIdInWindow(windowId, false);
+      let groupId = GroupManager.getGroupIdInWindow(windowId, {error: false});
       if (groupId >= 0) { // Only grouped window
         GroupManager.setLastAccessed(groupId, Date.now());
       }
@@ -502,24 +542,31 @@ Controller.initCommandsEventListener = function() {
       }
       switch (command) {
         case "swtich_next_group":
-          WindowManager.selectNextGroup(1, false);
+          WindowManager.selectNextGroup();
           break;
         case "swtich_previous_group":
-          WindowManager.selectNextGroup(-1, false);
+          WindowManager.selectNextGroup({
+            direction: -1,
+          });
           break;
         case "create_group_swtich":
           let newGroupId = GroupManager.addGroup();
           WindowManager.selectGroup(newGroupId);
           break;
         case "focus_next_group":
-          WindowManager.selectNextGroup(1, true);
+          WindowManager.selectNextGroup({
+            open: true,
+          });
           break;
         case "focus_previous_group":
-          WindowManager.selectNextGroup(-1, true);
+          WindowManager.selectNextGroup({
+            direction: -1,
+            open: true,
+          });
           break;
         case "remove_group_swtich":
           await WindowManager.removeGroup();
-          //WindowManager.selectNextGroup(1, false);
+          //WindowManager.selectNextGroup();
           break;
         default:
       }

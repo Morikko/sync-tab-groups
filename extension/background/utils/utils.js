@@ -574,7 +574,10 @@ Utils.waitDownload = async function(downloadId, waitingTime=6){
   }
 }
 
-Utils.timerDecorator = function(func, name="Perf", times=1) {
+Utils.timerDecorator = function(func, {
+  name="Perf",
+  times=1
+}={}) {
   return async function() {
 
     let t0 = performance.now();

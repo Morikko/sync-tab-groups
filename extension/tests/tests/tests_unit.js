@@ -270,7 +270,7 @@ describe("Session: ", () => {
         });
       } finally {
         ids.forEach((id, index)=>{
-          if ( GroupManager.getGroupIndexFromGroupId(id, false) >= 0) {
+          if ( GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0) {
             GroupManager.removeGroupFromId(id);
           }
         });
@@ -310,7 +310,7 @@ describe("GroupManager: ", () => {
       let good_groups = Utils.getCopy(this.groups[0]);
       TestManager.resetActiveProperties(this.groups[0].tabs);
 
-      GroupManager.coherentActiveTabInGroups(this.groups[0]);
+      GroupManager.coherentActiveTabInGroups({groups: this.groups[0]});
 
       expect(this.groups[0]).toEqualGroups(good_groups);
     });
@@ -318,7 +318,7 @@ describe("GroupManager: ", () => {
     it("1 active in group", function() {
       let good_groups = Utils.getCopy(this.groups[1]);
 
-      GroupManager.coherentActiveTabInGroups(this.groups[1]);
+      GroupManager.coherentActiveTabInGroups({groups: this.groups[1]});
 
       expect(this.groups[1]).toEqualGroups(good_groups);
     });
@@ -329,7 +329,7 @@ describe("GroupManager: ", () => {
       this.groups[2].tabs[3].active = true;
       this.groups[2].tabs[4].active = true;
 
-      GroupManager.coherentActiveTabInGroups(this.groups[2]);
+      GroupManager.coherentActiveTabInGroups({groups: this.groups[2]});
 
       expect(this.groups[2]).toEqualGroups(good_groups);
     });
@@ -342,7 +342,7 @@ describe("GroupManager: ", () => {
         })]
       let good_groups = Utils.getCopy(this.groups);
 
-      GroupManager.coherentActiveTabInGroups(this.groups);
+      GroupManager.coherentActiveTabInGroups({groups: this.groups});
 
       expect(this.groups).toEqualGroups(good_groups);
     });

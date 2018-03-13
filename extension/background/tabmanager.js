@@ -35,7 +35,10 @@ var TabManager = TabManager || {};
  * @param {Number} windowId
  * @return {Array[Tab]} tabs
  */
-TabManager.getTabsInWindowId = async function(windowId, withoutRealUrl = true, withPinned = OptionManager.options.pinnedTab.sync) {
+TabManager.getTabsInWindowId = async function(windowId, {
+  withoutRealUrl = true,
+  withPinned = OptionManager.options.pinnedTab.sync
+}={}) {
   try {
     let selector = {
       windowId: windowId
@@ -181,7 +184,11 @@ TabManager.openTab = async function(tab, windowId, index) {
  * @return {Proise{Array[Tab]} - created tab
  TODO: ParentId is not tested
  */
-TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = false, openAtLeastOne = false, pendingTab=undefined) {
+TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
+  inLastPos = false,
+  openAtLeastOne = false,
+  pendingTab = undefined,
+}={}) {
   try {
 
     // Look if has Tab in tabs
@@ -194,7 +201,10 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
       }
     }
 
-    const tabs = await TabManager.getTabsInWindowId(windowId, false, true);
+    const tabs = await TabManager.getTabsInWindowId(windowId, {
+      withoutRealUrl: false,
+      withPinned: true,
+    });
 
     // Don't Reopen only a new tab
     if (tabsToOpen.length === 1
@@ -307,7 +317,9 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, inLastPos = fal
 TabManager.activeTabInWindow = async function(windowId, tabIndex) {
   try {
     // Filter pinned if necessary
-    const tabs = await TabManager.getTabsInWindowId(windowId, false);
+    const tabs = await TabManager.getTabsInWindowId(windowId, {
+      withoutRealUrl: false,
+    });
     let tabId = tabs.filter((tab, index) => index === tabIndex).map((tab) => tab.id);
 
     if (tabId.length) {
@@ -471,7 +483,7 @@ TabManager.moveUnFollowedTabToGroup = async function(tabId, targetGroupId) {
     let sourceGroupId = GroupManager.getGroupIdFromTabId(tabId);
     if (sourceGroupId >= 0) { // Is in groups
       let sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(sourceGroupId);
-      let tabIndex = GroupManager.getTabIndexFromTabId(tabId, sourceGroupIndex, true);
+      let tabIndex = GroupManager.getTabIndexFromTabId(tabId, sourceGroupIndex, {error: true});
       await TabManager.moveTabBetweenGroups(sourceGroupId, tabIndex, targetGroupId);
     } else { // Unsync window
       let targetGroupIndex = GroupManager.getGroupIndexFromGroupId(targetGroupId);
@@ -499,12 +511,14 @@ TabManager.moveUnFollowedTabToGroup = async function(tabId, targetGroupId) {
  * @param {Number} tabIndex
  * @return {Number} id of the created group or -1
  */
-TabManager.moveTabToNewGroup = async function(title = "", sourceGroupId, tabIndex) {
+TabManager.moveTabToNewGroup = async function(sourceGroupId, tabIndex, title = "") {
   try {
     var sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(sourceGroupId);
 
     let tab = GroupManager.groups[sourceGroupIndex].tabs[tabIndex];
-    let id = GroupManager.addGroupWithTab([tab], browser.windows.WINDOW_ID_NONE, title);
+    let id = GroupManager.addGroupWithTab([tab], {
+      title
+    });
 
     await GroupManager.removeTabFromIndexInGroupId(sourceGroupId, tabIndex);
 
@@ -620,9 +634,15 @@ TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
  * @param {Boolean} if force to close the Pinned Tabs, else take in account the option: pinnedTab.sync
  * @return {Promise} - The only tab saved (first one or blank), or nothing if pinned tabs are staying
  */
-TabManager.removeTabsInWindow = async function(windowId, openBlankTab = false, remove_pinned = OptionManager.options.pinnedTab.sync) {
+TabManager.removeTabsInWindow = async function(windowId, {
+  openBlankTab = false,
+  remove_pinned = OptionManager.options.pinnedTab.sync
+}={}) {
   try {
-    let tabs = await TabManager.getTabsInWindowId(windowId, false, true);
+    let tabs = await TabManager.getTabsInWindowId(windowId, {
+      withoutRealUrl: false,
+      withPinned: true,
+    });
 
     let survivorTab;
 
@@ -633,7 +653,10 @@ TabManager.removeTabsInWindow = async function(windowId, openBlankTab = false, r
       await browser.tabs.update(tabs[0].id, {active: true});
     } else {
       if (openBlankTab) {
-        survivorTab = (await TabManager.openListOfTabs([], windowId, true, true))[0];
+        survivorTab = (await TabManager.openListOfTabs([], windowId, {
+          inLastPos: true,
+          openAtLeastOne: true,
+      }))[0];
       } else {
         survivorTab = tabs.shift();
       }
@@ -648,7 +671,9 @@ TabManager.removeTabsInWindow = async function(windowId, openBlankTab = false, r
       let i = 0
       for (i = 0; i < 20; i++) {
         await Utils.wait(50);
-        let tabs = await TabManager.getTabsInWindowId(windowId, false);
+        let tabs = await TabManager.getTabsInWindowId(windowId, {
+          withoutRealUrl: false,
+        });
         if (tabs.filter((tab) => {
           if (tabsToRemove.indexOf(tab.id) >= 0) {
             return true;

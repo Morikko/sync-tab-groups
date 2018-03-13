@@ -19,10 +19,9 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
   beforeEach(async function() {
     this.previousTabs = await TabManager.getTabsInWindowId(
-      this.windowId,
-      true, // Without fancy url
-      true, // Force pinned
-    );
+      this.windowId,{
+        withPinned: true,
+      });
   });
 
   describe("Normal tabs - ", ()=>{
@@ -32,17 +31,15 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
         await TabManager.openListOfTabs(
           [],
-          this.windowId,
-          false, // Last pos
-          true, //openAtLeastOne
-        );
+          this.windowId,{
+            openAtLeastOne: true,
+        });
         await Utils.wait(3000)
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
 
         expect(resultingTabs).toEqualTabs(this.previousTabs);
         expect(resultingTabs[0].id).toEqual(tabId);
@@ -58,16 +55,13 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
         await TabManager.openListOfTabs(
           tabs,
-          this.windowId,
-          false, // Last pos
-          false, //openAtLeastOne
+          this.windowId
         );
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
 
         let expectedTabs = tabs.concat(this.previousTabs);
         TestManager.resetIndexProperties(expectedTabs);
@@ -87,16 +81,14 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
         await TabManager.openListOfTabs(
           tabs,
-          this.windowId,
-          true, // Last pos
-          false, //openAtLeastOne
-        );
+          this.windowId,{
+            inLastPos: true,
+        });
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
 
         let expectedTabs = this.previousTabs.concat(tabs);
         expectedTabs.forEach((tab, index)=>{
@@ -109,16 +101,15 @@ describe("Tabs Creation/Deletion - ", ()=>{
       it("Open At Least One New Tab", async function(){
         let new_tab  = await TabManager.openListOfTabs(
           [],
-          this.windowId,
-          true, // Last pos
-          true, //openAtLeastOne
-        );
+          this.windowId,{
+            inLastPos: true,
+            openAtLeastOne: true,
+        });
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
 
         let expectedTabs = this.previousTabs.concat(new_tab);
         TestManager.resetActiveProperties(expectedTabs);
@@ -139,16 +130,14 @@ describe("Tabs Creation/Deletion - ", ()=>{
         await browser.tabs.remove(new_tabs.map(tab => tab.id));
 
         let survivorTab = await TabManager.removeTabsInWindow(
-          this.windowId,
-          false, // Let Blank tab
+          this.windowId
         );
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
         survivorTab.url = Utils.extractTabUrl(survivorTab.url);
         survivorTab = [survivorTab];
 
@@ -160,14 +149,13 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
       it("Remove tabs and let only New Tab", async function(){
         let new_tab = await TabManager.removeTabsInWindow(
-          this.windowId,
-          true, // Let Blank tab
-        );
+          this.windowId,{
+            openBlankTab: true,
+          });
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
         new_tab.index=0;
         expect(resultingTabs).toEqualTabs([new_tab]);
       });
@@ -187,17 +175,14 @@ describe("Tabs Creation/Deletion - ", ()=>{
         await TabManager.openListOfTabs(
           tabs,
           this.windowId,
-          false, // Last pos
-          false, //openAtLeastOne
         );
 
         await browser.tabs.remove(this.previousTabs.map(tab => tab.id));
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
         tabs[tabs.length-1].active = true;
         expect(resultingTabs).toEqualTabs(tabs);
       });
@@ -213,15 +198,12 @@ describe("Tabs Creation/Deletion - ", ()=>{
         await TabManager.openListOfTabs(
           tabs,
           this.windowId,
-          false, // Last pos
-          false, //openAtLeastOne
         );
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
 
         expectedTabs = Utils.getCopy(this.previousTabs);
 
@@ -245,15 +227,13 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
         let survivorTab = await TabManager.removeTabsInWindow(
           this.windowId,
-          false, // Let Blank tab
         );
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
 
         expectedTabs = this.previousTabs.filter(tab=>tab.pinned);
 
@@ -268,15 +248,13 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
         let survivorTab = await TabManager.removeTabsInWindow(
           this.windowId,
-          false, // Let Blank tab
         );
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,
-          true,
-          true,
-        );
+          this.windowId,{
+            withPinned: true,
+          });
 
         expectedTabs = [this.previousTabs[0]];
         survivorTab.url = Utils.extractTabUrl(survivorTab.url);
@@ -295,10 +273,10 @@ describe("Tabs Creation/Deletion - ", ()=>{
     it("Open list Tabs and keeping only one active", async function(){
       // Close all except blank
       let survivorTab = await TabManager.removeTabsInWindow(
-        this.windowId,
-        true, // Let Blank tab
-        true, // removed Pinned
-      );
+        this.windowId,{
+          openBlankTab: true,
+          remove_pinned: true,
+        });
       OptionManager.updateOption("groups-discardedOpen", true);
 
       let tabs = Session.createTabs({
@@ -311,24 +289,20 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
       await TabManager.openListOfTabs(
         tabs,
-        this.windowId,
-        false, // Last pos
-        false, //openAtLeastOne
-        survivorTab, // tab to kill
-      );
+        this.windowId,{
+          pendingTab: survivorTab,
+      });
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
       let resultingTabs = await TabManager.getTabsInWindowId(
-        this.windowId,
-        true,
-        true,
-      );
+        this.windowId,{
+          withPinned: true,
+        });
 
       let resultingTabsWithFancy = await TabManager.getTabsInWindowId(
-        this.windowId,
-        false,
-        true,
-      );
+        this.windowId,{
+          withPinned: true,
+        });
 
       let nbrNotDiscarded = resultingTabsWithFancy.filter(tab => tab.url.includes(Utils.LAZY_PAGE_URL)).length;
 
@@ -477,10 +451,9 @@ describe("Switch Group - ", ()=>{
           await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
           let resultingTabs = await TabManager.getTabsInWindowId(
-            this.windowId,
-            true,
-            true,
-          );
+            this.windowId,{
+              withPinned: true,
+            });
 
           TestManager.setActiveProperties(previousTabs, targetTabIndex);
 
@@ -501,10 +474,9 @@ describe("Switch Group - ", ()=>{
           await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
           let resultingTabs = await TabManager.getTabsInWindowId(
-            this.windowId,
-            true,
-            true,
-          );
+            this.windowId,{
+              withPinned: true,
+            });
 
           TestManager.setActiveProperties(previousTabs, targetTabIndex);
 
@@ -547,10 +519,9 @@ describe("Switch Group - ", ()=>{
           await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
           let resultingTabs = await TabManager.getTabsInWindowId(
-            this.windowId,
-            true,
-            true,
-          );
+            this.windowId,{
+              withPinned: true,
+            });
 
           TestManager.setActiveProperties(previousTabs, targetTabIndex);
 
@@ -588,7 +559,7 @@ describe("WindowManager: ", ()=>{
       afterAll(async function(){
         if ( this.windowId )
           await browser.windows.remove(this.windowId);
-        if ( GroupManager.getGroupIndexFromGroupId(this.id, false) >= 0 )
+        if ( GroupManager.getGroupIndexFromGroupId(this.id, {error: false}) >= 0 )
           await GroupManager.removeGroupFromId(this.id);
       });
 
@@ -603,7 +574,7 @@ describe("WindowManager: ", ()=>{
         TestManager.resetActiveProperties(this.group.tabs);
 
         expect(previousLength).toEqual(GroupManager.groups.length+1);
-        expect(GroupManager.getGroupIndexFromGroupId(this.id, false)).toEqual(-1);
+        expect(GroupManager.getGroupIndexFromGroupId(this.id, {error: false})).toEqual(-1);
         expect(tabs).toEqualTabs(this.group.tabs);
 
         this.id = undefined;
@@ -612,10 +583,10 @@ describe("WindowManager: ", ()=>{
       it("Associate Windows", async function(){
         let previousLength = GroupManager.groups.length;
 
-        let id = await WindowManager.integrateWindow(this.windowId, true);
+        let id = await WindowManager.integrateWindow(this.windowId, {even_new_one: true});
         expect(id).toBeGreaterThan(-1);
 
-        let groupIndex = GroupManager.getGroupIndexFromGroupId(id, false);
+        let groupIndex = GroupManager.getGroupIndexFromGroupId(id, {error: false});
         expect(groupIndex).not.toEqual(-1);
 
         let tabs = Utils.getCopy(GroupManager.groups[groupIndex].tabs);
@@ -666,7 +637,7 @@ describe("WindowManager: ", ()=>{
         TestManager.resetActiveProperties(this.group.tabs);
 
         expect(previousLength).toEqual(GroupManager.groups.length+1);
-        expect(GroupManager.getGroupIndexFromGroupId(this.id, false)).toEqual(-1);
+        expect(GroupManager.getGroupIndexFromGroupId(this.id, {error: false})).toEqual(-1);
         expect(tabs).toEqualTabs(this.group.tabs);
 
         this.id = undefined;
@@ -675,10 +646,10 @@ describe("WindowManager: ", ()=>{
       it("Associate Windows", async function(){
         let previousLength = GroupManager.groups.length;
 
-        let id = await WindowManager.integrateWindow(this.windowId, true);
+        let id = await WindowManager.integrateWindow(this.windowId, {even_new_one: true});
         expect(id).toBeGreaterThan(-1);
 
-        let groupIndex = GroupManager.getGroupIndexFromGroupId(id, false);
+        let groupIndex = GroupManager.getGroupIndexFromGroupId(id, {error: false});
         expect(groupIndex).not.toEqual(-1);
 
         let tabs = Utils.getCopy(GroupManager.groups[groupIndex].tabs);
@@ -703,7 +674,7 @@ describe("WindowManager: ", ()=>{
     afterEach(async function() {
       if ( this.windowId !== browser.windows.WINDOW_ID_NONE ) {
         let id;
-        if ( (id = GroupManager.getGroupIdInWindow(this.windowId, false)) >= 0 ) { // Remove group
+        if ( (id = GroupManager.getGroupIdInWindow(this.windowId, {error: false})) >= 0 ) { // Remove group
           await GroupManager.removeGroupFromId(id);
         }
         // Close window
@@ -886,8 +857,11 @@ describe("Select Groups - ", ()=>{
     });
 
     it("Switch To Next Open", async function(){
-      await WindowManager.selectNextGroup(
-        1, true, this.groups[0].id);
+      await WindowManager.selectNextGroup({
+        direction: 1,
+        open: true,
+        refGroupId: this.groups[0].id
+      });
 
       let currentWindow = await browser.windows.getLastFocused();
 
@@ -895,8 +869,11 @@ describe("Select Groups - ", ()=>{
     });
 
     it("Switch To Previous Open", async function(){
-      let nextGroupId = await WindowManager.selectNextGroup(
-        -1, true, this.groups[1].id);
+      let nextGroupId = await WindowManager.selectNextGroup({
+        direction: -1,
+        open: true,
+        refGroupId: this.groups[1].id
+      });
 
       let currentWindow = await browser.windows.getLastFocused();
 
@@ -906,8 +883,9 @@ describe("Select Groups - ", ()=>{
 
     // Select Next Unopen
     it("Switch To Next Unopen", async function(){
-      let nextGroupId = await WindowManager.selectNextGroup(
-        1, false, this.groups[0].id);
+      let nextGroupId = await WindowManager.selectNextGroup({
+        refGroupId: this.groups[0].id
+      });
 
       let currentWindow = await browser.windows.getLastFocused();
 
@@ -917,8 +895,10 @@ describe("Select Groups - ", ()=>{
 
     // Select Previous Unopen
     it("Switch To Previous Unopen", async function(){
-      await WindowManager.selectNextGroup(
-        -1, false, this.groups[2].id);
+      await WindowManager.selectNextGroup({
+        direction: -1,
+        refGroupId: this.groups[2].id
+      });
 
       let currentWindow = await browser.windows.getLastFocused();
 
@@ -962,7 +942,7 @@ describe("End of Groups - ", ()=>{
       await browser.windows.remove(this.windowId);
     // Remove Group
     for (let group of this.groups ) {
-      if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
+      if ( GroupManager.getGroupIndexFromGroupId(group.id, {error: false}) >= 0 )
         await GroupManager.removeGroupFromId(group.id);
     }
   });
@@ -1022,7 +1002,9 @@ describe("End of Groups - ", ()=>{
       await WindowManager.closeGroup(this.groups[1].id);
 
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
-      let tabs = await TabManager.getTabsInWindowId(this.windowId, true, true);
+      let tabs = await TabManager.getTabsInWindowId(this.windowId, {
+        withPinned: true,
+      });
 
       TestManager.resetActiveProperties(tabs);
       TestManager.resetActiveProperties(pinnedTab);
@@ -1062,7 +1044,7 @@ describe("End of Groups - ", ()=>{
 
       expect(tabs).toEqualTabs(blank);
       expect(previousLength).toEqual(GroupManager.groups.length+1);
-      expect(GroupManager.getGroupIndexFromGroupId(this.groups[0].id, false)).toEqual(-1);
+      expect(GroupManager.getGroupIndexFromGroupId(this.groups[0].id, {error: false})).toEqual(-1);
     }, TestManager.TIMEOUT);
 
     it("Another Window", async function(){
@@ -1084,7 +1066,7 @@ describe("End of Groups - ", ()=>{
       }
       expect(previousLength).toEqual(GroupManager.groups.length+1);
       expect(windowsNumber).toEqual((await browser.windows.getAll()).length+1);
-      expect(GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false)).toEqual(-1);
+      expect(GroupManager.getGroupIndexFromGroupId(this.groups[1].id, {error: false})).toEqual(-1);
 
       if ( await WindowManager.isWindowIdOpen(windowId) ) {
         await browser.windows.remove(windowId);
@@ -1382,7 +1364,7 @@ describe("TabManager", ()=>{
         await browser.windows.remove(TestManager.getGroupDeprecated(this.groups, 1).windowId);
       }
       for (let group of this.groups ) {
-        if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
+        if ( GroupManager.getGroupIndexFromGroupId(group.id, {error: false}) >= 0 )
           await GroupManager.removeGroupFromId(group.id);
       }
       TestManager.swapOptions(this.previousOptions);
@@ -1478,7 +1460,7 @@ describe("TabManager", ()=>{
           await browser.windows.remove(this.windowId_bis);
         // Remove Group
         for (let group of this.groups ) {
-          if ( GroupManager.getGroupIndexFromGroupId(group.id, false) >= 0 )
+          if ( GroupManager.getGroupIndexFromGroupId(group.id, {error: false}) >= 0 )
             await GroupManager.removeGroupFromId(group.id);
         }
       });
@@ -1627,7 +1609,6 @@ describe("TabManager", ()=>{
           let tabUrl = this.getGroup(2).tabs[sourceIndex].url;
 
           let newId = await TabManager.moveTabToNewGroup(
-            "",
             this.groups[2].id,
             sourceIndex,
           );
@@ -1658,7 +1639,9 @@ describe("TabManager", ()=>{
 
         it("Unsync To Open", async function(){
           // Source Index (Open)
-          let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, true, true);
+          let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
+            withPinned: true,
+          });
           let sourceIndex = this.getRandomIndex(
             tabs,
             true, false);
@@ -1675,7 +1658,9 @@ describe("TabManager", ()=>{
             this.groups[0].id,
           );
 
-          tabs = await TabManager.getTabsInWindowId(this.windowId_bis, true, true);
+          tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
+            withPinned: true,
+          });
           await TabManager.updateTabsInGroup(this.getGroup(0).windowId);
 
           let hasSourceTabId = tabs.reduce((acc, tab)=>{
@@ -1693,7 +1678,9 @@ describe("TabManager", ()=>{
 
         it("Unsync To Close", async function(){
           // Source Index (Open)
-          let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, true, true);
+          let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
+            withPinned: true,
+          });
           let sourceIndex = this.getRandomIndex(
             tabs,
             true, false);
@@ -1711,7 +1698,9 @@ describe("TabManager", ()=>{
 
           await Utils.wait(500); // Chrome don't wait for remove
 
-          tabs = await TabManager.getTabsInWindowId(this.windowId_bis, true, true);
+          tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
+            withPinned: true,
+          });
 
           let hasSourceTabId = tabs.reduce((acc, tab)=>{
             return tab.id === tabId?true:acc;
@@ -1728,7 +1717,9 @@ describe("TabManager", ()=>{
 
         it("Unsync To New", async function(){
           // Source Index (Open)
-          let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, true, true);
+          let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
+            withPinned: true,
+          });
           let sourceIndex = this.getRandomIndex(
             tabs,
             true, false);
@@ -1744,7 +1735,9 @@ describe("TabManager", ()=>{
           await Utils.wait(500);
 
           let newGroupIndex = GroupManager.getGroupIndexFromGroupId(newId);
-          tabs = await TabManager.getTabsInWindowId(this.windowId_bis, true, true);
+          tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
+            withPinned: true,
+          });
 
           let hasSourceTabId = tabs.reduce((acc, tab)=>{
             return tab.id === tabId?true:acc;
@@ -1796,7 +1789,7 @@ describe("TabManager", ()=>{
 
       afterAll(async function(){
         for (let group of this.groups ) {
-          if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, false) >= 0 )
+          if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, {error: false}) >= 0 )
             await GroupManager.removeGroupFromId(group.id);
         }
       });
@@ -2026,10 +2019,10 @@ describe("TabManager", ()=>{
 
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowIds,
-          false,
-          true,
-        );
+          this.windowIds,{
+            withoutRealUrl: false,
+            withPinned: true,
+          });
 
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
@@ -2068,15 +2061,15 @@ describe("TabManager", ()=>{
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds[0]);
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds[1]);
         resultingTabs[0] = await TabManager.getTabsInWindowId(
-          this.windowIds[0],
-          false,
-          true,
-        );
+          this.windowIds[0],{
+            withoutRealUrl: false,
+            withPinned: true,
+          });
         resultingTabs[1] = await TabManager.getTabsInWindowId(
-          this.windowIds[1],
-          false,
-          true,
-        );
+          this.windowIds[1],{
+            withoutRealUrl: false,
+            withPinned: true,
+          });
 
         expect(resultingTabs[0]).toEqualTabs(expectedTabs[0]);
         expect(resultingTabs[1]).toEqualTabs(expectedTabs[1]);
@@ -2106,18 +2099,17 @@ describe("TabManager", ()=>{
         await Controller.undiscardAll(0, ()=>{
           TabManager.openListOfTabs(
             [newTab],
-            this.windowIds,
-            true,
-            false,
-          );
+            this.windowIds,{
+              inLastPos: true,
+          });
         });
 
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowIds,
-          false,
-          true,
-        );
+          this.windowIds,{
+            withoutRealUrl: false,
+            withPinned: true,
+          });
 
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
@@ -2152,10 +2144,10 @@ describe("TabManager", ()=>{
 
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
         let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowIds,
-          false,
-          true,
-        );
+          this.windowIds,{
+            withoutRealUrl: false,
+            withPinned: true,
+          });
 
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
