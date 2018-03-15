@@ -1,7 +1,12 @@
 describe("Controller ", ()=>{
 
-  beforeAll(()=>{
-    jasmine.addMatchers(tabGroupsMatchers);
+  beforeAll(async function() {
+    await TestManager.initBeforeAll(this);
+  });
+
+  // Set back previous states
+  afterAll(async function() {
+    await TestManager.initAfterAll(this);
   });
 
   describe("Update ", ()=>{

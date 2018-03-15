@@ -303,7 +303,7 @@ Utils.search = function(title, keywords) {
  */
 Utils.wait = async function(time) {
   return new Promise((resolve, reject) => {
-    setTimeout(resolve, time, 'one');
+    setTimeout(resolve, time, time);
   });
 }
 

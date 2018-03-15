@@ -419,13 +419,12 @@ describe("Switch Group - ", ()=>{
      */
     describe("[Pin included]From groups with pinned tabs - ", ()=>{
       beforeAll(function(){
-        this.previousOptions = TestManager.swapOptions({
+        TestManager.changeSomeOptions({
           "pinnedTab-sync": true,
         })
       });
 
       afterAll(function(){
-        TestManager.swapOptions(this.previousOptions);
       });
 
       describe("To Groups with pinned tabs", function(){
@@ -1360,7 +1359,7 @@ describe("TabManager", ()=>{
       this.length = 4;
       this.groups = [];
 
-      this.previousOptions = TestManager.swapOptions({
+      TestManager.changeSomeOptions({
         "groups-discardedOpen": true,
       });
 
@@ -1392,7 +1391,6 @@ describe("TabManager", ()=>{
         if ( GroupManager.getGroupIndexFromGroupId(group.id, {error: false}) >= 0 )
           await GroupManager.removeGroupFromId(group.id);
       }
-      TestManager.swapOptions(this.previousOptions);
     });
 
     it("Open In New Window", async function(){
@@ -2017,7 +2015,7 @@ describe("TabManager", ()=>{
         title:"Undiscard",
       })
 
-      this.previousOptions = TestManager.swapOptions({
+      TestManager.changeSomeOptions({
         "groups-discardedOpen": true,
       })
 
@@ -2025,8 +2023,6 @@ describe("TabManager", ()=>{
 
     afterAll(async function(){
       await TestManager.removeGroups(this.groupIds)
-
-      TestManager.swapOptions(this.previousOptions);
     });
 
     it("On 4 tabs in 1 window", async function(){

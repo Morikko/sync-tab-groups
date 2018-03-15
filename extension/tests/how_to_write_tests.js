@@ -6,17 +6,26 @@
   * 3. Success 10 times in a row (not lucky success)
   * 4. Respect the following structure for clarity
 */
+this.savedTime = TestManager.installFakeTime();
+TestManager.uninstallFakeTime(this.savedTime);
 
 {
-  /** BEFORE **/
-  beforeAll(function(){
-    // Done at the rootest describe
-    jasmine.addMatchers(tabGroupsMatchers);
+  /** Copy to the ROOTEST describe **/
+  // Keep previous states
+  beforeAll(async function() {
+    await TestManager.initBeforeAll(this);
   });
+
+  // Set back previous states
+  afterAll(async function() {
+    await TestManager.initAfterAll(this);
+  });
+
   {
+    /** Tweaking Before Tests **/
 
     // Set custom options
-    this.previousOptions = TestManager.swapOptions({
+    await TestManager.changeSomeOptions({
       "privateWindow-removeOnClose": true,
       "pinnedTab-sync": false,
     })
@@ -43,6 +52,9 @@
     TestManager.splitOnHalfScreen(windowId)
     TestManager.splitOnHalfTopScreen(windowId)
     TestManager.splitOnHalfBottomScreen(windowId)
+
+    TestManager.installFakeTime();
+    jasmine.clock.tick(10000);
   }
 
   /** TESTS **/
@@ -75,13 +87,16 @@
     expect(resultingGroups).toEqualGroups(expectedGroups);
   }
 
-  /** AFTER **/
+  /** Cleaning AFTER
+      Might not  be necessary because everything is cleaned when a root describe is overed
+  **/
+
+  TestManager.uninstallFakeTime();
+
   // Close all windows
   await TestManager.closeWindows(this.windowIds)
 
   // Remove groups
   await TestManager.removeGroups(this.groupIds)
 
-  // Reset options
-  TestManager.swapOptions(this.previousOptions);
 }

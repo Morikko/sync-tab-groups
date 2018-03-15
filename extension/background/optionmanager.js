@@ -35,13 +35,26 @@ OptionManager.repeatedtask = new TaskManager.RepeatedTask(3000);
  * @param {String} state - each part is separated with '-'
  * @param {Object} optionValue - the value to set
  */
-OptionManager.updateOption = function(optionName, optionValue) {
+OptionManager.updateOption = async function(optionName, optionValue) {
+  switch (optionName) {
+    case "backup-local-intervalTime":
+      optionValue = parseFloat(optionValue, 10);
+      optionValue = Math.max(0.01, optionValue);
+      break;
+    case "backup-local-maxSave":
+      optionValue = parseInt(optionValue, 10);
+      optionValue = Math.max(1, optionValue);
+      break;
+  }
+  if (optionValue === undefined || isNaN(optionValue)) {
+    return;
+  }
+
   optionName.split('-').reduce((a, b, index, array) => {
     if (index === array.length - 1)
       a[b] = optionValue;
     return a[b];
   }, OptionManager.options);
-  OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
 
   switch (optionName) {
     case "privateWindow-sync":
@@ -63,15 +76,27 @@ OptionManager.updateOption = function(optionName, optionValue) {
     case "groups-sortingType":
       GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
       break;
-    case "backup-enable":
-      OptionManager.onBackUpEnableChange(optionValue);
+    case "backup-download-enable":
+      OptionManager.onDownloadBackUpEnableChange(optionValue);
       break;
+    case "backup-local-enable":
+      await OptionManager.onLocalBackUpEnableChange(optionValue);
+      break;
+    case "backup-local-intervalTime":
+      await StorageManager.Local.planBackUp();
+      break;
+    case "backup-local-maxSave":
+      await StorageManager.Local.respectMaxBackUp();
+      break;
+
   }
   if ( optionName.startsWith("backup-time-") ) {
     OptionManager.onBackUpTimerChange(
-      optionName.substring("backup-time-".length),
+      optionName.substring("backup-download-time-".length),
       optionValue);
   }
+
+  OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
 }
 
 OptionManager.getOptionValue = function (optionName) {
@@ -84,11 +109,19 @@ OptionManager.getOptionValue = function (optionName) {
 /**
   * Init or stop the automatic back up process
   */
-OptionManager.onBackUpEnableChange = function(value) {
+OptionManager.onDownloadBackUpEnableChange = function(value) {
   if ( value ) {
     StorageManager.Backup.init();
   } else {
     StorageManager.Backup.stopAll();
+  }
+}
+
+OptionManager.onLocalBackUpEnableChange = async function(value) {
+  if ( value ) {
+    await StorageManager.Local.planBackUp();
+  } else {
+    StorageManager.Local.abortBackUp();
   }
 }
 

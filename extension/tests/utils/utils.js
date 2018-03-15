@@ -25,7 +25,7 @@
  Put the window on the left of the screen
  If TestManager.DOUBLE_MONITORS is true, the screen is not the first one but the second one (the one the more on the right)
 **/
-TestManager.DOUBLE_MONITORS = false;
+TestManager.DOUBLE_MONITORS = true;
 
 TestManager.splitOnHalfScreen = async function(windowId){
   try {
@@ -127,26 +127,109 @@ TestManager.resetIndexProperties = function (tabs) {
   });
 }
 
-TestManager.swapOptions = function (params) {
+
+
+TestManager.changeSomeOptions = async function (params) {
   let previousValues = {};
   for (let p in params ) {
     previousValues[p] = OptionManager.getOptionValue(p);
-    OptionManager.updateOption(p, params[p]);
+    await OptionManager.updateOption(p, params[p]);
   }
+}
+
+/**
+ * Set new options as @params
+ * return the previous ones
+ */
+TestManager.swapOptions = function (params=OptionManager.TEMPLATE()) {
+  let options = OptionManager.options;
+  OptionManager.options = params;
+  return options;
+}
+
+/**
+ * Set new groups as @params
+ * return the previous ones
+ */
+TestManager.swapGroups = function (params=[]) {
+  let groups = GroupManager.groups;
+  GroupManager.groups = params;
+  return groups;
+}
+
+TestManager.getWindows = async function() {
+  return (await browser.windows.getAll()).map(w => w.id);
+}
+
+TestManager.clearWindows = async function(filter=[]) {
+  const allWindows = (await browser.windows.getAll())
+          .map(w => w.id)
+          .filter(windowId => filter.indexOf(windowId) === -1);
+
+  await Promise.all(
+    allWindows.map((windowId)=> browser.windows.remove(windowId))
+  )
+}
+
+TestManager.swapLocalStorage = async function (params={}) {
+  let previousValues = await browser.storage.local.get(null);
+  await browser.storage.local.clear();
+  await browser.storage.local.set(params);
   return previousValues;
 }
 
-TestManager.swapLocalStorage = async function (params, reset=false) {
-  let previousValues = await browser.storage.local.get(null);
-  if ( reset ) {
-    await browser.storage.local.clear();
-  }
-  for (let p in params ) {
-    await browser.storage.local.set({
-      [p]: params[p]
+TestManager.initBeforeAll = async function(that){
+  // Done at the rootest describe
+  jasmine.addMatchers(tabGroupsMatchers);
+  that.previousOptions = TestManager.swapOptions();
+  that.previousGroups = TestManager.swapGroups();
+  that.initialWindows = await TestManager.getWindows();
+  that.initialStorage = await TestManager.swapLocalStorage();
+  OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  await Utils.wait(300);
+}
+
+TestManager.initAfterAll = async function(that){
+  // Done at the rootest describe
+  TestManager.swapOptions(that.previousOptions);
+  TestManager.swapGroups(that.previousGroups);
+  await TestManager.swapLocalStorage(that.initialStorage);
+  OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  await TestManager.clearWindows(that.initialWindows);
+  await Utils.wait(300);
+}
+
+const TIME_OBJECTS = [
+  "setTimeout",
+  "setInterval",
+  "clearTimeout",
+  "clearInterval",
+  "Date",
+]
+
+var savedTime = {};
+TestManager.installFakeTime = function() {
+  if (!Object.keys(savedTime).length) {
+    jasmine.clock().install();
+    jasmine.clock().mockDate();
+    // Change setInterval and set this reference to the backgroung
+    savedTime = {};
+    TIME_OBJECTS.forEach((time)=>{
+      savedTime[time] = bg[time];
+      bg[time] = window[time];
     });
   }
-  return previousValues;
+}
+
+// Done only is previously saved
+TestManager.uninstallFakeTime = function() {
+  if (Object.keys(savedTime).length) {
+    jasmine.clock().uninstall();
+    Object.assign(bg, savedTime);
+    savedTime = {};
+  }
 }
 
 /**
