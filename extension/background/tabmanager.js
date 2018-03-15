@@ -158,7 +158,6 @@ TabManager.openTab = async function(tab, windowId, index) {
   if (url === "about:privatebrowsing" || url === TabManager.NEW_TAB) {
     url = undefined;
   }
-
   // Create a tab to tab.url or to newtab
   let tabCreationProperties = {
     url: url,
@@ -190,7 +189,6 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
   pendingTab = undefined,
 }={}) {
   try {
-
     // Look if has Tab in tabs
     if (tabsToOpen.length === 0) {
       if (openAtLeastOne) {
@@ -213,7 +211,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
       let notPinnedTabs = tabs.filter(tab => !tab.pinnded);
       if (notPinnedTabs.length === 1 && notPinnedTabs[0].url === TabManager.NEW_TAB) {
         // open only a new tab that was already open
-        return [];
+        return tabs;
       }
     }
 
@@ -656,7 +654,10 @@ TabManager.removeTabsInWindow = async function(windowId, {
         survivorTab = (await TabManager.openListOfTabs([], windowId, {
           inLastPos: true,
           openAtLeastOne: true,
-      }))[0];
+        }))[0];
+        if( survivorTab.id === tabs[0].id ) { // Already just a new tab, don't close anything
+          return survivorTab;
+        }
       } else {
         survivorTab = tabs.shift();
       }

@@ -34,7 +34,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
           this.windowId,{
             openAtLeastOne: true,
         });
-        await Utils.wait(3000)
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,{
@@ -58,6 +58,8 @@ describe("Tabs Creation/Deletion - ", ()=>{
           this.windowId
         );
 
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,{
             withPinned: true,
@@ -72,11 +74,17 @@ describe("Tabs Creation/Deletion - ", ()=>{
       });
 
       it("Open List of Tabs in last position", async function(){
+        let previousTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+        });
+
         let tabs = Session.createTabs({
           tabsLength: 3,
           pinnedTabs: 0,
           privilegedLength: 0,
           extensionUrlLength: 0,
+          active: -2,
         });
 
         await TabManager.openListOfTabs(
@@ -84,13 +92,14 @@ describe("Tabs Creation/Deletion - ", ()=>{
           this.windowId,{
             inLastPos: true,
         });
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,{
             withPinned: true,
           });
 
-        let expectedTabs = this.previousTabs.concat(tabs);
+        let expectedTabs = previousTabs.concat(tabs);
         expectedTabs.forEach((tab, index)=>{
           tab.index = index;
         })
@@ -105,6 +114,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
             inLastPos: true,
             openAtLeastOne: true,
         });
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,{
@@ -179,6 +189,8 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
         await browser.tabs.remove(this.previousTabs.map(tab => tab.id));
 
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
+
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,{
             withPinned: true,
@@ -199,6 +211,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
           tabs,
           this.windowId,
         );
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowId,{
@@ -277,15 +290,13 @@ describe("Tabs Creation/Deletion - ", ()=>{
           openBlankTab: true,
           remove_pinned: true,
         });
-      OptionManager.updateOption("groups-discardedOpen", true);
 
+      OptionManager.updateOption("groups-discardedOpen", true);
       let tabs = Session.createTabs({
         tabsLength: 5,
         pinnedTabs: 0,
-        privilegedLength: 0,
-        extensionUrlLength: 0,
+        active: 2,
       });
-      tabs[2].active = true;
 
       await TabManager.openListOfTabs(
         tabs,
@@ -301,6 +312,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
 
       let resultingTabsWithFancy = await TabManager.getTabsInWindowId(
         this.windowId,{
+          withoutRealUrl: false,
           withPinned: true,
         });
 
@@ -567,6 +579,7 @@ describe("WindowManager: ", ()=>{
         let previousLength = GroupManager.groups.length;
 
         await GroupManager.removeGroupFromId(this.id);
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
         let tabs = await TabManager.getTabsInWindowId(this.windowId);
 
@@ -1175,8 +1188,9 @@ describe("TabManager", ()=>{
             this.lastIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.lastIndex].active).toBe(true);
         });
 
         it("Select Middle...", async function(){
@@ -1184,8 +1198,9 @@ describe("TabManager", ()=>{
             this.middleIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.middleIndex].active).toBe(true);
         });
 
         it("Select first...", async function(){
@@ -1193,8 +1208,9 @@ describe("TabManager", ()=>{
             this.firstIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.firstIndex].active).toBe(true);
         });
       });
 
@@ -1209,8 +1225,9 @@ describe("TabManager", ()=>{
             this.lastIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.lastIndex].active).toBe(true);
         });
 
         it("Select Middle...", async function(){
@@ -1218,8 +1235,9 @@ describe("TabManager", ()=>{
             this.middleIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.middleIndex].active).toBe(true);
         });
 
         it("Select first...", async function(){
@@ -1227,8 +1245,9 @@ describe("TabManager", ()=>{
             this.firstIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.firstIndex].active).toBe(true);
         });
       });
 
@@ -1264,8 +1283,9 @@ describe("TabManager", ()=>{
             this.lastIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.lastIndex].active).toBe(true);
         });
 
         it("Select Middle...", async function(){
@@ -1273,8 +1293,9 @@ describe("TabManager", ()=>{
             this.middleIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.middleIndex].active).toBe(true);
         });
 
         it("Select first...", async function(){
@@ -1282,8 +1303,9 @@ describe("TabManager", ()=>{
             this.firstIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.firstIndex].active).toBe(true);
         });
       });
 
@@ -1303,8 +1325,9 @@ describe("TabManager", ()=>{
             this.lastIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.lastIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.lastIndex].active).toBe(true);
         });
 
         it("Select Middle...", async function(){
@@ -1312,8 +1335,9 @@ describe("TabManager", ()=>{
             this.middleIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.middleIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.middleIndex].active).toBe(true);
         });
 
         it("Select first...", async function(){
@@ -1321,8 +1345,9 @@ describe("TabManager", ()=>{
             this.firstIndex,
             this.id
           );
-          await Utils.wait(400);
-          expect(GroupManager.groups[this.groupIndex].tabs[this.firstIndex].active).toBe(true);
+          await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+          const tabs = await TabManager.getTabsInWindowId(this.windowId);
+          expect(tabs[this.firstIndex].active).toBe(true);
         });
       });
 
@@ -2005,6 +2030,9 @@ describe("TabManager", ()=>{
     });
 
     it("On 4 tabs in 1 window", async function(){
+      if ( !Utils.isChrome()) {
+        return;
+      }
       try {
         this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[0].id);
         await TestManager.splitOnHalfScreen(this.windowIds);
@@ -2017,7 +2045,10 @@ describe("TabManager", ()=>{
 
         await Controller.undiscardAll();
 
+        console.log("Undiscard done")
+
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
+
         let resultingTabs = await TabManager.getTabsInWindowId(
           this.windowIds,{
             withoutRealUrl: false,
@@ -2034,6 +2065,9 @@ describe("TabManager", ()=>{
     });
 
     it("On 6 tabs in 2 window", async function(){
+      if ( !Utils.isChrome()) {
+        return;
+      }
       try {
         let group1 = 1, group2 = 2;
         let expectedTabs = [], resultingTabs = [];
@@ -2082,6 +2116,9 @@ describe("TabManager", ()=>{
     });
 
     it("Add new discarded tabs while undiscarding", async function(){
+      if ( !Utils.isChrome()) {
+        return;
+      }
       try {
         this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[3].id);
         await TestManager.splitOnHalfScreen(this.windowIds);
@@ -2121,6 +2158,9 @@ describe("TabManager", ()=>{
     });
 
     it("While undiscarding, a tab in the queue is removed", async function(){
+      if ( !Utils.isChrome()) {
+        return;
+      }
       try {
         this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[4].id);
         await TestManager.splitOnHalfScreen(this.windowIds);

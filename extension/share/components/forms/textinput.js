@@ -35,7 +35,7 @@ class TextInput extends React.Component {
           "span",
           {
             className: "option-input-text-label",
-            "for": this.props.id },
+            htmlFor: this.props.id },
           this.props.label
         ),
         React.createElement("input", {

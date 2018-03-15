@@ -677,6 +677,11 @@ Controller.updateFromBelow_0_6_2 = function (options=OptionManager.options) {
   }
 }
 
+/**
+ * WARNING: this funtion is not working well on firefox
+ * https://bugzilla.mozilla.org/show_bug.cgi?id=1420681
+ * Any tab with a beforeunload event set will not be discardable...
+ */
 Controller.undiscardAll = async function (globalCount = 0, callbackAfterFirstUndiscard=undefined) {
   return new Promise(async function(resolve, reject){
     let queue = Promise.resolve();

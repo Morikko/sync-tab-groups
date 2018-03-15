@@ -35,7 +35,7 @@ Session.createTabs = function({
   privilegedLength= 0,
   openPrivileged= false, // Note= Real Groups never have this types (urls are filtered)
   extensionUrlLength= 0,
-  active=-1,
+  active=-1, // -1: last, -2 or >= tabs.length: nothing, else the tab
 }={}){
   let tabs = [];
   let index = 0;
@@ -149,7 +149,7 @@ Session.createGroup = function({
       - [ids{Array}, groups{Array}]  if params.global to true
  */
 Session.createArrayGroups = function(params={}) {
-  params : Object.assign({
+  params = Object.assign({
     groupsLength: 0,
     tabsLength: 0,
     pinnedTabs: 0,
@@ -315,14 +315,14 @@ Session.ListOfTabURLs = [
     "favIconUrl": "https://cdn.mdn.mozilla.net/static/img/favicon32.7f3da72dcea1.png"
   },
   {
-    "title": "introduction.js",
-    "url": "https://jasmine.github.io/edge/introduction.html",
-    "favIconUrl": "https://jasmine.github.io/images/jasmine_32x32.ico"
+    favIconUrl: "https://jasmine.github.io/favicon.ico",
+    title: "Jasmine Documentation",
+    url: "https://jasmine.github.io/index.html",
   },
   {
-    "title": "Les superpouvoirs des rats-taupes nus | ARTE",
-    "url": "https://www.arte.tv/fr/videos/067065-000-A/les-superpouvoirs-des-rats-taupes-nus/",
-    "favIconUrl": "https://static-cdn.arte.tv/guide/favicons/favicon.ico"
+    favIconUrl: "https://static-cdn.arte.tv/guide/favicons/favicon-16x16.png",
+    title: "ARTE : chaîne télé culturelle franco-allemande - TV direct & replay",
+    url: "https://www.arte.tv/fr/"
   },
   {
     "title": "HTML Color Picker",
@@ -418,4 +418,21 @@ Session.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
     console.error(msg);
     return msg;
   }
+}
+
+// Get information for adding tab in the array
+Session.getTabInformation = async function(url) {
+  let windowId = (await browser.windows.getLastFocused()).id;
+  let tabId = (await browser.tabs.create({
+    url: url,
+    windowId: windowId,
+  })).id;
+  await TestManager.waitAllTabsToBeLoadedInWindowId(windowId)
+  let tab = await browser.tabs.get(tabId);
+  let tabLight = {};
+  tabLight.url = tab.url;
+  tabLight.title = tab.title;
+  tabLight.favIconUrl = tab.favIconUrl;
+  console.log(tabLight);
+  await browser.tabs.remove(tabId);
 }
