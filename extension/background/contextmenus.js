@@ -337,7 +337,11 @@ browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
 
 try {
   browser.runtime.sendMessage("treestyletab@piro.sakura.ne.jp", {
-    type: "register-self"
+    type: "register-self",
+    icons: {
+      "64": "/share/icons/gear-64.png",
+      "32": "/share/icons/gear-32.png"
+    }
   });
   browser.runtime.onMessageExternal.addListener((message, sender) => {
     if (sender.id != "treestyletab@piro.sakura.ne.jp")
