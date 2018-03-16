@@ -11,9 +11,9 @@ ContextMenu.repeatedtask = new TaskManager.RepeatedTask(1000);
 ContextMenu.occupied = false;
 ContextMenu.again = false;
 
-ContextMenu.createMoveTabMenu = async function() {
+ContextMenu.createMoveTabMenu = async function(force) {
   try {
-    if ( GroupManager.groups.length === ContextMenu.MoveTabMenuIds.length-3 ) {
+    if ( !force && GroupManager.groups.length === ContextMenu.MoveTabMenuIds.length-3 ) {
       // No change nothing to do
       return;
     }
@@ -27,7 +27,7 @@ ContextMenu.createMoveTabMenu = async function() {
       return "";
     }
     for (let id of ContextMenu.MoveTabMenuIds) {
-      await browser.contextMenus.remove(id);
+      await this._removeMenuItem(id);
     }
     await Utils.wait(500)
     ContextMenu.MoveTabMenuIds = [];
@@ -36,7 +36,7 @@ ContextMenu.createMoveTabMenu = async function() {
 
     let parentId = ContextMenu.MoveTabMenu_ID + "title";
     ContextMenu.MoveTabMenuIds.push(parentId);
-    await browser.contextMenus.create({
+    await this._createMenuItem({
       id: parentId,
       title: browser.i18n.getMessage("move_tab_group"),
       contexts: contexts,
@@ -55,7 +55,7 @@ ContextMenu.createMoveTabMenu = async function() {
     let sortedIndex = GroupManager.getIndexSortByPosition(groups);
     for (let i of sortedIndex) {
       ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
-      await browser.contextMenus.create({
+      await this._createMenuItem({
         id: ContextMenu.MoveTabMenu_ID + groups[i].id,
         title: Utils.getGroupTitle(groups[i]),
         contexts: contexts,
@@ -65,7 +65,7 @@ ContextMenu.createMoveTabMenu = async function() {
     }
 
     ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "separator-2");
-    await browser.contextMenus.create({
+    await this._createMenuItem({
       id: ContextMenu.MoveTabMenu_ID + "separator-2",
       type: "separator",
       contexts: contexts,
@@ -73,7 +73,7 @@ ContextMenu.createMoveTabMenu = async function() {
     });
 
     ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "new");
-    await browser.contextMenus.create({
+    await this._createMenuItem({
       id: ContextMenu.MoveTabMenu_ID + "new",
       title: browser.i18n.getMessage("add_group"),
       contexts: contexts,
@@ -114,7 +114,7 @@ ContextMenu.updateMoveFocus = async function(disabledId) {
           error: false
         });
         if ( groupIndex >= 0 ) {
-          return browser.contextMenus.update(
+          return this._updateMenuItem(
             id, {
               enabled: disabledId !== GroupManager.groups[groupIndex].windowId
             });
@@ -143,7 +143,7 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "/share/icons/list-32.png"
     };
   }
-  browser.contextMenus.create(contextManageGroups);
+  this._createMenuItem(contextManageGroups);
 
   let contextExportGroups = {
     id: ContextMenu.SpecialActionMenu_ID + "export_groups",
@@ -156,7 +156,7 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "/share/icons/upload-32.png"
     };
   }
-  browser.contextMenus.create(contextExportGroups);
+  this._createMenuItem(contextExportGroups);
 
   let contextBackUp = {
     id: ContextMenu.SpecialActionMenu_ID + "backup",
@@ -169,9 +169,9 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "/share/icons/hdd-o-32.png"
     };
   }
-  browser.contextMenus.create(contextBackUp);
+  this._createMenuItem(contextBackUp);
   /* TODO: not working can't ask file, wait select group in popup window with filter
-  browser.contextMenus.create({
+  this._createMenuItem({
     id: ContextMenu.SpecialActionMenu_ID + "import_groups",
     title: browser.i18n.getMessage("import_groups"),
     contexts: ['browser_action'],
@@ -182,7 +182,7 @@ ContextMenu.createSpecialActionMenu = function() {
   });
   */
   /*  TODO: end of bookmark auto-save
-  browser.contextMenus.create({
+  this._createMenuItem({
     id: ContextMenu.SpecialActionMenu_ID + "save_bookmarks_groups",
     title: browser.i18n.getMessage("save_bookmarks_groups"),
     contexts: ['browser_action'],
@@ -204,7 +204,7 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "/share/icons/gear-32.png"
     };
   }
-  browser.contextMenus.create(contextOpenPreferences);
+  this._createMenuItem(contextOpenPreferences);
 
   /* TODO: Add Guide
   let contextGuide = {
@@ -218,7 +218,7 @@ ContextMenu.createSpecialActionMenu = function() {
       "32": "/share/icons/info-32.png"
     };
   }
-  browser.contextMenus.create(contextGuide);
+  this._createMenuItem(contextGuide);
   */
   if ( Utils.DEBUG_MODE ) {
     let contextTestPreferences = {
@@ -226,7 +226,7 @@ ContextMenu.createSpecialActionMenu = function() {
       title: "Tests",
       contexts: ['browser_action'],
     };
-    browser.contextMenus.create(contextTestPreferences);
+    this._createMenuItem(contextTestPreferences);
   }
 }
 
@@ -294,8 +294,75 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
 };
 
 
+ContextMenu._createMenuItem = async function(params) {
+  const result = await browser.contextMenus.create(params);
+  try {
+    await browser.runtime.sendMessage("treestyletab@piro.sakura.ne.jp", {
+      type: "fake-contextMenu-create",
+      params
+    });
+  }
+  catch(error) {
+  }
+  return result;
+};
+
+ContextMenu._removeMenuItem = async function(id) {
+  const result = await browser.contextMenus.remove(id);
+  try {
+    await browser.runtime.sendMessage("treestyletab@piro.sakura.ne.jp", {
+      type: "fake-contextMenu-remove",
+      params: id
+    });
+  }
+  catch(error) {
+  }
+  return result;
+};
+
+ContextMenu._updateMenuItem = async function(id, params) {
+  const result = await browser.contextMenus.update(id, params);
+  try {
+    await browser.runtime.sendMessage("treestyletab@piro.sakura.ne.jp", {
+      type: "fake-contextMenu-update",
+      params: { id, params }
+    });
+  }
+  catch(error) {
+  }
+  return result;
+};
+
+
 browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
 browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
+
+try {
+  const registerToTST = () => {
+    browser.runtime.sendMessage("treestyletab@piro.sakura.ne.jp", {
+      type: "register-self",
+      icons: browser.runtime.getManifest().icons
+    });
+  };
+  registerToTST();
+  browser.runtime.onMessageExternal.addListener((message, sender) => {
+    if (sender.id != "treestyletab@piro.sakura.ne.jp")
+      return;
+    switch (message.type) {
+      case "fake-contextMenu-click":
+        ContextMenu.SpecialActionMenuListener(message.info, message.tab);
+        ContextMenu.MoveTabMenuListener(message.info, message.tab);
+        break;
+      case "ready":
+        registerToTST();
+        ContextMenu.createMoveTabMenu(true);
+        break;
+    }
+  });
+}
+catch(error) {
+}
+
 GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
   () => {
     ContextMenu.repeatedtask.add(
