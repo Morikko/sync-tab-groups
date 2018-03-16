@@ -339,10 +339,7 @@ try {
   const registerToTST = () => {
     browser.runtime.sendMessage("treestyletab@piro.sakura.ne.jp", {
       type: "register-self",
-      icons: {
-        "64": "/share/icons/gear-64.png",
-        "32": "/share/icons/gear-32.png"
-      }
+      icons: browser.runtime.getManifest().icons
     });
   };
   registerToTST();
