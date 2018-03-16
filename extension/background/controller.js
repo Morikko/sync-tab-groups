@@ -79,6 +79,12 @@ Controller.refreshOptionsUI = function() {
   });
 };
 
+Controller.refreshBackupListUI = async function() {
+  Utils.sendMessage("BackupList:Changed", {
+    backupList: await StorageManager.Local.getBackUpList(),
+  });
+};
+
 Controller.refreshUi = function() {
   Utils.sendMessage("Groups:Changed", {
     groups: GroupManager.groups,
@@ -280,15 +286,9 @@ Controller.onImportGroups = function({
   content_file
 }) {
   try {
-    let groups = StorageManager.File.importGroups(content_file);
-    GroupManager.addGroups(groups);
-
-    browser.notifications.create({
-      "type": "basic",
-      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
-      "title": "Import Groups succeeded",
-      "message": groups.length + " groups imported.",
-      "eventTime": 4000,
+    let groups = StorageManager.File.importGroupsFromFile(content_file);
+    GroupManager.addGroups(groups, {
+      showNotification: true,
     });
   } catch (e) {
     console.error(e);
@@ -304,6 +304,42 @@ Controller.onImportGroups = function({
 
 Controller.onExportGroups = function() {
   StorageManager.File.exportGroups(GroupManager.getCopy());
+};
+
+Controller.onExportBackUp = async function(id) {
+  let groups = await StorageManager.Local.getBackUp(id);
+  if ( groups ) {
+    StorageManager.File.exportGroups(groups);
+  } else {
+    browser.notifications.create({
+      "type": "basic",
+      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+      "title": "Import Back Up Groups",
+      "message": "Back up is empty, no group to import.",
+      "eventTime": 4000,
+    });
+  }
+};
+
+Controller.onImportBackUp = async function(id) {
+  let groups = await StorageManager.Local.getBackUp(id);
+  if ( groups ) {
+    GroupManager.addGroups(groups, {
+      showNotification: true,
+    });
+  } else {
+    browser.notifications.create({
+      "type": "basic",
+      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+      "title": "Import Back Up Groups",
+      "message": "Back up is empty, no group to import.",
+      "eventTime": 4000,
+    });
+  }
+};
+
+Controller.onRemoveBackUp = async function(ids) {
+  await StorageManager.Local.removeBackup(ids);
 };
 
 Controller.onGroupChangePosition = async function({
@@ -403,6 +439,9 @@ Controller.optionMessenger = function(message) {
     case "Option:Ask":
       Controller.refreshOptionsUI();
       break;
+    case "BackupList:Ask":
+      Controller.refreshBackupListUI();
+      break;
     case "Option:Change":
       OptionManager.updateOption(message.params.optionName, message.params.optionValue);
       Controller.refreshOptionsUI();
@@ -429,6 +468,15 @@ Controller.optionMessenger = function(message) {
     case "Option:UndiscardLazyTabs":
       Controller.undiscardAll();
       break;
+    case "Option:RemoveBackUp":
+      Controller.onRemoveBackUp(message.params.id);
+    break;
+    case "Option:ImportBackUp" :
+      Controller.onImportBackUp(message.params.id);
+      break;
+    case "Option:ExportBackUp" :
+      Controller.onExportBackUp(message.params.id);
+      break;
   }
 }
 
@@ -440,12 +488,18 @@ Controller.initDataEventListener = function() {
   GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     () => {
       Controller.refreshUi();
-    });
-
+    }
+  );
   OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
     () => {
       Controller.refreshOptionsUI();
-    });
+    }
+  );
+  StorageManager.Local.eventlistener.on(StorageManager.Local.BACKUP_CHANGE,
+    ()=>{
+        Controller.refreshBackupListUI();
+    }
+  );
 }
 
 

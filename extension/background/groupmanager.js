@@ -733,12 +733,25 @@ GroupManager.addGroupWithTab = function(tabs, {
  * @param {Array} newGroups - groups to add
  * @param {Array} groups - groups where to add
  */
-GroupManager.addGroups = function(newGroups, groups=GroupManager.groups) {
+GroupManager.addGroups = function(newGroups, {
+  groups=GroupManager.groups,
+  showNotification=false,
+}={}) {
   let ids = []
   for (let g of newGroups) {
     g.id = GroupManager.createUniqueGroupId();
     ids.push(g.id);
     groups.push(g);
+  }
+
+  if ( showNotification ){
+    browser.notifications.create({
+      "type": "basic",
+      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+      "title": "Import Groups succeeded",
+      "message": groups.length + " groups imported.",
+      "eventTime": 4000,
+    });
   }
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);

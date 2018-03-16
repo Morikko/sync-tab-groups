@@ -49,7 +49,7 @@ StorageManager.File.exportGroups = async function(groups) {
   }
 }
 
-StorageManager.File.importGroups = function(content_file) {
+StorageManager.File.importGroupsFromFile = function(content_file) {
   if (!content_file.hasOwnProperty('version')) {
     throw Error("ImportGroups: Content file is not in a supported format.");
   }

@@ -1,4 +1,26 @@
-class SaveSection extends React.Component {
+class SaveSectionStandalone extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      backupSelected: []
+    };
+
+    this.getBackUpList = this.getBackUpList.bind(this);
+    this.handleRemoveBackup = this.handleRemoveBackup.bind(this);
+    this.handleImportBackup = this.handleImportBackup.bind(this);
+    this.handleExportBackup = this.handleExportBackup.bind(this);
+    this.handleBackupSelection = this.handleBackupSelection.bind(this);
+  }
+
+  async getBackUpList() {
+    let bg = await browser.runtime.getBackgroundPage();
+
+    this.setState({
+      backupList: await bg.StorageManager.Local.getBackUpList()
+    });
+  }
+
   render() {
     return React.createElement(
       "div",
@@ -9,7 +31,7 @@ class SaveSection extends React.Component {
         browser.i18n.getMessage("options_groups")
       ),
       this.getImportExportSection(),
-      this.getBackUpSection(),
+      this.getBackUpLocalSection(),
       this.getBackUpDownloadSection(),
       this.getCleaningSection()
     );
@@ -84,7 +106,22 @@ class SaveSection extends React.Component {
     });
   }
 
-  getBackUpSection() {
+  getBackUpLocalSection() {
+    let backups = [];
+
+    let sortedBackupList = Object.entries(this.props.backupList)
+    // Desc: recent first
+    .sort((a, b) => b[1].date - a[1].date);
+
+    for (let backup of sortedBackupList) {
+      backups.push(React.createElement(
+        "option",
+        { value: backup[0],
+          key: backup[0] },
+        new Date(backup[1].date).toString()
+      ));
+    }
+
     return React.createElement(SubSection, {
       title: browser.i18n.getMessage("options_groups_backup"),
       tooltip: React.createElement(
@@ -138,8 +175,76 @@ class SaveSection extends React.Component {
             onChange: this.props.onOptionChange,
             name: this.props.options.backup.local.maxSave
           })
+        ),
+        React.createElement(
+          "select",
+          { size: "6",
+            multiple: true,
+            onChange: this.handleBackupSelection,
+            style: {
+              overflow: "auto",
+              width: "100%",
+              height: "300px"
+            } },
+          backups
+        ),
+        React.createElement(
+          "div",
+          { className: "triple-buttons" },
+          React.createElement(
+            "div",
+            { className: "dangerous-zone" },
+            React.createElement(OptionButton, {
+              title: "Remove",
+              onClick: this.handleRemoveBackup,
+              enabled: this.state.backupSelected.length
+            })
+          ),
+          React.createElement(OptionButton, {
+            title: "Import",
+            onClick: this.handleImportBackup,
+            enabled: this.state.backupSelected.length === 1
+          }),
+          React.createElement(OptionButton, {
+            title: "Export",
+            onClick: this.handleExportBackup,
+            enabled: this.state.backupSelected.length === 1
+          })
         )
       )
+    });
+  }
+
+  handleRemoveBackup() {
+    if (this.state.backupSelected.length) {
+      this.props.onRemoveBackUp(this.state.backupSelected);
+    }
+  }
+
+  handleImportBackup() {
+    if (this.state.backupSelected.length === 1) {
+      this.props.onImportBackUp(this.state.backupSelected[0]);
+    }
+  }
+
+  handleExportBackup() {
+    if (this.state.backupSelected.length === 1) {
+      this.props.onExportBackUp(this.state.backupSelected[0]);
+    }
+  }
+
+  handleBackupSelection(event) {
+    event.stopPropagation();
+
+    let selected = [],
+        sel = event.target;
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].selected) {
+        selected.push(sel.options[i].value);
+      }
+    }
+    this.setState({
+      backupSelected: selected
     });
   }
 
@@ -296,6 +401,14 @@ class SaveSection extends React.Component {
     });
   }
 };
+
+SaveSection = (() => {
+  return ReactRedux.connect(state => {
+    return {
+      backupList: state.get("backupList")
+    };
+  }, ActionCreators)(SaveSectionStandalone);
+})();
 
 SaveSection.propTypes = {
   options: PropTypes.object.isRequired,

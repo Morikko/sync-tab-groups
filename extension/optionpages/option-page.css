@@ -249,7 +249,11 @@ input[type=checkbox]:checked ~ label{
   background: var(--dangerous-checked);
 }
 
-.dangerous-zone .option-button:focus, .dangerous-zone  .option-button:hover {
+.dangerous-zone .option-button.disabled {
+  background: var(--dangerous-checked-disabled);
+}
+
+.dangerous-zone .option-button:not(.disabled):focus, .dangerous-zone  .option-button:not(.disabled):hover {
   background: var(--dangerous-checked-hover);
 }
 

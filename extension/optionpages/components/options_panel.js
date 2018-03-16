@@ -18,7 +18,10 @@ class OptionsPanel extends React.Component {
         onExportClick: this.props.onExportClick,
         onDeleteAllGroups: this.props.onDeleteAllGroups,
         onReloadGroups: this.props.onReloadGroups,
-        selected: this.props.selected
+        selected: this.props.selected,
+        onRemoveBackUp: this.props.onRemoveBackUp,
+        onImportBackUp: this.props.onImportBackUp,
+        onExportBackUp: this.props.onExportBackUp
         /* TODO: end of bookmark auto-save
         onBackUpClick: this.props.onBackUpClick*/ }),
       React.createElement(AboutSection, {

@@ -5,6 +5,10 @@ const Actions = {
     Utils.sendMessage("Option:Ask", {});
   },
 
+  askBackupList: function() {
+    Utils.sendMessage("BackupList:Ask", {});
+  },
+
   onOptionChange: function(name, value) {
     Utils.sendMessage("Option:Change", {
       optionName: name,
@@ -41,6 +45,24 @@ const Actions = {
   onUndiscardLazyTabs: function() {
     Utils.sendMessage("Option:UndiscardLazyTabs", {});
   },
+
+  onRemoveBackUp: function(id) {
+    Utils.sendMessage("Option:RemoveBackUp", {
+      id: id
+    });
+  },
+
+  onImportBackUp: function(id) {
+    Utils.sendMessage("Option:ImportBackUp", {
+      id: id
+    });
+  },
+
+  onExportBackUp: function(id) {
+    Utils.sendMessage("Option:ExportBackUp", {
+      id: id
+    });
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -59,6 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
         onReloadGroups: Actions.onReloadGroups,
         onOpenGuide: Actions.onOpenGuide,
         onUndiscardLazyTabs: Actions.onUndiscardLazyTabs,
+        onRemoveBackUp: Actions.onRemoveBackUp,
+        onImportBackUp: Actions.onImportBackUp,
+        onExportBackUp: Actions.onExportBackUp,
       })
     ),
     document.getElementById("content")
@@ -70,6 +95,9 @@ var optionMessenger = function(message) {
     case "Option:Changed":
       store.dispatch(ActionCreators.setOptions(message.params.options));
       break;
+    case "BackupList:Changed":
+      store.dispatch(ActionCreators.setBackupList(message.params.backupList));
+      break;
   }
 }
 
@@ -80,6 +108,7 @@ browser.runtime.onMessage.addListener(optionMessenger);
  */
 function init() {
   Actions.askOptions();
+  Actions.askBackupList();
 }
 
 init();

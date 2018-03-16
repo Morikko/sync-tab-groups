@@ -20,7 +20,7 @@ TestManager.import_export = function() {
       await this.set();
 
       // Import Tab Groups without session
-      this.groups = StorageManager.File.importGroups(
+      this.groups = StorageManager.File.importGroupsFromFile(
         Examples.tabGroups_2w_3g
       );
 
@@ -32,7 +32,7 @@ TestManager.import_export = function() {
       }
 
       // Import Tab Groups with session
-      this.groups = StorageManager.File.importGroups(
+      this.groups = StorageManager.File.importGroupsFromFile(
         Examples.tabGroups_2w_3g_session
       );
 
@@ -44,7 +44,7 @@ TestManager.import_export = function() {
       }
 
       // Import Sync Tab Groups
-      this.groups = StorageManager.File.importGroups(
+      this.groups = StorageManager.File.importGroupsFromFile(
         Examples.syncTabGroups_2w_3g
       );
 

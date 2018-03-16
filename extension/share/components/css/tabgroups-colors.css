@@ -18,6 +18,7 @@
   --checked-hover: #0e647d;
   --dangerous-checked: #ff4d4d;
   --dangerous-checked-hover: #b30000;
+  --dangerous-checked-disabled: #ffcccc;
   --not-checked: #e6e6e6;
   --not-checked-hover: #ccc;
   --disabled: #7b7b7b;

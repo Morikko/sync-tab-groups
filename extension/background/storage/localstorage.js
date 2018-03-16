@@ -2,6 +2,9 @@ var StorageManager = StorageManager || {};
 
 StorageManager.Local = StorageManager.Local || {};
 StorageManager.Local.BACKUP_TIMEOUT;
+
+StorageManager.Local.BACKUP_CHANGE = "backup-change";
+StorageManager.Local.eventlistener = new EventListener();
 // For test
 StorageManager.Local.BACKUP_TIMEOUT_PROMISE = Promise.resolve();
 
@@ -108,17 +111,15 @@ StorageManager.Local.planBackUp = async function(
 
   // Do it now
   if (diffTime >= intervalTime) {
-    id = await StorageManager.Local.addBackup(groups);
+    id = await StorageManager.Local.addBackup({groups});
     diffTime = 0;
   }
 
-  console.log(diffTime);
-  
   // Or set specific timer
   //StorageManager.Local.planBackUp();
   StorageManager.Local.BACKUP_TIMEOUT_PROMISE = new Promise((resolve, reject)=>{
     StorageManager.Local.BACKUP_TIMEOUT = setTimeout(async () => {
-      await StorageManager.Local.addBackup(groups);
+      await StorageManager.Local.addBackup({groups});
       await StorageManager.Local.planBackUp(groups);
       resolve();
     }, intervalTime-diffTime);
@@ -132,8 +133,16 @@ StorageManager.Local.getBackUpList = async function() {
   return (await browser.storage.local.get({backupList: {}})).backupList;
 }
 
-StorageManager.Local.setBackUpList = async function(backupList = {}) {
-  return browser.storage.local.set({backupList: backupList});
+StorageManager.Local.setBackUpList = async function(backupList = {}, {
+  fireEvent=true,
+}={}) {
+  await browser.storage.local.set({backupList: backupList});
+
+  if( fireEvent ) {
+    StorageManager.Local.eventlistener.fire(
+      StorageManager.Local.BACKUP_CHANGE
+    );
+  }
 }
 
 StorageManager.Local.getBackUp = async function(id) {
@@ -141,10 +150,11 @@ StorageManager.Local.getBackUp = async function(id) {
   return (await browser.storage.local.get(id))[id];
 }
 
-StorageManager.Local.addBackup = async function(
+StorageManager.Local.addBackup = async function({
   groups = GroupManager.groups,
-  time = (new Date()).getTime()
-) {
+  time = (new Date()).getTime(),
+  fireEvent=true,
+}={}) {
   // Get list
   let backupList = await StorageManager.Local.getBackUpList();
 
@@ -155,20 +165,31 @@ StorageManager.Local.addBackup = async function(
   };
 
   // Save list
-  await StorageManager.Local.setBackUpList(backupList);
+  await StorageManager.Local.setBackUpList(backupList, {
+    fireEvent: false,
+  });
 
   // save groups
   let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
   await browser.storage.local.set({[id]: export_groups});
 
-  await StorageManager.Local.respectMaxBackUp();
+  await StorageManager.Local.respectMaxBackUp({
+    fireEvent: false,
+  });
+
+  if( fireEvent ) {
+    StorageManager.Local.eventlistener.fire(
+      StorageManager.Local.BACKUP_CHANGE
+    );
+  }
 
   return id;
 }
 
-StorageManager.Local.respectMaxBackUp = async function(
-  maxSave=OptionManager.options.backup.local.maxSave
-){
+StorageManager.Local.respectMaxBackUp = async function({
+  maxSave=OptionManager.options.backup.local.maxSave,
+  fireEvent=true,
+}={}){
   const outnumbering = Object.entries( await StorageManager.Local.getBackUpList())
                             // Desc: recent first
                             .sort((a,b) => b[1].date - a[1].date)
@@ -179,31 +200,68 @@ StorageManager.Local.respectMaxBackUp = async function(
   let queue = Promise.resolve();
   await Promise.all(
     outnumbering.map((el) => queue = queue.then((res)=>{
-        return StorageManager.Local.removeBackup(el[0])
+        return StorageManager.Local.removeBackup(el[0], {
+          fireEvent: false,
+        })
       })
     )
   );
+
+  if( fireEvent ) {
+    StorageManager.Local.eventlistener.fire(
+      StorageManager.Local.BACKUP_CHANGE
+    );
+  }
 }
 
-StorageManager.Local.removeBackup = async function(id) {
+StorageManager.Local.removeBackup = async function(ids, {
+  fireEvent=true,
+}={}) {
+
+  if ( !Array.isArray(ids) ) {
+    ids = [ids];
+  }
+
   // Get list
   let backupList = await StorageManager.Local.getBackUpList();
 
-  // Remove list
-  delete backupList[id];
+  for (let id of ids) {
+    if ( backupList.hasOwnProperty(id) ) {
+      // Remove list
+      delete backupList[id];
+
+    }
+    // Remove groups
+    await browser.storage.local.remove(id);
+  }
 
   // Save list
-  await StorageManager.Local.setBackUpList(backupList);
+  await StorageManager.Local.setBackUpList(backupList, {
+    fireEvent: false,
+  });
 
-  // Remove groups
-  await browser.storage.local.remove(id);
+  if( fireEvent ) {
+    StorageManager.Local.eventlistener.fire(
+      StorageManager.Local.BACKUP_CHANGE
+    );
+  }
 }
 
-StorageManager.Local.clearBackups = async function() {
+StorageManager.Local.clearBackups = async function({
+  fireEvent=true,
+}={}) {
   const backupList = await StorageManager.Local.getBackUpList();
 
   for (let backup in backupList) {
     await browser.storage.local.remove(backup);
   }
-  await StorageManager.Local.setBackUpList();
+  await StorageManager.Local.setBackUpList({}, {
+    fireEvent: false,
+  });
+
+  if( fireEvent ) {
+    StorageManager.Local.eventlistener.fire(
+      StorageManager.Local.BACKUP_CHANGE
+    );
+  }
 }

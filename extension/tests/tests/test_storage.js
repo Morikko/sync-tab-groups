@@ -21,12 +21,12 @@ describe('Storage', () => {
       await browser.storage.local.set({backupList: {}});
     });
 
-    describe('Low level function ', () => {
+    describe('Low level function -', () => {
       it('Add a backup', async function() {
         const ref_groups = Utils.getCopy(GroupManager.groups);
         const ref_backupList = await StorageManager.Local.getBackUpList()
 
-        const id = await StorageManager.Local.addBackup(ref_groups);
+        const id = await StorageManager.Local.addBackup({groups: ref_groups});
 
         const backupList = await StorageManager.Local.getBackUpList(),
           backupGroups = await StorageManager.Local.getBackUp(id);
@@ -40,7 +40,7 @@ describe('Storage', () => {
 
       it('Remove a backup', async function() {
         const ref_groups = Utils.getCopy(GroupManager.groups);
-        const id = await StorageManager.Local.addBackup(ref_groups);
+        const id = await StorageManager.Local.addBackup({groups: ref_groups});
 
         await StorageManager.Local.removeBackup(id);
 
@@ -60,7 +60,7 @@ describe('Storage', () => {
 
         const ids = [];
         for (let i = 0; i < length; i++) {
-          ids.push(await StorageManager.Local.addBackup(ref_groups));
+          ids.push(await StorageManager.Local.addBackup({groups: ref_groups}));
           await Utils.wait(50);
         }
 
@@ -81,13 +81,13 @@ describe('Storage', () => {
 
         const ids = [];
         for (let i = 0; i < length; i++) {
-          ids.push(await StorageManager.Local.addBackup(ref_groups));
+          ids.push(await StorageManager.Local.addBackup({groups: ref_groups}));
           await Utils.wait(50);
         }
 
         expect(Object.keys(await StorageManager.Local.getBackUpList()).length).toEqual(length);
 
-        await StorageManager.Local.respectMaxBackUp(maxSave);
+        await StorageManager.Local.respectMaxBackUp({maxSave});
 
         expect(Object.keys((await StorageManager.Local.getBackUpList())).length).toEqual(maxSave);
 
@@ -338,7 +338,6 @@ describe('Storage', () => {
           });
           expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
-          console.log(INTER_MS*2)
           jasmine.clock().tick(INTER_MS * 2);
           await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
           expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
@@ -404,10 +403,10 @@ describe('Storage', () => {
           }
         }, false);
 
-        await StorageManager.Local.addBackup(
-          [],
-          30
-        );
+        await StorageManager.Local.addBackup({
+          groups: [],
+          time: 30
+        });
 
         const backupList = await StorageManager.Local.getBackUpList();
 
