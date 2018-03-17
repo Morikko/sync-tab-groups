@@ -60,28 +60,42 @@
 .button-file-label, .option-button {
   display: block;
   padding: 15px;
-  background: var(--checked);
-  color: #fff;
+  background: var(--not-checked);
+  color: #666;
   font-size: 1em;
   transition: all .4s;
   cursor: pointer;
 }
-
-.option-button.disabled {
-  background: var(--not-checked);
-  color: #666;
-}
-
-.option-button.disabled:focus, .option-button.disabled:hover {
-  background: var(--not-checked-hover);
-}
-
 .option-button {
   border: none
 }
+.option-button[disabled] {
+  cursor: initial;
+}
 
-.button-file-input:hover+.button-file-label, .button-file-input:focus+.button-file-label, .button-file-label:hover, .button-file-label:focus, .option-button:focus, .option-button:hover {
+.option-button.highlight {
+  background: var(--checked);
+  color: #fff;
+}
+
+.option-button:not([disabled]).highlight:focus, .option-button:not([disabled]).highlight:hover {
   background: var(--checked-hover);
+}
+
+.button-file-input:hover+.button-file-label, .button-file-input:focus+.button-file-label, .button-file-label:hover, .button-file-label:focus,
+.option-button:not([disabled]):focus, .option-button:not([disabled]):hover {
+  background: var(--not-checked-hover);
+}
+
+/*** Button in dangerous zone ***/
+
+.option-button.dangerous.highlight {
+  background: var(--dangerous-checked);
+}
+
+.option-button:not([disabled]).dangerous.highlight:focus,
+.option-button:not([disabled]).dangerous.highlight:hover {
+  background: var(--dangerous-checked-hover);
 }
 
 .button-file-label {

@@ -6,7 +6,6 @@ class SaveSectionStandalone extends React.Component {
       backupSelected: [],
     };
 
-    this.getBackUpList = this.getBackUpList.bind(this);
     this.handleRemoveBackup = this.handleRemoveBackup.bind(this);
     this.handleImportBackup = this.handleImportBackup.bind(this);
     this.handleExportBackup = this.handleExportBackup.bind(this);
@@ -14,12 +13,14 @@ class SaveSectionStandalone extends React.Component {
 
   }
 
-  async getBackUpList() {
-    let bg = await browser.runtime.getBackgroundPage();
-
-    this.setState({
-      backupList: (await bg.StorageManager.Local.getBackUpList())
-    });
+  componentWillReceiveProps(nextProps) {
+    if ( this.props.backupList !== nextProps.backupList ) {
+      this.setState({
+        backupSelected: this.state.backupSelected.filter(
+                backup => nextProps.backupList.hasOwnProperty(backup)
+              )
+      })
+    }
   }
 
   render() {
@@ -90,7 +91,7 @@ class SaveSectionStandalone extends React.Component {
             <OptionButton
               title= {browser.i18n.getMessage("export_groups")}
               onClick= {this.props.onExportClick}
-              enabled={true}
+              highlight={true}
             />
             <ButtonFile
               title= {browser.i18n.getMessage("import_groups")}
@@ -137,12 +138,12 @@ class SaveSectionStandalone extends React.Component {
               <OptionButton
                 title= {browser.i18n.getMessage("options_button_enable")}
                 onClick= {this.onEnableBackUp.bind(this)}
-                enabled={this.props.options.backup.local.enable}
+                highlight={this.props.options.backup.local.enable}
               />
               <OptionButton
                 title= {browser.i18n.getMessage("options_button_disable")}
                 onClick= {this.onDisableBackUp.bind(this)}
-                enabled={!this.props.options.backup.local.enable}
+                highlight={!this.props.options.backup.local.enable}
               />
             </div>
             <div>
@@ -170,23 +171,25 @@ class SaveSectionStandalone extends React.Component {
                     }}>
               {backups}
             </select>
-            <div className="triple-buttons">
-              <div className="dangerous-zone">
-              <OptionButton
-                title= {"Remove"}
-                onClick= {this.handleRemoveBackup}
-                enabled={this.state.backupSelected.length}
-              />
-            </div>
+            <div className="double-buttons">
               <OptionButton
                 title= {"Import"}
                 onClick= {this.handleImportBackup}
-                enabled={this.state.backupSelected.length===1}
+                highlight={this.state.backupSelected.length===1}
+                disabled={!(this.state.backupSelected.length===1)}
               />
               <OptionButton
                 title= {"Export"}
                 onClick= {this.handleExportBackup}
-                enabled={this.state.backupSelected.length===1}
+                highlight={this.state.backupSelected.length===1}
+                disabled={!(this.state.backupSelected.length===1)}
+              />
+              <OptionButton
+                title= {"Remove"}
+                onClick= {this.handleRemoveBackup}
+                highlight={this.state.backupSelected.length}
+                disabled={!this.state.backupSelected.length}
+                dangerous
               />
             </div>
           </div>
@@ -264,15 +267,16 @@ class SaveSectionStandalone extends React.Component {
               <OptionButton
                 title= {browser.i18n.getMessage("options_button_enable")}
                 onClick= {this.onEnableBackUp.bind(this)}
-                enabled={this.props.options.backup.download.enable}
+                highlight={this.props.options.backup.download.enable}
               />
               <OptionButton
                 title= {browser.i18n.getMessage("options_button_disable")}
                 onClick= {this.onDisableBackUp.bind(this)}
-                enabled={!this.props.options.backup.download.enable}
+                highlight={!this.props.options.backup.download.enable}
               />
             </div>
-            {this.createCheckBoxesForTimers()}
+            {this.props.options.backup.download.enable &&
+              this.createCheckBoxesForTimers()}
           </div>
         }
       />
@@ -292,17 +296,19 @@ class SaveSectionStandalone extends React.Component {
           </ul>
         }
         content = {
-          <div className="dangerous-zone">
+          <div>
             <OptionButton
               title= {"Remove all groups"}
               onClick= {this.handleClickOnRemoveAllGroups.bind(this)}
-              enabled={true}
+              highlight={true}
+              dangerous
             />
             {/*
             <OptionButton
               title= {"Reload your groups"}
               onClick= {this.handleClickOnReloadGroups.bind(this)}
-              enabled={true}
+              highlight={true}
+              dangerous
             />
             */}
           </div>

@@ -8,9 +8,11 @@ class OptionButton extends React.Component {
     return (
       <button
       type="button"
+      disabled={this.props.disabled}
       className={classNames({
         "option-button": true,
-        "disabled": !this.props.enabled,
+        "highlight":  this.props.highlight,
+        "dangerous":  this.props.dangerous,
       })}
       onClick={this.handleClick}>
         <span>{this.props.title}</span>

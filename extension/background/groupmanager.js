@@ -523,13 +523,13 @@ GroupManager.detachWindow = async function(windowId) {
 /**
  * Remove all groups that are in private window
  */
-GroupManager.removeGroupsInPrivateWindow = async function() {
+GroupManager.removeGroupsInPrivateWindow = async function(groups=GroupManager.groups) {
   try {
-    for (let i = GroupManager.groups.length - 1; i >= 0; i--) {
+    for (let i = groups.length - 1; i >= 0; i--) {
       // Remove group from private window if set
-      if (GroupManager.groups[i].tabs.length > 0 && GroupManager.groups[i].tabs[0].incognito && !OptionManager.options.privateWindow.sync) {
+      if (groups[i].tabs.length > 0 && groups[i].tabs[0].incognito && !OptionManager.options.privateWindow.sync) {
 
-        await GroupManager.removeGroupFromId(GroupManager.groups[i].id);
+        await GroupManager.removeGroupFromId(groups[i].id);
       }
     }
     return "GroupManager.removeGroupsInPrivateWindow done!";
@@ -538,7 +538,6 @@ GroupManager.removeGroupsInPrivateWindow = async function() {
     console.error(msg);
     return;
   }
-
 }
 
 /**

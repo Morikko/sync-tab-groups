@@ -9,9 +9,11 @@ class OptionButton extends React.Component {
       "button",
       {
         type: "button",
+        disabled: this.props.disabled,
         className: classNames({
           "option-button": true,
-          "disabled": !this.props.enabled
+          "highlight": this.props.highlight,
+          "dangerous": this.props.dangerous
         }),
         onClick: this.handleClick },
       React.createElement(

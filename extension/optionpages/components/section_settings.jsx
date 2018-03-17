@@ -39,12 +39,12 @@ class SettingsSection extends React.Component {
                   <OptionButton
                     title= {browser.i18n.getMessage("options_behaviors_help_title_visible")}
                     onClick= {this.clickOnVisible}
-                    enabled={this.props.options.groups.syncNewWindow}
+                    highlight={this.props.options.groups.syncNewWindow}
                   />
                   <OptionButton
                     title= {browser.i18n.getMessage("options_behaviors_help_title_invisible")}
                     onClick= {this.clickOnInvisible}
-                    enabled={!this.props.options.groups.syncNewWindow}
+                    highlight={!this.props.options.groups.syncNewWindow}
                   />
                 </div>
               }
@@ -75,13 +75,13 @@ class SettingsSection extends React.Component {
                     title= {browser.i18n.getMessage("options_behaviors_pinned_excluded")}
                     onClick= {this.clickOnExcluded}
                     key="pinned-excluded"
-                    enabled={!this.props.options.pinnedTab.sync}
+                    highlight={!this.props.options.pinnedTab.sync}
                   />
                   <OptionButton
                     title= {browser.i18n.getMessage("options_behaviors_pinned_included")}
                     onClick= {this.clickOnIncluded}
                     key="pinned-included"
-                    enabled={this.props.options.pinnedTab.sync}
+                    highlight={this.props.options.pinnedTab.sync}
                   />
                 </div>
               }
@@ -122,20 +122,20 @@ class SettingsSection extends React.Component {
                   <OptionButton
                     title= {browser.i18n.getMessage("options_behaviors_tabsopening_discarded")}
                     onClick= {this.clickOnOpenDiscarded.bind(this)}
-                    enabled={this.props.options.groups.discardedOpen}
+                    highlight={this.props.options.groups.discardedOpen}
                     key="opening-tab-discarded"
                   />
                   <OptionButton
                     title= {browser.i18n.getMessage("options_behaviors_tabsopening_full")}
                     onClick= {this.clickOnOpenFull.bind(this)}
-                    enabled={!this.props.options.groups.discardedOpen}
+                    highlight={!this.props.options.groups.discardedOpen}
                     key="opening-tab-full"
                   />
                 </div>
                 <OptionButton
                   title= {browser.i18n.getMessage("options_behaviors_tabsopening_reload")}
                   onClick= {this.handleClickOnUndiscardAllTabs.bind(this)}
-                  enabled={true}
+                  highlight={true}
                 />
                 </div>
               }
@@ -166,13 +166,13 @@ class SettingsSection extends React.Component {
                   <OptionButton
                   title= {browser.i18n.getMessage("options_behaviors_private")}
                   onClick= {this.clickOnPrivate}
-                  enabled={this.props.options.privateWindow.sync}
+                  highlight={this.props.options.privateWindow.sync}
                   key="private-window-private"
                 />
                 <OptionButton
                   title= {browser.i18n.getMessage("options_behaviors_private_invisible")}
                   onClick= {this.clickOnPrivateInvisible}
-                  enabled={!this.props.options.privateWindow.sync}
+                  highlight={!this.props.options.privateWindow.sync}
                   key="private-window-invisible"
                 />
               </div>

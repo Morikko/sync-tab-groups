@@ -243,19 +243,6 @@ input[type=checkbox]:checked ~ label{
 
 /*** END Tooltip ****/
 
-/*** Button in dangerous zone ***/
-
-.dangerous-zone .option-button {
-  background: var(--dangerous-checked);
-}
-
-.dangerous-zone .option-button.disabled {
-  background: var(--dangerous-checked-disabled);
-}
-
-.dangerous-zone .option-button:not(.disabled):focus, .dangerous-zone  .option-button:not(.disabled):hover {
-  background: var(--dangerous-checked-hover);
-}
 
 /*** End Button in dangerous zone *****/
 
@@ -307,17 +294,17 @@ input[type=checkbox]:checked ~ label{
 }
 
 .double-buttons .option-button {
-  border-radius: 3px;
+  border-radius: 0px;
 }
 
 .double-buttons .option-button:first-child {
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 
 .double-buttons .option-button:last-child {
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .row-about {

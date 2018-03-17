@@ -6,19 +6,18 @@ class SaveSectionStandalone extends React.Component {
       backupSelected: []
     };
 
-    this.getBackUpList = this.getBackUpList.bind(this);
     this.handleRemoveBackup = this.handleRemoveBackup.bind(this);
     this.handleImportBackup = this.handleImportBackup.bind(this);
     this.handleExportBackup = this.handleExportBackup.bind(this);
     this.handleBackupSelection = this.handleBackupSelection.bind(this);
   }
 
-  async getBackUpList() {
-    let bg = await browser.runtime.getBackgroundPage();
-
-    this.setState({
-      backupList: await bg.StorageManager.Local.getBackUpList()
-    });
+  componentWillReceiveProps(nextProps) {
+    if (this.props.backupList !== nextProps.backupList) {
+      this.setState({
+        backupSelected: this.state.backupSelected.filter(backup => nextProps.backupList.hasOwnProperty(backup))
+      });
+    }
   }
 
   render() {
@@ -95,7 +94,7 @@ class SaveSectionStandalone extends React.Component {
         React.createElement(OptionButton, {
           title: browser.i18n.getMessage("export_groups"),
           onClick: this.props.onExportClick,
-          enabled: true
+          highlight: true
         }),
         React.createElement(ButtonFile, {
           title: browser.i18n.getMessage("import_groups"),
@@ -151,12 +150,12 @@ class SaveSectionStandalone extends React.Component {
           React.createElement(OptionButton, {
             title: browser.i18n.getMessage("options_button_enable"),
             onClick: this.onEnableBackUp.bind(this),
-            enabled: this.props.options.backup.local.enable
+            highlight: this.props.options.backup.local.enable
           }),
           React.createElement(OptionButton, {
             title: browser.i18n.getMessage("options_button_disable"),
             onClick: this.onDisableBackUp.bind(this),
-            enabled: !this.props.options.backup.local.enable
+            highlight: !this.props.options.backup.local.enable
           })
         ),
         React.createElement(
@@ -190,25 +189,25 @@ class SaveSectionStandalone extends React.Component {
         ),
         React.createElement(
           "div",
-          { className: "triple-buttons" },
-          React.createElement(
-            "div",
-            { className: "dangerous-zone" },
-            React.createElement(OptionButton, {
-              title: "Remove",
-              onClick: this.handleRemoveBackup,
-              enabled: this.state.backupSelected.length
-            })
-          ),
+          { className: "double-buttons" },
           React.createElement(OptionButton, {
             title: "Import",
             onClick: this.handleImportBackup,
-            enabled: this.state.backupSelected.length === 1
+            highlight: this.state.backupSelected.length === 1,
+            disabled: !(this.state.backupSelected.length === 1)
           }),
           React.createElement(OptionButton, {
             title: "Export",
             onClick: this.handleExportBackup,
-            enabled: this.state.backupSelected.length === 1
+            highlight: this.state.backupSelected.length === 1,
+            disabled: !(this.state.backupSelected.length === 1)
+          }),
+          React.createElement(OptionButton, {
+            title: "Remove",
+            onClick: this.handleRemoveBackup,
+            highlight: this.state.backupSelected.length,
+            disabled: !this.state.backupSelected.length,
+            dangerous: true
           })
         )
       )
@@ -355,15 +354,15 @@ class SaveSectionStandalone extends React.Component {
           React.createElement(OptionButton, {
             title: browser.i18n.getMessage("options_button_enable"),
             onClick: this.onEnableBackUp.bind(this),
-            enabled: this.props.options.backup.download.enable
+            highlight: this.props.options.backup.download.enable
           }),
           React.createElement(OptionButton, {
             title: browser.i18n.getMessage("options_button_disable"),
             onClick: this.onDisableBackUp.bind(this),
-            enabled: !this.props.options.backup.download.enable
+            highlight: !this.props.options.backup.download.enable
           })
         ),
-        this.createCheckBoxesForTimers()
+        this.props.options.backup.download.enable && this.createCheckBoxesForTimers()
       )
     });
   }
@@ -391,11 +390,12 @@ class SaveSectionStandalone extends React.Component {
       ),
       content: React.createElement(
         "div",
-        { className: "dangerous-zone" },
+        null,
         React.createElement(OptionButton, {
           title: "Remove all groups",
           onClick: this.handleClickOnRemoveAllGroups.bind(this),
-          enabled: true
+          highlight: true,
+          dangerous: true
         })
       )
     });
