@@ -28,23 +28,7 @@
   ],
 
   "background": {
-    "scripts": [
-      "lib/js/browser-polyfill.development.js",
-      "background/utils/utils.js",
-      "background/utils/delayedtaskmanager.js",
-      "background/utils/repeatedtaskmanager.js",
-      "background/utils/eventlistener.js",
-      "background/storage/bookmarkstorage.js",
-      "background/storage/localstorage.js",
-      "background/storage/filestorage.js",
-      "background/storage/backup.js",
-      "background/optionmanager.js",
-      "background/groupmanager.js",
-      "background/windowmanager.js",
-      "background/tabmanager.js",
-      "background/contextmenus.js",
-      "background/controller.js"
-    ]
+    "page": "/background/background.html"
   },
 
   "default_locale": "en",
