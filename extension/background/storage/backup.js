@@ -8,14 +8,14 @@ StorageManager.Backup.TIMERS = Utils.setObjectPropertiesWith(OptionManager.TIMER
 
 
 StorageManager.Backup.init = function () {
-  if( !OptionManager.options.backup.enable ) {
+  if( !OptionManager.options.backup.download.enable ) {
     return;
   }
 
   // Start enable timers
   StorageManager.Backup.TIMERS = {};
-  for (let t in OptionManager.options.backup.time ) {
-    if ( OptionManager.options.backup.time[t] ) {
+  for (let t in OptionManager.options.backup.download.time ) {
+    if ( OptionManager.options.backup.download.time[t] ) {
       StorageManager.Backup.startTimer(t);
     } else {
       StorageManager.Backup.TIMERS[t] = undefined

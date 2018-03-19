@@ -627,6 +627,13 @@ describe("Check Corrupted: ", ()=>{
 });
 
 describe("Search: ", () => {
+
+  beforeEach(()=>{
+    if ( !Utils.getParameterByName("todo").length ) {
+      pending('TODO not enable')
+    }
+  })
+
   describe("Results: ", () => {
 
     it("Single keyword NOT found", () => {
@@ -720,5 +727,75 @@ describe("Back Up: ", ()=>{
     OptionManager.options.backup = optionSave;
     jasmine.clock().uninstall();
     bg.setInterval = savedSetInterval;
+  });
+});
+
+describe("GroupManager.", ()=>{
+  describe("setUniqueTabIds ", ()=>{
+    it("should replace ids for tabs in close groups", function(){
+      let groups = Session.createArrayGroups({
+        groupsLength: 2,
+        tabsLength: 2,
+      });
+
+      groups.forEach((group)=>{
+        group.tabs.forEach((tab, index)=>{
+          tab.id = index>0?index:undefined;
+        });
+      });
+
+      GroupManager.setUniqueTabIds(groups);
+
+      groups.forEach((group)=>{
+        group.tabs.forEach((tab, index)=>{
+          let parts = tab.id.split("-");
+          expect(parts[0].length>0).toBe(true);
+          expect(parts[1]).toEqual(""+group.id);
+          expect(parts[2]).toEqual(""+index);
+        });
+      });
+    });
+
+    it("should not replace ids for tabs in open groups", function(){
+      let groups = Session.createArrayGroups({
+        groupsLength: 2,
+        tabsLength: 2,
+        windowId: 1,
+      });
+
+      groups.forEach((group)=>{
+        group.tabs.forEach((tab, index)=>{
+          tab.id = index>0?index:undefined;
+        });
+      });
+
+      GroupManager.setUniqueTabIds(groups);
+
+      groups.forEach((group)=>{
+        group.tabs.forEach((tab, index)=>{
+          expect(tab.id).toEqual(index>0?index:undefined);
+        });
+      });
+    });
+
+    it("should also update parentIds for tabs in close groups", function(){
+      let group = Session.createGroup({
+        tabsLength: 4,
+      });
+
+      group.tabs.forEach((tab, index)=>{
+        tab.id = index;
+      });
+      group.tabs[1].parentId = 0;
+      group.tabs[2].parentId = 0;
+      group.tabs[3].parentId = 2;
+
+      GroupManager.setUniqueTabIds([group]);
+
+      expect(group.tabs[0].parentId).toBe(undefined);
+      expect(group.tabs[1].parentId).toEqual(group.tabs[0].id);
+      expect(group.tabs[2].parentId).toEqual(group.tabs[0].id);
+      expect(group.tabs[3].parentId).toEqual(group.tabs[2].id);
+    });
   });
 });

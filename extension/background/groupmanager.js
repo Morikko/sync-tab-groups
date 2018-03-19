@@ -904,6 +904,7 @@ GroupManager.initEventListener = function() {
       sortingType: OptionManager.options.groups.sortingType
     });
     GroupManager.coherentActiveTabInGroups({groups: GroupManager.groups});
+    GroupManager.setUniqueTabIds(GroupManager.groups);
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   });
 
@@ -912,6 +913,38 @@ GroupManager.initEventListener = function() {
     GroupManager.checkCorruptedGroups(GroupManager.groups);
   }, 30000);
 };
+
+/**
+ * Give a new unique tabId for closed groups
+ * Avoid collision of new tabs in open groups
+ * New id is a long string
+ */
+GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
+  groups.forEach((group) => {
+    if( group.windowId !== -1 ) {
+      return;
+    }
+
+    let newIds = [], oldIds = [];
+    group.tabs.forEach((tab, index)=>{
+      // Update ids
+        if (!tab.id || !tab.id.length) {
+          oldIds.push(tab.id);
+          tab.id = Date.now() + "-" + group.id + "-" + index;
+          newIds.push(tab.id);
+        }
+    });
+
+    // Update parent Ids
+    for(let i of Utils.range(newIds.length)) {
+      group.tabs.forEach((tab, index)=>{
+        if (oldIds[i] >= 0 && tab.parentId === oldIds[i] ) {
+          tab.parentId = newIds[i];
+        }
+      });
+    }
+  });
+}
 
 /**
  * Check if groups is corrupted

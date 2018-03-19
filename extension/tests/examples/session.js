@@ -71,7 +71,8 @@ Session.createTabs = function({
   // Set indexes
   tabs = tabs.map((tab, index)=>{
     tab.index = index;
-    tab.id = index; // Create different ids for tests compatibility
+    // Create different ids for tests compatibility
+    tab.id = "" + Date.now() + tab.url.length + index;;
     if (index===active) {
       tab.active = true;
     } else {
@@ -110,6 +111,7 @@ Session.createGroup = function({
     incognito= false,
     active= -1,
     title="",
+    windowId=browser.windows.WINDOW_ID_NONE,
 }={}) {
   let tabs = Session.createTabs({
     tabsLength,
@@ -123,10 +125,10 @@ Session.createGroup = function({
   });
 
   let group = new GroupManager.Group(
-    id = GroupManager.createUniqueGroupId(),
+    id = Date.now()-TestManager.getRandom(1000, Date.now()),
     title = title,
     tabs = tabs,
-    windowId = browser.windows.WINDOW_ID_NONE,
+    windowId = windowId,
     incognito = incognito,
   );
   if ( global ) {
@@ -161,6 +163,7 @@ Session.createArrayGroups = function(params={}) {
     incognito: false,
     active: -1,
     title:"",
+    windowId: browser.windows.WINDOW_ID_NONE,
   }, params);
 
   // Prepare params
