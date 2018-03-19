@@ -898,7 +898,7 @@ describe("TabManager", ()=>{
           tab.discarded = !tab.active;
         });
 
-        await Controller.undiscardAll();
+        await TabManager.undiscardAll();
 
         console.log("Undiscard done")
 
@@ -945,7 +945,7 @@ describe("TabManager", ()=>{
           tab.discarded = !tab.active;
         });
 
-        await Controller.undiscardAll();
+        await TabManager.undiscardAll();
 
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds[0]);
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds[1]);
@@ -988,7 +988,7 @@ describe("TabManager", ()=>{
           tab.index = index;
         });
 
-        await Controller.undiscardAll(0, ()=>{
+        await TabManager.undiscardAll(0, ()=>{
           TabManager.openListOfTabs(
             [newTab],
             this.windowIds,{
@@ -1030,7 +1030,7 @@ describe("TabManager", ()=>{
           tab.index = index;
         });
 
-        await Controller.undiscardAll(0, ()=>{
+        await TabManager.undiscardAll(0, ()=>{
           GroupManager.removeTabFromIndexInGroupId(
             this.groups[4].id,
             this.groups[4].tabs.length-2

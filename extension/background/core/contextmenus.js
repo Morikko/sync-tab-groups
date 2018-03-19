@@ -250,7 +250,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
     let order = info.menuItemId.substring(ContextMenu.SpecialActionMenu_ID.length, info.menuItemId.length);
     switch (order) {
       case "export_groups":
-        Controller.onExportGroups();
+        Background.onExportGroups();
         break;
       case "import_groups":
         let fileInput = document.createElement('input');
@@ -259,7 +259,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         fileInput.acceptCharset = 'utf-8';
         fileInput.onchange = () => {
           StorageManager.File.readJsonFile(fileInput.files[0]).then((jsonContent) => {
-            Controller.onImportGroups({
+            Background.onImportGroups({
               content_file: jsonContent
             });
           });
@@ -267,10 +267,10 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         fileInput.click();
         break;
       case "save_bookmarks_groups":
-        Controller.onBookmarkSave();
+        Background.onBookmarkSave();
         break;
       case "open_preferences":
-        Controller.onOpenSettings();
+        Background.onOpenSettings();
         break;
       case "manage_groups":
         Utils.openUrlOncePerWindow(browser.extension.getURL(
@@ -281,7 +281,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
         StorageManager.Backup.backup("manual");
         break;
       case "guide":
-        Controller.onOpenGuide();
+        Background.onOpenGuide();
         break;
       case "open_tests":
         Utils.openUrlOncePerWindow(

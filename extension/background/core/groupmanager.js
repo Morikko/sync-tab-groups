@@ -864,7 +864,7 @@ GroupManager.integrateAllOpenedWindows = async function() {
     // Don't create
     await WindowManager.integrateWindow(
       windowInfo.id,
-      {even_new_one: Controller.install?true:false} // When installed add all, else none
+      {even_new_one: Background.install?true:false} // When installed add all, else none
     );
   }
 }

@@ -7,31 +7,31 @@ describe("Controller ", ()=>{
     describe("Utils ", ()=>{
         it("isVersionBelow", ()=>{
           expect(
-            Controller.isVersionBelow("0.1.2", "1.2.3")
+            Event.Install.isVersionBelow("0.1.2", "1.2.3")
           ).toBe(true);
 
           expect(
-            Controller.isVersionBelow("1.1.2", "1.2.3")
+            Event.Install.isVersionBelow("1.1.2", "1.2.3")
           ).toBe(true);
 
           expect(
-            Controller.isVersionBelow("1.2.2", "1.2.3")
+            Event.Install.isVersionBelow("1.2.2", "1.2.3")
           ).toBe(true);
 
           expect(
-            Controller.isVersionBelow("1.2.3", "1.2.3")
+            Event.Install.isVersionBelow("1.2.3", "1.2.3")
           ).toBe(true);
 
           expect(
-            Controller.isVersionBelow("2.2.3", "1.2.3")
+            Event.Install.isVersionBelow("2.2.3", "1.2.3")
           ).toBe(false);
 
           expect(
-            Controller.isVersionBelow("1.3.3", "1.2.3")
+            Event.Install.isVersionBelow("1.3.3", "1.2.3")
           ).toBe(false);
 
           expect(
-            Controller.isVersionBelow("1.2.4", "1.2.3")
+            Event.Install.isVersionBelow("1.2.4", "1.2.3")
           ).toBe(false);
         });
     });
@@ -52,7 +52,7 @@ describe("Controller ", ()=>{
             }
         };
 
-        Controller.updateFromBelow_0_6_2(
+        Event.Install.updateFromBelow_0_6_2(
           options
         );
 

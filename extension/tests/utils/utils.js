@@ -230,7 +230,7 @@ const ACTIONS = [
   // MOVE
   async (groups) =>{
     if (!groups.length) return;
-    await Controller.onGroupChangePosition({
+    await Background.onGroupChangePosition({
       groupId: TestManager.getRandomGroupId(groups),
       position: TestManager.getRandomGroupPosition(groups),
     })
@@ -239,7 +239,7 @@ const ACTIONS = [
     if (!groups.length) return;
     let sourceGroupId = TestManager.getRandomGroupId(groups);
     let targetGroupId = TestManager.getRandomGroupId(groups);
-    await Controller.onMoveTabToGroup({
+    await Background.onMoveTabToGroup({
       sourceGroupId: sourceGroupId,
       sourceTabIndex: TestManager.getRandomTabIndex(groups, sourceGroupId),
       targetGroupId: targetGroupId,
@@ -259,7 +259,7 @@ const ACTIONS = [
   async (groups) =>{
     if (!groups.length) return;
     let groupId = TestManager.getRandomGroupId(groups);
-    await Controller.onTabClose({
+    await Background.onTabClose({
       groupId: groupId,
       tabIndex: TestManager.getRandomTabIndex(groups, groupId),
     })
@@ -267,7 +267,7 @@ const ACTIONS = [
   async (groups) =>{
     if (!groups.length) return;
     let groupId = TestManager.getRandomGroupId(groups);
-    await Controller.onTabChangePin({
+    await Background.onTabChangePin({
       groupId: groupId,
       tabIndex: TestManager.getRandomTabIndex(groups, groupId),
     })
@@ -275,7 +275,7 @@ const ACTIONS = [
   // GROUP CHANGE
   async (groups) =>{
     if (!groups.length) return;
-    await Controller.onGroupRemove({
+    await Background.onGroupRemove({
       groupId: TestManager.getRandomGroupId(groups),
       taskRef: TaskManager.FORCE,
     })
@@ -292,7 +292,7 @@ const ACTIONS = [
   },
   async (groups) =>{
     if (!groups.length) return;
-    await Controller.onGroupRename({
+    await Background.onGroupRename({
       groupId: TestManager.getRandomGroupId(groups),
       title: Date.now().toString(),
     });
