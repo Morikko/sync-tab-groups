@@ -1,13 +1,7 @@
 describe("Controller ", ()=>{
 
-  beforeAll(async function() {
-    await TestManager.initBeforeAll(this);
-  });
-
-  // Set back previous states
-  afterAll(async function() {
-    await TestManager.initAfterAll(this);
-  });
+  beforeAll(TestManager.initUnitBeforeAll());
+  beforeEach(TestManager.initBeforeEach());
 
   describe("Update ", ()=>{
     describe("Utils ", ()=>{

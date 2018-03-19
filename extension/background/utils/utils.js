@@ -3,6 +3,7 @@
  * Shared variables definition
  Tools:
  - search
+ - extractSearchValue
  - sendMessage
  - getCopy
  - wait
@@ -40,6 +41,7 @@ Objects:
  - createGroupsJsonFile
 
  */
+const WINDOW_ID_NONE = browser.windows.WINDOW_ID_NONE;
 var Utils = Utils || {};
 var TabManager = TabManager || {};
 /**
@@ -477,6 +479,32 @@ Utils.openUrlOncePerWindow = async function(url, active=true) {
     console.error(msg);
     return msg;
   }
+}
+
+/**
+  * Extract the value of search with this pattern:
+    g/search in group/search in tabs
+  * Search in group is optional
+  * Search value returned are "" if nothing is found
+  * @param {String} Search Value
+  * @return {Array[groupSearch, tabSearch]}
+  */
+Utils.extractSearchValue = function (searchValue) {
+  let groupSearch = "", tabSearch = "";
+  if ( searchValue.startsWith("g/") ) {
+    let last_separator = searchValue.lastIndexOf('/');
+    groupSearch = searchValue.substring(
+      2,
+      last_separator>1?last_separator:searchValue.length
+    );
+    tabSearch = searchValue.substring(
+      last_separator>1?last_separator+1:searchValue.length,
+      searchValue.length
+    );
+  } else {
+    tabSearch = searchValue;
+  }
+  return [groupSearch, tabSearch];
 }
 
 /**

@@ -49,7 +49,7 @@ class GroupList extends React.Component {
       // Mark Search
       if ( // Currently Searching, Update: In case of change in groups
         (this.props.searchfilter && this.props.searchfilter.length)) {
-          let [groupSearchValue, tabSearchValue] = this.extractSearchValue(this.props.searchfilter);
+          let [groupSearchValue, tabSearchValue] = Utils.extractSearchValue(this.props.searchfilter);
           this.markSearch(groupSearchValue, tabSearchValue);
       }
     }
@@ -136,7 +136,7 @@ class GroupList extends React.Component {
     let atLeastOneResult = false;
 
     let [groupSearchValue,
-        tabSearchValue] = this.extractSearchValue(searchValue);
+        tabSearchValue] = Utils.extractSearchValue(searchValue);
 
     // Apply search
     for (let i = 0; i < this.props.groups.length; i++) {
@@ -216,32 +216,6 @@ class GroupList extends React.Component {
         }
       }
     });
-  }
-
-  /**
-    * Extract the value of search with this pattern:
-      g/search in group/search in tabs
-    * Search in group is optional
-    * Search value returned are "" if nothing is found
-    * @param {String} Search Value
-    * @return {Array[groupSearch, tabSearch]}
-    */
-  extractSearchValue(searchValue) {
-    let groupSearch = "", tabSearch = "";
-    if ( searchValue.startsWith("g/") ) {
-      let last_separator = searchValue.lastIndexOf('/');
-      groupSearch = searchValue.substring(
-        2,
-        last_separator>1?last_separator:searchValue.length
-      );
-      tabSearch = searchValue.substring(
-        last_separator>1?last_separator+1:searchValue.length,
-        searchValue.length
-      );
-    } else {
-      tabSearch = searchValue;
-    }
-    return [groupSearch, tabSearch];
   }
 };
 

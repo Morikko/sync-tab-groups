@@ -12,14 +12,14 @@ TestManager.uninstallFakeTime(this.savedTime);
 {
   /** Copy to the ROOTEST describe **/
   // Keep previous states
-  beforeAll(async function() {
-    await TestManager.initBeforeAll(this);
-  });
-
+  beforeAll(TestManager.initIntegrationBeforeAll());
+  beforeEach(TestManager.initBeforeEach());
   // Set back previous states
-  afterAll(async function() {
-    await TestManager.initAfterAll(this);
-  });
+  afterAll(TestManager.initIntegrationAfterAll());
+
+  // OR unit tests
+  beforeAll(TestManager.initUnitBeforeAll());
+  beforeEach(TestManager.initBeforeEach());
 
   {
     /** Tweaking Before Tests **/
