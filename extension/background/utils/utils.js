@@ -52,6 +52,7 @@ Utils.DEBUG_MODE=true;
 Utils.UTILS_SHOW_MESSAGES = Utils.DEBUG_MODE;
 Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
 Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";
+Utils.SELECTOR_PAGE_URL = "tabpages/selector-groups/selector-groups.html";
 
 var StorageManager = StorageManager || {};
 StorageManager.Backup = StorageManager.Backup || {};

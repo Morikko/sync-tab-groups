@@ -82,7 +82,7 @@ class Tab extends React.Component {
         onMouseLeave: this.removeMenuItem,
         contextMenu: "moveTabSubMenu" + this.props.tab.id,
         tabIndex: "0",
-        onKeyDown: Utils.doActivateHotkeys(tabNavigationListener(this), this.props.hotkeysEnable)
+        onKeyDown: this.props.hotkeysEnable ? Utils.doActivateHotkeys(tabNavigationListener(this), this.props.hotkeysEnable) : undefined
       },
       this.props.tab.pinned && React.createElement("i", {
         className: "pinned-icon fa fa-fw fa-thumb-tack"

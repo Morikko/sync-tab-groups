@@ -126,7 +126,7 @@ const GroupActions = {
 var popupMessenger = function(message) {
   switch (message.task) {
     case "Groups:Changed":
-      store.dispatch(ActionCreators.setTabgroups(message.params.groups));
+      store.dispatch(ActionCreators.setGroups(message.params.groups));
       store.dispatch(ActionCreators.setDelayedTask(message.params.delayedTasks));
       browser.windows.getLastFocused({
         windowTypes: ['normal']
@@ -141,6 +141,7 @@ var popupMessenger = function(message) {
 }
 
 browser.runtime.onMessage.addListener(popupMessenger);
+
 
 var tabspaceBackground = browser.runtime.getBackgroundPage();
 

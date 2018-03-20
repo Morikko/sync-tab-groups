@@ -2,7 +2,6 @@ class ManagePanelStandAlone extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      maximized: this.props.options.popup.maximized,
       leftsearchfilter: '',
       rightsearchfilter: '',
       leftForceExpand: false,
@@ -106,7 +105,6 @@ class ManagePanelStandAlone extends React.Component {
             onChangeExpand: this.props.onChangeExpand
             /*** Data ***/
             , groups: this.props.groups,
-            options: this.props.options,
             currentWindowId: this.props.currentWindowId,
             delayedTasks: this.props.delayedTasks
             /*** Options ***/
@@ -115,7 +113,9 @@ class ManagePanelStandAlone extends React.Component {
             allowClickSwitch: false,
             stateless: true,
             width: width,
-            hotkeysEnable: this.props.options.shortcuts.navigation
+            hotkeysEnable: this.props.options.shortcuts.navigation,
+            showTabsNumber: this.props.options.popup.showTabsNumber,
+            groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM
             /*** actions ***/
             , forceExpand: this.state.leftForceExpand,
             forceReduce: this.state.leftForceReduce
@@ -161,7 +161,6 @@ class ManagePanelStandAlone extends React.Component {
             onChangeExpand: this.props.onChangeExpand
             /*** Data ***/
             , groups: this.props.groups,
-            options: this.props.options,
             currentWindowId: this.props.currentWindowId,
             delayedTasks: this.props.delayedTasks
             /*** Options ***/
@@ -170,7 +169,9 @@ class ManagePanelStandAlone extends React.Component {
             allowClickSwitch: false,
             stateless: true,
             width: width,
-            hotkeysEnable: this.props.options.shortcuts.navigation
+            hotkeysEnable: this.props.options.shortcuts.navigation,
+            showTabsNumber: this.props.options.popup.showTabsNumber,
+            groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM
             /*** actions ***/
             , forceExpand: this.state.rightForceExpand,
             forceReduce: this.state.rightForceReduce
@@ -246,7 +247,7 @@ class ManagePanelStandAlone extends React.Component {
 const ManagePanel = (() => {
   return ReactRedux.connect(state => {
     return {
-      groups: state.get("tabgroups"),
+      groups: state.get("groups"),
       currentWindowId: state.get("currentWindowId"),
       delayedTasks: state.get("delayedTasks"),
       options: state.get("options")

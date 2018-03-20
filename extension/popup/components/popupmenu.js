@@ -77,7 +77,6 @@ class PopupMenuStandAlone extends React.Component {
         onChangeExpand: this.props.onChangeExpand
         /*** Data ***/
         , groups: this.props.groups,
-        options: this.props.options,
         currentWindowId: this.props.currentWindowId,
         delayedTasks: this.props.delayedTasks
         /*** Options ***/
@@ -86,7 +85,9 @@ class PopupMenuStandAlone extends React.Component {
         allowClickSwitch: true,
         hotkeysEnable: this.props.options.shortcuts.navigation,
         stateless: false,
-        width: width
+        width: width,
+        showTabsNumber: this.props.options.popup.showTabsNumber,
+        groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM
         /*** actions ***/
         , forceExpand: false,
         forceReduce: false
@@ -180,7 +181,7 @@ PopupMenuStandAlone.propTypes = {
 const PopupMenu = (() => {
   return ReactRedux.connect(state => {
     return {
-      groups: state.get("tabgroups"),
+      groups: state.get("groups"),
       currentWindowId: state.get("currentWindowId"),
       delayedTasks: state.get("delayedTasks"),
       options: state.get("options")

@@ -10,7 +10,8 @@ Event.Install = Event.Install || {};
 Event.Install.DEV_TABS = [
   "/tests/test-page/unit.html",
   "/tests/test-page/integration.html",
-  "/tests/test-page/unit.html?spec=Comparator%3A%20%20toEqualTabs"
+  "/tests/test-page/integration.html?spec=Selector%20-%20",
+  "/optionpages/option-page.html#groups"
 ]
 
 Event.Install.onDevelopmentInstall = function() {
@@ -24,7 +25,7 @@ Event.Install.onDevelopmentInstall = function() {
   });
 
   /*** Add extra code you want to be done in Development ***/
-
+  Selector.onOpenGroupsSelector();
 }
 
 

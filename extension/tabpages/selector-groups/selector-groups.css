@@ -10,7 +10,6 @@ body {
 #menu {
   display: flex;
   justify-content: space-between;
-  border-bottom: 3px solid #424f5a;
   width: 100%;
   color: #c4cdd4;
   height: 50px;
@@ -79,6 +78,9 @@ body {
 
 #manage-panel {
   width: 100%;
+  border-top: 4px solid #424f5a;
+  border-bottom: 4px solid #424f5a;
+  box-sizing: border-box;
 }
 
 .group-lists {
@@ -96,7 +98,7 @@ body {
 }
 
 /** Group Lists **/
-#manage-panel .left-list, #manage-panel .right-list {
+#manage-panel .left-list{
   box-sizing: content-box;
   display: inline-block;
   max-width: 800px;
@@ -106,36 +108,12 @@ body {
 }
 
 .group-list {
-  height: calc(100vh - 147px) !important;
+  height: calc(100vh - 110px) !important;
   box-sizing: border-box;
 }
 
-#manage-panel .left-list {
-}
-
-#manage-panel .half {
-}
 /** End Group Lists **/
 
-/** Below Actions **/
-.belowActions {
-  height: 50px;
-  width: 100%;
-  border-top: 4px solid #424f5a;
-  background-color: var(--not-checked);
-}
-
-.belowActions i {
-  font-size: 40px;
-  cursor: pointer;
-  width: 50px;
-  text-align: center;
-  height: 100%;
-}
-
-.belowActions i:hover {
-  background-color: var(--not-checked);
-}
 
 
 

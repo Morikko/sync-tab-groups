@@ -54,8 +54,12 @@ class GroupList extends React.Component {
       }
     }
 
-    // Return if an action (close/remove) is pending on groupId
+    // Return true if an action (close/remove) is pending on groupId
     isCurrently(action, groupId) {
+      if ( !this.props.delayedTasks ) {
+        return false;
+      }
+
       if (this.props.delayedTasks[action] !== undefined) {
         return this.props.delayedTasks[action].delayedTasks[groupId] !== undefined;
       } else {
@@ -74,9 +78,9 @@ class GroupList extends React.Component {
         if (!this.state.atLeastOneResult) {
           groups.push(
             <div className="no-search-result"
-                key={this.props.id+"-search"}>
-            {'No search result for "'+ this.props.searchfilter + '".'}
-          </div>);
+              key={this.props.id+"-search"}>
+              {'No search result for "'+ this.props.searchfilter + '".'}
+            </div>);
         }
         let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
         for (let index of sortedIndex) {
@@ -106,8 +110,7 @@ class GroupList extends React.Component {
               /*** Options ***/
               searchGroupResult= {this.state.searchGroupsResults?this.state.searchGroupsResults[index]:undefined}
               currentlySearching= {this.state.searchGroupsResults?true:false}
-              showTabsNumber= {this.props.options.popup.showTabsNumber}
-              groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+
               allowClickSwitch={this.props.allowClickSwitch}
               stateless={this.props.stateless}
               width={this.props.width}
@@ -221,7 +224,6 @@ class GroupList extends React.Component {
 
 GroupList.propTypes = {
   groups: PropTypes.object.isRequired,
-  options: PropTypes.object.isRequired,
   currentWindowId: PropTypes.number,
   delayedTasks: PropTypes.object,
   onGroupAddClick: PropTypes.func,

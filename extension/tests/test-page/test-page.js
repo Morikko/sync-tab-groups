@@ -40,7 +40,8 @@ env.specFilter = function(spec) {
   TabManager = bg.TabManager;
   OptionManager = bg.OptionManager;
   StorageManager = bg.StorageManager;
-  Controller = bg.Controller;
+  Selector = bg.Selector;
+  Background = bg.Background;
 })()
 
 function insertParam(key, value) {

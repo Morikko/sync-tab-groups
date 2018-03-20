@@ -48,7 +48,8 @@ class Tab extends React.Component{
         alt=""
         className="tab-icon"
         src={(Utils.isPrivilegedURL(this.props.tab.favIconUrl || "")?"":(this.props.tab.favIconUrl)) || ""}
-      />);
+      />
+    );
 
     let tabClasses = classNames({
       active: this.props.tab.active,
@@ -71,32 +72,37 @@ class Tab extends React.Component{
 
     return (
       <li
-          className={tabClasses}
-          onDragStart={this.handleTabDragStart}
-          onDragOver={this.handleTabDragOver}
-          onDragLeave={this.handleTabDragLeave}
-          onDrop={this.handleTabDrop}
-          onMouseUp={this.handleTabClick}
-          draggable={true}
-          onMouseEnter={this.addMenuItem}
-          onMouseLeave={this.removeMenuItem}
-          contextMenu={"moveTabSubMenu" + this.props.tab.id}
-          tabIndex="0"
-          onKeyDown={Utils.doActivateHotkeys(
+        className={tabClasses}
+        onDragStart={this.handleTabDragStart}
+        onDragOver={this.handleTabDragOver}
+        onDragLeave={this.handleTabDragLeave}
+        onDrop={this.handleTabDrop}
+        onMouseUp={this.handleTabClick}
+        draggable={true}
+        onMouseEnter={this.addMenuItem}
+        onMouseLeave={this.removeMenuItem}
+        contextMenu={"moveTabSubMenu" + this.props.tab.id}
+        tabIndex="0"
+        onKeyDown={this.props.hotkeysEnable
+          ? Utils.doActivateHotkeys(
             tabNavigationListener(this),
-            this.props.hotkeysEnable)}
-        >
-        {this.props.tab.pinned && <i
-          className="pinned-icon fa fa-fw fa-thumb-tack"
-        ></i>}
+          this.props.hotkeysEnable)
+          : undefined}
+      >
+        {
+          this.props.tab.pinned &&
+          <i
+            className="pinned-icon fa fa-fw fa-thumb-tack"
+          ></i>
+        }
         {favicon}
         <span
-            className={"tab-title"}
-            title={tabTitle}
-          >
+          className={"tab-title"}
+          title={tabTitle}
+        >
           {this.props.tab.title}
-      </span>
-      <TabControls
+        </span>
+        <TabControls
           opened={this.props.opened}
           onCloseTab={this.handleCloseTabClick}
           onOpenTab={this.handleOpenTabClick}
@@ -108,7 +114,7 @@ class Tab extends React.Component{
           handleOnMoveTabMenuClick={this.handleOnMoveTabMenuClick}
           handleOnMoveTabNewMenuClick={this.handleOnMoveTabNewMenuClick}
         />
-    </li>);
+      </li>);
   }
 
   handleOnMoveTabNewMenuClick(event) {

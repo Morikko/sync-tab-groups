@@ -53,6 +53,7 @@ Background.init = async function() {
 
   browser.runtime.onMessage.addListener(Messenger.Groups.popupMessenger);
   browser.runtime.onMessage.addListener(Messenger.Options.optionMessenger);
+  browser.runtime.onMessage.addListener(Messenger.Selector.selectorMessenger);
   browser.runtime.onMessage.addListener((message)=>{
     if (Utils.UTILS_SHOW_MESSAGES) {
       console.log(message);
@@ -324,9 +325,15 @@ Background.onExportBackUp = async function(id) {
 Background.onImportBackUp = async function(id) {
   let groups = await StorageManager.Local.getBackUp(id);
   if ( groups ) {
+    Selector.onOpenGroupsSelector({
+      title: 'Back up: ' + id,
+      groups
+    });
+    /*
     GroupManager.addGroups(groups, {
       showNotification: true,
     });
+    */
   } else {
     browser.notifications.create({
       "type": "basic",

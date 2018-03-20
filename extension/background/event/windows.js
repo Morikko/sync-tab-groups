@@ -18,6 +18,7 @@ Event.Windows.initWindowsEventListener = function() {
 
   browser.windows.onRemoved.addListener((windowId) => {
     WindowManager.WINDOW_CURRENTLY_CLOSING[windowId] = true;
+    Selector.wasClosedGroupsSelector(windowId);
 
     setTimeout(()=>{
       delete WindowManager.WINDOW_CURRENTLY_CLOSING[windowId];

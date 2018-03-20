@@ -1,9 +1,7 @@
-/*
-Copyright (c) 2017 Eric Masseran
+/* Copyright (c) 2017 Eric Masseran
 
 From: https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
+Copyright (c) 2015 Dennis Schubert */
 class Group extends React.Component {
   constructor(props) {
     super(props);
@@ -106,13 +104,11 @@ class Group extends React.Component {
       titleElement = React.createElement("input", {
         className: "",
         id: "text-editiong-" + this.props.group.id,
-        autoFocus: true,
+        autoFocus: "autoFocus",
         type: "text",
         value: this.state.newTitle,
         onChange: (event => {
-          this.setState({
-            newTitle: event.target.value
-          });
+          this.setState({ newTitle: event.target.value });
         }).bind(this),
         onMouseUp: e => e.stopPropagation(),
         onClick: e => e.stopPropagation(),
@@ -164,22 +160,17 @@ class Group extends React.Component {
       {
         className: groupClasses,
         onMouseUp: this.handleGroupClick,
-        draggable: this.props.groupDraggable,
-        onDragOver: this.handleGroupDragOver,
-        onDragEnter: this.handleGroupDragEnter,
-        onDragLeave: this.handleGroupDragLeave,
-        onDragStart: this.handleGroupDragStart,
+        draggable: this.props.groupDraggable, onDragOver: this.handleGroupDragOver, onDragEnter: this.handleGroupDragEnter, onDragLeave: this.handleGroupDragLeave, onDragStart: this.handleGroupDragStart,
         onDrop: this.handleGroupDrop,
         title: groupTitle,
-        style: { width: this.props.width },
+        style: {
+          width: this.props.width
+        },
         tabIndex: "0",
-        onKeyDown: Utils.doActivateHotkeys(groupNavigationListener(this), this.props.hotkeysEnable)
-      },
+        onKeyDown: this.props.hotkeysEnable ? Utils.doActivateHotkeys(groupNavigationListener(this), this.props.hotkeysEnable) : undefined },
       React.createElement(
         "span",
-        {
-          className: "group-title"
-        },
+        { className: "group-title" },
         titleElement,
         React.createElement(GroupControls, {
           closing: this.state.closing,
@@ -187,32 +178,19 @@ class Group extends React.Component {
           editing: this.state.editing,
           expanded: this.state.expanded,
           opened: this.state.opened,
-          onClose: this.handleGroupCloseClick,
-          onRemove: this.handleGroupRemoveClick,
-          onEdit: this.handleGroupEditClick,
-          onEditAbort: this.handleGroupEditAbortClick,
-          onEditSave: this.handleGroupEditSaveClick,
-          onExpand: this.handleGroupExpandClick,
-          onUndoCloseClick: this.handleGroupCloseAbortClick,
-          onOpenInNewWindow: this.handleOpenInNewWindowClick
-        })
+          onClose: this.handleGroupCloseClick, onRemove: this.handleGroupRemoveClick, onEdit: this.handleGroupEditClick, onEditAbort: this.handleGroupEditAbortClick, onEditSave: this.handleGroupEditSaveClick, onExpand: this.handleGroupExpandClick, onUndoCloseClick: this.handleGroupCloseAbortClick, onOpenInNewWindow: this.handleOpenInNewWindowClick })
       ),
-      this.state.waitFirstMount /*&& this.state.expanded*/ && React.createElement(TabList, {
+      this.state.waitFirstMount /* && this.state.expanded */
+      && React.createElement(TabList, {
         tabs: this.props.group.tabs,
         group: this.props.group,
-        onTabClick: this.props.onTabClick,
-        onGroupDrop: this.props.onGroupDrop,
+        onTabClick: this.props.onTabClick, onGroupDrop: this.props.onGroupDrop,
         onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
         opened: this.state.opened,
         onCloseTab: this.props.onCloseTab,
         onOpenTab: this.props.onOpenTab,
-        searchTabsResults: this.props.searchGroupResult ? this.props.searchGroupResult.searchTabsResults : undefined,
-        groups: this.props.groups,
-        onChangePinState: this.props.onChangePinState,
-        visible: this.state.expanded,
-        allowClickSwitch: this.props.allowClickSwitch,
-        hotkeysEnable: this.props.hotkeysEnable
-      })
+        searchTabsResults: this.props.searchGroupResult ? this.props.searchGroupResult.searchTabsResults : undefined, groups: this.props.groups,
+        onChangePinState: this.props.onChangePinState, visible: this.state.expanded, allowClickSwitch: this.props.allowClickSwitch, hotkeysEnable: this.props.hotkeysEnable })
     );
   }
 
@@ -424,10 +402,7 @@ class Group extends React.Component {
 
     if (DRAG_TYPE === "group") {
       // Position of main group-list
-      let pos = event.pageY - // Event loc Full page
-      Utils.getOffset(event.currentTarget);
-
-      let height = event.currentTarget.offsetHeight;
+      let pos = event.pageY - /*Event loc Full*/pageUtils.getOffset(event.currentTarget);let height = event.currentTarget.offsetHeight;
 
       // Bottom
       if (pos > height / 2 && pos <= height) {
