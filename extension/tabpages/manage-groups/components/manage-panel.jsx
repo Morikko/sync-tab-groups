@@ -66,22 +66,22 @@ class ManagePanelStandAlone extends React.Component {
         <li className="group-lists">
           <div className={classNames({
             "left-list": true,
-            "half": !this.props.singleMode,})}>
+          "half": !this.props.singleMode,})}>
             <div className="group-action left">
-                <i
-                  className="app-pref fa fa-fw fa-angle-double-down expand-groups"
-                  title={browser.i18n.getMessage("expand_all_groups")}
-                  onClick={this.handleLeftForceExpand.bind(this)}
-                />
-                <i
-                  className="app-pref fa fa-fw fa-angle-double-up reduce-groups"
-                  title={browser.i18n.getMessage("reduce_all_groups")}
-                  onClick={this.handleLeftForceReduce.bind(this)}
-                />
+              <i
+                className="app-pref fa fa-fw fa-angle-double-down expand-groups"
+                title={browser.i18n.getMessage("expand_all_groups")}
+                onClick={this.handleLeftForceExpand.bind(this)}
+              />
+              <i
+                className="app-pref fa fa-fw fa-angle-double-up reduce-groups"
+                title={browser.i18n.getMessage("reduce_all_groups")}
+                onClick={this.handleLeftForceReduce.bind(this)}
+              />
               {
                 <SearchBar
-                    onSearchChange={this.onSearchLeftChange.bind(this)}
-                    hotkeysEnable={this.props.options.shortcuts.navigation}/>
+                  onSearchChange={this.onSearchLeftChange.bind(this)}
+                  hotkeysEnable={this.props.options.shortcuts.navigation}/>
               }
             </div>
             <GroupList
@@ -112,6 +112,7 @@ class ManagePanelStandAlone extends React.Component {
               hotkeysEnable={this.props.options.shortcuts.navigation}
               showTabsNumber= {this.props.options.popup.showTabsNumber}
               groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+              hoverStyle={true}
               /*** actions ***/
               forceExpand={this.state.leftForceExpand}
               forceReduce={this.state.leftForceReduce}
@@ -120,12 +121,12 @@ class ManagePanelStandAlone extends React.Component {
           <div className={classNames({
             "right-list": true,
             "half": true,
-            "invisible": this.props.singleMode,})} >
+          "invisible": this.props.singleMode,})} >
             <div className="group-action right">
               {
                 <SearchBar
-                    onSearchChange={this.onSearchRightChange.bind(this)}
-                    hotkeysEnable={this.props.options.shortcuts.navigation} />
+                  onSearchChange={this.onSearchRightChange.bind(this)}
+                  hotkeysEnable={this.props.options.shortcuts.navigation} />
               }
               <i
                 className="app-pref fa fa-fw fa-angle-double-down"
@@ -166,6 +167,7 @@ class ManagePanelStandAlone extends React.Component {
               hotkeysEnable={this.props.options.shortcuts.navigation}
               showTabsNumber= {this.props.options.popup.showTabsNumber}
               groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+              hoverStyle={true}
               /*** actions ***/
               forceExpand={this.state.rightForceExpand}
               forceReduce={this.state.rightForceReduce}

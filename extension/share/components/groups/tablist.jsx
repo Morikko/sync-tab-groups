@@ -9,26 +9,34 @@ class TabList extends React.Component{
   render() {
     return (
       <ul className ={"tab-list "
-                      + (this.props.visible?"":"hiddenBySearch")}>
+        + (this.props.visible?"":"hiddenBySearch")}>
         {this.props.tabs.map((tab, index) => {
-          return <Tab
-            key={index}
-            group={this.props.group}
-            tabIndex={index}
-            tab={tab}
-            onTabClick={this.props.onTabClick}
-            onGroupDrop={this.props.onGroupDrop}
-            onMoveTabToNewGroup={this.props.onMoveTabToNewGroup}
-            opened={this.props.opened}
-            onCloseTab={this.props.onCloseTab}
-            onOpenTab={this.props.onOpenTab}
-            searchTabResult={this.props.searchTabsResults?this.props.searchTabsResults[index]:true}
-            groups={this.props.groups}
-            onChangePinState={this.props.onChangePinState}
-            allowClickSwitch={this.props.allowClickSwitch}
-            hotkeysEnable={this.props.hotkeysEnable}
-          />
-        })}
+          let selected = this.props.selectionFilter !== undefined
+            ? this.props.selectionFilter[index]
+            : undefined;
+
+          return (
+            <Tab
+              key={index}
+              group={this.props.group}
+              tabIndex={index}
+              tab={tab}
+              onTabClick={this.props.onTabClick}
+              onGroupDrop={this.props.onGroupDrop}
+              onMoveTabToNewGroup={this.props.onMoveTabToNewGroup}
+              opened={this.props.opened}
+              onCloseTab={this.props.onCloseTab}
+              onOpenTab={this.props.onOpenTab}
+              searchTabResult={this.props.searchTabsResults?this.props.searchTabsResults[index]:true}
+              groups={this.props.groups}
+              onChangePinState={this.props.onChangePinState}
+              allowClickSwitch={this.props.allowClickSwitch}
+              hotkeysEnable={this.props.hotkeysEnable}
+              selected={selected}
+              hoverStyle={this.props.hoverStyle}
+            />
+          );
+          })}
       </ul>
     );
   }

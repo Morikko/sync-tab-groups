@@ -12,6 +12,7 @@ class Tab extends React.Component{
       dragOnTop: false,
       dragOnBottom: false,
       waitFirstMount: false,
+      hasFocus: false,
     };
 
     this.handleOnMoveTabNewMenuClick = this.handleOnMoveTabNewMenuClick.bind(this);
@@ -51,8 +52,14 @@ class Tab extends React.Component{
       />
     );
 
+    let active = this.props.selected !== undefined
+      ? this.props.selected
+      : this.props.tab.active;
+
     let tabClasses = classNames({
-      active: this.props.tab.active,
+      hasFocus: this.state.hasFocus,
+      hoverStyle: this.props.hoverStyle,
+      active: active,
       tab: true,
       hiddenBySearch: !this.props.searchTabResult,
       dragTopBorder: this.state.dragOnTop,
@@ -83,6 +90,19 @@ class Tab extends React.Component{
         onMouseLeave={this.removeMenuItem}
         contextMenu={"moveTabSubMenu" + this.props.tab.id}
         tabIndex="0"
+        onFocus={(e)=>{
+          if ( (typeof Navigation !== 'undefined')
+          && Navigation.KEY_PRESSED_RECENTLY ) {
+            this.setState({
+              hasFocus: true,
+            })
+          }
+        }}
+        onBlur={(e)=>{
+          this.setState({
+            hasFocus: false,
+          })
+        }}
         onKeyDown={this.props.hotkeysEnable
           ? Utils.doActivateHotkeys(
             tabNavigationListener(this),
@@ -163,6 +183,12 @@ class Tab extends React.Component{
         newWindow,
       );
       window.close();
+    } else if ( this.props.selected !== undefined ) {
+      this.props.onTabClick(
+        this.props.group.id,
+        this.props.tabIndex,
+        this.props.selected
+      );
     }
   }
 

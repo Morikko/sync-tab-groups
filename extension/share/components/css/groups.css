@@ -114,7 +114,7 @@ li {
   cursor: pointer;
 }
 
-.group:focus .group-title, .tab:focus .tab-title {
+.group.hasFocus:focus .group-title, .tab.hasFocus:focus .tab-title {
   font-weight: bold;
 }
 
@@ -134,7 +134,7 @@ li {
   color: #333;
 }
 
-.group:hover, .tab:hover {
+.group.hoverStyle:hover, .tab.hoverStyle:hover {
   background-color: var(--group-hover) !important;
   color: #fff !important;
 }
@@ -151,7 +151,7 @@ li {
   background-color: var(--private-focus);
 }
 
-.group.incognito:hover, .incognito .tab:hover {
+.group.incognito.hoverStyle:hover, .incognito .tab.hoverStyle:hover {
   background-color: var(--private-hover)  !important;
   color: #fff  !important;
 }
@@ -316,7 +316,7 @@ li {
   background-color: #fff;
 }
 
-.tab-list:hover {
+.tab-list.hoverStyle:hover {
   border: 1px solid transparent;
 }
 

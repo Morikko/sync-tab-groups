@@ -11,6 +11,8 @@ class TabList extends React.Component {
       "ul",
       { className: "tab-list " + (this.props.visible ? "" : "hiddenBySearch") },
       this.props.tabs.map((tab, index) => {
+        let selected = this.props.selectionFilter !== undefined ? this.props.selectionFilter[index] : undefined;
+
         return React.createElement(Tab, {
           key: index,
           group: this.props.group,
@@ -26,7 +28,9 @@ class TabList extends React.Component {
           groups: this.props.groups,
           onChangePinState: this.props.onChangePinState,
           allowClickSwitch: this.props.allowClickSwitch,
-          hotkeysEnable: this.props.hotkeysEnable
+          hotkeysEnable: this.props.hotkeysEnable,
+          selected: selected,
+          hoverStyle: this.props.hoverStyle
         });
       })
     );

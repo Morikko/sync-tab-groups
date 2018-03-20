@@ -26,10 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.title = Utils.getParameterByName("title");
   // Set tab icon
   Utils.setIcon("/share/icons/tabspace-active-64.png");
-
   ReactDOM.render(
     <ReactRedux.Provider store={store}>
-      <ManageWrapper
+      <Wrapper
         /*
         onGroupAddClick={GroupActions.addGroup}
         onGroupAddDrop={GroupActions.addGroupWithTab}

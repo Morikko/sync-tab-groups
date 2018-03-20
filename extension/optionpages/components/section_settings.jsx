@@ -13,39 +13,39 @@ class SettingsSection extends React.Component {
     return (
       <div
         className={"option-section " + (this.props.selected==="settings"?
-            "visible":"invisible")}>
-            <h1 className="section-title">
-              {browser.i18n.getMessage("options_settings")}
-            </h1>
-            <SubSection
-              title={browser.i18n.getMessage("state_new_normal_window")}
-              tooltip={
-                    <div>
-                      <ul>
-                      <li>{browser.i18n.getMessage("options_behaviors_help_title_invisible")}</li>
-                      <ul>
-                        <li>{browser.i18n.getMessage("options_behaviors_help_invisible")}</li>
-                      </ul>
-                      <li>{browser.i18n.getMessage("options_behaviors_help_title_visible")}</li>
-                      <ul>
-                        <li>{browser.i18n.getMessage("options_behaviors_help_visible_new")}</li>
-                      </ul>
-                      <li>{browser.i18n.getMessage("options_behaviors_help_change_visibility")}</li>
-                    </ul>
-                  </div>
-              }
-              content={
-                <div className="double-buttons">
-                  <OptionButton
-                    title= {browser.i18n.getMessage("options_behaviors_help_title_visible")}
-                    onClick= {this.clickOnVisible}
-                    highlight={this.props.options.groups.syncNewWindow}
-                  />
-                  <OptionButton
-                    title= {browser.i18n.getMessage("options_behaviors_help_title_invisible")}
-                    onClick= {this.clickOnInvisible}
-                    highlight={!this.props.options.groups.syncNewWindow}
-                  />
+        "visible":"invisible")}>
+        <h1 className="section-title">
+          {browser.i18n.getMessage("options_settings")}
+        </h1>
+        <SubSection
+          title={browser.i18n.getMessage("state_new_normal_window")}
+          tooltip={
+            <div>
+              <ul>
+                <li>{browser.i18n.getMessage("options_behaviors_help_title_invisible")}</li>
+                <ul>
+                  <li>{browser.i18n.getMessage("options_behaviors_help_invisible")}</li>
+                </ul>
+                <li>{browser.i18n.getMessage("options_behaviors_help_title_visible")}</li>
+                <ul>
+                  <li>{browser.i18n.getMessage("options_behaviors_help_visible_new")}</li>
+                </ul>
+                <li>{browser.i18n.getMessage("options_behaviors_help_change_visibility")}</li>
+              </ul>
+            </div>
+          }
+          content={
+            <div className="double-buttons">
+              <OptionButton
+                title= {browser.i18n.getMessage("options_behaviors_help_title_visible")}
+                onClick= {this.clickOnVisible}
+                highlight={this.props.options.groups.syncNewWindow}
+              />
+              <OptionButton
+                title= {browser.i18n.getMessage("options_behaviors_help_title_invisible")}
+                onClick= {this.clickOnInvisible}
+                highlight={!this.props.options.groups.syncNewWindow}
+              />
                 </div>
               }
             />

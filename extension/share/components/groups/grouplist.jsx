@@ -1,9 +1,3 @@
-/*
-Copyright (c) 2017 Eric Masseran
-
-From: https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
 class GroupList extends React.Component {
     constructor(props) {
       super(props);
@@ -107,6 +101,11 @@ class GroupList extends React.Component {
               currentWindowId= {this.props.currentWindowId}
               currentlyClosing= {this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id)}
               currentlyRemoving= {this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id)}
+              selectionFilter={
+                this.props.selectionFilter
+                  ? this.props.selectionFilter[this.props.groups[index].id]
+                  : undefined
+              }
               /*** Options ***/
               searchGroupResult= {this.state.searchGroupsResults?this.state.searchGroupsResults[index]:undefined}
               currentlySearching= {this.state.searchGroupsResults?true:false}
@@ -115,6 +114,7 @@ class GroupList extends React.Component {
               stateless={this.props.stateless}
               width={this.props.width}
               hotkeysEnable={this.props.hotkeysEnable}
+              hoverStyle={this.props.hoverStyle}
               /*** actions ***/
               forceExpand={this.props.forceExpand}
               forceReduce={this.props.forceReduce}
@@ -127,11 +127,14 @@ class GroupList extends React.Component {
         </div>
       );
     }
-    return (<ul className={groupListClasses}
-                id={this.props.id}
-                style={{width: this.props.width}}>
-              {groups}
-            </ul>);
+
+    return (
+      <ul className={groupListClasses}
+        id={this.props.id}
+        style={{width: this.props.width}}>
+        {groups}
+      </ul>
+    );
   }
 
   applySearch(searchValue) {

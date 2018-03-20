@@ -19,14 +19,23 @@ class ManageBar extends React.Component {
       ),
       React.createElement(
         "div",
-        { className: "right-buttons" },
-        React.createElement(RadioButton, {
-          labelLeft: browser.i18n.getMessage("group_manager_single_button"),
-          iconLeft: "square-o",
-          labelRight: browser.i18n.getMessage("group_manager_split_button"),
-          iconRight: "columns",
-          left: this.props.singleMode,
-          getActivatedState: this.props.changeColumnDisplay
+        { className: "bar-buttons" },
+        React.createElement(OptionButton, {
+          title: "Selection" /*browser.i18n.getMessage("options_behaviors_help_title_invisible")*/,
+          onClick: this.clickOnInvisible,
+          highlight: true
+        }),
+        React.createElement(OptionButton, {
+          title: "Type",
+          onClick: this.clickOnInvisible,
+          highlight: false,
+          disabled: true
+        }),
+        React.createElement(OptionButton, {
+          title: "Go",
+          onClick: this.clickOnInvisible,
+          highlight: false,
+          disabled: true
         })
       )
     );

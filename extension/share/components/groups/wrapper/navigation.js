@@ -38,9 +38,22 @@ var Navigation = Navigation || {};
 /** Targetting **/
 
 Navigation.Target = document;
+Navigation.KEY_PRESSED_RECENTLY = false;
+
+Navigation.setKeyPressedRecently = function() {
+  Navigation.KEY_PRESSED_RECENTLY = true;
+  setTimeout(()=>{
+    Navigation.KEY_PRESSED_RECENTLY = false;
+  }, 1500);
+}
 
 Navigation.setTarget = function (id) {
   Navigation.Target = id;
+}
+
+Navigation.focus = function(el) {
+  Navigation.setKeyPressedRecently();
+  el.focus();
 }
 
 /** DOM change **/
@@ -54,7 +67,7 @@ Navigation.focusParent = function(toElement, element=document.activeElement) {
   while (element.parentElement) {
     element = element.parentElement;
     if (Navigation.isElement(element, toElement)) {
-      element.focus()
+      Navigation.focus(element);
       return true;
     }
   }
@@ -70,24 +83,32 @@ Navigation.isTab = function(element=document.activeElement) {
 }
 
 Navigation.focusFirstGroup = function() {
-  Navigation.Target.querySelector('.group:not(.hiddenBySearch)').focus();
+  Navigation.focus(
+    Navigation.Target.querySelector('.group:not(.hiddenBySearch)')
+  );
 }
 
 Navigation.focusLastGroup = function() {
   let groups = Navigation.Target.querySelectorAll('.group:not(.hiddenBySearch)');
-  groups[groups.length-1].focus();
+  Navigation.focus(
+    groups[groups.length-1]
+  );
 }
 
 Navigation.focusFirstTab = function(element) {
   if ( Navigation.isTab() ) {
-    element.querySelector('.tab:not(.hiddenBySearch)').focus()
+    Navigation.focus(
+      element.querySelector('.tab:not(.hiddenBySearch)')
+    );
   }
 }
 
 Navigation.focusLastTab = function(element) {
   if ( Navigation.isTab() ) {
     let tabs = element.querySelectorAll('.tab:not(.hiddenBySearch)');
-    tabs[tabs.length-1].focus();
+    Navigation.focus(
+      tabs[tabs.length-1]
+    );
   }
 }
 
@@ -101,9 +122,9 @@ Navigation.focusNext = function() {
   let index = [].indexOf.call(results, document.activeElement)
 
   if ( index > -1 && index < results.length-1) {
-    results[index+1].focus();
+    Navigation.focus(results[index+1]);
   } else {
-    results[0].focus();
+    Navigation.focus(results[0]);
   }
 }
 
@@ -116,10 +137,11 @@ Navigation.focusPrevious = function() {
 
   let index = [].indexOf.call(results, document.activeElement)
 
+  Navigation.setKeyPressedRecently();
   if ( index-1 > -1) {
-    results[index-1].focus();
+    Navigation.focus(results[index-1]);
   } else {
-    results[results.length-1].focus();
+    Navigation.focus(results[results.length-1]);
   }
 }
 
@@ -186,6 +208,12 @@ var generalNavigationListener = Navigation.navigationFactory({
   "ctrl+f": (e) => {
     e.preventDefault();
     Navigation.Target.querySelector('.search-input').focus()
+  },
+  "tab": (e) => {
+    Navigation.setKeyPressedRecently();
+  },
+  "shift+tab": (e) => {
+    Navigation.setKeyPressedRecently();
   },
 });
 
@@ -275,7 +303,9 @@ var tabNavigationListener = function(tab) {
       "shift+enter": ()=>tab.onTabClick(true),
       "spacebar": (e)=>{
         e.preventDefault();
-        document.activeElement.parentElement.parentElement.focus()
+        Navigation.focus(
+          document.activeElement.parentElement.parentElement
+        );
       },
       "delete": tab.handleCloseTabClick,
       "ctrl+enter": tab.handleOpenTabClick,
@@ -288,7 +318,9 @@ var tabNavigationListener = function(tab) {
           tab.props.group.id,
           tab.props.tabIndex-1,
         );
-        document.activeElement.previousSibling.focus();
+        Navigation.focus(
+          document.activeElement.previousSibling
+        );
       },
       "shift+down": (e)=>{
         e.preventDefault();
@@ -298,7 +330,9 @@ var tabNavigationListener = function(tab) {
           tab.props.group.id,
           tab.props.tabIndex+2,
         );
-        document.activeElement.nextSibling.focus();
+        Navigation.focus(
+          document.activeElement.nextSibling
+        );
       },
     })
 }

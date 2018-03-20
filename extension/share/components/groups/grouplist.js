@@ -1,9 +1,3 @@
-/*
-Copyright (c) 2017 Eric Masseran
-
-From: https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
 class GroupList extends React.Component {
   constructor(props) {
     super(props);
@@ -108,7 +102,8 @@ class GroupList extends React.Component {
           group: this.props.groups[index],
           currentWindowId: this.props.currentWindowId,
           currentlyClosing: this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id),
-          currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id)
+          currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id),
+          selectionFilter: this.props.selectionFilter ? this.props.selectionFilter[this.props.groups[index].id] : undefined
           /*** Options ***/
           , searchGroupResult: this.state.searchGroupsResults ? this.state.searchGroupsResults[index] : undefined,
           currentlySearching: this.state.searchGroupsResults ? true : false,
@@ -116,7 +111,8 @@ class GroupList extends React.Component {
           allowClickSwitch: this.props.allowClickSwitch,
           stateless: this.props.stateless,
           width: this.props.width,
-          hotkeysEnable: this.props.hotkeysEnable
+          hotkeysEnable: this.props.hotkeysEnable,
+          hoverStyle: this.props.hoverStyle
           /*** actions ***/
           , forceExpand: this.props.forceExpand,
           forceReduce: this.props.forceReduce
@@ -129,6 +125,7 @@ class GroupList extends React.Component {
         "There is no group now... Create your first one!"
       );
     }
+
     return React.createElement(
       "ul",
       { className: groupListClasses,

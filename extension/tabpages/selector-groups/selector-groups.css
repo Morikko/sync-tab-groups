@@ -32,10 +32,23 @@ body {
   padding-left: 10px;
 }
 
-#menu .right-buttons {
-  display: inline-block;
-  margin: auto 0;
+.bar-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  flex: 1;
+  padding: 10px;
 }
+
+/*
+.bar-buttons .option-button {
+  padding: 0px;
+  border: 20px red solid;
+  border-left: 20px solid transparent;
+  box-sizing: border-box;
+}
+*/
 
 /*** End Manage Bar ***/
 
@@ -113,8 +126,6 @@ body {
 }
 
 /** End Group Lists **/
-
-
 
 
 /** End Below Actions **/

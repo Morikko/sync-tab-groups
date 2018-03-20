@@ -11,7 +11,8 @@ class Tab extends React.Component {
     this.state = {
       dragOnTop: false,
       dragOnBottom: false,
-      waitFirstMount: false
+      waitFirstMount: false,
+      hasFocus: false
     };
 
     this.handleOnMoveTabNewMenuClick = this.handleOnMoveTabNewMenuClick.bind(this);
@@ -49,8 +50,12 @@ class Tab extends React.Component {
       src: (Utils.isPrivilegedURL(this.props.tab.favIconUrl || "") ? "" : this.props.tab.favIconUrl) || ""
     });
 
+    let active = this.props.selected !== undefined ? this.props.selected : this.props.tab.active;
+
     let tabClasses = classNames({
-      active: this.props.tab.active,
+      hasFocus: this.state.hasFocus,
+      hoverStyle: this.props.hoverStyle,
+      active: active,
       tab: true,
       hiddenBySearch: !this.props.searchTabResult,
       dragTopBorder: this.state.dragOnTop,
@@ -82,6 +87,18 @@ class Tab extends React.Component {
         onMouseLeave: this.removeMenuItem,
         contextMenu: "moveTabSubMenu" + this.props.tab.id,
         tabIndex: "0",
+        onFocus: e => {
+          if (typeof Navigation !== 'undefined' && Navigation.KEY_PRESSED_RECENTLY) {
+            this.setState({
+              hasFocus: true
+            });
+          }
+        },
+        onBlur: e => {
+          this.setState({
+            hasFocus: false
+          });
+        },
         onKeyDown: this.props.hotkeysEnable ? Utils.doActivateHotkeys(tabNavigationListener(this), this.props.hotkeysEnable) : undefined
       },
       this.props.tab.pinned && React.createElement("i", {
@@ -145,6 +162,8 @@ class Tab extends React.Component {
       let tab = this.props.tab;
       this.props.onTabClick(group.id, this.props.tabIndex, newWindow);
       window.close();
+    } else if (this.props.selected !== undefined) {
+      this.props.onTabClick(this.props.group.id, this.props.tabIndex, this.props.selected);
     }
   }
 

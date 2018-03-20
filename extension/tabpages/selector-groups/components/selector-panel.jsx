@@ -1,4 +1,4 @@
-class ManagePanelStandAlone extends React.Component {
+class Panel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,43 +56,43 @@ class ManagePanelStandAlone extends React.Component {
         <li className="group-lists">
           <div className={classNames({
             "left-list": true,
-            "half": !this.props.singleMode,})}>
+          "half": !this.props.singleMode,})}>
             <div className="group-action left">
-                <i
-                  className="app-pref fa fa-fw fa-angle-double-down expand-groups"
-                  title={browser.i18n.getMessage("expand_all_groups")}
-                  onClick={this.handleLeftForceExpand.bind(this)}
-                />
-                <i
-                  className="app-pref fa fa-fw fa-angle-double-up reduce-groups"
-                  title={browser.i18n.getMessage("reduce_all_groups")}
-                  onClick={this.handleLeftForceReduce.bind(this)}
-                />
+              <i
+                className="app-pref fa fa-fw fa-angle-double-down expand-groups"
+                title={browser.i18n.getMessage("expand_all_groups")}
+                onClick={this.handleLeftForceExpand.bind(this)}
+              />
+              <i
+                className="app-pref fa fa-fw fa-angle-double-up reduce-groups"
+                title={browser.i18n.getMessage("reduce_all_groups")}
+                onClick={this.handleLeftForceReduce.bind(this)}
+              />
               {
                 <SearchBar
-                    onSearchChange={this.onSearchLeftChange.bind(this)}
-                    hotkeysEnable={false/*this.props.options.shortcuts.navigation*/}/>
+                  onSearchChange={this.onSearchLeftChange.bind(this)}
+                  hotkeysEnable={false/*this.props.options.shortcuts.navigation*/}/>
               }
             </div>
             <GroupList
               /*** Functions ***/
+              onGroupClick= {this.props.changeGroupSelectionFilter}
+              onTabClick= {this.props.changeTabSelectionFilter}
+
               onMoveTabToNewGroup= {this.props.onGroupAddDrop}
               onGroupCloseClick= {this.props.onGroupCloseClick}
               onGroupRemoveClick= {this.props.onGroupRemoveClick}
               onGroupTitleChange= {this.props.onGroupTitleChange}
-              onTabClick= {this.props.onTabClick}
               onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
               onCloseTab= {this.props.onCloseTab}
               onOpenTab= {this.props.onOpenTab}
-              onGroupClick= {this.props.onGroupClick}
               onGroupDrop= {this.props.onGroupDrop}
               onGroupChangePosition= {this.props.onGroupChangePosition}
               onChangePinState= {this.props.onChangePinState}
               onChangeExpand= {this.props.onChangeExpand}
               /*** Data ***/
               groups= {this.props.groups}
-              currentWindowId= {this.props.currentWindowId}
-              delayedTasks= {this.props.delayedTasks}
+              selectionFilter={this.props.selectionFilter}
               /*** Options ***/
               id="manage-left"
               searchfilter= {this.state.leftsearchfilter}
@@ -102,6 +102,7 @@ class ManagePanelStandAlone extends React.Component {
               hotkeysEnable={false/*this.props.options.shortcuts.navigation*/}
               showTabsNumber= {false}
               groupDraggable= {false}
+              hoverStyle={false}
               /*** actions ***/
               forceExpand={this.state.leftForceExpand}
               forceReduce={this.state.leftForceReduce}
@@ -136,11 +137,3 @@ class ManagePanelStandAlone extends React.Component {
     });
   }
 }
-
-const ManagePanel = (() => {
-  return ReactRedux.connect((state) => {
-    return {
-      groups: state.get("groups"),
-    };
-  }, ActionCreators)(ManagePanelStandAlone)
-})();
