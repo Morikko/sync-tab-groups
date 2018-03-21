@@ -736,7 +736,7 @@ GroupManager.addGroups = function(newGroups, {
   groups=GroupManager.groups,
   showNotification=false,
 }={}) {
-  let ids = []
+  let ids = [];
   for (let g of newGroups) {
     g.id = GroupManager.createUniqueGroupId();
     ids.push(g.id);
@@ -748,13 +748,34 @@ GroupManager.addGroups = function(newGroups, {
       "type": "basic",
       "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
       "title": "Import Groups succeeded",
-      "message": groups.length + " groups imported.",
+      "message": newGroups.length + " groups imported.",
       "eventTime": 4000,
     });
   }
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   return ids;
+}
+
+GroupManager.filterGroups = function(groups, filter=undefined) {
+  if (filter === undefined) {
+    return groups;
+  }
+
+  let filteredGroups = [];
+  for (let g of groups) {
+    if ( filter.hasOwnProperty(g.id) && filter[g.id].selected > 0 ) {
+      let nextGroup = Utils.getCopy(g);
+      nextGroup.tabs = nextGroup.tabs.filter(
+                          (_, index) => filter[g.id].tabs[index])
+
+      filteredGroups.push(
+        nextGroup
+      );
+    }
+  }
+
+  return filteredGroups;
 }
 
 /**

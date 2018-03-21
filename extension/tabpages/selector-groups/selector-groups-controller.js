@@ -5,9 +5,12 @@ class SelectorActions {
     Utils.sendMessage("Ask:SelectorGroups", {});
   }
 
-  static finish({ filter }) {
+  static finish({
+    filter,
+    importType = undefined
+  } = {}) {
     Utils.sendMessage("Selector:Finish", {
-      type,
+      importType,
       filter
     });
   }
@@ -29,27 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(React.createElement(
     ReactRedux.Provider,
     { store: store },
-    React.createElement(Wrapper
-    /*
-    onGroupAddClick={GroupActions.addGroup}
-    onGroupAddDrop={GroupActions.addGroupWithTab}
-    onGroupClick={GroupActions.selectGroup}
-    onGroupDrop={GroupActions.moveTabToGroup}
-    onGroupCloseClick={GroupActions.closeGroup}
-    onGroupRemoveClick={GroupActions.removeGroup}
-    onGroupTitleChange={GroupActions.renameGroup}
-    onTabClick={GroupActions.selectTab}
-    onOpenInNewWindowClick={GroupActions.OpenGroupInNewWindow}
-    onChangeWindowSync={GroupActions.onChangeWindowSync}
-    onClickPref={GroupActions.openSettings}
-    onCloseTab={GroupActions.onCloseTab}
-    onOpenTab={GroupActions.onOpenTab}
-    onOptionChange={GroupActions.onOptionChange}
-    onGroupChangePosition={GroupActions.changeGroupPosition}
-    onChangePinState={GroupActions.onChangePinState}
-    onChangeExpand={GroupActions.onChangeExpand}
-    */
-    , null)
+    React.createElement(Wrapper, {
+      finish: SelectorActions.finish
+    })
   ), document.getElementById("content"));
 });
 

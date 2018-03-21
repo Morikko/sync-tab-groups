@@ -1,41 +1,37 @@
 class ManageBar extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {};
+
+    if (Utils.getParameterByName('type') === Selector.TYPE.IMPORT) {
+      this.state.type = 'import_groups';
+    } else {
+      this.state.type = 'export_groups';
+    }
   }
 
   render() {
     return React.createElement(
-      "div",
-      { id: "menu" },
+      'div',
+      { id: 'menu' },
       React.createElement(
-        "div",
-        { className: "title" },
-        React.createElement("img", { src: "/share/icons/tabspace-active-64.png", alt: "", height: "32" }),
+        'div',
+        { className: 'title' },
+        React.createElement('img', { src: '/share/icons/tabspace-active-64.png', alt: '', height: '32' }),
         React.createElement(
-          "span",
+          'span',
           null,
-          browser.i18n.getMessage("group_manager")
+          "Selector"
         )
       ),
       React.createElement(
-        "div",
-        { className: "bar-buttons" },
+        'div',
+        { className: 'bar-buttons' },
         React.createElement(OptionButton, {
-          title: "Selection" /*browser.i18n.getMessage("options_behaviors_help_title_invisible")*/,
-          onClick: this.clickOnInvisible,
-          highlight: true
-        }),
-        React.createElement(OptionButton, {
-          title: "Type",
-          onClick: this.clickOnInvisible,
-          highlight: false,
-          disabled: true
-        }),
-        React.createElement(OptionButton, {
-          title: "Go",
-          onClick: this.clickOnInvisible,
-          highlight: false,
-          disabled: true
+          title: browser.i18n.getMessage(this.state.type),
+          onClick: e => this.props.onFinish(),
+          highlight: this.props.hasSelected,
+          disabled: !this.props.hasSelected
         })
       )
     );

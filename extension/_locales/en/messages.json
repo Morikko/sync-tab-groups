@@ -1149,6 +1149,16 @@
   "tab_show_actions_menu": {
     "message": "Open extra actions menu",
     "description": ""
+  },
+
+  "selector_select_all": {
+    "message": "Select all the tabs and groups.",
+    "description": "In the selector popup (import/export)"
+  },
+
+  "selector_select_none": {
+    "message": "Unselect all the tabs and groups.",
+    "description": "In the selector popup (import/export)"
   }
 
 }

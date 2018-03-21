@@ -203,14 +203,14 @@ class Group extends React.Component {
     let groupTitle = this.getGroupTitle();
 
     let checkbox = this.props.selectionFilter !== undefined ? React.createElement(NiceCheckbox, {
-      checked: this.props.selectionFilter.selected === this.props.group.tabs.length,
+      checked: this.props.selectionFilter.selected === this.props.group.tabs.length && this.props.selectionFilter.selected > 0,
       onCheckChange: () => {
         this.props.onGroupClick(this.props.group.id, this.props.selectionFilter.selected);
       },
       label: "",
       indeterminate: this.props.selectionFilter.selected > 0 && this.props.selectionFilter.selected !== this.props.group.tabs.length,
       id: "selected-group-" + this.props.group.id,
-      disabled: false
+      disabled: this.props.group.tabs.length === 0
     }) : null;
 
     return React.createElement(

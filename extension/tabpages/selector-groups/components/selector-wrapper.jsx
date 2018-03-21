@@ -4,16 +4,18 @@ class WrapperStandAlone extends React.Component {
     this.state = {
       single: true,
       selectionFilter: this.getSelectionFilter(props.groups),
+      hasSelected: false,
     }
-    this.onColumnChange = this.onColumnChange.bind(this);
+
+    this.onImportTypeChange = this.onImportTypeChange.bind(this);
     this.changeTabSelectionFilter = this.changeTabSelectionFilter.bind(this);
     this.changeGroupSelectionFilter = this.changeGroupSelectionFilter.bind(this);
+    this.getSelectionFilter = this.getSelectionFilter.bind(this);
+    this.onFinish = this.onFinish.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      selectionFilter: this.getSelectionFilter(nextProps.groups)
-    });
+    this.setSelectionFilter(this.getSelectionFilter(nextProps.groups))
   }
 
   getSelectionFilter(groups, defaultValue=false) {
@@ -29,6 +31,19 @@ class WrapperStandAlone extends React.Component {
     return selectionFilter;
   }
 
+  setSelectionFilter(selectionFilter) {
+    let hasSelected = Object.values(selectionFilter).filter((group)=>{
+      if ( group.selected ) return true;
+      if ( group.tabs.filter(tab => tab).length) return true;
+      return false;
+    }).length>0;
+
+    this.setState({
+      hasSelected: hasSelected,
+      selectionFilter: selectionFilter
+    });
+  }
+
   // Also change the group
   changeTabSelectionFilter(id, index, previousValue) {
     const nextSelectionFilter = Utils.getCopy(this.state.selectionFilter);
@@ -36,9 +51,7 @@ class WrapperStandAlone extends React.Component {
     nextSelectionFilter[id].selected = nextSelectionFilter[id].tabs
                                           .filter(tab => tab).length;
 
-    this.setState({
-      selectionFilter: nextSelectionFilter
-    });
+    this.setSelectionFilter(nextSelectionFilter);
   }
 
   // None -> Full | Partial -> Full | Full -> None
@@ -60,9 +73,7 @@ class WrapperStandAlone extends React.Component {
       };
     }
 
-    this.setState({
-      selectionFilter: nextSelectionFilter
-    });
+    this.setSelectionFilter(nextSelectionFilter);
   }
 
   render() {
@@ -70,6 +81,8 @@ class WrapperStandAlone extends React.Component {
       <div>
         <ManageBar
           singleMode={this.state.single}
+          hasSelected={this.state.hasSelected}
+          onFinish={this.onFinish}
           changeColumnDisplay={this.onColumnChange}/>
         <Panel
           {...this.props}
@@ -77,22 +90,29 @@ class WrapperStandAlone extends React.Component {
           selectionFilter={this.state.selectionFilter}
           changeTabSelectionFilter={this.changeTabSelectionFilter}
           changeGroupSelectionFilter={this.changeGroupSelectionFilter}
+          selectAllInSelectionFilter={()=>{
+            this.setSelectionFilter(this.getSelectionFilter(this.props.groups, true));
+          }}
+          selectNoneInSelectionFilter={()=>{
+            this.setSelectionFilter(this.getSelectionFilter(this.props.groups, false));
+          }}
         />
       </div>
     )
   }
 
-  onColumnChange(value) {
+  onImportTypeChange(value) {
     this.setState({
       single: value
     });
   }
-  /*
-  static STEP = Object.freeze({
-    SELECTION: "Selection",
-    TYPE:
-  })
-  */
+
+  onFinish() {
+    this.props.finish({
+      importType: undefined,
+      filter: this.state.selectionFilter,
+    })
+  }
 }
 
 const Wrapper = (() => {

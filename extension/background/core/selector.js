@@ -2,11 +2,6 @@ var Selector = Selector || {};
 
 Selector.WINDOW_ID = WINDOW_ID_NONE;
 
-Selector.TYPE = Object.freeze({
-  EXPORT: "Export",
-  IMPORT: "Import",
-});
-
 // Export or Import
 Selector.type = Selector.TYPE.IMPORT;
 // The groups currently under selection (never directly the groups in place)
@@ -16,14 +11,28 @@ Selector.file = "No groups selected";
 
 
 Selector.onOpenGroupsSelector = async function({
-  title=Selector.type + ": " + Selector.file,
+  title=Selector.file,
   groups=[],
+  type=Selector.TYPE.IMPORT,
+  force=false,
 }={}) {
+  if( groups.length === 0 && !force ) {
+    browser.notifications.create({
+      "type": "basic",
+      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+      "title": "No Group imported",
+      "message": "The group list was empty...",
+      "eventTime": 4000,
+    });
+    return;
+  }
+
   const url = browser.extension.getURL(
     Utils.SELECTOR_PAGE_URL
-    + "?title=" + title
+    + "?title=" + Selector.type + " " + title
+    + "&type=" + type
   );
-  
+
   const windowInfo = {
     height: (window.screen.availHeight - 100),
     width: Math.min( window.screen.availWidth, 850 ),
@@ -32,7 +41,10 @@ Selector.onOpenGroupsSelector = async function({
       - Math.min( window.screen.availWidth, 850 ))/2)
   };
 
-  Selector.groups = groups;
+  Selector.groups = GroupManager.getGroupsWithoutPrivate( 
+    groups.filter(group => group.tabs.length) // Only non empty groups
+  );
+  Selector.type = type;
 
   if ( Selector.WINDOW_ID === WINDOW_ID_NONE ) {
     windowInfo["url"] = url;

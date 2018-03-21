@@ -1,18 +1,20 @@
 /**
- * Everything related to save file on the disk (Not through firefox API)
+ * Everything related to save file on the disk
  */
 var StorageManager = StorageManager || {};
 StorageManager.File = StorageManager.File || {};
 
-StorageManager.File.exportGroups = async function(groups) {
+StorageManager.File.downloadGroups = async function(groups) {
   try {
     let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
 
     // Clean tabs
     export_groups = export_groups.map((group)=>{
       let export_group = Utils.getCopy(group);
+      // Filter values to export
+      // TODO really
+      /*
       export_group.tabs = export_group.tabs.map((tab)=>{
-        // Filter values to export
         let export_tab = {
           id: tab.id || -1,
           title: tab.title || "New Tab",
@@ -20,7 +22,7 @@ StorageManager.File.exportGroups = async function(groups) {
           pinned: tab.pinned || false,
           active: tab.active || false,
           discarded: tab.discarded || false,
-          favIconUrl: tab.favIconUrl || "chrome://branding/content/icon32.png",
+          favIconUrl: tab.favIconUrl || "",
         };
         if (tab.hasOwnProperty("openerTabId")) {
           export_tab["openerTabId"] = tab["openerTabId"];
@@ -28,6 +30,7 @@ StorageManager.File.exportGroups = async function(groups) {
 
         return export_tab;
       });
+      */
       return export_group;
     });
 
@@ -44,8 +47,11 @@ StorageManager.File.exportGroups = async function(groups) {
     await Utils.waitDownload(id);
 
     URL.revokeObjectURL(url);
+    return true;
+
   } catch (e) {
-    console.error("StorageManager.File.exportGroups: " + e);
+    console.error("StorageManager.File.downloadGroups: " + e);
+    return false;
   }
 }
 
@@ -83,6 +89,8 @@ StorageManager.File.importSyncTabGroups = function(content_file) {
       g.tabs || [],
     ));
   }
+
+  // TODO notifications in case of error
 
   return groups;
 }

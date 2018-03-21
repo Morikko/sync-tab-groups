@@ -82,6 +82,7 @@ StorageManager.Local.abortBackUp = function() {
 /**
  * Do a back up right now if last one if > intervalTime
  * Else plan a timeout to reach intervalTime
+ * Local Back Up Entry Point
  */
 StorageManager.Local.planBackUp = async function(
   groups=GroupManager.groups,
@@ -264,4 +265,17 @@ StorageManager.Local.clearBackups = async function({
       StorageManager.Local.BACKUP_CHANGE
     );
   }
+}
+
+StorageManager.Local.getBackUpDate = function(id) {
+  if ( id  && id.length ) {
+    let dateString = id.split('-')[1];
+    if ( dateString  && dateString.length ) {
+      let dateInt = parseInt(dateString)
+      if ( !isNaN(dateInt) ) {
+        return (new Date(dateInt)).toString();
+      }
+    }
+  }
+  return "Unknown date";
 }

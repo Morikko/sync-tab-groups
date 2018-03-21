@@ -228,8 +228,10 @@ class Group extends React.Component {
     let checkbox = this.props.selectionFilter !== undefined
       ? (
         <NiceCheckbox
-          checked= {this.props.selectionFilter.selected
-          ===this.props.group.tabs.length}
+          checked= {
+            this.props.selectionFilter.selected===this.props.group.tabs.length
+            && this.props.selectionFilter.selected > 0
+          }
           onCheckChange= {()=>{
             this.props.onGroupClick(
               this.props.group.id,
@@ -241,7 +243,7 @@ class Group extends React.Component {
             && this.props.selectionFilter.selected
           !==this.props.group.tabs.length}
           id={"selected-group-"+this.props.group.id}
-          disabled={false}
+          disabled={this.props.group.tabs.length===0}
         />
       )
       : null;

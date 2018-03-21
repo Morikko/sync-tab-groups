@@ -46,6 +46,10 @@ Background.init = async function() {
   await OptionManager.init();
   await GroupManager.init();
 
+  Event.Install.prepareExtensionForUpdate(
+    Background.lastVersion,
+    (browser.runtime.getManifest()).version);
+
   Event.Extension.initDataEventListener();
   Event.Tabs.initTabsEventListener();
   Event.Windows.initWindowsEventListener();
@@ -60,17 +64,14 @@ Background.init = async function() {
     }
   });
 
-  StorageManager.Backup.init();
-
   Utils.setBrowserActionIcon(OptionManager.options.popup.whiteTheme);
-
-  Event.Install.prepareExtensionForUpdate(
-    Background.lastVersion,
-    (browser.runtime.getManifest()).version);
 
   Background.refreshUi();
   Background.refreshOptionsUI();
 
+  await Utils.wait(2000);
+  StorageManager.Local.planBackUp();
+  StorageManager.Backup.init();
   Background.install = false;
 };
 
@@ -286,63 +287,35 @@ Background.onTabOpen = async function({
 Background.onImportGroups = function({
   content_file
 }) {
-  try {
-    let groups = StorageManager.File.importGroupsFromFile(content_file);
-    GroupManager.addGroups(groups, {
-      showNotification: true,
-    });
-  } catch (e) {
-    console.error(e);
-    browser.notifications.create({
-      "type": "basic",
-      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
-      "title": "Import Groups failed",
-      "message": e.message,
-      "eventTime": 4000,
-    });
-  }
+  Selector.onOpenGroupsSelector({
+    title: 'From file: ' + filename,
+    groups: StorageManager.File.importGroupsFromFile(content_file),
+    type: Selector.TYPE.IMPORT
+  });
 };
 
 Background.onExportGroups = function() {
-  StorageManager.File.exportGroups(GroupManager.getCopy());
+  Selector.onOpenGroupsSelector({
+    title: 'Current groups at ' + new Date(),
+    groups: GroupManager.getCopy(),
+    type: Selector.TYPE.EXPORT
+  });
 };
 
 Background.onExportBackUp = async function(id) {
-  let groups = await StorageManager.Local.getBackUp(id);
-  if ( groups ) {
-    StorageManager.File.exportGroups(groups);
-  } else {
-    browser.notifications.create({
-      "type": "basic",
-      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
-      "title": "Import Back Up Groups",
-      "message": "Back up is empty, no group to import.",
-      "eventTime": 4000,
-    });
-  }
+  Selector.onOpenGroupsSelector({
+    title: 'Back up: ' + StorageManager.Local.getBackUpDate(id),
+    groups: (await StorageManager.Local.getBackUp(id)),
+    type: Selector.TYPE.EXPORT
+  });
 };
 
 Background.onImportBackUp = async function(id) {
-  let groups = await StorageManager.Local.getBackUp(id);
-  if ( groups ) {
-    Selector.onOpenGroupsSelector({
-      title: 'Back up: ' + id,
-      groups
-    });
-    /*
-    GroupManager.addGroups(groups, {
-      showNotification: true,
-    });
-    */
-  } else {
-    browser.notifications.create({
-      "type": "basic",
-      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
-      "title": "Import Back Up Groups",
-      "message": "Back up is empty, no group to import.",
-      "eventTime": 4000,
-    });
-  }
+  Selector.onOpenGroupsSelector({
+    title: 'Back up: ' + StorageManager.Local.getBackUpDate(id),
+    groups: (await StorageManager.Local.getBackUp(id)),
+    type: Selector.TYPE.IMPORT
+  });
 };
 
 Background.onRemoveBackUp = async function(ids) {

@@ -44,6 +44,8 @@ Objects:
 const WINDOW_ID_NONE = browser.windows.WINDOW_ID_NONE;
 var Utils = Utils || {};
 var TabManager = TabManager || {};
+var Selector = Selector || {};
+
 /**
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
@@ -125,6 +127,11 @@ OptionManager.TEMPLATE = function() {
     }
   };
 };
+
+Selector.TYPE = Object.freeze({
+  EXPORT: "Export",
+  IMPORT: "Import",
+});
 
 Utils.setObjectPropertiesWith = function(obj, val)  {
   let obj2 = Utils.getCopy(obj);

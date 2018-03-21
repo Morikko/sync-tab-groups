@@ -1,6 +1,13 @@
 class ManageBar extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {};
+
+    if ( Utils.getParameterByName('type') === Selector.TYPE.IMPORT ) {
+      this.state.type = 'import_groups';
+    } else {
+      this.state.type = 'export_groups';
+    }
   }
 
   render() {
@@ -8,25 +15,22 @@ class ManageBar extends React.Component {
       <div id="menu">
         <div className="title">
           <img src="/share/icons/tabspace-active-64.png" alt="" height="32"/>
-          <span>{browser.i18n.getMessage("group_manager")}</span>
+          <span>{"Selector"}</span>
         </div>
         <div className="bar-buttons">
-          <OptionButton
-            title= {"Selection"/*browser.i18n.getMessage("options_behaviors_help_title_invisible")*/}
+          {/*
+            <OptionButton
+            title= {"Help"}
             onClick= {this.clickOnInvisible}
             highlight={true}
-          />
+            disabled={false}
+            />
+          */}
           <OptionButton
-            title= {"Type"}
-            onClick= {this.clickOnInvisible}
-            highlight={false}
-            disabled={true}
-          />
-          <OptionButton
-            title= {"Go"}
-            onClick= {this.clickOnInvisible}
-            highlight={false}
-            disabled={true}
+            title= {browser.i18n.getMessage(this.state.type)}
+            onClick= {(e)=>this.props.onFinish()}
+            highlight={this.props.hasSelected}
+            disabled={!this.props.hasSelected}
           />
         </div>
       </div>

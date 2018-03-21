@@ -25,7 +25,7 @@ Event.Install.onDevelopmentInstall = function() {
   });
 
   /*** Add extra code you want to be done in Development ***/
-  Selector.onOpenGroupsSelector();
+  Selector.onOpenGroupsSelector({force: true});
 }
 
 
