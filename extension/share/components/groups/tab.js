@@ -73,6 +73,16 @@ class Tab extends React.Component {
       tabTitle = this.props.tab.title;
     }
 
+    let checkbox = this.props.selected !== undefined ? React.createElement(NiceCheckbox, {
+      checked: this.props.selected,
+      onCheckChange: () => {
+        this.props.onTabClick(this.props.group.id, this.props.tabIndex, this.props.selected);
+      },
+      label: "",
+      id: "selected-tab-" + this.props.tab.id,
+      disabled: false
+    }) : null;
+
     return React.createElement(
       "li",
       {
@@ -82,7 +92,7 @@ class Tab extends React.Component {
         onDragLeave: this.handleTabDragLeave,
         onDrop: this.handleTabDrop,
         onMouseUp: this.handleTabClick,
-        draggable: true,
+        draggable: this.props.draggable,
         onMouseEnter: this.addMenuItem,
         onMouseLeave: this.removeMenuItem,
         contextMenu: "moveTabSubMenu" + this.props.tab.id,
@@ -101,6 +111,7 @@ class Tab extends React.Component {
         },
         onKeyDown: this.props.hotkeysEnable ? Utils.doActivateHotkeys(tabNavigationListener(this), this.props.hotkeysEnable) : undefined
       },
+      checkbox,
       this.props.tab.pinned && React.createElement("i", {
         className: "pinned-icon fa fa-fw fa-thumb-tack"
       }),
@@ -123,7 +134,8 @@ class Tab extends React.Component {
         group: this.props.group,
         tab: this.props.tab,
         handleOnMoveTabMenuClick: this.handleOnMoveTabMenuClick,
-        handleOnMoveTabNewMenuClick: this.handleOnMoveTabNewMenuClick
+        handleOnMoveTabNewMenuClick: this.handleOnMoveTabNewMenuClick,
+        controlsEnable: this.props.controlsEnable
       })
     );
   }

@@ -185,7 +185,9 @@ class Group extends React.Component {
       editing={this.state.editing}
       expanded={this.state.expanded}
       opened={this.state.opened}
-      onClose={this.handleGroupCloseClick} onRemove={this.handleGroupRemoveClick} onEdit={this.handleGroupEditClick} onEditAbort={this.handleGroupEditAbortClick} onEditSave={this.handleGroupEditSaveClick} onExpand={this.handleGroupExpandClick} onUndoCloseClick={this.handleGroupCloseAbortClick} onOpenInNewWindow={this.handleOpenInNewWindowClick}/>
+      onClose={this.handleGroupCloseClick} onRemove={this.handleGroupRemoveClick} onEdit={this.handleGroupEditClick} onEditAbort={this.handleGroupEditAbortClick} onEditSave={this.handleGroupEditSaveClick} onExpand={this.handleGroupExpandClick} onUndoCloseClick={this.handleGroupCloseAbortClick} onOpenInNewWindow={this.handleOpenInNewWindowClick}
+      controlsEnable={this.props.controlsEnable}
+    />
     );
   }
 
@@ -210,6 +212,8 @@ class Group extends React.Component {
         onChangePinState={this.props.onChangePinState} visible={this.state.expanded} allowClickSwitch={this.props.allowClickSwitch} hotkeysEnable={this.props.hotkeysEnable}
         selectionFilter={selectionFilter}
         hoverStyle={this.props.hoverStyle}
+        controlsEnable={this.props.controlsEnable}
+        draggable={this.props.draggable}
       />
     );
   }
@@ -221,11 +225,32 @@ class Group extends React.Component {
 
     let groupTitle = this.getGroupTitle();
 
+    let checkbox = this.props.selectionFilter !== undefined
+      ? (
+        <NiceCheckbox
+          checked= {this.props.selectionFilter.selected
+          ===this.props.group.tabs.length}
+          onCheckChange= {()=>{
+            this.props.onGroupClick(
+              this.props.group.id,
+              this.props.selectionFilter.selected
+            );
+          }}
+          label= {""}
+          indeterminate={this.props.selectionFilter.selected>0
+            && this.props.selectionFilter.selected
+          !==this.props.group.tabs.length}
+          id={"selected-group-"+this.props.group.id}
+          disabled={false}
+        />
+      )
+      : null;
+
     return (
       <li
         className={groupClasses}
         onMouseUp={this.handleGroupClick}
-        draggable={this.props.groupDraggable}
+        draggable={this.props.groupDraggable && this.props.draggable}
         onDragOver={this.handleGroupDragOver} onDragEnter={this.handleGroupDragEnter} onDragLeave={this.handleGroupDragLeave} onDragStart={this.handleGroupDragStart}
         onDrop={this.handleGroupDrop}
         title={groupTitle}
@@ -234,7 +259,7 @@ class Group extends React.Component {
         }}
         onFocus={(e)=>{
           if ( (typeof Navigation !== 'undefined')
-                && Navigation["KEY_PRESSED_RECENTLY"] ) {
+          && Navigation["KEY_PRESSED_RECENTLY"] ) {
             this.setState({
               hasFocus: true,
             })
@@ -251,6 +276,7 @@ class Group extends React.Component {
           : undefined}>
 
         <span className={"group-title"}>
+          {checkbox}
           {titleElement}
           {this.getGroupControls()}
         </span>
@@ -474,7 +500,10 @@ class Group extends React.Component {
 
     if (DRAG_TYPE === "group") {
       // Position of main group-list
-      let pos = event.pageY - /*Event loc Full*/ pageUtils.getOffset(event.currentTarget);let height = event.currentTarget.offsetHeight;
+      let pos = event.pageY - /*Event loc Full page*/
+                  Utils.getOffset(event.currentTarget);
+
+      let height = event.currentTarget.offsetHeight;
 
         // Bottom
         if (pos > height / 2 && pos <= height) {

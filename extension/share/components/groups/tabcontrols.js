@@ -14,22 +14,26 @@ class TabControls extends React.Component {
   }
 
   render() {
-    let controls = [React.createElement(
-      "i",
-      {
-        key: "tooltip",
-        title: browser.i18n.getMessage("tab_show_actions_menu"),
-        className: "tab-edit fa fa-fw fa-exchange tab-actions",
-        onClick: this.handleOpenExtraActions.bind(this),
-        onMouseLeave: this.handleMouseLeaveExtraActions.bind(this),
-        onMouseEnter: this.handleMouseEnterExtraActions.bind(this) },
-      this.state.waitFirstMount && this.createExtraActionsMenu()
-    ), React.createElement("i", {
-      key: "close",
-      title: browser.i18n.getMessage("close_tab"),
-      className: "tab-edit fa fa-fw fa-times",
-      onClick: this.props.onCloseTab
-    })];
+    let controls = [];
+
+    if (this.props.controlsEnable) {
+      controls = [React.createElement(
+        "i",
+        {
+          key: "tooltip",
+          title: browser.i18n.getMessage("tab_show_actions_menu"),
+          className: "tab-edit fa fa-fw fa-exchange tab-actions",
+          onClick: this.handleOpenExtraActions.bind(this),
+          onMouseLeave: this.handleMouseLeaveExtraActions.bind(this),
+          onMouseEnter: this.handleMouseEnterExtraActions.bind(this) },
+        this.state.waitFirstMount && this.createExtraActionsMenu()
+      ), React.createElement("i", {
+        key: "close",
+        title: browser.i18n.getMessage("close_tab"),
+        className: "tab-edit fa fa-fw fa-times",
+        onClick: this.props.onCloseTab
+      })];
+    }
 
     return React.createElement(
       "span",

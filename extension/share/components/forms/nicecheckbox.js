@@ -16,9 +16,13 @@ class NiceCheckbox extends React.Component {
   }
 
   render() {
+
+    let indeterminate = this.props.indeterminate !== undefined ? this.props.indeterminate.toString() : "false";
+
     return React.createElement(
       "label",
       {
+        onMouseUp: e => e.stopPropagation(),
         className: classNames({
           "control": true,
           "control--checkbox": true,
@@ -31,7 +35,9 @@ class NiceCheckbox extends React.Component {
         checked: this.state.checked,
         id: this.props.id,
         onClick: this.handleClick,
-        onChange: e => e.stopPropagation()
+        onMouseUp: e => e.stopPropagation(),
+        onChange: e => e.stopPropagation(),
+        indeterminate: indeterminate
       }),
       React.createElement("div", { className: "control__indicator" }),
       React.createElement(

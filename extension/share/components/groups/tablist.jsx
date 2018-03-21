@@ -34,6 +34,8 @@ class TabList extends React.Component{
               hotkeysEnable={this.props.hotkeysEnable}
               selected={selected}
               hoverStyle={this.props.hoverStyle}
+              controlsEnable={this.props.controlsEnable}
+              draggable={this.props.draggable}
             />
           );
           })}

@@ -172,7 +172,7 @@ li {
   background-color: var(--not-checked-hover);
 }
 
-.group:hover .group-title input {
+.group:hover .group-title > input {
   color: #fff;
   border: 1px solid #fff;
 }
@@ -276,7 +276,7 @@ li {
   justify-content: space-around;
 }
 
-.group-title input {
+.group-title > input {
   background: transparent;
   box-sizing: border-box;
   border: 1px solid #444;
@@ -286,7 +286,7 @@ li {
   margin: auto 0;
 }
 
-.group .group-title:hover input {
+.group .group-title:hover > input {
   width: 100%;
 }
 

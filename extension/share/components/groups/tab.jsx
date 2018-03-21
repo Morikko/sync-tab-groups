@@ -77,6 +77,24 @@ class Tab extends React.Component{
       tabTitle = this.props.tab.title;
     }
 
+    let checkbox = this.props.selected !== undefined
+      ? (
+        <NiceCheckbox
+          checked= {this.props.selected}
+          onCheckChange= {()=>{
+            this.props.onTabClick(
+              this.props.group.id,
+              this.props.tabIndex,
+              this.props.selected
+            );
+          }}
+          label= {""}
+          id={"selected-tab-"+this.props.tab.id}
+          disabled={false}
+        />
+      )
+      : null;
+
     return (
       <li
         className={tabClasses}
@@ -85,7 +103,7 @@ class Tab extends React.Component{
         onDragLeave={this.handleTabDragLeave}
         onDrop={this.handleTabDrop}
         onMouseUp={this.handleTabClick}
-        draggable={true}
+        draggable={this.props.draggable}
         onMouseEnter={this.addMenuItem}
         onMouseLeave={this.removeMenuItem}
         contextMenu={"moveTabSubMenu" + this.props.tab.id}
@@ -109,6 +127,7 @@ class Tab extends React.Component{
           this.props.hotkeysEnable)
           : undefined}
       >
+        {checkbox}
         {
           this.props.tab.pinned &&
           <i
@@ -133,6 +152,7 @@ class Tab extends React.Component{
           tab={this.props.tab}
           handleOnMoveTabMenuClick={this.handleOnMoveTabMenuClick}
           handleOnMoveTabNewMenuClick={this.handleOnMoveTabNewMenuClick}
+          controlsEnable={this.props.controlsEnable}
         />
       </li>);
   }

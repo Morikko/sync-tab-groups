@@ -51,69 +51,72 @@ class GroupControls extends React.Component {
 
   render() {
     let controls = [];
-    if (!(this.props.closing || this.props.removing)) {
-      controls.push(this.getEditControls());
-    }
 
-    if (!this.props.editing) {
-      // Open in new window button
-      if (!this.props.opened &&
-        !this.props.closing &&
-        !this.props.removing) {
-        controls.push(
-          <i
-            key="open_window"
-            className="group-edit group-control fa fa-fw fa-window-maximize"
-            title={browser.i18n.getMessage("open_window_group")}
-            onClick={this.props.onOpenInNewWindow}
-          ></i>
-        );
+    if ( this.props.controlsEnable ) {
+      if (!(this.props.closing || this.props.removing)) {
+        controls.push(this.getEditControls());
       }
 
-      // Before closing
-      if (this.props.closing) {
-        controls.push(this.getClosingControls());
-      }
+      if (!this.props.editing) {
+        // Open in new window button
+        if (!this.props.opened &&
+          !this.props.closing &&
+          !this.props.removing) {
+          controls.push(
+            <i
+              key="open_window"
+              className="group-edit group-control fa fa-fw fa-window-maximize"
+              title={browser.i18n.getMessage("open_window_group")}
+              onClick={this.props.onOpenInNewWindow}
+            ></i>
+          );
+        }
 
-      // Close button
-      if (this.props.opened && !this.props.removing) {
-        let overHelp;
+        // Before closing
         if (this.props.closing) {
-          overHelp = browser.i18n.getMessage("force_closing");
-        } else {
-          overHelp = browser.i18n.getMessage("close_group");
+          controls.push(this.getClosingControls());
         }
-        controls.push(
-          <i
-            key="close"
-            title={overHelp}
-            className="group-close group-control fa fa-fw fa-times"
-            onClick={this.props.onClose}
-          ></i>
-        );
-      }
 
-      if (!this.props.closing) {
-        let overHelp;
+        // Close button
+        if (this.props.opened && !this.props.removing) {
+          let overHelp;
+          if (this.props.closing) {
+            overHelp = browser.i18n.getMessage("force_closing");
+          } else {
+            overHelp = browser.i18n.getMessage("close_group");
+          }
+          controls.push(
+            <i
+              key="close"
+              title={overHelp}
+              className="group-close group-control fa fa-fw fa-times"
+              onClick={this.props.onClose}
+            ></i>
+          );
+        }
+
+        if (!this.props.closing) {
+          let overHelp;
+          if (this.props.removing) {
+            overHelp = browser.i18n.getMessage("force_removing");
+          } else {
+            overHelp = browser.i18n.getMessage("remove_group");
+          }
+          controls.push(
+            <i
+              key="remove"
+              title={overHelp}
+              className="group-close group-control fa fa-fw fa-trash"
+              onClick={this.props.onRemove}
+            ></i>
+          );
+        }
+
         if (this.props.removing) {
-          overHelp = browser.i18n.getMessage("force_removing");
-        } else {
-          overHelp = browser.i18n.getMessage("remove_group");
+          controls.push(this.getClosingControls());
         }
-        controls.push(
-          <i
-            key="remove"
-            title={overHelp}
-            className="group-close group-control fa fa-fw fa-trash"
-            onClick={this.props.onRemove}
-          ></i>
-        );
       }
-
-      if (this.props.removing) {
-        controls.push(this.getClosingControls());
-      }
-    }
+    } 
 
     let expanderClasses = classNames({
       "group-expand": true,

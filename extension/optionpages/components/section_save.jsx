@@ -45,7 +45,7 @@ class SaveSectionStandalone extends React.Component {
         <NiceCheckbox
           checked= {this.props.options.backup.download.time[time]}
           label= {browser.i18n.getMessage("options_groups_backup_every")
-                  + browser.i18n.getMessage("options_groups_backup_"+time)}
+            + browser.i18n.getMessage("options_groups_backup_"+time)}
           onCheckChange= {this.props.onOptionChange}
           id={"backup-download-time-"+time}
           disabled={!this.props.options.backup.download.enable}

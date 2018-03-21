@@ -106,7 +106,9 @@ class Panel extends React.Component {
             hotkeysEnable: false /*this.props.options.shortcuts.navigation*/,
             showTabsNumber: false,
             groupDraggable: false,
-            hoverStyle: false
+            draggable: false,
+            hoverStyle: false,
+            controlsEnable: false
             /*** actions ***/
             , forceExpand: this.state.leftForceExpand,
             forceReduce: this.state.leftForceReduce

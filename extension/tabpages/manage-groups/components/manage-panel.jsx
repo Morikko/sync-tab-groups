@@ -111,8 +111,10 @@ class ManagePanelStandAlone extends React.Component {
               width={width}
               hotkeysEnable={this.props.options.shortcuts.navigation}
               showTabsNumber= {this.props.options.popup.showTabsNumber}
-              groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+              groupDraggable={this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+              draggable={true}
               hoverStyle={true}
+              controlsEnable={true}
               /*** actions ***/
               forceExpand={this.state.leftForceExpand}
               forceReduce={this.state.leftForceReduce}
@@ -167,7 +169,9 @@ class ManagePanelStandAlone extends React.Component {
               hotkeysEnable={this.props.options.shortcuts.navigation}
               showTabsNumber= {this.props.options.popup.showTabsNumber}
               groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+              draggable={true}
               hoverStyle={true}
+              controlsEnable={true}
               /*** actions ***/
               forceExpand={this.state.rightForceExpand}
               forceReduce={this.state.rightForceReduce}

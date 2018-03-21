@@ -86,7 +86,9 @@ class PopupMenuStandAlone extends React.Component {
           width={width}
           showTabsNumber= {this.props.options.popup.showTabsNumber}
           groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+          draggable={true}
           hoverStyle={true}
+          controlsEnable={true}
           /*** actions ***/
           forceExpand={false}
           forceReduce={false}

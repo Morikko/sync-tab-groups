@@ -112,7 +112,10 @@ class GroupList extends React.Component {
           stateless: this.props.stateless,
           width: this.props.width,
           hotkeysEnable: this.props.hotkeysEnable,
-          hoverStyle: this.props.hoverStyle
+          hoverStyle: this.props.hoverStyle,
+          controlsEnable: this.props.controlsEnable,
+          groupDraggable: this.props.groupDraggable,
+          draggable: this.props.draggable
           /*** actions ***/
           , forceExpand: this.props.forceExpand,
           forceReduce: this.props.forceReduce

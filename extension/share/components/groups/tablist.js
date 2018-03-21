@@ -30,7 +30,9 @@ class TabList extends React.Component {
           allowClickSwitch: this.props.allowClickSwitch,
           hotkeysEnable: this.props.hotkeysEnable,
           selected: selected,
-          hoverStyle: this.props.hoverStyle
+          hoverStyle: this.props.hoverStyle,
+          controlsEnable: this.props.controlsEnable,
+          draggable: this.props.draggable
         });
       })
     );

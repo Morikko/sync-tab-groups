@@ -123,7 +123,6 @@
 
 .control__indicator {
   position: absolute;
-  top: 2px;
   left: 0;
   width: 20px;
   height: 20px;
@@ -142,7 +141,9 @@
 
 /* Checked state */
 
-.control input:checked~.control__indicator {
+.control input:checked~.control__indicator,
+.control input[indeterminate="true"]~.control__indicator
+ {
   background: var(--checked);
 }
 
@@ -174,13 +175,15 @@
 
 /* Show check mark */
 
-.control input:checked~.control__indicator:after {
+.control input:checked~.control__indicator:after,
+.control  input[indeterminate="true"]~.control__indicator:after
+ {
   display: block;
 }
 
 /* Checkbox tick */
 
-.control--checkbox .control__indicator:after {
+.control--checkbox input:checked~.control__indicator:after {
   top: 4px;
   left: 8px;
   width: 3px;
@@ -188,6 +191,13 @@
   transform: rotate(45deg);
   border: solid #fff;
   border-width: 0 2px 2px 0;
+}
+
+.control--checkbox input[indeterminate="true"]~.control__indicator:after {
+  top: 8px;
+  left: 4px;
+  width: 12px;
+  border-top: solid #fff 3px;
 }
 
 /* Disabled tick colour */

@@ -14,23 +14,28 @@ class TabControls extends React.Component{
   }
 
   render() {
-    let controls = ([
-      <i
-        key="tooltip"
-        title={browser.i18n.getMessage("tab_show_actions_menu")}
-        className="tab-edit fa fa-fw fa-exchange tab-actions"
-        onClick={this.handleOpenExtraActions.bind(this)}
-        onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
-        onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}>
-        {this.state.waitFirstMount && this.createExtraActionsMenu()}
-      </i>,
-      <i
-        key="close"
-        title={browser.i18n.getMessage("close_tab")}
-        className="tab-edit fa fa-fw fa-times"
-        onClick={this.props.onCloseTab}
-      ></i>
-    ]);
+    let controls = [];
+
+    if ( this.props.controlsEnable ) {
+     controls = ([
+       <i
+         key="tooltip"
+         title={browser.i18n.getMessage("tab_show_actions_menu")}
+         className="tab-edit fa fa-fw fa-exchange tab-actions"
+         onClick={this.handleOpenExtraActions.bind(this)}
+         onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
+         onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}>
+         {this.state.waitFirstMount && this.createExtraActionsMenu()}
+       </i>,
+       <i
+         key="close"
+         title={browser.i18n.getMessage("close_tab")}
+         className="tab-edit fa fa-fw fa-times"
+         onClick={this.props.onCloseTab}
+       ></i>
+     ]);
+    }
+
 
     return (<span className="tab-controls"
                   onMouseUp={(e)=>e.stopPropagation()}>

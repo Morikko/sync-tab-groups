@@ -16,21 +16,29 @@ class NiceCheckbox extends React.Component {
   }
 
   render() {
+
+    let indeterminate = this.props.indeterminate !== undefined
+                         ? this.props.indeterminate.toString()
+                         : "false";
+
     return (
       <label
-      className={classNames({
-        "control": true,
-        "control--checkbox": true,
-        "disabled": this.state.disabled,
-      })}
-      htmlFor={this.props.id}>
+        onMouseUp={(e)=>e.stopPropagation()}
+        className={classNames({
+          "control": true,
+          "control--checkbox": true,
+          "disabled": this.state.disabled,
+        })}
+        htmlFor={this.props.id}>
         <input
           type="checkbox"
           disabled={this.state.disabled}
           checked={this.state.checked}
           id={this.props.id}
           onClick={this.handleClick}
+          onMouseUp={(e)=>e.stopPropagation()}
           onChange={(e)=>e.stopPropagation()}
+          indeterminate={indeterminate}
         />
         <div className="control__indicator"></div>
         <span>{this.props.label}</span>
