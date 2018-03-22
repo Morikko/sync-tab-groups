@@ -285,7 +285,8 @@ Background.onTabOpen = async function({
 };
 
 Background.onImportGroups = function({
-  content_file
+  content_file,
+  filename,
 }) {
   Selector.onOpenGroupsSelector({
     title: 'From file: ' + filename,

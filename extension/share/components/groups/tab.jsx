@@ -43,12 +43,23 @@ class Tab extends React.Component{
     }
   }
 
+  getfavIconUrl(favIconUrl){
+    if ( !favIconUrl ) {
+      return "";
+    }
+    if ( favIconUrl !== "chrome://branding/content/icon32.png"
+      && Utils.isPrivilegedURL(favIconUrl) ) {
+      return "";
+    }
+    return favIconUrl;
+  }
+
   render() {
     let favicon = (
       <img
         alt=""
         className="tab-icon"
-        src={(Utils.isPrivilegedURL(this.props.tab.favIconUrl || "")?"":(this.props.tab.favIconUrl)) || ""}
+        src={this.getfavIconUrl(this.props.tab.favIconUrl)}
       />
     );
 

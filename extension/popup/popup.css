@@ -5,7 +5,7 @@ From: https://github.com/denschub/firefox-tabgroups
 Copyright (c) 2015 Dennis Schubert
 */
 body {
-  overflow-x: hidden;
+  overflow: hidden;
   margin: 0;
 }
 
@@ -25,6 +25,7 @@ body {
   position: relative;
   height: 34px;
   display: flex;
+  box-sizing: content-box;
 }
 
 .grouped-button {

@@ -7,10 +7,10 @@ class OptionsPanel extends React.Component{
           selected={this.props.selected} onUndiscardLazyTabs={this.props.onUndiscardLazyTabs}/>
         <ShortcutsSection
           options={this.props.options} onOptionChange={this.props.onOptionChange}
-        selected={this.props.selected}/>
+          selected={this.props.selected}/>
         <InterfaceSection
           options={this.props.options} onOptionChange={this.props.onOptionChange}
-        selected={this.props.selected}/>
+          selected={this.props.selected}/>
         <SaveSection
           options={this.props.options} onOptionChange={this.props.onOptionChange}
           onImportClick={this.props.onImportClick}

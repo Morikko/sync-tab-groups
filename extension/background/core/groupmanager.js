@@ -78,9 +78,15 @@ GroupManager.repeatedtask = new TaskManager.RepeatedTask(3000);
 GroupManager.checkerInterval = undefined;
 
 
-GroupManager.Group = function(id, title = "", tabs = [], windowId = browser.windows.WINDOW_ID_NONE, incognito = false) {
+GroupManager.Group = function({
+  id = -1,
+  title = "",
+  tabs = [],
+  windowId = WINDOW_ID_NONE,
+  incognito = false
+}={}) {
   this.title = title;
-  this.tabs = Utils.getCopy(tabs);
+  this.tabs = tabs.map(tab => TabManager.getTab(tab));
   this.id = id; // Unique in all group
   this.windowId = windowId;
   this.index = -1; // Position of this Group in an Array
@@ -674,8 +680,10 @@ GroupManager.addGroup = function({
   windowId = browser.windows.WINDOW_ID_NONE,
   incognito = false
 }={}) {
-  if (GroupManager.isWindowAlreadyRegistered(windowId))
+  if (GroupManager.isWindowAlreadyRegistered(windowId)){
     return;
+  }
+
   let tabs = [
     {
       url: TabManager.NEW_TAB,
@@ -686,7 +694,7 @@ GroupManager.addGroup = function({
   let uniqueGroupId;
   try {
     uniqueGroupId = GroupManager.createUniqueGroupId();
-    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, windowId, incognito));
+    GroupManager.groups.push(new GroupManager.Group({id: uniqueGroupId, title, tabs, windowId, incognito}));
   } catch (e) {
     throw Error("addGroup: Group not created because " + e);
   }
@@ -717,7 +725,7 @@ GroupManager.addGroupWithTab = function(tabs, {
   let uniqueGroupId;
   try {
     uniqueGroupId = GroupManager.createUniqueGroupId();
-    GroupManager.groups.push(new GroupManager.Group(uniqueGroupId, title, tabs, windowId, incognito));
+    GroupManager.groups.push(new GroupManager.Group({id: uniqueGroupId, title, tabs, windowId, incognito}));
   } catch (e) {
     // Propagate Error
     throw Error("addGroupWithTab: Group not created because " + e.message);
@@ -739,8 +747,9 @@ GroupManager.addGroups = function(newGroups, {
   let ids = [];
   for (let g of newGroups) {
     g.id = GroupManager.createUniqueGroupId();
+    g.windowId = WINDOW_ID_NONE;
     ids.push(g.id);
-    groups.push(g);
+    groups.push(Utils.getCopy(g));
   }
 
   if ( showNotification ){
@@ -803,10 +812,13 @@ GroupManager.removeUnopenGroups = function() {
 /**
  *
  */
-GroupManager.removeEmptyGroup = function({fireEvent=false}={}) {
-  for (let i = GroupManager.groups.length - 1; i >= 0; i--) {
-    if (GroupManager.groups[i].tabs.length === 0) {
-      GroupManager.groups.splice(i, 1);
+GroupManager.removeEmptyGroup = function({
+  fireEvent=false,
+  groups=GroupManager.groups
+}={}) {
+  for (let i = groups.length - 1; i >= 0; i--) {
+    if (groups[i].tabs.length === 0) {
+      groups.splice(i, 1);
     }
   }
   if(fireEvent) {
@@ -915,17 +927,7 @@ GroupManager.initEventListener = function() {
 
   // Done after a group modification to assure integrity
   GroupManager.eventlistener.on(GroupManager.EVENT_PREPARE, () => {
-    if (OptionManager.options.groups.removeEmptyGroup) {
-      GroupManager.removeEmptyGroup();
-    }
-
-    GroupManager.setAllIndexes(GroupManager.groups);
-    GroupManager.setAllPositions({
-      groups: GroupManager.groups,
-      sortingType: OptionManager.options.groups.sortingType
-    });
-    GroupManager.coherentActiveTabInGroups({groups: GroupManager.groups});
-    GroupManager.setUniqueTabIds(GroupManager.groups);
+    GroupManager.prepareGroups(GroupManager.groups);
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   });
 
@@ -934,6 +936,30 @@ GroupManager.initEventListener = function() {
     GroupManager.checkCorruptedGroups(GroupManager.groups);
   }, 30000);
 };
+
+/**
+ * Do some verifications to guarantee the groups data
+ * Do on the groups itself
+ */
+GroupManager.prepareGroups = function (groups=GroupManager.groups, {
+  removeEmptyGroup=OptionManager.options.groups.removeEmptyGroup,
+  fireEvent=true,
+}={}) {
+  if (removeEmptyGroup) {
+    GroupManager.removeEmptyGroup({
+      groups,
+      fireEvent
+    });
+  }
+
+  GroupManager.setAllIndexes(groups);
+  GroupManager.setAllPositions({
+    groups: groups,
+    sortingType: OptionManager.options.groups.sortingType
+  });
+  GroupManager.coherentActiveTabInGroups({groups: groups});
+  GroupManager.setUniqueTabIds(groups);
+}
 
 /**
  * Give a new unique tabId for closed groups

@@ -20,9 +20,13 @@ const Actions = {
     Utils.sendMessage("Option:BackUp", {});
   },
 
-  onImportAsk: function(content_file) {
+  onImportAsk: function({
+    content,
+    filename,
+  }) {
     Utils.sendMessage("Option:Import", {
-      content_file: content_file,
+      content_file: content,
+      filename,
     });
   },
 

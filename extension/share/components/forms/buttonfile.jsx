@@ -30,7 +30,10 @@ class ButtonFile extends React.Component {
         return "No file selected..."
       }
       const jsonContent = await StorageManager.File.readJsonFile(files[0]);
-      this.props.onFileSelected(jsonContent);
+      this.props.onFileSelected({
+        content: jsonContent,
+        filename: files[0].name,
+      });
     } catch (e) {
       let msg = "ButtonFile.handleClick failed: " + e;
       console.error(msg);

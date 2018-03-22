@@ -11,26 +11,6 @@ StorageManager.File.downloadGroups = async function(groups) {
     // Clean tabs
     export_groups = export_groups.map((group)=>{
       let export_group = Utils.getCopy(group);
-      // Filter values to export
-      // TODO really
-      /*
-      export_group.tabs = export_group.tabs.map((tab)=>{
-        let export_tab = {
-          id: tab.id || -1,
-          title: tab.title || "New Tab",
-          url: tab.url || TabManager.NEW_TAB,
-          pinned: tab.pinned || false,
-          active: tab.active || false,
-          discarded: tab.discarded || false,
-          favIconUrl: tab.favIconUrl || "",
-        };
-        if (tab.hasOwnProperty("openerTabId")) {
-          export_tab["openerTabId"] = tab["openerTabId"];
-        }
-
-        return export_tab;
-      });
-      */
       return export_group;
     });
 
@@ -56,21 +36,34 @@ StorageManager.File.downloadGroups = async function(groups) {
 }
 
 StorageManager.File.importGroupsFromFile = function(content_file) {
-  if (!content_file.hasOwnProperty('version')) {
-    throw Error("ImportGroups: Content file is not in a supported format.");
-  }
-  let groups = [];
+  try {
+    if (!content_file.hasOwnProperty('version')) {
+      throw Error("ImportGroups: Content file is not in a supported format.");
+    }
+    let groups = [];
 
-  if (content_file['version'][0] === "tabGroups" ||
-    content_file['version'][0] === "sessionrestore") {
-    groups = StorageManager.File.importTabGroups(content_file);
-  } else if (content_file['version'][0] === "syncTabGroups") {
-    groups = StorageManager.File.importSyncTabGroups(content_file);
-  } else {
-    throw Error("ImportGroups: Content file is not in a supported format.");
-  }
+    if (content_file['version'][0] === "tabGroups" ||
+      content_file['version'][0] === "sessionrestore") {
+      groups = StorageManager.File.importTabGroups(content_file);
+    } else if (content_file['version'][0] === "syncTabGroups") {
+      groups = StorageManager.File.importSyncTabGroups(content_file);
+    } else {
+      throw Error("ImportGroups: Content file is not in a supported format.");
+    }
 
-  return groups;
+    GroupManager.prepareGroups(groups, {fireEvent:false});
+
+    return groups;
+  } catch(e) {
+    browser.notifications.create({
+      "type": "basic",
+      "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+      "title": "Impossible to read the file",
+      "message": e.message,
+      "eventTime": 4000,
+    });
+    console.error(e.message);
+  }
 }
 
 
@@ -81,16 +74,13 @@ StorageManager.File.importSyncTabGroups = function(content_file) {
     throw Error("SyncTabGroups importation: Content file is not readable.")
   }
 
-  let groups = [];
-
-  for (let g of content_file['groups']) {
-    groups.push(new GroupManager.Group(-1,
-      g.title || "",
-      g.tabs || [],
-    ));
-  }
-
-  // TODO notifications in case of error
+  let groups = content_file['groups'].map((group, index)=>{
+    return new GroupManager.Group({
+      id: index,
+      title: group.title || "",
+      tabs: group.tabs || [],
+    });
+  });
 
   return groups;
 }
@@ -110,9 +100,7 @@ StorageManager.File.importTabGroups = function(content_file) {
   let pinnedTabs = [];
 
   for (let w of content_file['windows']) {
-    let cross_ref = {},
-      index = 0,
-      tmp_groups = [];
+    let cross_ref = {};
 
     // Create groups
     if (!w.hasOwnProperty('extData') ||
@@ -123,11 +111,12 @@ StorageManager.File.importTabGroups = function(content_file) {
     for (let i in tabviewgroup) {
       let g = tabviewgroup[i];
       if (g !== undefined) {
-        tmp_groups.push(new GroupManager.Group(-1,
-          g.title || "", [],
-        ));
-        cross_ref[g.id] = index;
-        index++;
+        groups.push(new GroupManager.Group({
+          id: groups.length,
+          title: g.title || "",
+          tabs: [],
+        }));
+        cross_ref[g.id] = groups.length-1;
       }
     }
 
@@ -157,26 +146,28 @@ StorageManager.File.importTabGroups = function(content_file) {
       if (t.hasOwnProperty('image')) {
         tab["favIconUrl"] = t['image'];
       }
+      if (t.hasOwnProperty('lastAccessed')) {
+        tab["lastAccessed"] = t['lastAccessed'];
+      }
+
 
       if (JSON.parse(t['extData']['tabview-tab'])) { // Normal tab
         let i = cross_ref[JSON.parse(t['extData']['tabview-tab'])['groupID']];
-        tmp_groups[i].tabs.push(tab);
+        groups[i].tabs.push(TabManager.getTab(tab));
       } else { // Pinned tabs
         tab.pinned = true;
         pinnedTabs.push(tab);
       }
     }
-
-    for (let g of tmp_groups) {
-      groups.push(g);
-    }
   }
 
   // Add all pinned tabs in one group
   if (pinnedTabs.length > 0) {
-    groups.push(new GroupManager.Group(-1,
-      "Imported Pinned Tabs", pinnedTabs,
-    ));
+    groups.push(new GroupManager.Group({
+      id: groups.length,
+      title: "Imported Pinned Tabs",
+      tabs: pinnedTabs,
+    }));
   }
 
   return groups;

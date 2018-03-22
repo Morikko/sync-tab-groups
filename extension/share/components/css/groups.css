@@ -100,8 +100,7 @@ ul, li {
 /** END Tab Actions Menu **/
 
 li {
-  list-style-type: none;
-  cursor: move;
+  list-style-type: none
   overflow: hidden;
 }
 

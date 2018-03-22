@@ -31,6 +31,21 @@
  */
 var TabManager = TabManager || {};
 
+// Return with all standard tab information (factory)
+// Id are Index are set once in a group (see GroupManager.prepareGroups)
+TabManager.getTab = function(tab) {
+  return Object.assign({
+    title: "New Tab",
+    url: TabManager.NEW_TAB,
+    favIconUrl: "chrome://branding/content/icon32.png",
+    hidden: false,
+    lastAccessed: 0,
+    pinned: false,
+    windowId: WINDOW_ID_NONE,
+    discarded: false
+  }, tab);
+}
+
 /**
  * Return all the tabs in the window with windowId
  * Pinned tabs are inlcuded/excluded depending options.pinnedTab.sync

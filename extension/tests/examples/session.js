@@ -124,13 +124,13 @@ Session.createGroup = function({
     active,
   });
 
-  let group = new GroupManager.Group(
-    id = Date.now()-TestManager.getRandom(1000, Date.now()),
-    title = title,
-    tabs = tabs,
-    windowId = windowId,
-    incognito = incognito,
-  );
+  let group = new GroupManager.Group({
+    id: Date.now()-TestManager.getRandom(1000, Date.now()),
+    title,
+    tabs,
+    windowId,
+    incognito,
+  });
   if ( global ) {
     return [GroupManager.addGroups([
       group
