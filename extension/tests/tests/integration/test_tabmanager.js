@@ -860,6 +860,12 @@ describe("TabManager", ()=>{
   });
 
   describe("Undiscard home made method - ", ()=>{
+    beforeEach(function() {
+      if ( !Utils.isChrome() ) {
+        pending("Firefox is not able to undiscard all tabs...")
+      }
+    });
+
     beforeAll(function(){
       // Add tabs and groups matchers
       jasmine.addMatchers(tabGroupsMatchers);
@@ -978,7 +984,7 @@ describe("TabManager", ()=>{
         this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[3].id);
         await TestManager.splitOnHalfScreen(this.windowIds);
 
-        let newTab = Session.getRandomNormalTab();
+        let newTab = Session.getFakeTab();
 
         let expectedTabs = Utils.getCopy(this.groups[3].tabs);
         expectedTabs.push(newTab);

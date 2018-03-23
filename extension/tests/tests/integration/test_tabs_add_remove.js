@@ -341,7 +341,10 @@ describe("TabManager[Add/Remove]", ()=>{
       it(" without special argument should remove all the tabs except the first one", async function(){
         // Open some tabs
         for (let i=0; i<3; i++) {
-          await browser.tabs.create({url: Session.getFakeUrl()});
+          await browser.tabs.create({
+            url: Session.getFakeUrl(),
+            windowId: this.windowId,
+          });
         }
 
         // Remove all the New Tab (only)
@@ -372,7 +375,10 @@ describe("TabManager[Add/Remove]", ()=>{
       it(" with openBlankTab:true should remove all tabs and let only one new tab", async function(){
         // Open some tabs
         for (let i=0; i<3; i++) {
-          await browser.tabs.create({url: Session.getFakeUrl()});
+          await browser.tabs.create({
+            url: Session.getFakeUrl(),
+            windowId: this.windowId,
+        });
         }
 
         let new_tab = await TabManager.removeTabsInWindow(
@@ -396,7 +402,8 @@ describe("TabManager[Add/Remove]", ()=>{
         for (let i=0; i<5; i++) {
           await browser.tabs.create({
             pinned: i<2,
-            url: Session.getFakeUrl()
+            url: Session.getFakeUrl(),
+            windowId: this.windowId,
           });
         }
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
@@ -417,6 +424,9 @@ describe("TabManager[Add/Remove]", ()=>{
 
         expectedTabs = previousTabs.filter(tab=>tab.pinned);
 
+        console.log(previousTabs)
+        console.log(expectedTabs)
+
         expectedTabs[0].active = true;
         expect(resultingTabs).toEqualTabs(expectedTabs);
         expect(survivorTab).toBeUndefined();
@@ -429,7 +439,8 @@ describe("TabManager[Add/Remove]", ()=>{
         for (let i=0; i<5; i++) {
           await browser.tabs.create({
             pinned: i<2,
-            url: Session.getFakeUrl()
+            url: Session.getFakeUrl(),
+            windowId: this.windowId,
           });
         }
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);

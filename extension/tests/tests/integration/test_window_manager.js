@@ -73,6 +73,10 @@ describe("WindowManager: ", ()=>{
 
     describe(" Private Window: ", ()=>{
       beforeAll(async function(){
+        if ( !(await browser.extension.isAllowedIncognitoAccess()) ){
+          pending("No incognito access.")
+          return;
+        }
         jasmine.addMatchers(tabGroupsMatchers);
         OptionManager.updateOption("privateWindow-sync", false);
 
@@ -98,6 +102,10 @@ describe("WindowManager: ", ()=>{
       });
 
       it("Desassociate Windows", async function(){
+        if ( !(await browser.extension.isAllowedIncognitoAccess()) ){
+          pending("No incognito access.")
+          return;
+        }
         let previousLength = GroupManager.groups.length;
 
         await GroupManager.removeGroupFromId(this.id);
@@ -115,6 +123,10 @@ describe("WindowManager: ", ()=>{
       });
 
       it("Associate Windows", async function(){
+        if ( !(await browser.extension.isAllowedIncognitoAccess()) ){
+          pending("No incognito access.")
+          return;
+        }
         let previousLength = GroupManager.groups.length;
 
         let id = await WindowManager.integrateWindow(this.windowId, {even_new_one: true});
@@ -183,6 +195,10 @@ describe("WindowManager: ", ()=>{
 
     describe("Private Window", function(){
       it("Private", async function(){
+        if ( !(await browser.extension.isAllowedIncognitoAccess()) ){
+          pending("No incognito access.")
+          return;
+        }
         OptionManager.updateOption("privateWindow-sync", true);
         OptionManager.updateOption("groups-syncNewWindow", true);
         let previousLength = GroupManager.groups.length;
@@ -200,6 +216,10 @@ describe("WindowManager: ", ()=>{
       });
 
       it("Invisible", async function(){
+        if ( !(await browser.extension.isAllowedIncognitoAccess()) ){
+          pending("No incognito access.")
+          return;
+        }
         OptionManager.updateOption("privateWindow-sync", false);
         OptionManager.updateOption("groups-syncNewWindow", true);
         let previousLength = GroupManager.groups.length;

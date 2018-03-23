@@ -6,14 +6,13 @@
   * 3. Success 10 times in a row (not lucky success)
   * 4. Respect the following structure for clarity
 */
-this.savedTime = TestManager.installFakeTime();
-TestManager.uninstallFakeTime(this.savedTime);
+TestManager.installFakeTime();
+TestManager.uninstallFakeTime();
 
 {
   /** Copy to the ROOTEST describe **/
   // Keep previous states
   beforeAll(TestManager.initIntegrationBeforeAll());
-  beforeEach(TestManager.initBeforeEach());
   // Set back previous states
   afterAll(TestManager.initIntegrationAfterAll());
 

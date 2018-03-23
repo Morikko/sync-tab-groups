@@ -11,6 +11,7 @@ TestManager.initUnitBeforeAll = function(){
   }
 }
 
+// Deprecated
 TestManager.initBeforeEach = function(){
   return function(){
     TestManager.setDynamicEnable();
@@ -45,6 +46,7 @@ TestManager.initIntegrationAfterAll = function(){
   }
 }
 
+// Deprecated
 TestManager.setDynamicEnable = function() {
   if ( Utils.getParameterByName("enable") !== 'true' ) {
     pending();
