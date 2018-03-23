@@ -15,7 +15,7 @@ StorageManager.File.downloadGroups = async function(groups) {
     });
 
     let d = new Date();
-    let url = Utils.createGroupsJsonFile(export_groups);
+    let url = Utils.createGroupsJsonFile(export_groups, {prettify:true});
     let filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
 
     let id = await browser.downloads.download({

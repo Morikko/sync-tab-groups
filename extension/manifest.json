@@ -15,7 +15,7 @@
       "strict_min_version": "56.0"
     }
   },
-  "minimum_chrome_version": "63",
+  "minimum_chrome_version": "56",
 
   "permissions": [
     "tabs",

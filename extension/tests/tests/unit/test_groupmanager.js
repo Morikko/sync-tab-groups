@@ -1,8 +1,8 @@
-describe("GroupManager: ", () => {
+describe("GroupManager", () => {
   beforeAll(TestManager.initUnitBeforeAll());
   beforeEach(TestManager.initBeforeEach());
 
-  describe("coherentActiveTabInGroups function: ", () => {
+  describe(".coherentActiveTabInGroups function: ", () => {
 
     // TODO not good unit test style
     beforeEach(function() {
@@ -66,7 +66,7 @@ describe("GroupManager: ", () => {
    * normal: only tabs with raw URLs
    * fancy: tabs with raw, Privileged and Lazy URLs
    */
-  describe("bestMatchGroup: ", ()=>{
+  describe(".bestMatchGroup: ", ()=>{
 
     it("Match normal", ()=>{
       let id = 122;
@@ -199,7 +199,7 @@ describe("GroupManager: ", () => {
 
   });
 
-  describe("removeAllGroups: ", ()=>{
+  describe(".removeAllGroups: ", ()=>{
 
     it("is Removing well", ()=>{
       let groups = Session.createArrayGroups({
@@ -214,7 +214,7 @@ describe("GroupManager: ", () => {
 
   });
 
-  describe("reloadGroupsFromDisk: ", ()=>{
+  describe(".reloadGroupsFromDisk: ", ()=>{
 
     it("is Reloading well", async ()=>{
       let groups = Session.createArrayGroups({
@@ -255,7 +255,7 @@ describe("GroupManager: ", () => {
 
   });
 
-  describe("setUniqueTabIds ", ()=>{
+  describe(".setUniqueTabIds ", ()=>{
     it("should replace ids for tabs in close groups", function(){
       let groups = Session.createArrayGroups({
         groupsLength: 2,
@@ -323,4 +323,66 @@ describe("GroupManager: ", () => {
     });
   });
 
+  describe(".filterGroups", ()=>{
+    it(" sould return filtered groups", function(){
+      let groups = Session.createArrayGroups({
+        groupsLength: 4,
+        tabsLength: 7,
+        pinnedTabs: 3,
+        lazyMode: false,
+        title:"Filter groups",
+      });
+
+      // Only odd groups and tabs (cf index)
+      let filter = {};
+
+      groups.forEach((group, ind)=>{
+        if ( (ind %2===1) ) {
+          let tabs = group.tabs.map((_,index)=>index%2===1);
+          filter[group.id] = {
+            tabs: tabs,
+            selected: tabs.filter(_ => _).length,
+          }
+        } else {
+          let tabs = group.tabs.map((_,index)=>false);
+          filter[group.id] =  {
+            tabs: tabs,
+            selected: 0,
+          }
+        }
+      });
+
+      let filteredGroups = GroupManager.filterGroups(
+        groups,
+        filter,
+      );
+
+      // Keep odd groups
+      expectedFilteredGroups = groups.filter((group, ind)=>{
+        return (ind %2===1);
+      });
+      // Keep odd tabs
+      expectedFilteredGroups.forEach((group)=>{
+        group.tabs = group.tabs.filter((_,index)=>index%2===1)
+      });
+
+      expect(filteredGroups).toEqualGroups(expectedFilteredGroups);
+    });
+
+    it(" should return all groups if no filter provided", function(){
+      let groups = Session.createArrayGroups({
+        groupsLength: 4,
+        tabsLength: 7,
+        pinnedTabs: 3,
+        lazyMode: false,
+        title:"Filter groups",
+      });
+
+      let filteredGroups = GroupManager.filterGroups(
+        groups
+      );
+
+      expect(filteredGroups).toEqualGroups(groups);
+    })
+  })
 });

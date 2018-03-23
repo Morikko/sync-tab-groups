@@ -63,6 +63,8 @@
  - sortGroupsLastAccessed
  - sortGroupsAlphabetically
 
+ - filterGroups
+
  * Event: EVENT_CHANGE EVENT_PREPARE
  * DelayedTask: store() (Limited mode)
  */

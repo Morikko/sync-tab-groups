@@ -587,12 +587,14 @@ Utils.range = function(N) {
   return [...Array(N).keys()]
 }
 
-Utils.createGroupsJsonFile = function (groups=GroupManager.groups) {
+Utils.createGroupsJsonFile = function (groups=GroupManager.groups,{
+  prettify=false
+}={}) {
   return URL.createObjectURL(new Blob([
     JSON.stringify({
       version: ["syncTabGroups", 1],
       groups: groups,
-    })
+    }, null, (prettify?2:0))
   ], {
     type: 'application/json'
   }))

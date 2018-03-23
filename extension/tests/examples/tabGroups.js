@@ -1,4 +1,6 @@
-
+/**
+ * Groups for testing importing files
+ */
 
 var Examples = Examples || {};
 
@@ -36,24 +38,34 @@ Examples.importedGroups = [{
     "title": "Options des groupes d'onglets",
     "url": "about:tabgroups",
     "pinned": false,
-    "active": false,
+    "active": true,
     "discarded": false,
     "favIconUrl": "chrome://branding/content/icon32.png"
   }],
-  "id": -1,
-  "windowId": -1
+  "id": 0,
+  "windowId": -1,
+  "incognito": false,
+  "lastAccessed": 0,
+  "expand": false,
+  "position": 0,
+  "index": 0,
 }, {
   "title": "Mobile",
   "tabs": [{
     "title": "Navigateurs mobiles pour iOS et Android | Firefox",
     "url": "https://www.mozilla.org/fr/firefox/mobile/?utm_campaign=desktop&utm_content=ios&utm_medium=tiles&utm_source=directory-tiles",
     "pinned": false,
-    "active": false,
+    "active": true,
     "discarded": false,
     "favIconUrl": "chrome://branding/content/icon32.png"
   }],
-  "id": -1,
-  "windowId": -1
+  "id": 1,
+  "windowId": -1,
+  "incognito": false,
+  "lastAccessed": 0,
+  "expand": false,
+  "position": 1,
+  "index": 1
 }, {
   "title": "Window 2",
   "tabs": [{
@@ -74,12 +86,17 @@ Examples.importedGroups = [{
     "title": "GitHub - Quicksaver/Tab-Groups: Reimplementation of Firefox Tab Groups as an add-on.",
     "url": "https://github.com/Quicksaver/Tab-Groups",
     "pinned": false,
-    "active": false,
+    "active": true,
     "discarded": false,
     "favIconUrl": "chrome://branding/content/icon32.png"
   }],
-  "id": -1,
-  "windowId": -1
+  "id": 2,
+  "windowId": -1,
+  "incognito": false,
+  "lastAccessed": 0,
+  "expand": false,
+  "position": 2,
+  "index": 2
 }];
 
 Examples.syncTabGroups_2w_3g = {

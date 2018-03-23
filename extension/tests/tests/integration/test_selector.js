@@ -57,6 +57,13 @@ describe('Selector - ', () => {
       //await Utils.wait(1000)
       expect(Selector.WINDOW_ID).toEqual(WINDOW_ID_NONE);
     });
+  });
+
+  // TODO
+  describe('.manageFinish', ()=>{
+    it(' should export groups with StorageManager.File.downloadGroups', )
+
+    it(' should import groups with Group.addGroups')
   })
 
 });

@@ -1,4 +1,5 @@
 /** Tests:
+* TODO deprecated: To write for jasmine
 * TaskManager.DelayedTask - TestManager.delayedtask
 * TaskManager.RepeatedTask - TestManager.repeatedtask
 */
