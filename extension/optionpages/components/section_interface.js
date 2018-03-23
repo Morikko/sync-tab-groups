@@ -97,16 +97,16 @@ class InterfaceSection extends React.Component {
           })
         )
       }),
-      React.createElement(
-        "h2",
-        null,
-        browser.i18n.getMessage("options_interface_windows")
-      ),
-      React.createElement(NiceCheckbox, {
-        checked: this.props.options.groups.showGroupTitleInWindow,
-        label: browser.i18n.getMessage("show_title_window"),
-        onCheckChange: this.props.onOptionChange,
-        id: "groups-showGroupTitleInWindow" })
+      React.createElement(SubSection, {
+        title: browser.i18n.getMessage("options_interface_windows"),
+        tooltip: undefined,
+        content: React.createElement(NiceCheckbox, {
+          checked: this.props.options.groups.showGroupTitleInWindow,
+          label: browser.i18n.getMessage("show_title_window"),
+          onCheckChange: this.props.onOptionChange,
+          id: "groups-showGroupTitleInWindow"
+        })
+      })
     );
   }
 };

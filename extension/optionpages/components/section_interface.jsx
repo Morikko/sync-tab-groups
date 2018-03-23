@@ -2,7 +2,7 @@ class InterfaceSection extends React.Component {
   render() {
     return (
       <div className={"option-section " + (this.props.selected==="interface"?
-        "visible":"invisible")}>
+      "visible":"invisible")}>
         <h1 className="section-title">
           {browser.i18n.getMessage("options_interface")}
         </h1>
@@ -53,12 +53,12 @@ class InterfaceSection extends React.Component {
           title={browser.i18n.getMessage("options_interface_groups")}
           content={
             <div>
-                <NiceCheckbox
-                  checked= {this.props.options.popup.showTabsNumber}
-                  label= {browser.i18n.getMessage("show_tabs_number")}
-                  onCheckChange= {this.props.onOptionChange}
-                  id="popup-showTabsNumber"
-                />
+              <NiceCheckbox
+                checked= {this.props.options.popup.showTabsNumber}
+                label= {browser.i18n.getMessage("show_tabs_number")}
+                onCheckChange= {this.props.onOptionChange}
+                id="popup-showTabsNumber"
+              />
             </div>
           }
         />
@@ -81,14 +81,18 @@ class InterfaceSection extends React.Component {
             </div>
           }
         />
-        <h2>
-          {browser.i18n.getMessage("options_interface_windows")}
-        </h2>
-        <NiceCheckbox
-          checked={this.props.options.groups.showGroupTitleInWindow}
-          label={browser.i18n.getMessage("show_title_window")}
-          onCheckChange={this.props.onOptionChange}
-          id="groups-showGroupTitleInWindow"/>
+        <SubSection
+          title={browser.i18n.getMessage("options_interface_windows")}
+          tooltip={undefined}
+          content = {
+            <NiceCheckbox
+              checked={this.props.options.groups.showGroupTitleInWindow}
+              label={browser.i18n.getMessage("show_title_window")}
+              onCheckChange={this.props.onOptionChange}
+              id="groups-showGroupTitleInWindow"
+            />
+          }
+        />
       </div>
     );
   }

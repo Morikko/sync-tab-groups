@@ -41,7 +41,7 @@ body {
   background-color: #424f5a;
   width: 100%;
   color: #c4cdd4;
-  z-index: 1;
+  z-index: 10;
 }
 
 .logo {
@@ -166,6 +166,7 @@ input[type=checkbox]:checked ~ label{
 /** Sub panel -- section **/
 .section-title {
   margin-bottom: 30px;
+  margin-top: 20px;
   font-size: 2em;
   border-bottom: #2aa1c0 solid 2px;
 }
@@ -180,17 +181,17 @@ input[type=checkbox]:checked ~ label{
   width: 50%;
 }
 
-.subsection-left {
-  width: fit-content;
-  width: -moz-fit-content;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.subsection-content {
+  margin-left: 30px;
+  margin-right: 30px;
 }
 
 .tooltip {
-    position: relative;
-    /*display: inline-block;*/
+  position: relative;
+}
+
+.tooltip > h2 {
+  align-self: flex-start;
 }
 
 /* Tooltip text */
@@ -206,19 +207,25 @@ input[type=checkbox]:checked ~ label{
     /* Position the tooltip text */
     position: absolute;
     z-index: 1;
-    top: -5px;
-    left: 105%;
+    left: 100%;
 
     /* Fade in tooltip */
     opacity: 0;
     transition: opacity 1s;
 }
 
+.tooltiptext.tooltip-top {
+  top: -5px;
+}
+
+.tooltiptext.tooltip-bottom {
+  bottom: -5px;
+}
+
 /* Tooltip arrow */
 .tooltip .tooltiptext::after {
     content: " ";
     position: absolute;
-    top: 22%;
     right: 100%; /* To the left of the tooltip */
     margin-top: -5px;
     border-width: 5px;
@@ -226,8 +233,16 @@ input[type=checkbox]:checked ~ label{
     border-color: transparent black transparent transparent;
 }
 
+.tooltiptext.tooltip-top::after {
+  top: 22%;
+}
+
+.tooltiptext.tooltip-bottom::after {
+  bottom: 22%;
+}
+
 /* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
+.tooltip-visible .tooltiptext {
     visibility: visible;
     opacity: 1;
 }
@@ -289,8 +304,7 @@ input[type=checkbox]:checked ~ label{
 .double-buttons {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  margin-left: 30px;
+  justify-content: center;
 }
 
 .double-buttons .option-button {

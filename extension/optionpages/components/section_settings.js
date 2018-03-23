@@ -267,11 +267,15 @@ class SettingsSection extends React.Component {
               key: "opening-tab-full"
             })
           ),
-          React.createElement(OptionButton, {
-            title: browser.i18n.getMessage("options_behaviors_tabsopening_reload"),
-            onClick: this.handleClickOnUndiscardAllTabs.bind(this),
-            highlight: true
-          })
+          React.createElement(
+            "div",
+            { className: "double-buttons" },
+            React.createElement(OptionButton, {
+              title: browser.i18n.getMessage("options_behaviors_tabsopening_reload"),
+              onClick: this.handleClickOnUndiscardAllTabs.bind(this),
+              highlight: true
+            })
+          )
         )
       }),
       React.createElement(SubSection, {
@@ -354,16 +358,15 @@ class SettingsSection extends React.Component {
           })
         )
       }),
-      React.createElement(
-        "h2",
-        null,
-        browser.i18n.getMessage("options_settings_others")
-      ),
-      React.createElement(NiceCheckbox, {
-        checked: this.props.options.groups.removeEmptyGroup,
-        label: browser.i18n.getMessage("remove_empty_groups"),
-        onCheckChange: this.props.onOptionChange,
-        id: "groups-removeEmptyGroup"
+      React.createElement(SubSection, {
+        title: browser.i18n.getMessage("options_settings_others"),
+        tooltip: undefined,
+        content: React.createElement(NiceCheckbox, {
+          checked: this.props.options.groups.removeEmptyGroup,
+          label: browser.i18n.getMessage("remove_empty_groups"),
+          onCheckChange: this.props.onOptionChange,
+          id: "groups-removeEmptyGroup"
+        })
       })
     );
   }

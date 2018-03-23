@@ -56,12 +56,20 @@ class SaveSectionStandalone extends React.Component {
     return checkboxes;
   }
 
-  onEnableBackUp() {
+  onEnableDownloadBackUp() {
     this.props.onOptionChange("backup-download-enable", true);
   }
 
-  onDisableBackUp() {
+  onDisableDownloadBackUp() {
     this.props.onOptionChange("backup-download-enable", false);
+  }
+
+  onEnableLocalBackUp() {
+    this.props.onOptionChange("backup-local-enable", true);
+  }
+
+  onDisableLocalBackUp() {
+    this.props.onOptionChange("backup-local-enable", false);
   }
 
   handleClickOnRemoveAllGroups() {
@@ -137,12 +145,12 @@ class SaveSectionStandalone extends React.Component {
             <div className="double-buttons">
               <OptionButton
                 title= {browser.i18n.getMessage("options_button_enable")}
-                onClick= {this.onEnableBackUp.bind(this)}
+                onClick= {this.onEnableLocalBackUp.bind(this)}
                 highlight={this.props.options.backup.local.enable}
               />
               <OptionButton
                 title= {browser.i18n.getMessage("options_button_disable")}
-                onClick= {this.onDisableBackUp.bind(this)}
+                onClick= {this.onDisableLocalBackUp.bind(this)}
                 highlight={!this.props.options.backup.local.enable}
               />
             </div>
@@ -266,12 +274,12 @@ class SaveSectionStandalone extends React.Component {
             <div className="double-buttons">
               <OptionButton
                 title= {browser.i18n.getMessage("options_button_enable")}
-                onClick= {this.onEnableBackUp.bind(this)}
+                onClick= {this.onEnableDownloadBackUp.bind(this)}
                 highlight={this.props.options.backup.download.enable}
               />
               <OptionButton
                 title= {browser.i18n.getMessage("options_button_disable")}
-                onClick= {this.onDisableBackUp.bind(this)}
+                onClick= {this.onDisableDownloadBackUp.bind(this)}
                 highlight={!this.props.options.backup.download.enable}
               />
             </div>
