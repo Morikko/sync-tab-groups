@@ -152,11 +152,9 @@ class Group extends React.Component {
   getGroupTitle() {
     let groupTitle;
     if (Utils.DEBUG_MODE) {
-      groupTitle = "Group Id: " + this.props.group.id + "\n";
-      groupTitle += "Group Index: " + this.props.group.index + "\n";
-      groupTitle += "Group Window: " + this.props.group.windowId + "\n";
-      groupTitle += "Group Position: " + this.props.group.position + "\n";
-      groupTitle += "Incognito: " + this.props.group.incognito;
+      const groupWithoutTabs = Utils.getCopy(this.props.group);
+      groupWithoutTabs.tabs = groupWithoutTabs.tabs.length + " tabs";
+      groupTitle = JSON.stringify(groupWithoutTabs, null, 4);
     } else {
       groupTitle = browser.i18n.getMessage("open_group");
     }

@@ -292,9 +292,45 @@ describe("TabManager[Add/Remove]", ()=>{
         expect(nbrNotDiscarded).toEqual(4);
       });
 
-      //TODO
       it(" should update the openerTabIds with the new ids", async function(){
+        const tabsLength = 4;
+        let tabs = Session.createTabs({
+          tabsLength: tabsLength,
+          active: 0,
+        });
 
+        for(let i=1; i<tabs.length-1; i++){
+          tabs[i].openerTabId = tabs[i-1].id;
+        }
+        tabs[tabs.length-1].openerTabId = tabs[0].id;
+
+        let survivor = await TabManager.removeTabsInWindow(
+          this.windowId,{
+            openBlankTab: true,
+            remove_pinned: true,
+          });
+        await TabManager.openListOfTabs(
+          tabs,
+          this.windowId,{
+            inLastPos: true,
+        });
+        await browser.tabs.remove(survivor.id);
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
+
+        let resultingTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+          });
+
+        expect(resultingTabs.length).toEqual(tabsLength);
+        expect(resultingTabs[0].hasOwnProperty("openerTabId"))
+          .toBe(false);
+        for(let i=1; i<resultingTabs.length-1; i++){
+          expect(resultingTabs[i].openerTabId)
+            .toEqual(resultingTabs[i-1].id, "index: " + i);
+        }
+        expect(resultingTabs[resultingTabs.length-1].openerTabId)
+          .toEqual(resultingTabs[0].id);
       });
     })
   });

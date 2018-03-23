@@ -38,34 +38,14 @@ class ShortcutsSection extends React.Component {
           onCheckChange= {this.props.onOptionChange}
           id= {"shortcuts-allowGlobal"}
         />
-        {/*
-        <table className="list_help">
-          <tbody>
-            <tr>
-              <th className="command_shortcuts">{browser.i18n.getMessage("command_shortcuts")}</th>
-              <th className="command_description">{browser.i18n.getMessage("command_description")}</th>
-            </tr>
-            {
-              this.state.commands.map((command) => {
-                return (
-                  <tr key={command.name}>
-                    <td className="command_shortcuts">{command.shortcut}</td>
-                    <td className="command_description">{browser.i18n.getMessage("command_description_" + command.name)}</td>
-                  </tr>
-                )
-              })
-            }
-          </tbody>
-        </table>
-        */}
         {this.createShorcutDescription(
-          this.globalCommands, this.GLOBAL_SHORTCUT_NAME)}
+        this.globalCommands, this.GLOBAL_SHORTCUT_NAME)}
         <h2>
           {browser.i18n.getMessage("options_shortcuts_navigation")}
         </h2>
         <NiceCheckbox
           checked= {this.props.options.shortcuts.navigation}
-          label= {browser.i18n.getMessage("allow_global_shortcuts")}
+          label= {browser.i18n.getMessage("options_shortcuts_navigation_allow")}
           onCheckChange= {this.props.onOptionChange}
           id= {"shortcuts-navigation"}
         />

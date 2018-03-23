@@ -50,7 +50,7 @@ class ShortcutsSection extends React.Component {
       ),
       React.createElement(NiceCheckbox, {
         checked: this.props.options.shortcuts.navigation,
-        label: browser.i18n.getMessage("allow_global_shortcuts"),
+        label: browser.i18n.getMessage("options_shortcuts_navigation_allow"),
         onCheckChange: this.props.onOptionChange,
         id: "shortcuts-navigation"
       }),

@@ -74,11 +74,7 @@ class Tab extends React.Component {
 
     let tabTitle;
     if (Utils.DEBUG_MODE) {
-      tabTitle = "Tab Id: " + this.props.tab.id + "\n";
-      tabTitle += "Tab Url: " + this.props.tab.url + "\n";
-      tabTitle += "Tab Title: " + this.props.tab.title + "\n";
-      tabTitle += "Tab FavIconUrl: " + this.props.tab.favIconUrl + "\n";
-      tabTitle += "Tab Index: " + this.props.tab.index;
+      tabTitle = JSON.stringify(this.props.tab, null, 4);
     } else {
       tabTitle = this.props.tab.title;
     }
@@ -106,6 +102,7 @@ class Tab extends React.Component {
         onMouseEnter: this.addMenuItem,
         onMouseLeave: this.removeMenuItem,
         contextMenu: "moveTabSubMenu" + this.props.tab.id,
+        title: tabTitle,
         tabIndex: "0",
         onFocus: e => {
           if (typeof Navigation !== 'undefined' && Navigation.KEY_PRESSED_RECENTLY) {
@@ -129,8 +126,7 @@ class Tab extends React.Component {
       React.createElement(
         "span",
         {
-          className: "tab-title",
-          title: tabTitle
+          className: "tab-title"
         },
         this.props.tab.title
       ),

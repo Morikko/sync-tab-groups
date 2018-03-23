@@ -977,24 +977,23 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
       return;
     }
 
-    let newIds = [], oldIds = [];
+    let newIds = {};
     group.tabs.forEach((tab, index)=>{
       // Update ids
         if (!tab.id || !tab.id.length) {
-          oldIds.push(tab.id);
+          let oldId = tab.id;
           tab.id = Date.now() + "-" + group.id + "-" + index;
-          newIds.push(tab.id);
+          newIds[oldId] = tab.id;
         }
     });
 
     // Update parent Ids
-    for(let i of Utils.range(newIds.length)) {
-      group.tabs.forEach((tab, index)=>{
-        if (oldIds[i] >= 0 && tab.parentId === oldIds[i] ) {
-          tab.parentId = newIds[i];
-        }
-      });
-    }
+    group.tabs.forEach((tab, index)=>{
+      if (tab.openerTabId !== undefined
+            && newIds.hasOwnProperty(tab.openerTabId)) {
+        tab.openerTabId = newIds[tab.openerTabId];
+      }
+    });
   });
 }
 

@@ -153,7 +153,12 @@ TabManager.countPinnedTabs = function(tabs) {
  * @param {Number} windowId
  * @param {Number} index (tab)
   */
-TabManager.openTab = async function(tab, windowId, index) {
+TabManager.openTab = async function(
+  tab,
+  windowId,
+  index,
+  tabIdsCrossRef=undefined
+) {
   let url = tab.url;
 
   let incognitoAllowed = true;
@@ -182,6 +187,14 @@ TabManager.openTab = async function(tab, windowId, index) {
     index: index,
     windowId: windowId
   };
+
+  if (tab.hasOwnProperty("openerTabId") && tabIdsCrossRef !== undefined) {
+    // Check tab is still present -> was not removed when group was closed
+    // Parent tab has to be opened before children else it will be lost
+    if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
+      tabCreationProperties["openerTabId"] = tabIdsCrossRef[tab.openerTabId];
+    }
+  }
 
   return browser.tabs.create(tabCreationProperties);
 }
@@ -277,7 +290,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
           ? indexPinnedOffset
           : indexTabOffset;
         // Save results
-        createdTabs[index] = await TabManager.openTab(tab, windowId, currentIndex);
+        createdTabs[index] = await TabManager.openTab(tab, windowId, currentIndex, tabIdsCrossRef);
         tabIdsCrossRef[tab.id] = createdTabs[index].id;
       } else {
         // Special case: move active pinned tab
@@ -299,8 +312,9 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
       index++;
     }
 
-    // Update parentId
-    for (let tab of tabsToOpen) {
+    // Update parentId for active tab
+    if ( activeIndex >= 0 ) {
+      let tab = tabsToOpen[activeIndex];
       if (tab.hasOwnProperty("openerTabId")) {
         // Check tab is still present -> was not removed when group was closed
         // Parent tab has to be opened before children else it will be lost
@@ -309,8 +323,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
           // Set the new id of the parent Tab to the child
           browser.tabs.update(tabIdsCrossRef[tab.id], {
             openerTabId: tabIdsCrossRef[tab.openerTabId]
-          })
-          tabCreationProperties["openerTabId"] = tabParentId;
+          });
         }
       }
     }
