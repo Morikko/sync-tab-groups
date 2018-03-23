@@ -8,10 +8,10 @@ var Event = Event || {};
 Event.Install = Event.Install || {};
 
 Event.Install.DEV_TABS = [
-  "/tests/test-page/unit.html",
+  //"/tests/test-page/unit.html",
   "/tests/test-page/integration.html",
-  "/tests/test-page/integration.html?spec=Selector%20-%20",
-  "/optionpages/option-page.html#groups"
+  //"/tests/test-page/integration.html?spec=Selector%20-%20",
+  //"/optionpages/option-page.html#groups"
 ]
 
 Event.Install.onDevelopmentInstall = function() {
@@ -25,7 +25,7 @@ Event.Install.onDevelopmentInstall = function() {
   });
 
   /*** Add extra code you want to be done in Development ***/
-  Selector.onOpenGroupsSelector({force: true});
+  //Selector.onOpenGroupsSelector({force: true});
 }
 
 

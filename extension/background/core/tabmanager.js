@@ -26,8 +26,6 @@
  - moveTabToNewGroup
  - moveUnFollowedTabToNewGroup
 
- - removeTabsWithUnallowedURL: deprecated
-
  */
 var TabManager = TabManager || {};
 
@@ -175,6 +173,7 @@ TabManager.openTab = async function(tab, windowId, index) {
   if (url === "about:privatebrowsing" || url === TabManager.NEW_TAB) {
     url = undefined;
   }
+
   // Create a tab to tab.url or to newtab
   let tabCreationProperties = {
     url: url,
@@ -203,6 +202,7 @@ TabManager.openTab = async function(tab, windowId, index) {
 TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
   inLastPos = false,
   openAtLeastOne = false,
+  forceOpenNewTab = false, // Force to open a new tab even if already one
   pendingTab = undefined,
 }={}) {
   try {
@@ -223,7 +223,8 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
 
     // Don't Reopen only a new tab
     if (tabsToOpen.length === 1
-      && (tabsToOpen[0].url === TabManager.NEW_TAB )
+      && (tabsToOpen[0].url === TabManager.NEW_TAB
+      && !forceOpenNewTab ) // Else open new New Tab
       ) {
       let notPinnedTabs = tabs.filter(tab => !tab.pinnded);
       if (notPinnedTabs.length === 1 && notPinnedTabs[0].url === TabManager.NEW_TAB) {
@@ -566,45 +567,6 @@ TabManager.moveUnFollowedTabToNewGroup = async function(tabId) {
 }
 
 /**
- * Close the tabs that are privileged URL
- * Privileged url: chrome: URLs, javascript: URLs,
-                    data: URLs, file: URLs, about: URLs
- * Non-privileged URLs: about:blank, about:newtab ( should be
- * replaced by null ), all the other ones
- * Asynchronous
- * @return {Promise}
- */
-TabManager.removeTabsWithUnallowedURL = async function(groupId) {
-  try {
-    let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
-    let windowId = GroupManager.getWindowIdFromGroupId(groupId);
-
-    // Get not supported link tab id
-    var tabsIds = [];
-    GroupManager.groups[groupIndex].tabs.map((tab) => {
-      if (Utils.isPrivilegedURL(tab.url))
-        tabsIds.push(tab.id);
-      }
-    );
-
-    // Don't let empty window
-    if (GroupManager.groups[groupIndex].tabs.length === tabsIds.length) {
-      await TabManager.openListOfTabs([], windowId, true, true);
-    }
-
-    // Remove them
-    await browser.tabs.remove(tabsIds);
-
-    return "TabManager.removeTabsWithUnallowedURL done!";
-
-  } catch (e) {
-    let msg = "TabManager.removeTabsWithUnallowedURL failed; " + e;
-    console.error(msg);
-    return msg;
-  }
-}
-
-/**
  * Selects a given tab.
  * Switch to another group if necessary
  * @param {Number} tabIndex - the tabs index
@@ -659,25 +621,31 @@ TabManager.removeTabsInWindow = async function(windowId, {
       withPinned: true,
     });
 
-    let survivorTab;
+    let survivorTab = undefined;
 
     // 1. Save a tab for letting the window open and return this tab
     // Select the last tab, avoid switching tabs currently closing (create lag)
-    if (!OptionManager.options.pinnedTab.sync && tabs[0].pinned) {
-      // Kill all
-      await browser.tabs.update(tabs[0].id, {active: true});
-    } else {
-      if (openBlankTab) {
-        survivorTab = (await TabManager.openListOfTabs([], windowId, {
-          inLastPos: true,
-          openAtLeastOne: true,
-        }))[0];
-        if( survivorTab.id === tabs[0].id ) { // Already just a new tab, don't close anything
-          return survivorTab;
-        }
+    if (openBlankTab) {
+      // Opened or single blank...
+      survivorTab = (await TabManager.openListOfTabs([], windowId, {
+        inLastPos: true,
+        openAtLeastOne: true,
+      }))[0];
+      // Already just a new tab, don't close anything
+      if( tabs.length === 1
+            && survivorTab.id === tabs[0].id ) {
+        return survivorTab;
+      }
+    } else { // Keep a tab from previous session
+      if (!OptionManager.options.pinnedTab.sync && tabs[0].pinned) {
+        // Kill all
+        await browser.tabs.update(tabs[0].id, {active: true});
       } else {
         survivorTab = tabs.shift();
       }
+    }
+
+    if ( survivorTab !== undefined ) {
       await browser.tabs.update(survivorTab.id, {active: true});
     }
 
@@ -686,27 +654,39 @@ TabManager.removeTabsInWindow = async function(windowId, {
     await browser.tabs.remove(tabsToRemove);
 
     if (Utils.isChrome()) { // Chrome Incompatibility: doesn't wait that tabs are unloaded
-      let i = 0
-      for (i = 0; i < 20; i++) {
-        await Utils.wait(50);
-        let tabs = await TabManager.getTabsInWindowId(windowId, {
-          withoutRealUrl: false,
-        });
-        if (tabs.filter((tab) => {
-          if (tabsToRemove.indexOf(tab.id) >= 0) {
-            return true;
-          }
-          return false;
-        }).length === 0)
-          break;
-        }
-      }
+      await TabManager.waitTabsToBeClosed(windowId, tabsToRemove);
+    }
 
     return survivorTab;
   } catch (e) {
     let msg = "TabManager.removeTabsInWindow failed; " + e;
     console.error(msg);
     return msg;
+  }
+}
+
+/**
+ *
+ */
+TabManager.waitTabsToBeClosed = async function(windowId, tabsIdsToRemove, {
+  maxLoop=20,
+  waitPerLoop=50 //ms
+}={}){
+  for (let i = 0; i < maxLoop; i++) {
+    await Utils.wait(waitPerLoop);
+    let tabs = await TabManager.getTabsInWindowId(windowId, {
+      withoutRealUrl: false,
+    });
+    if (tabs.filter((tab) => {
+            if (tabsIdsToRemove.indexOf(tab.id) >= 0) {
+              return true;
+            }
+            return false;
+            }
+      ).length === 0
+    ) {
+      break;
+    }
   }
 }
 

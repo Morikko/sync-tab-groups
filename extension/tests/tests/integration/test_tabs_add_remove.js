@@ -1,34 +1,51 @@
-describe("Tabs Creation/Deletion - ", ()=>{
+describe("TabManager[Add/Remove]", ()=>{
 
   // Keep previous states
   beforeAll(TestManager.initIntegrationBeforeAll());
   // Set back previous states
   afterAll(TestManager.initIntegrationAfterAll());
 
+  // Create Window
   beforeAll(async function(){
-    // Create Window
     OptionManager.updateOption("groups-syncNewWindow", false);
+    OptionManager.updateOption("groups-discardedOpen", true);
     jasmine.addMatchers(tabGroupsMatchers);
     this.windowId = (await browser.windows.create()).id;
     await TestManager.splitOnHalfScreen(this.windowId);
   });
 
-  afterAll(async function(){
-    // Close Window
-    await browser.windows.remove(this.windowId);
-  });
-
-  beforeEach(async function() {
-    this.previousTabs = await TabManager.getTabsInWindowId(
+  // Keep test session clean in between :)
+  afterEach(async function() {
+    // Clear the window
+    await TabManager.removeTabsInWindow(
       this.windowId,{
-        withPinned: true,
+        openBlankTab: true,
+        remove_pinned: true,
       });
+    await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+  });
+  beforeEach(async function() {
+    // Clear the window
+    await TabManager.removeTabsInWindow(
+      this.windowId,{
+        openBlankTab: true,
+        remove_pinned: true,
+      });
+    await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
   });
 
-  describe("Normal tabs - ", ()=>{
-    describe("openListOfTabs - ", ()=>{
-      it("Do not open again, if only new tab", async function(){
-        let tabId = this.previousTabs[0].id;
+
+  describe(".openListOfTabs", ()=>{
+
+    describe(" with Normal tabs", ()=>{
+
+      it(" should not open again, if only new tab", async function(){
+        let previousTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+          });
+
+        let tabId = previousTabs[0].id;
 
         await TabManager.openListOfTabs(
           [],
@@ -42,11 +59,16 @@ describe("Tabs Creation/Deletion - ", ()=>{
             withPinned: true,
           });
 
-        expect(resultingTabs).toEqualTabs(this.previousTabs);
+        expect(resultingTabs).toEqualTabs(previousTabs);
         expect(resultingTabs[0].id).toEqual(tabId);
       });
 
-      it("Open List of Tabs in Window", async function(){
+      it(" should open List of Tabs in Window", async function(){
+        let previousTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+          });
+
         let tabs = Session.createTabs({
           tabsLength: 5,
           pinnedTabs: 0,
@@ -66,7 +88,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
             withPinned: true,
           });
 
-        let expectedTabs = tabs.concat(this.previousTabs);
+        let expectedTabs = tabs.concat(previousTabs);
         TestManager.resetIndexProperties(expectedTabs);
         TestManager.resetActiveProperties(expectedTabs);
         TestManager.resetActiveProperties(resultingTabs);
@@ -74,7 +96,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
       });
 
-      it("Open List of Tabs in last position", async function(){
+      it(" should open List of Tabs in last position", async function(){
         let previousTabs = await TabManager.getTabsInWindowId(
           this.windowId,{
             withPinned: true,
@@ -108,12 +130,18 @@ describe("Tabs Creation/Deletion - ", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
       });
 
-      it("Open At Least One New Tab", async function(){
+      it(" shoudl open At Least One New Tab", async function(){
+        let previousTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+        });
+
         let new_tab  = await TabManager.openListOfTabs(
           [],
           this.windowId,{
             inLastPos: true,
             openAtLeastOne: true,
+            forceOpenNewTab: true,
         });
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
@@ -122,60 +150,27 @@ describe("Tabs Creation/Deletion - ", ()=>{
             withPinned: true,
           });
 
-        let expectedTabs = this.previousTabs.concat(new_tab);
-        TestManager.resetActiveProperties(expectedTabs);
-        TestManager.resetActiveProperties(resultingTabs);
-        TestManager.resetIndexProperties(expectedTabs);
+        let expectedTabs = previousTabs.concat(new_tab);
 
-        expect(resultingTabs).toEqualTabs(expectedTabs);
+        // Last New Tab
+        expect(resultingTabs.length).toEqualTabs(previousTabs.length+1);
+        expect(resultingTabs[resultingTabs.length-1].url).toEqual(TabManager.NEW_TAB);
+
+        // Previous has not changed
+        resultingTabs.splice(resultingTabs.length-1)
+        TestManager.resetActiveProperties(previousTabs);
+        expect(resultingTabs).toEqualTabs(previousTabs);
       });
+
     });
 
-    describe("removeTabsInWindow - ", ()=>{
-      it("Remove tabs and let only First Tab", async function(){
-        let new_tabs = await browser.tabs.query({
-          windowId: this.windowId,
-          title: "New Tab",
-        });
-
-        await browser.tabs.remove(new_tabs.map(tab => tab.id));
-
-        let survivorTab = await TabManager.removeTabsInWindow(
-          this.windowId
-        );
-        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
-
-        let resultingTabs = await TabManager.getTabsInWindowId(
+    describe(" with Pinned tabs -", ()=>{
+      it(" should open pinned and non pinned before", async function(){
+        let previousTabs = await TabManager.getTabsInWindowId(
           this.windowId,{
             withPinned: true,
           });
-        survivorTab.url = Utils.extractTabUrl(survivorTab.url);
-        survivorTab = [survivorTab];
 
-        TestManager.resetActiveProperties(resultingTabs);
-        TestManager.resetActiveProperties(survivorTab);
-
-        expect(resultingTabs).toEqualTabs(survivorTab);
-      });
-
-      it("Remove tabs and let only New Tab", async function(){
-        let new_tab = await TabManager.removeTabsInWindow(
-          this.windowId,{
-            openBlankTab: true,
-          });
-        let resultingTabs = await TabManager.getTabsInWindowId(
-          this.windowId,{
-            withPinned: true,
-          });
-        new_tab.index=0;
-        expect(resultingTabs).toEqualTabs([new_tab]);
-      });
-    });
-  });
-
-  describe("Pinned tabs -", ()=>{
-    describe("openListOfTabs - ", ()=>{
-      it("Open List of Tabs with some Pinned Tabs", async function(){
         let tabs = Session.createTabs({
           tabsLength: 5,
           pinnedTabs: 2,
@@ -188,7 +183,7 @@ describe("Tabs Creation/Deletion - ", ()=>{
           this.windowId,
         );
 
-        await browser.tabs.remove(this.previousTabs.map(tab => tab.id));
+        await browser.tabs.remove(previousTabs.map(tab => tab.id));
 
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
@@ -200,8 +195,21 @@ describe("Tabs Creation/Deletion - ", ()=>{
         expect(resultingTabs).toEqualTabs(tabs);
       });
 
-      it("Open List of Tabs with some Pinned Tabs with already some in the Window", async function(){
-        let tabs = Session.createTabs({
+      it(" should open pinned after previous pinned and normal before previous normal", async function(){
+        let blank = await TabManager.removeTabsInWindow(
+          this.windowId,{
+            openBlankTab: true,
+          });
+
+
+        let tabsFirst = Session.createTabs({
+          tabsLength: 4,
+          pinnedTabs: 2,
+          privilegedLength: 0,
+          extensionUrlLength: 0,
+        });
+
+        let tabsSecond = Session.createTabs({
           tabsLength: 4,
           pinnedTabs: 2,
           privilegedLength: 0,
@@ -209,9 +217,18 @@ describe("Tabs Creation/Deletion - ", ()=>{
         });
 
         await TabManager.openListOfTabs(
-          tabs,
+          tabsFirst,
           this.windowId,
         );
+
+        await browser.tabs.remove(blank.id);
+
+        // Will be entwined
+        await TabManager.openListOfTabs(
+          tabsSecond,
+          this.windowId,
+        );
+
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
         let resultingTabs = await TabManager.getTabsInWindowId(
@@ -219,11 +236,11 @@ describe("Tabs Creation/Deletion - ", ()=>{
             withPinned: true,
           });
 
-        expectedTabs = Utils.getCopy(this.previousTabs);
+        expectedTabs = Utils.getCopy(tabsFirst);
 
-        let offset = expectedTabs.filter(tab=>tab.pinned).length;
-        for (let i=0; i<tabs.length; i++) {
-          expectedTabs.splice(offset+i, 0, tabs[i]);
+        let offset = tabsFirst.filter(tab=>tab.pinned).length;
+        for (let i=0; i<tabsSecond.length; i++) {
+          expectedTabs.splice(offset+i, 0, tabsSecond[i]);
         }
 
         // Reset active
@@ -235,9 +252,122 @@ describe("Tabs Creation/Deletion - ", ()=>{
       });
     });
 
-    describe("removeTabsInWindow - ", ()=>{
-      it("Remove all tabs and let only pinned", async function(){
+    describe(" on opening", ()=>{
+      it(" should open the list of tabs and active only one tab", async function(){
+        // Close all except blank
+        let survivorTab = await TabManager.removeTabsInWindow(
+          this.windowId,{
+            openBlankTab: true,
+            remove_pinned: true,
+          });
+
+        OptionManager.updateOption("groups-discardedOpen", true);
+        let tabs = Session.createTabs({
+          tabsLength: 5,
+          pinnedTabs: 0,
+          active: 2,
+        });
+
+        await TabManager.openListOfTabs(
+          tabs,
+          this.windowId,{
+            pendingTab: survivorTab,
+        });
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+        let resultingTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+          });
+
+        let resultingTabsWithFancy = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withoutRealUrl: false,
+            withPinned: true,
+          });
+
+        let nbrNotDiscarded = resultingTabsWithFancy.filter(tab => tab.url.includes(Utils.LAZY_PAGE_URL)).length;
+
+        expect(resultingTabs).toEqualTabs(tabs);
+        expect(nbrNotDiscarded).toEqual(4);
+      });
+
+      //TODO
+      it(" should update the openerTabIds with the new ids", async function(){
+
+      });
+    })
+  });
+
+
+  describe(".removeTabsInWindow", ()=>{
+    describe(" with Normal tabs", ()=>{
+      it(" without special argument should remove all the tabs except the first one", async function(){
+        // Open some tabs
+        for (let i=0; i<3; i++) {
+          await browser.tabs.create({url: Session.getFakeUrl()});
+        }
+
+        // Remove all the New Tab (only)
+        let new_tabs = await browser.tabs.query({
+          windowId: this.windowId,
+          title: "New Tab",
+        });
+        if ( new_tabs.length > 0 ){
+          new_tabs = new_tabs.map(tab => tab.id);
+          await browser.tabs.remove(new_tabs);
+          await TabManager.waitTabsToBeClosed(this.windowId, new_tabs);
+        }
+
+        let survivorTab = [await TabManager.removeTabsInWindow(
+          this.windowId
+        )];
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+        let resultingTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+          });
+        survivorTab[0].active = true;
+        // Normally just one tab
+        expect(resultingTabs).toEqualTabs(survivorTab);
+      });
+
+      it(" with openBlankTab:true should remove all tabs and let only one new tab", async function(){
+        // Open some tabs
+        for (let i=0; i<3; i++) {
+          await browser.tabs.create({url: Session.getFakeUrl()});
+        }
+
+        let new_tab = await TabManager.removeTabsInWindow(
+          this.windowId,{
+            openBlankTab: true,
+          });
+        let resultingTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+          });
+        new_tab.index=0;
+        expect(resultingTabs).toEqualTabs([new_tab]);
+      });
+    });
+
+    describe(" with Pinned tabs -", ()=>{
+      it(" ,without special argument and pinned tabs sync:false, should remove all the tabs except all the pinned tabs.", async function(){
         OptionManager.updateOption("pinnedTab-sync", false);
+
+        // Open some tabs
+        for (let i=0; i<5; i++) {
+          await browser.tabs.create({
+            pinned: i<2,
+            url: Session.getFakeUrl()
+          });
+        }
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+        let previousTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+          });
 
         let survivorTab = await TabManager.removeTabsInWindow(
           this.windowId,
@@ -249,20 +379,32 @@ describe("Tabs Creation/Deletion - ", ()=>{
             withPinned: true,
           });
 
-        expectedTabs = this.previousTabs.filter(tab=>tab.pinned);
+        expectedTabs = previousTabs.filter(tab=>tab.pinned);
 
-        TestManager.resetActiveProperties(resultingTabs);
-        TestManager.resetActiveProperties(expectedTabs);
+        expectedTabs[0].active = true;
         expect(resultingTabs).toEqualTabs(expectedTabs);
         expect(survivorTab).toBeUndefined();
       });
 
-      it("Remove all tabs and let only first pinned", async function(){
+      it(" ,without special argument and pinned tabs sync:true, should remove all the tabs except the first pinned tab.", async function(){
         OptionManager.updateOption("pinnedTab-sync", true);
 
-        let survivorTab = await TabManager.removeTabsInWindow(
+        // Open some tabs
+        for (let i=0; i<5; i++) {
+          await browser.tabs.create({
+            pinned: i<2,
+            url: Session.getFakeUrl()
+          });
+        }
+        await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+        let previousTabs = await TabManager.getTabsInWindowId(
+          this.windowId,{
+            withPinned: true,
+          });
+
+        let survivorTab = [await TabManager.removeTabsInWindow(
           this.windowId,
-        );
+        )];
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
@@ -270,57 +412,15 @@ describe("Tabs Creation/Deletion - ", ()=>{
             withPinned: true,
           });
 
-        expectedTabs = [this.previousTabs[0]];
-        survivorTab.url = Utils.extractTabUrl(survivorTab.url);
-        survivorTab = [survivorTab];
-
-        TestManager.resetActiveProperties(resultingTabs);
-        TestManager.resetActiveProperties(expectedTabs);
-        TestManager.resetActiveProperties(survivorTab);
-        expect(resultingTabs).toEqualTabs(survivorTab);
+        expectedTabs = [previousTabs[0]];
+        expectedTabs[0].active = true;
+        survivorTab[0].active = true;
+        expect(resultingTabs).toEqualTabs(expectedTabs);
         expect(survivorTab).toEqualTabs(expectedTabs);
       });
     });
+
+
   });
 
-  describe("Active support - ", ()=>{
-    it("Open list Tabs and keeping only one active", async function(){
-      // Close all except blank
-      let survivorTab = await TabManager.removeTabsInWindow(
-        this.windowId,{
-          openBlankTab: true,
-          remove_pinned: true,
-        });
-
-      OptionManager.updateOption("groups-discardedOpen", true);
-      let tabs = Session.createTabs({
-        tabsLength: 5,
-        pinnedTabs: 0,
-        active: 2,
-      });
-
-      await TabManager.openListOfTabs(
-        tabs,
-        this.windowId,{
-          pendingTab: survivorTab,
-      });
-      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
-
-      let resultingTabs = await TabManager.getTabsInWindowId(
-        this.windowId,{
-          withPinned: true,
-        });
-
-      let resultingTabsWithFancy = await TabManager.getTabsInWindowId(
-        this.windowId,{
-          withoutRealUrl: false,
-          withPinned: true,
-        });
-
-      let nbrNotDiscarded = resultingTabsWithFancy.filter(tab => tab.url.includes(Utils.LAZY_PAGE_URL)).length;
-
-      expect(resultingTabs).toEqualTabs(tabs);
-      expect(nbrNotDiscarded).toEqual(4);
-    });
-  });
 });

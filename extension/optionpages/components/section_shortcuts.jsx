@@ -25,7 +25,7 @@ class ShortcutsSection extends React.Component {
   render() {
     return (
       <div className={"option-section shortcuts " + (this.props.selected==="shortcuts"?
-        "visible":"invisible")}>
+      "visible":"invisible")}>
         <h1 className="section-title">
           {browser.i18n.getMessage("shortcuts")}
         </h1>

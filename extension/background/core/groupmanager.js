@@ -486,7 +486,12 @@ GroupManager.detachWindowFromGroupId = async function(groupId) {
  * @param {Array} groups
  */
 GroupManager.removeAllGroups = function (groups=GroupManager.groups) {
-  groups.length = 0;
+  if ( Utils.isDeadObject(groups) ) { // Critical case
+    GroupManager.groups = [];
+  } else { // Normal
+    groups.length = 0;
+  }
+
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 

@@ -36,12 +36,15 @@ Session.createTabs = function({
   openPrivileged= false, // Note= Real Groups never have this types (urls are filtered)
   extensionUrlLength= 0,
   active=-1, // -1: last, -2 or >= tabs.length: nothing, else the tab
+  fakeTab=true,
 }={}){
   let tabs = [];
   let index = 0;
   let normalTabsLength = tabsLength-privilegedLength-extensionUrlLength;
   for (let i = 0; i < normalTabsLength; i++) {
-    let tab = Session.getRandomTab(Session.ListOfTabURLs)
+    let tab = fakeTab
+              ?Session.getFakeTab()
+              :Session.getRandomTab(Session.ListOfTabURLs);
     index++;
     tabs.push(
       tab
@@ -301,18 +304,64 @@ Session.newTab = {
     "favIconUrl": "chrome://branding/content/icon32.png"
   };
 
+Session.getFakeTab = function() {
+  let random = TestManager.getRandom(0,999999999) + "";
+  return Session.createTab({
+    url: Session.getFakeUrl(random),
+    title: random,
+    favIconUrl: ""
+  })
+}
+
+Session.getFakeUrl = function(random=TestManager.getRandom(0,999999999) + "") {
+  return browser.extension.getURL("/tests/test-page/template/template.html")
+        + "?test=" + random;
+}
+
+
+/*
+PROBLEMS:
+ - Difference between urls in location bar and from encodeURIComponent
+ - Missing title (for discarded state) & favIconUrl empty idem
+ - On creation will not contain the definitve URL, once should add extra logic...
+
+Session.getFakeUrl = function({title="Test", url="/test"}={}) {
+  return browser.extension.getURL("/tests/test-page/template/template.html")
+          + "?title=" + encodeURIComponent(title)
+          + "&url=" + encodeURIComponent(url)
+}
+Session.ListOfFakeTabs = ([
+  {
+    title: "Let's go",
+    url: "/lets/go",
+  },
+  {
+    title: "Let's come back",
+    url: "/lets/come/back",
+  },
+  {
+    title: "Another day",
+    url: "/Another/DAY",
+  },
+]).map((obj) => {
+  return {
+    url: Session.getFakeUrl(obj)
+  }
+});
+*/
+
 Session.ListOfTabURLs = [
   {
     "title": "Issues · Morikko/sync-tab-groups",
     "url": "https://github.com/Morikko/sync-tab-groups/issues",
     "favIconUrl": "https://assets-cdn.github.com/favicon.ico"
   },
-  {
+  { // /!\ Heavy to load
     "title": "Font Awesome Icons",
     "url": "https://fontawesome.com/icons?d=gallery",
     "favIconUrl": "https://fontawesome.com/images/favicons/favicon-32x32.png",
   },
-  {
+  { // /!\ Heavy to load
     "title": "Debugging - Mozilla | MDN",
     "url": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Debugging",
     "favIconUrl": "https://cdn.mdn.mozilla.net/static/img/favicon32.7f3da72dcea1.png"
@@ -322,7 +371,7 @@ Session.ListOfTabURLs = [
     title: "Jasmine Documentation",
     url: "https://jasmine.github.io/index.html",
   },
-  {
+  { // /!\ Heavy to load
     favIconUrl: "https://static-cdn.arte.tv/guide/favicons/favicon-16x16.png",
     title: "ARTE : chaîne télé culturelle franco-allemande - TV direct & replay",
     url: "https://www.arte.tv/fr/"
@@ -332,7 +381,7 @@ Session.ListOfTabURLs = [
     "url": "https://www.w3schools.com/colors/colors_picker.asp",
     "favIconUrl": "https://www.w3schools.com/favicon.ico"
   },
-  {
+  { // /!\ Heavy to load
     "title": "Challenge your coding skills with these programming puzzles",
     "url": "https://www.codingame.com/training/expert",
     "favIconUrl": "https://static.codingame.com/common/images/favicon_16_16.1e3eb433.ico"
