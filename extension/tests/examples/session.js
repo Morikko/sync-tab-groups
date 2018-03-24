@@ -113,6 +113,7 @@ Session.createGroup = function({
     global= false,
     incognito= false,
     active= -1,
+    fakeTab=true,
     title="",
     windowId=browser.windows.WINDOW_ID_NONE,
 }={}) {
@@ -125,6 +126,7 @@ Session.createGroup = function({
     extensionUrlLength,
     incognito,
     active,
+    fakeTab,
   });
 
   let group = new GroupManager.Group({
@@ -165,6 +167,7 @@ Session.createArrayGroups = function(params={}) {
     global: false,
     incognito: false,
     active: -1,
+    fakeTab: true,
     title:"",
     windowId: browser.windows.WINDOW_ID_NONE,
   }, params);

@@ -488,8 +488,9 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex, 
       // Case 4: Closed Group -> Open Group
     } else {
       if (sourceGroupId === targetGroupId) { // Update index because tabs will change
-        if (targetTabIndex < sourceTabIndex)
+        if (targetTabIndex > -1 && targetTabIndex < sourceTabIndex) {
           sourceTabIndex++;
+        }
       }
       await GroupManager.moveTabBetweenGroups(tab, sourceGroupId, sourceTabIndex, targetGroupId, targetTabIndex);
     }
@@ -626,7 +627,7 @@ TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
  */
 TabManager.removeTabsInWindow = async function(windowId, {
   openBlankTab = false,
-  remove_pinned = OptionManager.options.pinnedTab.sync
+  remove_pinned = OptionManager.options.pinnedTab.sync,
 }={}) {
   try {
     let tabs = await TabManager.getTabsInWindowId(windowId, {
@@ -636,9 +637,10 @@ TabManager.removeTabsInWindow = async function(windowId, {
 
     let survivorTab = undefined;
 
-    // 1. Save a tab for letting the window open and return this tab
-    // Select the last tab, avoid switching tabs currently closing (create lag)
-    if (openBlankTab) {
+    if (openBlankTab
+          && !(!OptionManager.options.pinnedTab.sync
+                && tabs[0].pinned)
+    ) {
       // Opened or single blank...
       survivorTab = (await TabManager.openListOfTabs([], windowId, {
         inLastPos: true,

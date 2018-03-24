@@ -16,22 +16,10 @@ describe("TabManager[Add/Remove]", ()=>{
 
   // Keep test session clean in between :)
   afterEach(async function() {
-    // Clear the window
-    await TabManager.removeTabsInWindow(
-      this.windowId,{
-        openBlankTab: true,
-        remove_pinned: true,
-      });
-    await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+    await TestManager.clearWindow(this.windowId);
   });
   beforeEach(async function() {
-    // Clear the window
-    await TabManager.removeTabsInWindow(
-      this.windowId,{
-        openBlankTab: true,
-        remove_pinned: true,
-      });
-    await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+    await TestManager.clearWindow(this.windowId);
   });
 
 
@@ -423,9 +411,6 @@ describe("TabManager[Add/Remove]", ()=>{
           });
 
         expectedTabs = previousTabs.filter(tab=>tab.pinned);
-
-        console.log(previousTabs)
-        console.log(expectedTabs)
 
         expectedTabs[0].active = true;
         expect(resultingTabs).toEqualTabs(expectedTabs);

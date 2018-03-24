@@ -38,10 +38,10 @@ class MainBar extends React.Component {
         <div
           id="change-visibility"
           className={classNames({
-          "grouped-button": true,
-          "group-visible": this.props.isSync,
-          "incognito": this.props.isIncognito,
-            })}
+            "grouped-button": true,
+            "group-visible": this.props.isSync,
+            "incognito": this.props.isIncognito,
+          })}
           onClick={this.handleCheckChange}
           title={titleSynchronized}>
           <i className={classNames({

@@ -10,7 +10,10 @@ describe('Selector - ', () => {
       await Selector.closeGroupsSelector();
       expect(Selector.WINDOW_ID).toEqual(WINDOW_ID_NONE);
 
-      await Selector.onOpenGroupsSelector({title});
+      await Selector.onOpenGroupsSelector({
+        title,
+        groups: Session.createArrayGroups({groupsLength:2, length: 3})
+      });
 
       expect(Selector.WINDOW_ID).not.toEqual(WINDOW_ID_NONE);
       await Utils.wait(500)
@@ -26,7 +29,9 @@ describe('Selector - ', () => {
 
     it(' is well updated', async () => {
       if ( Selector.WINDOW_ID === WINDOW_ID_NONE) {
-        await Selector.onOpenGroupsSelector();
+        await Selector.onOpenGroupsSelector({
+          groups: Session.createArrayGroups({groupsLength:2, length: 3})
+        });
       }
       expect(Selector.WINDOW_ID).not.toEqual(WINDOW_ID_NONE);
 
@@ -35,7 +40,10 @@ describe('Selector - ', () => {
       let saveTitle = Selector.file;
       const title = "Test 2";
 
-      await Selector.onOpenGroupsSelector({title});
+      await Selector.onOpenGroupsSelector({
+        title,
+        groups: Session.createArrayGroups({groupsLength:2, length: 3})
+      });
       expect(Selector.WINDOW_ID).not.toEqual(WINDOW_ID_NONE);
       expect(Selector.WINDOW_ID).toEqual(previousWindowId);
       await TestManager.waitAllTabsToBeLoadedInWindowId(Selector.WINDOW_ID);
@@ -49,7 +57,9 @@ describe('Selector - ', () => {
 
     it(' is well closed', async () => {
       if ( Selector.WINDOW_ID === WINDOW_ID_NONE) {
-        await Selector.onOpenGroupsSelector();
+        await Selector.onOpenGroupsSelector({
+          groups: Session.createArrayGroups({groupsLength:2, length: 3})
+        });
       }
       expect(Selector.WINDOW_ID).not.toEqual(WINDOW_ID_NONE);
 

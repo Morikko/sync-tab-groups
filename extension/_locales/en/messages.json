@@ -1159,6 +1159,11 @@
   "selector_select_none": {
     "message": "Unselect all the tabs and groups.",
     "description": "In the selector popup (import/export)"
+  },
+
+  "remove_all_groups": {
+    "message": "Remove all groups",
+    "description": ""
   }
 
 }

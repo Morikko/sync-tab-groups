@@ -291,46 +291,22 @@ describe("TabManager", ()=>{
     });
   });
 
-  describe("Move Tab: ", ()=>{
+  describe(".Move", ()=>{
 
-    describe("Normal Tab", ()=>{
+    describe(" between windows a normal tab", ()=>{
       beforeAll(async function(){
         OptionManager.updateOption("groups-syncNewWindow", false);
         OptionManager.updateOption("pinnedTab-sync", true);
         jasmine.addMatchers(tabGroupsMatchers);
-        this.length = 3;
-        this.groups = [];
-        for( let i=0; i<4; i++) {
-          let id, group;
-          [id, group] = Session.createGroup({
-              tabsLength: this.length,
-              global: true,
-              pinnedTabs: 0,
-              active: 1,
-              title: "Debug Move Tabs " + i
-            });
-          this.groupIndex =
-          this.groups.push({
-            id: id,
-            group: group,
-            groupIndex: GroupManager.getGroupIndexFromGroupId(id)
-          });
-        }
 
-        this.windowId = await WindowManager.openGroupInNewWindow(this.groups[0].id);
+        this.windowId = (await browser.windows.create()).id;
         await TestManager.splitOnHalfTopScreen(this.windowId);
 
-        this.windowId_bis = await WindowManager.openGroupInNewWindow(this.groups[1].id);
+        this.windowId_bis = (await browser.windows.create()).id;
         await TestManager.splitOnHalfBottomScreen(this.windowId_bis);
 
         this.getGroup = (id)=>{
           return GroupManager.groups[this.groups[id].groupIndex];
-        };
-        this.getRandomIndex = (tabs, inPlace=true, pinned=false)=>{
-          return TestManager.getRandom(
-            pinned?0:tabs.filter(tab=>tab.pinned).length,
-            pinned?tabs.filter(tab=>tab.pinned)-inPlace.length:tabs.length-inPlace
-          );
         };
       }, TestManager.TIMEOUT);
 
@@ -340,170 +316,200 @@ describe("TabManager", ()=>{
           await browser.windows.remove(this.windowId);
         if ( this.windowId_bis )
           await browser.windows.remove(this.windowId_bis);
-        // Remove Group
-        for (let group of this.groups ) {
-          if ( GroupManager.getGroupIndexFromGroupId(group.id, {error: false}) >= 0 )
-            await GroupManager.removeGroupFromId(group.id);
-        }
       });
 
-      describe("Sync to Sync: ", ()=>{
+      // Keep test session clean in between :)
+      beforeEach(async function() {
+        await TestManager.clearWindow(this.windowId);
+        await TestManager.clearWindow(this.windowId_bis);
 
-        it("Open To Open", async function(){
+        [this.ids, this.groups] = Session.createArrayGroups({
+            groupsLength: 4,
+            tabsLength: 4,
+            global: true,
+            pinnedTabs: 0,
+            active: 1,
+            title: "Debug Move Tabs "
+          });
+
+        this.indexes = this.ids.map(id => GroupManager.getGroupIndexFromGroupId(id, {error: false}));
+
+        this.group_open_1 = GroupManager.groups[this.indexes[0]];
+        this.group_open_2 = GroupManager.groups[this.indexes[1]];
+        this.group_close_1 = GroupManager.groups[this.indexes[2]];
+        this.group_close_2 = GroupManager.groups[this.indexes[3]];
+
+        await WindowManager.openGroupInWindow(this.ids[0], this.windowId);
+        await WindowManager.openGroupInWindow(this.ids[1], this.windowId_bis);
+      });
+
+      afterEach(async function() {
+        // Remove Group
+        for (let id of this.ids ) {
+          if ( GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0 )
+            await GroupManager.removeGroupFromId(id);
+        }
+
+        await TestManager.clearWindow(this.windowId);
+        await TestManager.clearWindow(this.windowId_bis);
+      });
+
+      describe(" from a Group", ()=>{
+
+        it(" Open to another Open Group", async function(){
           // Source Index
-          let sourceIndex = this.getRandomIndex(this.getGroup(0).tabs, true, false);
+          let sourceIndex = TestManager.getRandomIndex(this.group_open_1.tabs, true, false);
           // Target Index
-          let targetIndex = this.getRandomIndex(this.getGroup(1).tabs, false, false);
+          let targetIndex = TestManager.getRandomIndex(this.group_open_2.tabs, false, false);
 
-          let tabId = this.getGroup(0).tabs[sourceIndex].id;
-          let tabUrl = this.getGroup(0).tabs[sourceIndex].url;
-          let previousLengthSource = this.getGroup(0).tabs.length;
-          let previousLengthTarget = this.getGroup(1).tabs.length;
+          let tabId = this.group_open_1.tabs[sourceIndex].id;
+          let tabUrl = this.group_open_1.tabs[sourceIndex].url;
+          let previousLengthSource = this.group_open_1.tabs.length;
+          let previousLengthTarget = this.group_open_2.tabs.length;
 
           await TabManager.moveTabBetweenGroups(
-            this.groups[0].id,
+            this.group_open_1.id,
             sourceIndex,
-            this.groups[1].id,
+            this.group_open_2.id,
             targetIndex,
           );
 
-          await TabManager.updateTabsInGroup(this.getGroup(0).windowId);
-          await TabManager.updateTabsInGroup(this.getGroup(1).windowId);
+          await TabManager.updateTabsInGroup(this.group_open_1.windowId);
+          await TabManager.updateTabsInGroup(this.group_open_2.windowId);
 
-          let hasSourceTabId = this.getGroup(0).tabs.reduce((acc, tab)=>{
+          let hasSourceTabId = this.group_open_1.tabs.reduce((acc, tab)=>{
             return tab.id === tabId?true:acc;
           }, false);
 
           let hasTargetTabId =
-            Utils.extractTabUrl(this.getGroup(1).tabs[targetIndex].url) ===
+            Utils.extractTabUrl(this.group_open_2.tabs[targetIndex].url) ===
             Utils.extractTabUrl(tabUrl);
 
-          expect(previousLengthSource).toEqual(this.getGroup(0).tabs.length+1);
-          expect(previousLengthTarget).toEqual(this.getGroup(1).tabs.length-1);
+          expect(previousLengthSource).toEqual(this.group_open_1.tabs.length+1);
+          expect(previousLengthTarget).toEqual(this.group_open_2.tabs.length-1);
           expect(hasSourceTabId).toBe(false);
           expect(hasTargetTabId).toBe(true);
         });
 
-        it("Open To Close", async function(){
+        it(" Open to a Closed Group", async function(){
 
           // Source Index (Open)
-          let sourceIndex = this.getRandomIndex(this.getGroup(1).tabs, true, false);
+          let sourceIndex = TestManager.getRandomIndex(this.group_open_1.tabs, true, false);
           // Target Index
-          let targetIndex = this.getRandomIndex(this.getGroup(2).tabs, false, false);
+          let targetIndex = TestManager.getRandomIndex(this.group_close_1.tabs, false, false);
 
-          let tabId = this.getGroup(1).tabs[sourceIndex].id;
-          let previousLengthSource = this.getGroup(1).tabs.length;
-          let previousLengthTarget = this.getGroup(2).tabs.length;
+          let tabId = this.group_open_1.tabs[sourceIndex].id,
+                tabUrl = this.group_open_1.tabs[sourceIndex].url;
+          let previousLengthSource = this.group_open_1.tabs.length;
+          let previousLengthTarget = this.group_close_1.tabs.length;
 
           await TabManager.moveTabBetweenGroups(
-            this.groups[1].id,
+            this.group_open_1.id,
             sourceIndex,
-            this.groups[2].id,
+            this.group_close_1.id,
             targetIndex,
           );
 
-          await TabManager.updateTabsInGroup(this.getGroup(1).windowId);
+          await TabManager.updateTabsInGroup(this.group_open_1.windowId);
 
-          let hasSourceTabId = this.getGroup(1).tabs.reduce((acc, tab)=>{
+          let hasSourceTabId = this.group_open_1.tabs.reduce((acc, tab)=>{
             return tab.id === tabId?true:acc;
           }, false);
 
-          let hasTargetTabId = this.getGroup(2).tabs.reduce((acc, tab, index)=>{
-            return (tab.id === tabId && index === targetIndex)?true:acc;
+          let hasTargetTabId = this.group_close_1.tabs.reduce((acc, tab, index)=>{
+            return (tab.url === tabUrl && index === targetIndex)?true:acc;
           }, false);
 
-          expect(previousLengthSource).toEqual(this.getGroup(1).tabs.length+1);
-          expect(previousLengthTarget).toEqual(this.getGroup(2).tabs.length-1);
+          expect(previousLengthSource).toEqual(this.group_open_1.tabs.length+1);
+          expect(previousLengthTarget).toEqual(this.group_close_1.tabs.length-1);
           expect(hasSourceTabId).toBe(false);
           expect(hasTargetTabId).toBe(true);
         });
 
-        it("Close To Open", async function(){
+        it(" Closed to an Open Group", async function(){
           // Source Index (Open)
-          let sourceIndex = this.getRandomIndex(this.getGroup(2).tabs, true, false);
+          let sourceIndex = TestManager.getRandomIndex(this.group_close_1.tabs, true, false);
           // Target Index
-          let targetIndex = this.getRandomIndex(this.getGroup(1).tabs, false, false);
+          let targetIndex = TestManager.getRandomIndex(this.group_open_1.tabs, false, false);
 
           // Id for tabs are not created with Session !!!, set special one
-          this.getGroup(2).tabs[sourceIndex].id = -1;
-          let tabUrl = this.getGroup(2).tabs[sourceIndex].url;
-          let previousLengthSource = this.getGroup(2).tabs.length;
-          let previousLengthTarget = this.getGroup(1).tabs.length;
+          this.group_close_1.tabs[sourceIndex].id = -1;
+          let tabUrl = this.group_close_1.tabs[sourceIndex].url;
+          let previousLengthSource = this.group_close_1.tabs.length;
+          let previousLengthTarget = this.group_open_1.tabs.length;
 
           await TabManager.moveTabBetweenGroups(
-            this.groups[2].id,
+            this.group_close_1.id,
             sourceIndex,
-            this.groups[1].id,
+            this.group_open_1.id,
             targetIndex,
           );
 
-          await TabManager.updateTabsInGroup(this.getGroup(1).windowId);
+          await TabManager.updateTabsInGroup(this.group_open_1.windowId);
 
-          let hasSourceTabId = this.getGroup(2).tabs.reduce((acc, tab)=>{
+          let hasSourceTabId = this.group_close_1.tabs.reduce((acc, tab)=>{
             return tab.id === -1?true:acc;
           }, false);
 
-          expect(previousLengthSource).toEqual(this.getGroup(2).tabs.length+1);
-          expect(previousLengthTarget).toEqual(this.getGroup(1).tabs.length-1);
+          expect(previousLengthSource).toEqual(this.group_close_1.tabs.length+1);
+          expect(previousLengthTarget).toEqual(this.group_open_1.tabs.length-1);
           expect(hasSourceTabId).toBe(false);
-          expect(Utils.extractTabUrl(this.getGroup(1).tabs[targetIndex].url))
+          expect(Utils.extractTabUrl(this.group_open_1.tabs[targetIndex].url))
             .toEqual(Utils.extractTabUrl(tabUrl));
         });
 
-        it("Close To Close", async function(){
+        it(" Closed to another Closed Group", async function(){
           // Source Index (Open)
-          let sourceIndex = this.getRandomIndex(this.getGroup(3).tabs, true, false);
+          let sourceIndex = TestManager.getRandomIndex(this.group_close_1.tabs, true, false);
           // Target Index
-          let targetIndex = this.getRandomIndex(this.getGroup(2).tabs, false, false);
+          let targetIndex = TestManager.getRandomIndex(this.group_close_2.tabs, false, false);
 
-          this.getGroup(3).tabs[sourceIndex].id = -1;
-          let previousLengthSource = this.getGroup(3).tabs.length;
-          let previousLengthTarget = this.getGroup(2).tabs.length;
+          let tabId = this.group_close_1.tabs[sourceIndex].id;
+          let previousLengthSource = this.group_close_1.tabs.length;
+          let previousLengthTarget = this.group_close_2.tabs.length;
 
           await TabManager.moveTabBetweenGroups(
-            this.groups[3].id,
+            this.group_close_1.id,
             sourceIndex,
-            this.groups[2].id,
+            this.group_close_2.id,
             targetIndex,
           );
 
-          let hasSourceTabId = this.getGroup(3).tabs.reduce((acc, tab)=>{
-            return tab.id === -1?true:acc;
+          let hasSourceTabId = this.group_close_1.tabs.reduce((acc, tab)=>{
+            return tab.id === tabId?true:acc;
           }, false);
 
-          let hasTargetTabId = this.getGroup(2).tabs[targetIndex].id === -1;
+          let hasTargetTabId = this.group_close_2.tabs[targetIndex].id === tabId;
 
-          // Reset index
-          this.getGroup(2).tabs[targetIndex].id = 0;
-
-          expect(previousLengthSource).toEqual(this.getGroup(3).tabs.length+1);
-          expect(previousLengthTarget).toEqual(this.getGroup(2).tabs.length-1);
+          expect(previousLengthSource).toEqual(this.group_close_1.tabs.length+1);
+          expect(previousLengthTarget).toEqual(this.group_close_2.tabs.length-1);
           expect(hasSourceTabId).toBe(false);
           expect(hasTargetTabId).toBe(true);
         });
 
-        it("Sync To New", async function(){
+        it(" Open to a New Group", async function(){
 
-          let sourceIndex = this.getRandomIndex(this.getGroup(2).tabs, true, false);
-          let previousLengthSource = this.getGroup(2).tabs.length;
+          let sourceIndex = TestManager.getRandomIndex(this.group_open_1.tabs, true, false);
+          let previousLengthSource = this.group_open_1.tabs.length;
 
-          this.getGroup(2).tabs[sourceIndex].id = -1;
-          let tabUrl = this.getGroup(2).tabs[sourceIndex].url;
+          let tabId = this.group_open_1.tabs[sourceIndex].id;
+          let tabUrl = this.group_open_1.tabs[sourceIndex].url;
 
           let newId = await TabManager.moveTabToNewGroup(
-            this.groups[2].id,
+            this.group_open_1.id,
             sourceIndex,
           );
+          await TabManager.updateTabsInGroup(this.group_open_1.windowId);
 
           let newGroupIndex = GroupManager.getGroupIndexFromGroupId(newId);
 
-          let hasSourceTabId = this.getGroup(2).tabs.reduce((acc, tab)=>{
-            return tab.id === -1?true:acc;
+          let hasSourceTabId = this.group_open_1.tabs.reduce((acc, tab)=>{
+            return tab.id === tabId?true:acc;
           }, false);
           let hasTargetTabId =
             Utils.extractTabUrl(GroupManager.groups[newGroupIndex].tabs[0].url) === Utils.extractTabUrl(tabUrl);
 
-          expect(previousLengthSource).toEqual(this.getGroup(2).tabs.length+1);
+          expect(previousLengthSource).toEqual(this.group_open_1.tabs.length+1);
           expect(GroupManager.groups[newGroupIndex].tabs.length).toEqual(1);
           expect(hasSourceTabId).toBe(false);
           expect(hasTargetTabId).toBe(true);
@@ -513,72 +519,73 @@ describe("TabManager", ()=>{
 
       });
 
-      describe("UnSync to Sync: ", ()=>{
+      describe(" from an ungrouped window", ()=>{
         beforeAll(async function(){
           // Unsync window ...
           await WindowManager.desassociateGroupIdToWindow(this.windowId_bis);
         });
 
-        it("Unsync To Open", async function(){
+        it(" to an Open Group", async function(){
           // Source Index (Open)
           let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
             withPinned: true,
           });
-          let sourceIndex = this.getRandomIndex(
+          let sourceIndex = TestManager.getRandomIndex(
             tabs,
             true, false);
           // Target Index
-          let targetIndex = this.getRandomIndex(this.getGroup(0).tabs, false, false);
+          let targetIndex = TestManager.getRandomIndex(this.group_open_1.tabs, false, false);
 
           let tabId = tabs[sourceIndex].id;
           let tabUrl = tabs[sourceIndex].url;
           let previousLengthSource = tabs.length;
-          let previousLengthTarget = this.getGroup(0).tabs.length;
+          let previousLengthTarget = this.group_open_1.tabs.length;
 
           await TabManager.moveUnFollowedTabToGroup(
             tabId,
-            this.groups[0].id,
+            this.group_open_1.id,
           );
 
           tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
             withPinned: true,
           });
-          await TabManager.updateTabsInGroup(this.getGroup(0).windowId);
+          await TabManager.updateTabsInGroup(this.group_open_1.windowId);
 
           let hasSourceTabId = tabs.reduce((acc, tab)=>{
             return tab.id === tabId?true:acc;
           }, false);
 
           let hasTargetTabId =
-            Utils.extractTabUrl(this.getGroup(0).tabs[this.getGroup(0).tabs.length-1].url) === Utils.extractTabUrl(tabUrl);
+            Utils.extractTabUrl(this.group_open_1.tabs[this.group_open_1.tabs.length-1].url) === Utils.extractTabUrl(tabUrl);
 
           expect(previousLengthSource).toEqual(tabs.length+1);
-          expect(previousLengthTarget).toEqual(this.getGroup(0).tabs.length-1);
+          expect(previousLengthTarget).toEqual(this.group_open_1.tabs.length-1);
           expect(hasSourceTabId).toBe(false);
           expect(hasTargetTabId).toBe(true);
         });
 
-        it("Unsync To Close", async function(){
+        it(" to a closed Group", async function(){
           // Source Index (Open)
           let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
             withPinned: true,
           });
-          let sourceIndex = this.getRandomIndex(
+          let sourceIndex = TestManager.getRandomIndex(
             tabs,
             true, false);
           // Target Index
-          let targetIndex = this.getRandomIndex(this.getGroup(2).tabs, false, false);
+          let targetIndex = TestManager.getRandomIndex(this.group_close_1.tabs, false, false);
 
           let tabId = tabs[sourceIndex].id;
+          let tabUrl = tabs[sourceIndex].url;
           let previousLengthSource = tabs.length;
-          let previousLengthTarget = this.getGroup(2).tabs.length;
+          let previousLengthTarget = this.group_close_1.tabs.length;
 
           await TabManager.moveUnFollowedTabToGroup(
             tabId,
-            this.groups[2].id,
+            this.group_close_1.id,
           );
 
-          await Utils.wait(500); // Chrome don't wait for remove
+          await TabManager.waitTabsToBeClosed(this.windowId_bis, [tabId]);
 
           tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
             withPinned: true,
@@ -589,20 +596,20 @@ describe("TabManager", ()=>{
           }, false);
 
           let hasTargetTabId =
-              this.getGroup(2).tabs[this.getGroup(2).tabs.length-1].id === tabId;
+              this.group_close_1.tabs[this.group_close_1.tabs.length-1].url === tabUrl;
 
           expect(previousLengthSource).toEqual(tabs.length+1);
-          expect(previousLengthTarget).toEqual(this.getGroup(2).tabs.length-1);
+          expect(previousLengthTarget).toEqual(this.group_close_1.tabs.length-1);
           expect(hasSourceTabId).toBe(false);
           expect(hasTargetTabId).toBe(true);
         });
 
-        it("Unsync To New", async function(){
+        it(" to a new Group", async function(){
           // Source Index (Open)
           let tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
             withPinned: true,
           });
-          let sourceIndex = this.getRandomIndex(
+          let sourceIndex = TestManager.getRandomIndex(
             tabs,
             true, false);
 
@@ -614,7 +621,7 @@ describe("TabManager", ()=>{
             tabId
           );
 
-          await Utils.wait(500);
+          await TabManager.waitTabsToBeClosed(this.windowId_bis, [tabId]);
 
           let newGroupIndex = GroupManager.getGroupIndexFromGroupId(newId);
           tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
@@ -637,225 +644,198 @@ describe("TabManager", ()=>{
     });
 
     describe("Special Cases", ()=>{
-      beforeAll(async function(){
-        OptionManager.updateOption("pinnedTab-sync", true);
-        jasmine.addMatchers(tabGroupsMatchers);
-        this.length = 7;
-        this.groups = [];
-        for( let i=0; i<4; i++) {
-          let id, group;
-          [id, group] = Session.createGroup({
-              tabsLength: this.length,
-              global: true,
-              pinnedTabs: (i===3)?0:2,
-              active: 3,
-              title: "Debug Move Tabs " + i
-            });
-          this.groupIndex =
-          this.groups.push({
-            id: id,
-            group: group,
-            groupIndex: GroupManager.getGroupIndexFromGroupId(id)
+
+      beforeEach(async function() {
+        [this.ids, this.groups] = Session.createArrayGroups({
+            groupsLength: 3,
+            tabsLength: 7,
+            pinnedTabs: [2,2,0],
+            global: true,
+            active: 1,
+            title: "Debug Move Tabs "
           });
+
+        this.indexes = this.ids.map(id => GroupManager.getGroupIndexFromGroupId(id, {error: false}));
+
+        this.group_pinned_1 = GroupManager.groups[this.indexes[0]];
+        this.group_pinned_2 = GroupManager.groups[this.indexes[1]];
+        this.group_without_pinned_1 = GroupManager.groups[this.indexes[2]];
+      });
+
+      afterEach(async function() {
+        // Remove Group
+        for (let id of this.ids ) {
+          if ( GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0 )
+            await GroupManager.removeGroupFromId(id);
         }
-        this.getGroup = (id)=>{
-          return GroupManager.groups[this.groups[id].groupIndex];
-        };
-        this.getRandomIndex = (tabs, inPlace=true, pinned=false)=>{
-          return TestManager.getRandom(
-            pinned?0:tabs.filter(tab=>tab.pinned).length,
-            pinned?tabs.filter(tab=>tab.pinned).length-inPlace:tabs.length-inPlace
+      });
+
+      describe(" in the same group", ()=>{
+        it(" from before to after position", async function(){
+          // Source Index
+          let sourceIndex = 1;
+          // Target Index
+          let targetIndex = this.group_without_pinned_1.tabs.length;
+
+          let tabId = this.group_without_pinned_1.tabs[sourceIndex].id;
+          let previousLengthSource = this.group_without_pinned_1.tabs.length;
+
+          await TabManager.moveTabBetweenGroups(
+            this.group_without_pinned_1.id,
+            sourceIndex,
+            this.group_without_pinned_1.id,
+            targetIndex,
           );
-        };
-      }, TestManager.TIMEOUT);
 
-      afterAll(async function(){
-        for (let group of this.groups ) {
-          if ( GroupManager.getGroupIndexFromGroupId(this.groups[1].id, {error: false}) >= 0 )
-            await GroupManager.removeGroupFromId(group.id);
-        }
+          let hasSourceTabId = this.group_without_pinned_1.tabs[sourceIndex].id === tabId;
+          let hasTargetTabId = this.group_without_pinned_1.tabs[targetIndex-1].id === tabId;
+
+          expect(previousLengthSource).toEqual(this.group_without_pinned_1.tabs.length);
+          expect(hasSourceTabId).toBe(false);
+          expect(hasTargetTabId).toBe(true);
+        });
+
+        it(" from after to before position", async function(){
+          // Source Index
+          let sourceIndex = this.group_without_pinned_1.tabs.length-1;
+          // Target Index
+          let targetIndex = 1;
+
+          let tabId = this.group_without_pinned_1.tabs[sourceIndex].id;
+          let previousLengthSource = this.group_without_pinned_1.tabs.length;
+
+          await TabManager.moveTabBetweenGroups(
+            this.group_without_pinned_1.id,
+            sourceIndex,
+            this.group_without_pinned_1.id,
+            targetIndex,
+          );
+
+          let hasSourceTabId = this.group_without_pinned_1.tabs[sourceIndex].id === tabId;
+          let hasTargetTabId = this.group_without_pinned_1.tabs[targetIndex].id === tabId;
+
+          expect(previousLengthSource).toEqual(this.group_without_pinned_1.tabs.length);
+          expect(hasSourceTabId).toBe(false);
+          expect(hasTargetTabId).toBe(true);
+        });
       });
 
-      it("Normal Tab Before Pinned", async function(){
-        // Source Index (Open)
-        let sourceIndex = this.getRandomIndex(this.getGroup(0).tabs, true, false);
-        // Target Index
-        let targetIndex = this.getRandomIndex(this.getGroup(1).tabs, true, true);
+      describe( " while respectiong pinned constraint", ()=>{
+        it(" so a normal tab can't move before a pinned tab", async function(){
+          // Source Index (Open)
+          let sourceIndex = TestManager.getRandomIndex(this.group_pinned_1.tabs, true, false);
+          // Target Index
+          let targetIndex = TestManager.getRandomIndex(this.group_pinned_2.tabs, true, true);
 
-        this.getGroup(0).tabs[sourceIndex].id = -1;
-        let previousLengthSource = this.getGroup(0).tabs.length;
-        let previousLengthTarget = this.getGroup(1).tabs.length;
+          let tabId = this.group_pinned_1.tabs[sourceIndex].id;
+          let previousLengthSource = this.group_pinned_1.tabs.length;
+          let previousLengthTarget = this.group_pinned_2.tabs.length;
 
-        await TabManager.moveTabBetweenGroups(
-          this.groups[0].id,
-          sourceIndex,
-          this.groups[1].id,
-          targetIndex,
-        );
+          await TabManager.moveTabBetweenGroups(
+            this.group_pinned_1.id,
+            sourceIndex,
+            this.group_pinned_2.id,
+            targetIndex,
+          );
 
-        let hasSourceTabId = this.getGroup(0).tabs.reduce((acc, tab)=>{
-          return tab.id === -1?true:acc;
-        }, false);
+          let hasSourceTabId = this.group_pinned_1.tabs.reduce((acc, tab)=>{
+            return tab.id === tabId?true:acc;
+          }, false);
 
-        let realPos = this.getGroup(1).tabs.filter(tab=>tab.pinned).length;
+          let realPos = this.group_pinned_2.tabs.filter(tab=>tab.pinned).length;
 
-        let hasTargetTabId = this.getGroup(1).tabs[realPos].id === -1;
+          let hasTargetTabId = this.group_pinned_2.tabs[realPos].id === tabId;
 
-        // Reset index
-        this.getGroup(1).tabs[realPos].id = 0;
+          expect(previousLengthSource).toEqual(this.group_pinned_1.tabs.length+1);
+          expect(previousLengthTarget).toEqual(this.group_pinned_2.tabs.length-1);
+          expect(hasSourceTabId).toBe(false);
+          expect(hasTargetTabId).toBe(true);
+        });
 
-        expect(previousLengthSource).toEqual(this.getGroup(0).tabs.length+1);
-        expect(previousLengthTarget).toEqual(this.getGroup(1).tabs.length-1);
-        expect(hasSourceTabId).toBe(false);
-        expect(hasTargetTabId).toBe(true);
-      });
+        it(" so a pinned tab can't move after a normal tab", async function(){
+          // Source Index (Open)
+          let sourceIndex = TestManager.getRandomIndex(this.group_pinned_1.tabs, true, true);
+          // Target Index
+          let targetIndex = TestManager.getRandomIndex(this.group_pinned_2.tabs, true, false)+1;
 
-      it("Pinned Tab after Normal", async function(){
-        // Source Index (Open)
-        let sourceIndex = this.getRandomIndex(this.getGroup(0).tabs, true, true);
-        // Target Index
-        let targetIndex = this.getRandomIndex(this.getGroup(1).tabs, true, false)+1;
+          let tabId = this.group_pinned_1.tabs[sourceIndex].id;
+          let previousLengthSource = this.group_pinned_1.tabs.length;
+          let previousLengthTarget = this.group_pinned_2.tabs.length;
 
-        this.getGroup(0).tabs[sourceIndex].id = -1;
-        let previousLengthSource = this.getGroup(0).tabs.length;
-        let previousLengthTarget = this.getGroup(1).tabs.length;
+          await TabManager.moveTabBetweenGroups(
+            this.group_pinned_1.id,
+            sourceIndex,
+            this.group_pinned_2.id,
+            targetIndex,
+          );
 
-        await TabManager.moveTabBetweenGroups(
-          this.groups[0].id,
-          sourceIndex,
-          this.groups[1].id,
-          targetIndex,
-        );
+          let hasSourceTabId = this.group_pinned_1.tabs.reduce((acc, tab)=>{
+            return tab.id === tabId?true:acc;
+          }, false);
 
-        let hasSourceTabId = this.getGroup(0).tabs.reduce((acc, tab)=>{
-          return tab.id === -1?true:acc;
-        }, false);
+          let realPos = this.group_pinned_2.tabs.filter(tab=>tab.pinned).length-1;
 
-        let realPos = this.getGroup(1).tabs.filter(tab=>tab.pinned).length-1;
+          let hasTargetTabId = this.group_pinned_2.tabs[realPos].id === tabId;
 
-        let hasTargetTabId = this.getGroup(1).tabs[realPos].id === -1;
+          expect(previousLengthSource).toEqual(this.group_pinned_1.tabs.length+1);
+          expect(previousLengthTarget).toEqual(this.group_pinned_2.tabs.length-1);
+          expect(hasSourceTabId).toBe(false);
+          expect(hasTargetTabId).toBe(true);
+        });
+      })
 
-        // Reset index
-        this.getGroup(1).tabs[realPos].id = 0;
+      describe(" to the last position", ()=>{
 
-        expect(previousLengthSource).toEqual(this.getGroup(0).tabs.length+1);
-        expect(previousLengthTarget).toEqual(this.getGroup(1).tabs.length-1);
-        expect(hasSourceTabId).toBe(false);
-        expect(hasTargetTabId).toBe(true);
-      });
+          it(" for a normal tab", async function(){
+            // Source Index First Not Pinned
+            let sourceIndex = 0;
+            let targetIndex = -1;
 
-      it("Same Group: Before -> After", async function(){
-        // Source Index (Open)
-        let sourceIndex = 1;
-        // Target Index
-        let targetIndex = this.getGroup(3).tabs.length;
+            let tabId = this.group_without_pinned_1.tabs[sourceIndex].id;
+            let previousLengthSource = this.group_without_pinned_1.tabs.length;
 
-        this.getGroup(3).tabs[sourceIndex].id = -1;
-        let previousLengthSource = this.getGroup(3).tabs.length;
+            await TabManager.moveTabBetweenGroups(
+              this.group_without_pinned_1.id,
+              sourceIndex,
+              this.group_without_pinned_1.id,
+              targetIndex,
+            );
 
-        await TabManager.moveTabBetweenGroups(
-          this.groups[3].id,
-          sourceIndex,
-          this.groups[3].id,
-          targetIndex,
-        );
+            targetIndex = this.group_without_pinned_1.tabs.length - 1;
+            let hasSourceTabId = this.group_without_pinned_1.tabs[sourceIndex].id === tabId;
+            let hasTargetTabId = this.group_without_pinned_1.tabs[targetIndex].id === tabId;
 
-        let hasSourceTabId = this.getGroup(3).tabs[sourceIndex].id === -1;
-        let hasTargetTabId = this.getGroup(3).tabs[targetIndex-1].id === -1;
+            expect(previousLengthSource).toEqual(this.group_without_pinned_1.tabs.length);
+            expect(hasSourceTabId).toBe(false);
+            expect(hasTargetTabId).toBe(true);
+          });
 
-        // Reset index
-        this.getGroup(3).tabs[targetIndex-1].id = 0;
+          it(" for a pinned tab", async function(){
+            // Source Index First Not Pinned
+            let sourceIndex = 0;
+            // Target Index
+            let targetIndex = -1;
 
-        expect(previousLengthSource).toEqual(this.getGroup(3).tabs.length);
-        expect(hasSourceTabId).toBe(false);
-        expect(hasTargetTabId).toBe(true);
-      });
+            let tabId = this.group_pinned_1.tabs[sourceIndex].id;
+            let previousLengthSource = this.group_pinned_1.tabs.length;
 
-      it("Same Group: After -> Before", async function(){
-        // Source Index (Open)
-        let sourceIndex = this.getGroup(3).tabs.length-1;
-        // Target Index
-        let targetIndex = 1;
+            await TabManager.moveTabBetweenGroups(
+              this.group_pinned_1.id,
+              sourceIndex,
+              this.group_pinned_1.id,
+              targetIndex,
+            );
 
-        this.getGroup(3).tabs[sourceIndex].id = -1;
-        let previousLengthSource = this.getGroup(3).tabs.length;
+            targetIndex = this.group_pinned_1.tabs.filter(t=>t.pinned).length - 1;
+            let hasSourceTabId = this.group_pinned_1.tabs[sourceIndex].id === tabId;
+            let hasTargetTabId = this.group_pinned_1.tabs[targetIndex].id === tabId;
 
-        await TabManager.moveTabBetweenGroups(
-          this.groups[3].id,
-          sourceIndex,
-          this.groups[3].id,
-          targetIndex,
-        );
+            expect(previousLengthSource).toEqual(this.group_pinned_1.tabs.length);
+            expect(hasSourceTabId).toBe(false);
+            expect(hasTargetTabId).toBe(true);
+          });
+      })
 
-        let hasSourceTabId = this.getGroup(3).tabs[sourceIndex].id === -1;
-        let hasTargetTabId = this.getGroup(3).tabs[targetIndex].id === -1;
-
-        // Reset index
-        this.getGroup(3).tabs[targetIndex].id = 0;
-
-        expect(previousLengthSource).toEqual(this.getGroup(3).tabs.length);
-        expect(hasSourceTabId).toBe(false);
-        expect(hasTargetTabId).toBe(true);
-      });
-
-      it("Last Pos for Normal Tab: ", async function(){
-        // Source Index First Not Pinned
-        let sourceIndex = this.getGroup(2).tabs
-                                .map((tab, index)=> {
-                                  if(!tab.pinned) return index;
-                                }).filter(i => i)[0];
-        // Target Index
-        let targetIndex = -1;
-
-        this.getGroup(2).tabs[sourceIndex].id = -1;
-        let previousLengthSource = this.getGroup(2).tabs.length;
-
-        await TabManager.moveTabBetweenGroups(
-          this.groups[2].id,
-          sourceIndex,
-          this.groups[2].id,
-          targetIndex,
-        );
-
-        targetIndex = this.getGroup(2).tabs.length - 1;
-        let hasSourceTabId = this.getGroup(2).tabs[sourceIndex].id !== -1;
-        let hasTargetTabId = this.getGroup(2).tabs[targetIndex].id === -1;
-
-        // Reset index
-        this.getGroup(2).tabs[targetIndex].id = 0;
-
-        expect(previousLengthSource).toEqual(this.getGroup(2).tabs.length);
-        expect(hasSourceTabId).toBe(false);
-        expect(hasTargetTabId).toBe(true);
-      });
-
-      it("Last Pos for Pinned Tab: ", async function(){
-        // Source Index First Not Pinned
-        let sourceIndex = 0;
-        // Target Index
-        let targetIndex = -1;
-
-        this.getGroup(2).tabs[sourceIndex].id = -1;
-        let previousLengthSource = this.getGroup(2).tabs.length;
-
-        await TabManager.moveTabBetweenGroups(
-          this.groups[2].id,
-          sourceIndex,
-          this.groups[2].id,
-          targetIndex,
-        );
-
-        targetIndex = this.getGroup(2).tabs.filter(t=>t.pinned).length - 1;
-        let hasSourceTabId = this.getGroup(2).tabs[sourceIndex].id !== -1;
-        let hasTargetTabId = this.getGroup(2).tabs[targetIndex].id === -1;
-
-        // Reset index
-        this.getGroup(2).tabs[targetIndex].id = 0;
-
-        expect(previousLengthSource).toEqual(this.getGroup(2).tabs.length);
-        expect(hasSourceTabId).toBe(false);
-        expect(hasTargetTabId).toBe(true);
-      });
     });
   });
 

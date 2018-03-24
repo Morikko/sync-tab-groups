@@ -42,6 +42,7 @@ env.specFilter = function(spec) {
   StorageManager = bg.StorageManager;
   Selector = bg.Selector;
   Background = bg.Background;
+  Event = bg.Event;
 })()
 
 function insertParam(key, value) {

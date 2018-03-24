@@ -400,7 +400,7 @@ class SaveSectionStandalone extends React.Component {
         "div",
         null,
         React.createElement(OptionButton, {
-          title: "Remove all groups",
+          title: browser.i18n.getMessage("remove_all_groups"),
           onClick: this.handleClickOnRemoveAllGroups.bind(this),
           highlight: true,
           dangerous: true

@@ -155,28 +155,28 @@ class SaveSectionStandalone extends React.Component {
               />
             </div>
             <div>
-            <TextInput
-              label="Interval time"
-              help="Examples: 1, 0.5 (30 mins), 24 (1 day)..."
-              id="backup-local-intervalTime"
-              onChange={this.props.onOptionChange}
-              name={this.props.options.backup.local.intervalTime}
-            />
-            <TextInput
-              label="Max backup"
-              id="backup-local-maxSave"
-              onChange={this.props.onOptionChange}
-              name={this.props.options.backup.local.maxSave}
-            />
+              <TextInput
+                label="Interval time"
+                help="Examples: 1, 0.5 (30 mins), 24 (1 day)..."
+                id="backup-local-intervalTime"
+                onChange={this.props.onOptionChange}
+                name={this.props.options.backup.local.intervalTime}
+              />
+              <TextInput
+                label="Max backup"
+                id="backup-local-maxSave"
+                onChange={this.props.onOptionChange}
+                name={this.props.options.backup.local.maxSave}
+              />
             </div>
             <select size="6"
-                    multiple
-                    onChange={this.handleBackupSelection}
-                    style={{
-                      overflow: "auto",
-                      width: "100%",
-                      height: "300px",
-                    }}>
+              multiple
+              onChange={this.handleBackupSelection}
+              style={{
+                overflow: "auto",
+                width: "100%",
+                height: "300px",
+              }}>
               {backups}
             </select>
             <div className="double-buttons">
@@ -306,7 +306,7 @@ class SaveSectionStandalone extends React.Component {
         content = {
           <div>
             <OptionButton
-              title= {"Remove all groups"}
+              title= {browser.i18n.getMessage("remove_all_groups")}
               onClick= {this.handleClickOnRemoveAllGroups.bind(this)}
               highlight={true}
               dangerous

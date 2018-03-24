@@ -18,6 +18,7 @@
 
  - removeGroups
  - closeWindows
+ - clearWindow
 
 */
 
@@ -136,6 +137,15 @@ TestManager.resetIndexProperties = function (tabs) {
 TestManager.getRandom = function (start, end){
   return Math.floor((Math.random() * (end+1-start)) + start);
 }
+
+TestManager.getRandomIndex = function (
+  tabs, inPlace=true, pinned=false
+){
+  return TestManager.getRandom(
+    pinned?0:tabs.filter(tab=>tab.pinned).length,
+    pinned?(tabs.filter(tab=>tab.pinned).length)-inPlace:(tabs.length)-inPlace
+  );
+};
 
 
 TestManager.waitAllTabsToBeLoadedInWindowId = async function ( windowId ) {
@@ -304,4 +314,15 @@ TestManager.changeGroups = async function(
   actionIndex=TestManager.getRandomAction())
 {
   await ACTIONS[actionIndex](groups);
+}
+
+
+TestManager.clearWindow = async function(windowId){
+  // Clear the window
+  await TabManager.removeTabsInWindow(
+    windowId,{
+      openBlankTab: true,
+      remove_pinned: true,
+    });
+  await TestManager.waitAllTabsToBeLoadedInWindowId(windowId);
 }

@@ -45,7 +45,7 @@ body {
   background-color: var(--private-open);
 }
 
-.grouped-button span {
+.grouped-button span, .manage-button span {
   flex: 1;
   margin: auto 0;
   text-align: center;
@@ -67,11 +67,6 @@ body {
   font-size: 20px !important;
   padding: 7px 0 !important;
   margin: auto 0;
-}
-
-.manage-button span {
-  margin: auto 0;
-  text-align: center;
 }
 
 .mainbar .right-actions i:hover, .manage-button:hover {

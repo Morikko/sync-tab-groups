@@ -95,8 +95,8 @@ describe("GroupManager", () => {
 
     it("Match reject length", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
-      let group2 = Session.createGroup({tabsLength: 6, pinnedTabs: 2});
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2, fakeTab:false});
+      let group2 = Session.createGroup({tabsLength: 6, pinnedTabs: 2, fakeTab:false});
       group2.id = id;
 
       let bestId = GroupManager.bestMatchGroup(group.tabs, [group2]);
@@ -116,8 +116,8 @@ describe("GroupManager", () => {
 
     it("Match reject URL", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
-      let group2 = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2, fakeTab:false});
+      let group2 = Session.createGroup({tabsLength: 7, pinnedTabs: 2, fakeTab:false});
       group2.id = id;
 
       let bestId = GroupManager.bestMatchGroup(group.tabs, [group2]);
@@ -302,7 +302,7 @@ describe("GroupManager", () => {
       });
     });
 
-    it("should also update parentIds for tabs in close groups", function(){
+    it("should also update openerTabIds for tabs in close groups", function(){
       let group = Session.createGroup({
         tabsLength: 4,
       });
@@ -310,16 +310,16 @@ describe("GroupManager", () => {
       group.tabs.forEach((tab, index)=>{
         tab.id = index;
       });
-      group.tabs[1].parentId = 0;
-      group.tabs[2].parentId = 0;
-      group.tabs[3].parentId = 2;
+      group.tabs[1].openerTabId = group.tabs[0].id;
+      group.tabs[2].openerTabId = group.tabs[0].id;
+      group.tabs[3].openerTabId = group.tabs[2].id;
 
       GroupManager.setUniqueTabIds([group]);
 
-      expect(group.tabs[0].parentId).toBe(undefined);
-      expect(group.tabs[1].parentId).toEqual(group.tabs[0].id);
-      expect(group.tabs[2].parentId).toEqual(group.tabs[0].id);
-      expect(group.tabs[3].parentId).toEqual(group.tabs[2].id);
+      expect(group.tabs[0].openerTabId).toBe(undefined);
+      expect(group.tabs[1].openerTabId).toEqual(group.tabs[0].id);
+      expect(group.tabs[2].openerTabId).toEqual(group.tabs[0].id);
+      expect(group.tabs[3].openerTabId).toEqual(group.tabs[2].id);
     });
   });
 
