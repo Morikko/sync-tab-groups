@@ -128,9 +128,8 @@ Session.createGroup = function({
     active,
     fakeTab,
   });
-
   let group = new GroupManager.Group({
-    id: Date.now()-TestManager.getRandom(1000, Date.now()),
+    id: (Date.now()-TestManager.getRandom(1000, Date.now())),
     title,
     tabs,
     windowId,

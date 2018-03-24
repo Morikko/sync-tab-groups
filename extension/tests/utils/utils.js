@@ -173,6 +173,31 @@ TestManager.waitAllTabsToBeLoadedInWindowId = async function ( windowId ) {
   }
 }
 
+TestManager.waitWindowToBeFocused = async function(windowId, {
+  maxLoop=20,
+  waitPerLoop=50 //ms
+}={}){
+  for (let i = 0; i < maxLoop; i++) {
+    if ( (await browser.windows.get(windowId)).focused ) {
+      break;
+    }
+    await Utils.wait(waitPerLoop);
+  }
+}
+
+TestManager.waitWindowToBeClosed = async function(windowId, {
+  maxLoop=20,
+  waitPerLoop=50 //ms
+}={}){
+  for (let i = 0; i < maxLoop; i++) {
+    if ( (await browser.windows.getAll())
+            .filter(w=>w.id===windowId) === 0 ) {
+      break;
+    }
+    await Utils.wait(waitPerLoop);
+  }
+}
+
 // Close all windows
 TestManager.closeWindows = async function(windowIds) {
   if (!windowIds.length) {
@@ -237,17 +262,6 @@ TestManager.focusedWindow = async function (windowId){
   await TestManager.waitWindowToBeFocused(windowId);
 }
 
-TestManager.waitWindowToBeFocused = async function(windowId, {
-  maxLoop=20,
-  waitPerLoop=50 //ms
-}={}){
-  for (let i = 0; i < maxLoop; i++) {
-    if ( (await browser.windows.get(windowId)).focused ) {
-      break;
-    }
-    await Utils.wait(waitPerLoop);
-  }
-}
 
 // Remove groups
 TestManager.removeGroups = async function(groupIds) {

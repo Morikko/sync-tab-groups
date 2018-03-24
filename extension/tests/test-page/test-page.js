@@ -27,13 +27,14 @@ var specFilter = new jasmine.HtmlSpecFilter({
   }
 });
 
+
 var env = jasmine.getEnv();
 
 env.specFilter = function(spec) {
   return specFilter.matches(spec.getFullName());
 };
 
-(async () => {
+var waitInit = (async () => {
   bg = await browser.runtime.getBackgroundPage();
   GroupManager = bg.GroupManager;
   WindowManager = bg.WindowManager;

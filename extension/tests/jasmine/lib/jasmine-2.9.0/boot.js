@@ -114,6 +114,18 @@
    */
   var currentWindowOnload = window.onload;
 
+  // CHANGED !!!
+  // Wait full loading of background page
+  // Problem on Chrome only
+  window.onload = async function() {
+    if (currentWindowOnload) {
+      currentWindowOnload();
+    }
+    htmlReporter.initialize();
+    await waitInit;
+    env.execute();
+  };
+  /* from
   window.onload = function() {
     if (currentWindowOnload) {
       currentWindowOnload();
@@ -121,6 +133,7 @@
     htmlReporter.initialize();
     env.execute();
   };
+  */
 
   /**
    * Helper function for readability above.

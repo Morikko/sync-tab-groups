@@ -64,6 +64,8 @@ describe('Selector - ', () => {
       expect(Selector.WINDOW_ID).not.toEqual(WINDOW_ID_NONE);
 
       await browser.windows.remove(Selector.WINDOW_ID);
+      await TestManager.waitWindowToBeClosed(Selector.WINDOW_ID);
+
       //await Utils.wait(1000)
       expect(Selector.WINDOW_ID).toEqual(WINDOW_ID_NONE);
     });
