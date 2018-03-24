@@ -14,48 +14,67 @@ class AboutSection extends React.Component {
     return (
       <div
         className={"option-section about " + (this.props.selected==="about"?
-            "visible":"invisible")}>
-          <h1 className="section-title">
-            {browser.i18n.getMessage("options_about")}
-          </h1>
-          <h2>
-            Sync Tab Groups
-          </h2>
-          <div className="row-about">
-            <div>
-              <h3>{browser.i18n.getMessage("options_about_start_title")}</h3>
-              <p>{browser.i18n.getMessage("options_about_start")}</p>
-            </div>
-            <div>
-              <h3>{browser.i18n.getMessage("options_about_enjoy_title")}</h3>
-              <p>{browser.i18n.getMessage("options_about_enjoy")}</p>
-            </div>
-            <div>
-              <h3>{browser.i18n.getMessage("options_about_contribute_title")}</h3>
-              <p>{browser.i18n.getMessage("options_about_contribute")}</p>
-            </div>
-            <div>
-              <h3>{browser.i18n.getMessage("options_about_dev_title")}</h3>
-              <p>{browser.i18n.getMessage("options_about_dev")}</p>
-            </div>
+        "visible":"invisible")}>
+        <h1 className="section-title">
+          {browser.i18n.getMessage("options_about")}
+        </h1>
+        <h2>
+          Sync Tab Groups
+        </h2>
+        <div className="row-about">
+          <div>
+            <h3>{browser.i18n.getMessage("options_about_start_title")}</h3>
+            <p>{browser.i18n.getMessage("options_about_start")}</p>
           </div>
-          <div className="row-about-center">
-                <a href="https://chrome.google.com/webstore/detail/sync-tab-groups/gbkddinkjahdfhaiifploahejhmaaeoa"
-                    title="Chrome Add-On page">
-                <img src="/share/icons/chrome.png" alt=""/>
-              </a>
-              <a href="https://morikko.github.io/synctabgroups"
-                  title="Sync Tab Groups website">
-                <img src="/share/icons/sync-tab-groups.png" alt="extension icon"/>
-              </a>
-              <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/"
-                  title="Firefox Add-On page">
-              <img src="/share/icons/firefox.png" alt=""/>
-            </a>
+          <div>
+            <h3>{browser.i18n.getMessage("options_about_enjoy_title")}</h3>
+            <p>{browser.i18n.getMessage("options_about_enjoy")}</p>
           </div>
-          <h2>
-            Release Notes (0.6.2)
-          </h2>
+          <div>
+            <h3>{browser.i18n.getMessage("options_about_contribute_title")}</h3>
+            <p>{browser.i18n.getMessage("options_about_contribute")}</p>
+          </div>
+          <div>
+            <h3>{browser.i18n.getMessage("options_about_dev_title")}</h3>
+            <p>{browser.i18n.getMessage("options_about_dev")}</p>
+          </div>
+        </div>
+        <div className="row-about-center">
+          <a href="https://chrome.google.com/webstore/detail/sync-tab-groups/gbkddinkjahdfhaiifploahejhmaaeoa"
+          title="Chrome Add-On page">
+            <img src="/share/icons/chrome.png" alt=""/>
+          </a>
+          <a href="https://morikko.github.io/synctabgroups"
+          title="Sync Tab Groups website">
+            <img src="/share/icons/sync-tab-groups.png" alt="extension icon"/>
+          </a>
+          <a href="https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/"
+          title="Firefox Add-On page">
+            <img src="/share/icons/firefox.png" alt=""/>
+          </a>
+        </div>
+        <h2>
+          Release Notes (0.6.3)
+        </h2>
+        <ul>
+          <li>Add Local Back-Up</li>
+          <ul>
+            <li>Saved in the extension, without a download popup</li>
+            <li>Choose the interval time & the max number of back-ups</li>
+            <li>See all your back-ups and import, export or remove them</li>
+          </ul>
+          <li>Add: Groups Selector on Import/Export</li>
+          <li>Fix: Move Tab between groups</li>
+          <ul>
+            <li>Sometimes a wrong tab was moved (due to a duplicate id with closed tabs)</li>
+            <li>A tab moved on the same group at the last index was not working properly</li>
+          </ul>
+          <li>Fix: Tree Style Tab support #26 (partially)</li>
+          <li>Add: Unlimited Storage permission: allow extension storage bigger than 5MB (if you use a lot of back-ups with big groups). In any case, your browser is secured, it won't allow to fill the disk entirely.</li>
+        </ul>
+        <h2>
+          Release Notes (0.6.2)
+        </h2>
           <ul>
             <li>Fix: Mouse middle click on Chrome</li>
             <li>Fix: Move Tab menu on Tab bar improved</li>

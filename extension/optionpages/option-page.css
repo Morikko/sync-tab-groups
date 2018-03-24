@@ -41,7 +41,7 @@ body {
   background-color: #424f5a;
   width: 100%;
   color: #c4cdd4;
-  z-index: 10;
+  z-index: 1;
 }
 
 .logo {
@@ -206,7 +206,7 @@ input[type=checkbox]:checked ~ label{
 
     /* Position the tooltip text */
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     left: 100%;
 
     /* Fade in tooltip */

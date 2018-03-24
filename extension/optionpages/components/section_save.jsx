@@ -131,15 +131,8 @@ class SaveSectionStandalone extends React.Component {
 
     return (
       <SubSection
-        title={browser.i18n.getMessage("options_groups_backup")}
-        tooltip={
-          <ul>
-            <li>{browser.i18n.getMessage("options_groups_backup_behavior")}</li>
-            <ul>
-              <li>{browser.i18n.getMessage("options_groups_backup_behavior_download")}</li>
-            </ul>
-          </ul>
-        }
+        title={browser.i18n.getMessage("options_groups_backup_local")}
+        tooltip={undefined}
         content = {
           <div>
             <div className="double-buttons">
@@ -241,7 +234,7 @@ class SaveSectionStandalone extends React.Component {
   getBackUpDownloadSection(){
     return (
       <SubSection
-        title={browser.i18n.getMessage("options_groups_backup")}
+        title={browser.i18n.getMessage("options_groups_backup_download")}
         tooltip={
           <ul>
             <li>{browser.i18n.getMessage("options_groups_backup_behavior")}</li>

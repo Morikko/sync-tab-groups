@@ -130,25 +130,8 @@ class SaveSectionStandalone extends React.Component {
     }
 
     return React.createElement(SubSection, {
-      title: browser.i18n.getMessage("options_groups_backup"),
-      tooltip: React.createElement(
-        "ul",
-        null,
-        React.createElement(
-          "li",
-          null,
-          browser.i18n.getMessage("options_groups_backup_behavior")
-        ),
-        React.createElement(
-          "ul",
-          null,
-          React.createElement(
-            "li",
-            null,
-            browser.i18n.getMessage("options_groups_backup_behavior_download")
-          )
-        )
-      ),
+      title: browser.i18n.getMessage("options_groups_backup_local"),
+      tooltip: undefined,
       content: React.createElement(
         "div",
         null,
@@ -257,7 +240,7 @@ class SaveSectionStandalone extends React.Component {
 
   getBackUpDownloadSection() {
     return React.createElement(SubSection, {
-      title: browser.i18n.getMessage("options_groups_backup"),
+      title: browser.i18n.getMessage("options_groups_backup_download"),
       tooltip: React.createElement(
         "ul",
         null,

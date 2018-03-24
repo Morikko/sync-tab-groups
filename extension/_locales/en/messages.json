@@ -699,8 +699,13 @@
     "description": "Option section for the groups data"
   },
 
-  "options_groups_backup": {
-    "message": "Back Up",
+  "options_groups_backup_local": {
+    "message": "Local Back Up",
+    "description": ""
+  },
+
+  "options_groups_backup_download": {
+    "message": "Download Back Up",
     "description": ""
   },
 

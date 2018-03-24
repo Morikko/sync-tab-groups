@@ -110,6 +110,73 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.3)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Add Local Back-Up"
+        ),
+        React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            "Saved in the extension, without a download popup"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "Choose the interval time & the max number of back-ups"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "See all your back-ups and import, export or remove them"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Groups Selector on Import/Export"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Move Tab between groups"
+        ),
+        React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            "Sometimes a wrong tab was moved (due to a duplicate id with closed tabs)"
+          ),
+          React.createElement(
+            "li",
+            null,
+            "A tab moved on the same group at the last index was not working properly"
+          )
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Tree Style Tab support #26 (partially)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Unlimited Storage permission: allow extension storage bigger than 5MB (if you use a lot of back-ups with big groups). In any case, your browser is secured, it won't allow to fill the disk entirely."
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.2)"
       ),
       React.createElement(
