@@ -59,7 +59,7 @@ TabManager.getTabsInWindowId = async function(windowId, {
       windowId: windowId
     };
     // Pinned tab
-    if (!withPinned) {
+    if ( !withPinned ) {
       selector["pinned"] = false;
     }
     let tabs = await browser.tabs.query(selector);
@@ -638,7 +638,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
     let survivorTab = undefined;
 
     if (openBlankTab
-          && !(!OptionManager.options.pinnedTab.sync
+          && !(!remove_pinned
                 && tabs[0].pinned)
     ) {
       // Opened or single blank...
@@ -652,7 +652,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
         return survivorTab;
       }
     } else { // Keep a tab from previous session
-      if (!OptionManager.options.pinnedTab.sync && tabs[0].pinned) {
+      if (!remove_pinned && tabs[0].pinned) {
         // Kill all
         await browser.tabs.update(tabs[0].id, {active: true});
       } else {
@@ -676,6 +676,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
   } catch (e) {
     let msg = "TabManager.removeTabsInWindow failed; " + e;
     console.error(msg);
+    console.error(e);
     return msg;
   }
 }

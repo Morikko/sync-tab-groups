@@ -126,7 +126,7 @@ describe("Session: ", () => {
       expect(lazyLength).toEqual(length-1);
     });
 
-    it("Group global", () => {
+    it("Group global", async () => {
       let title = "coucou",
         length = 5;
       let [id, group] = Session.createGroup({tabsLength: length, title: title, global: true});
@@ -137,7 +137,7 @@ describe("Session: ", () => {
 
       expect(group).toEqualGroups(GroupManager.groups[groupIndex]);
 
-      GroupManager.removeGroupFromId(id);
+      await GroupManager.removeGroupFromId(id);
     });
   });
 

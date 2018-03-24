@@ -19,6 +19,7 @@
  - removeGroups
  - closeWindows
  - clearWindow
+ - openWindow
 
 */
 
@@ -186,6 +187,65 @@ TestManager.closeWindows = async function(windowIds) {
         // Window might not exist...
       }
     }
+  }
+}
+
+TestManager.openWindow = async function({
+  focused=true,
+  url=null,
+  split=true,
+}={}) {
+  const w = await browser.windows.create({
+    url,
+  });
+  if (split)  {
+    await TestManager.splitOnHalfScreen(w.id);
+  }
+  await browser.windows.update(w.id,{
+    focused
+  });
+  return w.id;
+}
+
+TestManager.openTwoWindows = async function({
+  focused=true,
+  url=null,
+  split=true,
+}={}) {
+  let windowId, windowId_bis;
+  windowId = await TestManager.openWindow({
+    focused,
+    url,
+    split,
+  });
+  TestManager.splitOnHalfTopScreen(windowId);
+
+  windowId_bis = await TestManager.openWindow({
+    focused,
+    url,
+    split,
+  });
+  TestManager.splitOnHalfBottomScreen(windowId_bis);
+
+  return [windowId, windowId_bis];
+}
+
+TestManager.focusedWindow = async function (windowId){
+  await browser.windows.update(windowId,{
+    focused: true,
+  });
+  await TestManager.waitWindowToBeFocused(windowId);
+}
+
+TestManager.waitWindowToBeFocused = async function(windowId, {
+  maxLoop=20,
+  waitPerLoop=50 //ms
+}={}){
+  for (let i = 0; i < maxLoop; i++) {
+    if ( (await browser.windows.get(windowId)).focused ) {
+      break;
+    }
+    await Utils.wait(waitPerLoop);
   }
 }
 

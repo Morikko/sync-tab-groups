@@ -1,4 +1,4 @@
-describe("Select Groups - ", ()=>{
+describe("Select a group ", ()=>{
   // Keep previous states
   beforeAll(TestManager.initIntegrationBeforeAll());
   // Set back previous states
@@ -6,126 +6,197 @@ describe("Select Groups - ", ()=>{
 
   beforeAll(async function(){
     OptionManager.updateOption("groups-syncNewWindow", false);
-    this.length = 3;
-    this.groups = [];
-    for( let i=0; i<4; i++) {
-      let id, group;
-      [id, group] = Session.createGroup({
-          tabsLength: this.length,
-          global: true,
-          pinnedTabs: 0,
-          active: 5,
-          title: "Debug Select Groups " + i
-        });
-      this.groups.push({
-        id: id,
-        group: group,
-        groupIndex: GroupManager.getGroupIndexFromGroupId(id)
-      });
-    }
-
-    this.windowId = await WindowManager.openGroupInNewWindow(this.groups[0].id);
-    await TestManager.splitOnHalfScreen(this.windowId);
-
-    this.windowId_bis = (await browser.windows.create()).id;
-    await TestManager.splitOnHalfScreen(this.windowId_bis);
   }, TestManager.TIMEOUT);
 
-  afterAll(async function(){
-    // Close Window
-    if ( this.windowId )
-      await browser.windows.remove(this.windowId);
-    if ( this.windowId_bis )
-      await browser.windows.remove(this.windowId_bis);
-    // Remove Group
-    for (let group of this.groups ) {
-      await GroupManager.removeGroupFromId(group.id);
-    }
-  });
+  describe(" whith his id", ()=>{
+    beforeAll(async function (){
+      [this.windowId, this.windowId_bis] = await TestManager.openTwoWindows();
+    });
 
-  describe("Basic", ()=>{
+    afterAll(async function (){
+      OptionManager.updateOption("groups-sortingType", this.lastSorting);
 
-    it("Switch with Opening", async function(){
+      await TestManager.closeWindows([this.windowId, this.windowId_bis]);
+    });
+
+    beforeEach(async function(){
+      await TestManager.clearWindow(this.windowId);
+      await TestManager.clearWindow(this.windowId_bis);
+      [this.id, this.group] = Session.createGroup({
+          tabsLength: 4,
+          global: true,
+          active: 1,
+          title: "Debug Select Groups"
+        });
+      this.group = GroupManager.groups[
+        GroupManager.getGroupIndexFromGroupId(this.id, {error: true})
+      ];
+    });
+
+    afterEach(async function(){
+      if ( GroupManager.getGroupIndexFromGroupId(this.id, {error: false}) >= 0 ) {
+        await GroupManager.removeGroupFromId(this.id);
+      }
+      await TestManager.clearWindow(this.windowId);
+      await TestManager.clearWindow(this.windowId_bis);
+    });
+
+    it(" should be opened if not.", async function(){
+
       let previousLength = GroupManager.groups.length;
 
-      await WindowManager.selectGroup(this.groups[1].id);
+      let windowId = await TestManager.openWindow();
+      TestManager.splitOnHalfScreen(windowId);
+      const previousWindowNumber = (await browser.windows.getAll()).length
+
+      await WindowManager.selectGroup(this.id);
 
       //No new window
+      expect((await browser.windows.getAll()).length ).toEqual(previousWindowNumber);
       expect(GroupManager.groups.length).toEqual(previousLength);
       // group is associated with OPEN window
-      expect(GroupManager.groups[this.groups[1].groupIndex].windowId).toEqual(this.windowId_bis);
+      expect(this.group.windowId).toEqual(windowId);
+
+      await TestManager.closeWindows([windowId]);
+
     }, TestManager.TIMEOUT);
 
-    it("Switch with Change Focus of Window", async function(){
+    it(" should be focused if already opened.", async function(){
       let previousLength = GroupManager.groups.length;
 
-      await WindowManager.selectGroup(this.groups[0].id);
+      const previousWindowNumber = (await browser.windows.getAll()).length
 
-      let currentWindow = await browser.windows.getLastFocused();
-      // group is associated with OPEN window
-      expect(currentWindow.id).toEqual(GroupManager.groups[this.groups[0].groupIndex].windowId);
+      await TestManager.focusedWindow(this.windowId);
+      await WindowManager.selectGroup(this.id);
+
+      // Open well
+      expect(GroupManager.groups.length).toEqual(previousLength);
+      expect(this.group.windowId).toEqual(this.windowId);
+
+      await TestManager.focusedWindow(this.windowId_bis);
+      // Change focus
+      expect((await browser.windows.getLastFocused()).id).toEqual(this.windowId_bis);
+
+
+      await WindowManager.selectGroup(this.id);
+      await TestManager.waitWindowToBeFocused(this.windowId);
+      // Focus without opening/changing groups/windows
+      expect(GroupManager.groups.length).toEqual(previousLength);
+      expect((await browser.windows.getAll()).length ).toEqual(previousWindowNumber);
+      expect((await browser.windows.getLastFocused()).id).toEqual(this.windowId);
+      expect(this.group.windowId).toEqual(this.windowId);
     }, TestManager.TIMEOUT);
 
   });
 
-  describe("Next Group", ()=>{
+  describe(" by willing the next one (on the list)", ()=>{
 
-    beforeAll(function (){
+    beforeAll(async function (){
       this.lastSorting = OptionManager.options.groups.sortingType;
       OptionManager.updateOption("groups-sortingType", OptionManager.SORT_OLD_RECENT);
+
+      [this.windowId, this.windowId_bis] = await TestManager.openTwoWindows();
     });
 
-    afterAll(function (){
+    afterAll(async function (){
       OptionManager.updateOption("groups-sortingType", this.lastSorting);
+
+      await TestManager.closeWindows([this.windowId, this.windowId_bis]);
     });
 
-    it("Switch To Next Open", async function(){
-      await WindowManager.selectNextGroup({
+    beforeEach(async function(){
+      await TestManager.clearWindow(this.windowId);
+      await TestManager.clearWindow(this.windowId_bis);
+      [this.ids, this.groups] = Session.createArrayGroups({
+          groupsLength: 3,
+          tabsLength: 4,
+          global: true,
+          active: 1,
+          title: "Debug Select Groups"
+        });
+      this.groups = this.ids.map( (id) => GroupManager.groups[
+        GroupManager.getGroupIndexFromGroupId(id, {error: true})
+      ]);
+    });
+
+    afterEach(async function(){
+      for (let id of this.ids ) {
+        if ( GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0 )
+          await GroupManager.removeGroupFromId(id);
+      }
+      await TestManager.clearWindow(this.windowId);
+      await TestManager.clearWindow(this.windowId_bis);
+    });
+
+    it(" should switch to the next group open.", async function(){
+      await WindowManager.openGroupInWindow(this.ids[2], this.windowId);
+      await WindowManager.openGroupInWindow(this.ids[0], this.windowId_bis);
+
+
+      await TestManager.focusedWindow(this.windowId_bis);
+      let nextGroupId = await WindowManager.selectNextGroup({
         direction: 1,
         open: true,
-        refGroupId: this.groups[0].id
+        refGroupId: this.ids[0]
       });
-
-      let currentWindow = await browser.windows.getLastFocused();
-
-      expect(currentWindow.id).toEqual(GroupManager.groups[this.groups[1].groupIndex].windowId);
-    });
-
-    it("Switch To Previous Open", async function(){
-      let nextGroupId = await WindowManager.selectNextGroup({
-        direction: -1,
-        open: true,
-        refGroupId: this.groups[1].id
-      });
-
-      let currentWindow = await browser.windows.getLastFocused();
-
-      expect(nextGroupId).toEqual(this.groups[0].id);
-      expect(currentWindow.id).toEqual(GroupManager.groups[this.groups[0].groupIndex].windowId);
-    });
-
-    // Select Next Unopen
-    it("Switch To Next Unopen", async function(){
-      let nextGroupId = await WindowManager.selectNextGroup({
-        refGroupId: this.groups[0].id
-      });
+      await TestManager.waitWindowToBeFocused(this.windowId);
 
       let currentWindow = await browser.windows.getLastFocused();
 
       expect(nextGroupId).toEqual(this.groups[2].id);
-      expect(GroupManager.groups[this.groups[2].groupIndex].windowId).toEqual(currentWindow.id);
-    }, TestManager.TIMEOUT);
+      expect(currentWindow.id).toEqual(this.groups[2].windowId);
+    });
 
-    // Select Previous Unopen
-    it("Switch To Previous Unopen", async function(){
-      await WindowManager.selectNextGroup({
+    it(" should switch to the previous group open.", async function(){
+      await WindowManager.openGroupInWindow(this.ids[2], this.windowId);
+      await WindowManager.openGroupInWindow(this.ids[0], this.windowId_bis);
+
+      await TestManager.focusedWindow(this.windowId_bis);
+
+      let nextGroupId = await WindowManager.selectNextGroup({
         direction: -1,
-        refGroupId: this.groups[2].id
+        open: true,
+        refGroupId: this.ids[0]
       });
+      await TestManager.waitWindowToBeFocused(this.windowId);
 
       let currentWindow = await browser.windows.getLastFocused();
 
-      expect(GroupManager.groups[this.groups[0].groupIndex].windowId).toEqual(currentWindow.id);
+      expect(nextGroupId).toEqual(this.groups[2].id);
+      expect(currentWindow.id).toEqual(this.groups[2].windowId);
+    });
+
+    // Select Next Unopen
+    it(" should switch to the next group NOT open.", async function(){
+      await WindowManager.openGroupInWindow(this.ids[1], this.windowId);
+      await TestManager.focusedWindow(this.windowId);
+
+      let nextGroupId = await WindowManager.selectNextGroup({
+        refGroupId: this.ids[0]
+      });
+      await TestManager.focusedWindow(this.windowId);
+
+      let currentWindow = await browser.windows.getLastFocused();
+
+      expect(nextGroupId).toEqual(this.ids[2]);
+      expect(this.groups[2].windowId).toEqual(currentWindow.id);
+    }, TestManager.TIMEOUT);
+
+    // Select Previous Unopen
+    it(" should switch to the previous group NOT open.", async function(){
+      await WindowManager.openGroupInWindow(this.ids[1], this.windowId);
+      await TestManager.focusedWindow(this.windowId);
+
+      let nextGroupId = await WindowManager.selectNextGroup({
+        direction: -1,
+        refGroupId: this.ids[0]
+      });
+      await TestManager.focusedWindow(this.windowId);
+
+      let currentWindow = await browser.windows.getLastFocused();
+
+      expect(nextGroupId).toEqual(this.ids[2]);
+      expect(this.groups[2].windowId).toEqual(currentWindow.id);
     }, TestManager.TIMEOUT);
 
   });

@@ -74,6 +74,7 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
  * Open newGroupId in current window, close the previous group if has
  * Secure: don't switch a window if it is already switching
  * @param {Number} newGroupId
+ * @return {Promise:Number} windowId
  */
 WindowManager.switchGroup = async function(newGroupId) {
   try {
@@ -84,7 +85,7 @@ WindowManager.switchGroup = async function(newGroupId) {
 
     }
     await WindowManager.openGroupInWindow(newGroupId, currentWindow.id);
-    return "WindowManager.switchGroup done!";
+    return currentWindow.id;
   } catch (e) {
     let msg = "WindowManager.switchGroup failed: " + e;
     console.error(msg);
@@ -218,7 +219,7 @@ WindowManager.decoratorCurrentlyChanging = function (func) {
  * If not open, switch to it
  * If open is another window, switch to that window
  * @param {Number} newGroupId - the group id
- * @return {Promise}
+ * @return {Promise:Number} windowId
  */
 WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
   try {
@@ -226,22 +227,25 @@ WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
       newGroupId
     );
 
+    let windowId;
+
     // Case 1: Another window
     if (GroupManager.isGroupIndexInOpenWindow(newGroupIndex)) {
+      windowId = GroupManager.groups[newGroupIndex].windowId;
       await browser.windows.update(
-        GroupManager.groups[newGroupIndex].windowId, {
+        windowId, {
           focused: true
         });
     }
     // Case 2: switch group
     else {
       if ( newWindow ) {
-        await WindowManager.openGroupInNewWindow(newGroupId);
+        windowId = await WindowManager.openGroupInNewWindow(newGroupId);
       } else {
-        await WindowManager.switchGroup(newGroupId);
+        windowId = await WindowManager.switchGroup(newGroupId);
       }
     }
-    return "WindowManager.selectGroup done!";
+    return windowId;
   } catch (e) {
     let msg = "WindowManager.selectGroup failed: " + e;
     console.error(msg);
@@ -394,7 +398,9 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
 
     let count = 0;
     while( !(await browser.windows.get(w.id)).focused ) {
-      console.log("NOT SYNCHRONIZED");
+      if ( Utils.DEBUG_MODE ) {
+        console.log("NOT SYNCHRONIZED");
+      }
       if ( count > 50 ) {
         throw Error("WindowManager.openGroupInNewWindow was unable to focus the window.");
       }
