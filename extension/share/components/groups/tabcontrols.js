@@ -57,6 +57,10 @@ class TabControls extends React.Component {
     if (this.differedTimeOut) {
       clearTimeout(this.differedTimeOut);
     }
+
+    if (this.closeMenuTimeout) {
+      clearTimeout(this.closeMenuTimeout);
+    }
   }
 
   createExtraActionsMenu() {
@@ -233,12 +237,6 @@ class TabControls extends React.Component {
   }
 
   handleMouseEnterExtraActions(event) {
-    if (this.closeMenuTimeout) {
-      clearTimeout(this.closeMenuTimeout);
-    }
-  }
-
-  componentWillUnmount() {
     if (this.closeMenuTimeout) {
       clearTimeout(this.closeMenuTimeout);
     }

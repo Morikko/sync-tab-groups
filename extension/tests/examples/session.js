@@ -233,50 +233,25 @@ Session.addTabToGroup = async function (group, tab_params) {
  */
 Session.setLightSession = function() {
   bg.GroupManager.removeAllGroups();
-  Session.createGroup({
-    tabsLength: 7,
+  Session.createArrayGroups({
+    groupsLength: 7,
     global: true,
-    title:"Normal 1",
-  });
-  Session.createGroup({
-    tabsLength: 7,
-    global: true,
-    title:"Normal 2",
-  });
-
-  Session.createGroup({
-    tabsLength: 7,
-    pinnedTabs: 2,
-    global: true,
-    title:"Pinned 1",
-  });
-
-  Session.createGroup({
-    tabsLength: 7,
-    pinnedTabs: 3,
-    global: true,
-    title:"Pinned 2",
-  });
-  Session.createGroup({
-    tabsLength: 7,
-    global: true,
-    incognito: true,
-    title:"Private",
-  });
-
-  Session.createGroup({
-    tabsLength: 0,
-    global: true,
-  });
-
-  Session.createGroup({
-    tabsLength: 7,
-    global: true,
-    privilegedLength: 1,
-    extensionUrlLength: 1,
-    title:"Special URLs",
-  });
-
+    fakeTab: false,
+    tabsLength: [7,7,7,7,7,0,7],
+    pinnedTabs: [0,0,2,3,0,0,0],
+    privilegedLength: [0,0,0,0,0,0,1],
+    extensionUrlLength: [0,0,0,0,0,0,1],
+    incognito: [false, false, false, false, true, false, false],
+    title: [
+      "Normal 1",
+      "Normal 2",
+      "Pinned 1",
+      "Pinned 2",
+      "Private",
+      "",
+      "Special URLs",
+    ]
+  })
 }
 
 /**
