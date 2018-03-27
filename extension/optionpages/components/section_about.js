@@ -110,6 +110,35 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.4)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Fix: Ordering the groups by position in UI"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Too much recursion on prepareGroups #98"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Tab.isArticle was undefined on discarded tab"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Update: French Translation to v0.6.4"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.3)"
       ),
       React.createElement(
