@@ -225,12 +225,14 @@ GroupManager.getWindowIdFromGroupId = function(groupId) {
 }
 
 GroupManager.isWindowAlreadyRegistered = function(windowId) {
-  if (windowId === browser.windows.WINDOW_ID_NONE)
+  if (windowId === WINDOW_ID_NONE)
     return false;
   for (let g of GroupManager.groups) {
-    if (g.windowId === windowId)
+    if (g.windowId === windowId) {
       return true;
     }
+  }
+
   return false;
 }
 
@@ -684,7 +686,7 @@ GroupManager.renameGroup = function(groupIndex, title) {
  */
 GroupManager.addGroup = function({
   title = "",
-  windowId = browser.windows.WINDOW_ID_NONE,
+  windowId = WINDOW_ID_NONE,
   incognito = false
 }={}) {
   if (GroupManager.isWindowAlreadyRegistered(windowId)){
@@ -820,7 +822,7 @@ GroupManager.removeUnopenGroups = function() {
  *
  */
 GroupManager.removeEmptyGroup = function({
-  fireEvent=false,
+  fireEvent=true,
   groups=GroupManager.groups
 }={}) {
   for (let i = groups.length - 1; i >= 0; i--) {
@@ -850,8 +852,8 @@ GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
  * Find an Id that is not used in the groups
  * @return {Number} uniqueGroupId
  */
-GroupManager.createUniqueGroupId = function() {
-  let uniqueGroupId = GroupManager.groups.length - 1;
+GroupManager.createUniqueGroupId = function(groups=GroupManager.groups) {
+  let uniqueGroupId = groups.length - 1;
   let isUnique = true,
     count = 0;
 
@@ -859,15 +861,16 @@ GroupManager.createUniqueGroupId = function() {
     uniqueGroupId++;
     count++;
     isUnique = true;
-    for (let g of GroupManager.groups) {
+    for (let g of groups) {
       isUnique = isUnique && g.id !== uniqueGroupId;
     }
 
-    if (count > 100000)
+    if (count > 100000) {
       throw Error("createUniqueGroupId: Can't find an unique group Id");
-
     }
-  while (!isUnique);
+
+
+  } while (!isUnique);
 
   return uniqueGroupId;
 }
@@ -947,15 +950,15 @@ GroupManager.initEventListener = function() {
 /**
  * Do some verifications to guarantee the groups data
  * Do on the groups itself
+ * /!\ Should NEVER fire GroupManager.EVENT_PREPARE
  */
 GroupManager.prepareGroups = function (groups=GroupManager.groups, {
   removeEmptyGroup=OptionManager.options.groups.removeEmptyGroup,
-  fireEvent=true,
 }={}) {
   if (removeEmptyGroup) {
     GroupManager.removeEmptyGroup({
       groups,
-      fireEvent
+      fireEvent: false,
     });
   }
 
@@ -1010,6 +1013,7 @@ GroupManager.checkCorruptedGroups = function(groups = GroupManager.groups) {
     // Don't fix data in debug mode for allowing to analyze
     if ( !Utils.DEBUG_MODE ) {
       GroupManager.reloadGroupsFromDisk();
+      console.log('Tried to correct corruption...')
     }
   }
   return corrupted;
