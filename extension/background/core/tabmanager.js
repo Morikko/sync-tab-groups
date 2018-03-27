@@ -68,6 +68,9 @@ TabManager.getTabsInWindowId = async function(windowId, {
     if (withoutRealUrl) {
       tabs.forEach((tab) => {
         tab.url = Utils.extractTabUrl(tab.url);
+        if ( tab.hasOwnProperty('isArticle') && tab.isArticle === undefined ) {
+          tab.isArticle = false;
+        }
       });
     }
 
