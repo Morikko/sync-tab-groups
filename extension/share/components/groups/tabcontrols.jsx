@@ -45,17 +45,21 @@ class TabControls extends React.Component{
 
   componentDidMount() {
     if ( !this.state.waitFirstMount ) {
-      this.differedTimeOut = setTimeout((()=>{
+      this.differedTimeOut = setTimeout(()=>{
         this.setState({
           waitFirstMount: true,
         });
-      }).bind(this), 500);
+      }, 500);
     }
   }
 
   componentWillUnmount() {
     if ( this.differedTimeOut ) {
       clearTimeout(this.differedTimeOut);
+    }
+
+    if ( this.closeMenuTimeout ) {
+      clearTimeout(this.closeMenuTimeout);
     }
   }
 
@@ -222,12 +226,6 @@ class TabControls extends React.Component{
   }
 
   handleMouseEnterExtraActions(event) {
-    if ( this.closeMenuTimeout ) {
-      clearTimeout(this.closeMenuTimeout);
-    }
-  }
-
-  componentWillUnmount(){
     if ( this.closeMenuTimeout ) {
       clearTimeout(this.closeMenuTimeout);
     }
