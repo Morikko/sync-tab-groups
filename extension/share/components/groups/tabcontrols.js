@@ -45,11 +45,11 @@ class TabControls extends React.Component {
 
   componentDidMount() {
     if (!this.state.waitFirstMount) {
-      this.differedTimeOut = setTimeout((() => {
+      this.differedTimeOut = setTimeout(() => {
         this.setState({
           waitFirstMount: true
         });
-      }).bind(this), 500);
+      }, 500);
     }
   }
 

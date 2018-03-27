@@ -385,4 +385,99 @@ describe("GroupManager", () => {
       expect(filteredGroups).toEqualGroups(groups);
     })
   })
+
+  describe(".getIndexSortByPosition", ()=>{
+    it("should return the index in the right same position", ()=>{
+      let groups = Utils.range(10).map((i)=>{
+        return {
+          index: i,
+          position: i,
+        }
+      });
+
+      let index = GroupManager.getIndexSortByPosition(groups);
+
+      expect(index).toEqual(groups.map(group=>group.index));
+    });
+
+    it("should return the indexer ordered by position", ()=>{
+      const SIZE = 10;
+      let groups = Utils.range(SIZE).map((i)=>{
+        return {
+          index: i,
+          position: SIZE-1-i,
+        }
+      });
+
+      let index = GroupManager.getIndexSortByPosition(groups);
+
+      expect(index).toEqual(groups.map(group=>group.index).reverse());
+    });
+
+    it("should add the missing positions at the end by index", ()=>{
+      const SIZE = 10;
+      let groups = Utils.range(SIZE).map((i)=>{
+        return {
+          index: i,
+          position: (i>SIZE/2)?SIZE-1-i:undefined,
+        }
+      });
+                          // Adding first defined in reverse
+      const expectIndex = groups.filter(group => group.position !== undefined)
+                            .map(group=>group.index).reverse()
+                            .concat(
+                              // Adding in order undefined
+                              groups.filter(group => group.position === undefined)
+                                .map(group=>group.index)
+                              );
+
+      let index = GroupManager.getIndexSortByPosition(groups);
+
+      expect(index).toEqual(expectIndex);
+    });
+
+    it("should correct negative index and put it at the end", ()=>{
+      let groups =  [
+        {
+          "index": 0,
+          "position": 1
+        },
+        {
+          "index": 1,
+          "position": 5
+        },
+        {
+          "index": 2,
+          "position": 0
+        },
+        {
+          "index": 3,
+          "position": 4
+        },
+        {
+          "index": 4,
+          "position": 2
+        },
+        {
+          "index": 5,
+          "position": 3
+        },
+        {
+          "index": -1,
+          "position": -1
+        }
+      ];
+                          // Adding first defined in reverse
+      const expectIndex = groups.filter(group => group.position >= 0)
+                            .sort((a,b) => a.position > b.position)
+                            .map(group=>group.index);
+      expectIndex.push(expectIndex.length);
+
+      let index = GroupManager.getIndexSortByPosition(groups);
+
+      console.log(groups)
+      expect(index.length).toEqual(groups.length)
+      expect(index).toEqual(expectIndex);
+    });
+  });
 });
