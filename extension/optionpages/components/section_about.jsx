@@ -54,6 +54,15 @@ class AboutSection extends React.Component {
           </a>
         </div>
         <h2>
+          Release Notes (0.6.4)
+        </h2>
+        <ul>
+          <li>Fix: Ordering the groups by position in UI</li>
+          <li>Fix: Too much recursion on prepareGroups #98</li>
+          <li>Fix: Tab.isArticle was undefined on discarded tab</li>
+          <li>Update: French Translation to v0.6.4</li>
+        </ul>
+        <h2>
           Release Notes (0.6.3)
         </h2>
         <ul>
