@@ -41,12 +41,12 @@ describe("Select a group ", ()=>{
       await TestManager.clearWindow(this.windowId_bis);
     });
 
-    it(" should be opened if not.", async function(){
+    it(" should be opened if not already.", async function(){
 
       let previousLength = GroupManager.groups.length;
 
-      let windowId = await TestManager.openWindow();
-      TestManager.splitOnHalfScreen(windowId);
+      await TestManager.focusedWindow(this.windowId);
+
       const previousWindowNumber = (await browser.windows.getAll()).length
 
       await WindowManager.selectGroup(this.id);
@@ -55,10 +55,7 @@ describe("Select a group ", ()=>{
       expect((await browser.windows.getAll()).length ).toEqual(previousWindowNumber);
       expect(GroupManager.groups.length).toEqual(previousLength);
       // group is associated with OPEN window
-      expect(this.group.windowId).toEqual(windowId);
-
-      await TestManager.closeWindows([windowId]);
-
+      expect(this.group.windowId).toEqual(this.windowId);
     }, TestManager.TIMEOUT);
 
     it(" should be focused if already opened.", async function(){

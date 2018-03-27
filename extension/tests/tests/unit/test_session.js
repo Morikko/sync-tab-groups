@@ -191,7 +191,10 @@ describe("Session: ", () => {
       });
     });
 
-    it("Create Global Groups", ()=>{
+    it("Create Global Groups", async ()=>{
+      await TestManager.changeSomeOptions({
+        "groups-removeEmptyGroup": false,
+      })
       let ids = [], groups = [];
       try {
         let groupsLength = 4, titlePrefix="Create Global Groups";

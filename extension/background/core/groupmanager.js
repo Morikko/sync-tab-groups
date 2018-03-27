@@ -755,7 +755,7 @@ GroupManager.addGroups = function(newGroups, {
 }={}) {
   let ids = [];
   for (let g of newGroups) {
-    g.id = GroupManager.createUniqueGroupId();
+    g.id = GroupManager.createUniqueGroupId(groups);
     g.windowId = WINDOW_ID_NONE;
     ids.push(g.id);
     groups.push(Utils.getCopy(g));
