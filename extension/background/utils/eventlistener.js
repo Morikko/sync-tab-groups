@@ -11,6 +11,6 @@ EventListener.prototype.fire = function(event) {
   if (this.events[event]) {
     this.events[event].forEach(function(fn) {
       fn();
-    })
+    });
   }
 }

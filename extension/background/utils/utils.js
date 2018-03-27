@@ -159,8 +159,8 @@ GroupManager.getIndexSortByPosition = function(groups) {
   // Add them in the order of the array at the end
   if (sortedIndex.length < groups.length) { // Wrong position
     for (let i = 0; i < groups.length; i++) {
-      if (!sortedIndex[groups[i].index]) {
-        sortedIndex.push(groups[i].index);
+      if (sortedIndex.indexOf(i) === -1) {
+        sortedIndex.push(i);
       }
     }
   }

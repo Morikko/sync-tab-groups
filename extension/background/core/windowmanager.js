@@ -428,6 +428,9 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
  */
 WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
   try {
+    if ( windowId === WINDOW_ID_NONE ) {
+      return;
+    }
     await browser.windows.update(
       windowId, {
         titlePreface: "[" +
