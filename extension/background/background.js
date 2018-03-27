@@ -106,7 +106,7 @@ Background.onOpenGuide = function() {
 
 Background.onGroupAdd = function({title}) {
   try {
-    GroupManager.addGroup({title: title});
+    GroupManager.addGroup({title});
   } catch (e) {
     console.error("Controller - onGroupAdd failed: " + e);
   }
