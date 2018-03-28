@@ -107,7 +107,7 @@ class GroupList extends React.Component {
           /*** Options ***/
           , searchGroupResult: this.state.searchGroupsResults ? this.state.searchGroupsResults[index] : undefined,
           currentlySearching: this.state.searchGroupsResults ? true : false,
-
+          showTabsNumber: this.props.showTabsNumber,
           allowClickSwitch: this.props.allowClickSwitch,
           stateless: this.props.stateless,
           width: this.props.width,

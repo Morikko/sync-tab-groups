@@ -33,8 +33,8 @@ class PopupMenuStandAlone extends React.Component {
     if (this.props.options.popup.showSearchBar) {
       searchbar = (
         <SearchBar
-            onSearchChange={this.onSearchChange.bind(this)}
-            hotkeysEnable={this.props.options.shortcuts.navigation}/>
+          onSearchChange={this.onSearchChange.bind(this)}
+          hotkeysEnable={this.props.options.shortcuts.navigation}/>
       );
     }
 
@@ -84,7 +84,7 @@ class PopupMenuStandAlone extends React.Component {
           hotkeysEnable={this.props.options.shortcuts.navigation}
           stateless={false}
           width={width}
-          showTabsNumber= {this.props.options.popup.showTabsNumber}
+          showTabsNumber={this.props.options.popup.showTabsNumber}
           groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
           draggable={true}
           hoverStyle={true}
@@ -92,13 +92,13 @@ class PopupMenuStandAlone extends React.Component {
           /*** actions ***/
           forceExpand={false}
           forceReduce={false}
-            />
-          <li>
-            <GroupAddButton
-                onClick= {this.props.onGroupAddClick}
-                onDrop= {this.props.onGroupAddDrop}
-                currentlySearching= {this.state.searchfilter.length > 0}
-                hotkeysEnable={this.props.options.shortcuts.navigation}
+        />
+        <li>
+          <GroupAddButton
+            onClick= {this.props.onGroupAddClick}
+            onDrop= {this.props.onGroupAddDrop}
+            currentlySearching= {this.state.searchfilter.length > 0}
+            hotkeysEnable={this.props.options.shortcuts.navigation}
             />
           </li>
           <MainBar

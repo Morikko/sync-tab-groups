@@ -111,7 +111,7 @@ class Panel extends React.Component {
             allowClickSwitch={false}
             stateless={true}
             width={width}
-            hotkeysEnable={false/*this.props.options.shortcuts.navigation*/}
+            hotkeysEnable={false}
             showTabsNumber= {false}
             groupDraggable= {false}
             draggable={false}
