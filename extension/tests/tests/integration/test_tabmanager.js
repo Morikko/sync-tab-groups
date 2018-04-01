@@ -581,7 +581,7 @@ describe("TabManager", ()=>{
             this.group_close_1.id,
           );
 
-          await TabManager.waitTabsToBeClosed(this.windowId_bis, [tabId]);
+          await TabManager.waitTabsToBeClosed([tabId]);
 
           tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
             withPinned: true,
@@ -617,7 +617,7 @@ describe("TabManager", ()=>{
             tabId
           );
 
-          await TabManager.waitTabsToBeClosed(this.windowId_bis, [tabId]);
+          await TabManager.waitTabsToBeClosed([tabId]);
 
           let newGroupIndex = GroupManager.getGroupIndexFromGroupId(newId);
           tabs = await TabManager.getTabsInWindowId(this.windowId_bis, {
@@ -1035,5 +1035,97 @@ describe("TabManager", ()=>{
       }
     });
 
+  });
+
+  describe(".waitTabsToBeClosed", ()=>{
+    beforeAll(async function(){
+      this.windowId = await TestManager.openWindow();
+    });
+
+    // Keep test session clean in between :)
+    afterEach(async function() {
+      await TestManager.clearWindow(this.windowId);
+    });
+    beforeEach(async function() {
+      await TestManager.clearWindow(this.windowId);
+    });
+
+    afterAll(async function(){
+      await TestManager.closeWindows(this.windowId);
+    })
+
+    it(' to wait tabs to be closed in 1 window and return true', async function(){
+      const tabsLength = 5;
+      const tabs = Session.createTabs({tabsLength});
+
+      const openTabs = await TabManager.openListOfTabs(tabs);
+      const tabsToRemove = openTabs.splice(0,3).map(tab=>tab.id);
+
+      setTimeout(()=>{
+        browser.tabs.remove(tabsToRemove);
+      }, 250);
+
+      const result = await TabManager.waitTabsToBeClosed(tabsToRemove);
+
+      const tabsInWindow = await browser.tabs.query({windowId: this.windowId});
+      const tabsInWindowIds = tabsInWindow.map(tab=>tab.id);
+
+      expect(result).toBe(true);
+      expect(tabsInWindow.length).toBe(tabsLength+1-tabsToRemove.length);
+      tabsToRemove.forEach((id)=>{
+        expect(tabsInWindowIds.indexOf(id)).toBe(-1);
+      });
+    });
+
+    it(' to wait tabs to be closed in 2 windows and return true', async function(){
+      const windowId_bis = await TestManager.openWindow();
+
+      const tabsLength = 3;
+      const tabs = Session.createTabs({tabsLength});
+
+      let openTabs, tabsToRemove;
+
+      await TestManager.focusedWindow(this.windowId);
+      openTabs = await TabManager.openListOfTabs(tabs);
+      tabsToRemove = openTabs.splice(0,2).map(tab=>tab.id);
+
+      await TestManager.focusedWindow(windowId_bis);
+      openTabs = await TabManager.openListOfTabs(tabs);
+      tabsToRemove = tabsToRemove.concat(
+        openTabs.splice(0,2).map(tab=>tab.id)
+      );
+
+      setTimeout(()=>{
+        browser.tabs.remove(tabsToRemove);
+      }, 250);
+
+      const result = await TabManager.waitTabsToBeClosed(tabsToRemove);
+
+      let tabsInWindow = await browser.tabs.query({windowId: this.windowId});
+      tabsInWindow = tabsInWindow.concat(
+        await browser.tabs.query({windowId: windowId_bis})
+      );
+
+      const tabsInWindowIds = tabsInWindow.map(tab=>tab.id);
+
+      expect(result).toBe(true);
+      expect(tabsInWindow.length).toBe(
+        (tabsLength+1)*2
+        -tabsToRemove.length
+      );
+      tabsToRemove.forEach((id)=>{
+        expect(tabsInWindowIds.indexOf(id)).toBe(-1);
+      });
+
+      await TestManager.closeWindows(windowId_bis);
+    });
+
+    it(' to wait tabs that never closed and return false', async function(){
+      const tabs = await browser.tabs.query({windowId: this.windowId});
+
+      const result = await TabManager.waitTabsToBeClosed(tabs.map(tab=>tab.id));
+
+      expect(result).toBe(false);
+    });
   });
 });

@@ -343,7 +343,7 @@ describe("TabManager[Add/Remove]", ()=>{
         if ( new_tabs.length > 0 ){
           new_tabs = new_tabs.map(tab => tab.id);
           await browser.tabs.remove(new_tabs);
-          await TabManager.waitTabsToBeClosed(this.windowId, new_tabs);
+          await TabManager.waitTabsToBeClosed(new_tabs);
         }
 
         let survivorTab = [await TabManager.removeTabsInWindow(

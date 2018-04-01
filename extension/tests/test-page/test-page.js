@@ -8,22 +8,11 @@ var queryString = new jasmine.QueryString({
 
 var specFilter = new jasmine.HtmlSpecFilter({
   filterString: function() {
-    if (Utils.getParameterByName("enable") !== 'true') {
+    if (Utils.getParameterByName("enable") !== 'true' && false) {
       return "@@@@@@@";
     } else {
       return queryString.getParam("spec")
     }
-    /*
-    switch(queryString.getParam("spec")) {
-      case "all":
-        return "";
-      case undefined:
-        return "@@@@@@@";
-      case "":
-        return "@@@@@@@";
-      default:
-        return queryString.getParam("spec")
-    */
   }
 });
 
@@ -43,6 +32,7 @@ var waitInit = (async () => {
   StorageManager = bg.StorageManager;
   Selector = bg.Selector;
   Background = bg.Background;
+  TabHidden = bg.TabHidden;
   Event = bg.Event;
 })()
 
@@ -90,3 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
   div.innerText = "Filter: " + Utils.getParameterByName("spec");
   document.body.insertBefore(div, button);
 });
+
+if ( Utils.getParameterByName("enable") !== 'true' ) {
+  fdescribe('Force only fdescribe and fit to run', ()=>{
+
+  });
+}

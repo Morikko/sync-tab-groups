@@ -26,6 +26,9 @@
  - moveTabToNewGroup
  - moveUnFollowedTabToNewGroup
 
+Wait:
+ - waitTabsToBeClosed
+
  */
 var TabManager = TabManager || {};
 
@@ -150,6 +153,15 @@ TabManager.countPinnedTabs = function(tabs) {
   return tabs.filter(tab => tab.pinned).length;
 }
 
+OptionManager.isClosingAlived = function() {
+  return OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE;
+}
+
+OptionManager.isClosingHidden = function() {
+  //return OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN;
+  return false;
+}
+
 /**
  * Open A Tab
  * @param {Tab} tab
@@ -164,10 +176,13 @@ TabManager.openTab = async function(
 ) {
   let tabCreation;
 
-  if ( OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE
-        && (await TabAlive.containTab(tab)) ) {
+  if ( OptionManager.isClosingAlived() && (await TabAlive.containTab(tab)) ) {
     tabCreation = TabAlive.wakeupTab(tab, windowId, index);
-  } else {
+  }
+  else if ( OptionManager.isClosingHidden() ) {
+
+  }
+  else {
     let url = tab.url;
 
     let incognitoAllowed = true;
@@ -207,7 +222,7 @@ TabManager.openTab = async function(
       }
     }
 
-    tabCreation = browser.tabs.create(tabCreationProperties);
+    tabCreation = await browser.tabs.create(tabCreationProperties);
   }
 
   return tabCreation;
@@ -697,7 +712,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
       await browser.tabs.remove(tabsToRemove);
 
       if (Utils.isChrome()) { // Chrome Incompatibility: doesn't wait that tabs are unloaded
-        await TabManager.waitTabsToBeClosed(windowId, tabsToRemove);
+        await TabManager.waitTabsToBeClosed(tabsToRemove);
       }
     }
 
@@ -711,28 +726,34 @@ TabManager.removeTabsInWindow = async function(windowId, {
 }
 
 /**
- *
+ * Return true if tabs were closed in the waiting time.
  */
-TabManager.waitTabsToBeClosed = async function(windowId, tabsIdsToRemove, {
+TabManager.waitTabsToBeClosed = async function(tabsIdsToRemove, {
   maxLoop=20,
   waitPerLoop=50 //ms
 }={}){
+  if (!Array.isArray(tabsIdsToRemove)) {
+    tabsIdsToRemove = [tabsIdsToRemove]
+  }
+
   for (let i = 0; i < maxLoop; i++) {
     await Utils.wait(waitPerLoop);
-    let tabs = await TabManager.getTabsInWindowId(windowId, {
-      withoutRealUrl: false,
-    });
-    if (tabs.filter((tab) => {
-            if (tabsIdsToRemove.indexOf(tab.id) >= 0) {
-              return true;
-            }
-            return false;
-            }
-      ).length === 0
-    ) {
-      break;
+
+    const stillOpen = await Promise.all(
+      tabsIdsToRemove.map(async (id) => {
+        try {
+          await browser.tabs.get(id);
+          return true;
+        } catch(e) {
+          return false;
+        }
+    }));
+
+    if ( stillOpen.filter(i => i).length === 0 ) {
+      return true;
     }
   }
+  return false;
 }
 
 /**

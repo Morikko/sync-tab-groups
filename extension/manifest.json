@@ -24,7 +24,8 @@
     "downloads",
     "notifications",
     "contextMenus",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "tabHide"
   ],
 
   "background": {

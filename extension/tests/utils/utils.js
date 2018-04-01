@@ -10,7 +10,7 @@
 
  - resetActiveProperties
  - resetIndexProperties
- - waitAllTabsToBeLoadedInWindowId
+
 
  - swapOptions
 
@@ -20,7 +20,13 @@
  - closeWindows
  - clearWindow
  - openWindow
+ - openTwoWindows
+ - focusedWindow
+ - replaceTabs
 
+ - waitWindowToBeClosed
+ - waitWindowToBeFocused
+ - waitAllTabsToBeLoadedInWindowId
 */
 
 /**
@@ -198,9 +204,12 @@ TestManager.waitWindowToBeClosed = async function(windowId, {
   }
 }
 
-// Close all windows
+/**
+ * Close all windows
+ * Accept one id or an array
+ */
 TestManager.closeWindows = async function(windowIds) {
-  if (!windowIds.length) {
+  if (!Array.isArray(windowIds)) {
     windowIds = [windowIds]
   }
 
@@ -399,4 +408,41 @@ TestManager.clearWindow = async function(windowId){
       remove_pinned: true,
     });
   await TestManager.waitAllTabsToBeLoadedInWindowId(windowId);
+}
+
+/**
+ * Open {tabs} in Window with {windowId} and remove all the tabs that were in the window before
+ */
+TestManager.replaceTabs = async function(windowId, tabs) {
+  const tabsToOpen = tabs.map(tab => {
+    const setVal = (from, val, to) => {
+      if (from[val] !== undefined) {
+        to[val] = from[val];
+      }
+    }
+    const newTab = {};
+    setVal(tab, "active", newTab);
+    setVal(tab, "index", newTab);
+    setVal(tab, "openerTabId", newTab);
+    setVal(tab, "openInReaderMode", newTab);
+    setVal(tab, "pinned", newTab);
+    setVal(tab, "cookieStoreId", newTab);
+    setVal(tab, "url", newTab);
+    newTab["windowId"] = windowId;
+
+    return newTab;
+  });
+
+  const oldTabs = await browser.tabs.query({windowId});
+  const openTabs = await Promise.all(
+    tabsToOpen.map(tab => browser.tabs.create(tab))
+  );
+  await browser.tabs.remove(oldTabs.map(tab => tab.id));
+
+  return openTabs;
+}
+
+TestManager.removeTabs = async function(ids) {
+  await browser.tabs.remove(ids);
+  await TabManager.waitTabsToBeClosed(ids);
 }
