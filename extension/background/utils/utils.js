@@ -18,9 +18,12 @@ Objects:
  - checkCorruptedObject
 
  Browser type:
+ - isFirefox
  - isChrome
- - isFF57
- - isBeforeFF57
+ - hasDiscardFunction
+ - hasSessionWindowValue
+ - hasWindowTitlePreface
+ - hasHideFunctions
 
  URLs
  - extractTabUrl
@@ -324,40 +327,16 @@ Utils.wait = async function(time) {
   });
 }
 
-/**
- * Return true if the browser is Chrome
- * @return {Boolean}
- */
-Utils.isChrome = function() {
-  if (browser.sessions.getWindowValue === undefined &&
-    browser.tabs.discard !== undefined) {
-    return true;
-  }
-  return false;
-}
 
-/**
- * Return true if the browser is FF57
- * @return {Boolean}
- */
-Utils.isFF57 = function() {
-  if (browser.sessions.getWindowValue !== undefined) {
-    return true;
-  }
-  return false;
-}
+Utils.isFirefox = () => browser.runtime.getBrowserInfo !== undefined;
+Utils.isChrome = () => !Utils.isFirefox();
 
-/**
- * Return true if the browser is FF56 and -
- * @return {Boolean}
- */
-Utils.isBeforeFF57 = function() {
-  if (browser.sessions.getWindowValue === undefined &&
-    browser.tabs.discard === undefined) {
-    return true;
-  }
-  return false;
-}
+
+Utils.hasDiscardFunction = () => browser.tabs.discard !== undefined;
+Utils.hasSessionWindowValue = () => browser.sessions.getWindowValue !== undefined;
+Utils.hasWindowTitlePreface = () => Utils.isFirefox();
+Utils.hasHideFunctions = () =>  browser.tabs.hide !== undefined;
+
 
 /**
  * Return the url in parameter for privileged-tab.html pages

@@ -1,4 +1,4 @@
-describe("When Hidden Closing State is enabled, ", ()=>{
+fdescribe("When Hidden Closing State is enabled, ", ()=>{
   // Keep previous states
   beforeAll(TestManager.initIntegrationBeforeAll());
   // Set back previous states
@@ -17,7 +17,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     await TestManager.clearWindow(this.windowId);
   });
 
-  fdescribe("TabHidden.hideTab", ()=>{
+  describe("TabHidden.hideTab", ()=>{
     it(" hides a tab if it is possible and return true", async function(){
       const tabsLength = 5;
       const tabs = Session.createTabs({tabsLength, active: 0});
@@ -65,7 +65,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
   });
 
-  fdescribe("TabHidden.showTab", ()=>{
+  describe("TabHidden.showTab", ()=>{
     it(" shows a tab if it is possible and return true", async function(){
       const tabsLength = 3;
       const tabs = Session.createTabs({tabsLength, active: 0});
@@ -107,21 +107,114 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   describe("TabManager.openListOfTabs", ()=>{
     it(" shows tabs previously hidden", async function(){
+      const tabsLength = 5;
+      const tabs = Session.createTabs({tabsLength});
+      const openTabs = await TestManager.replaceTabs(this.windowId, tabs);
 
+      const tabsToHide = await browser.tabs.query({
+        windowId: this.windowId,
+        active: false,
+      });
+      await TabManager.removeTabs(
+        tabsToHide.map(tab => tab.id)
+      );
+
+      await TabManager.openListOfTabs(tabsToHide, this.windowId);
+
+      expect((await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: true
+      })).length).toBe(0)
+      expect((await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: false
+      })).length).toBe(tabsLength);
+
+      const finalTabs = (await browser.tabs.query({windowId: this.windowId}))
+            .map(tab => tab.id);
+      tabsToHide.forEach(({id}) => {
+        expect(finalTabs.indexOf(id)).not.toBe(-1);
+      });
     });
 
     it(" shows tabs previously hidden and opens missing tabs", async function(){
+      const tabsLength = 5;
+      const tabs = Session.createTabs({tabsLength});
+      const openTabs = await TestManager.replaceTabs(this.windowId, tabs);
 
+      const tabsToHide = await browser.tabs.query({
+        windowId: this.windowId,
+        active: true,
+      });
+      await TabManager.removeTabs(
+        tabsToHide.map(tab => tab.id)
+      );
+
+      await TabManager.openListOfTabs(tabsToHide, this.windowId);
+
+      expect((await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: true
+      })).length).toBe(0)
+      expect((await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: false
+      })).length).toBe(tabsLength);
+
+      const finalTabs = (await browser.tabs.query({windowId: this.windowId}))
+            .map(tab => tab.id);
+      tabsToHide.forEach(({id}) => {
+        expect(finalTabs.indexOf(id)).toBe(-1);
+      });
     });
   });
 
-  describe("TabManager.removeTabsInWindow", ()=>{
-    it(" hides tabs in the group", async function(){
+  describe("TabManager.removeTabs", ()=>{
+    it(" hides tabs in the window", async function(){
+      const tabsLength = 5;
+      const tabs = Session.createTabs({tabsLength});
+      const openTabs = await TestManager.replaceTabs(this.windowId, tabs);
 
+      const tabsToHide = await browser.tabs.query({
+        windowId: this.windowId,
+        active: false,
+      });
+
+      const isHidden = await TabManager.removeTabs(
+        tabsToHide.map(tab => tab.id)
+      );
+
+      expect((await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: true
+      })).length).toBe(tabsLength-1)
+      expect((await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: false
+      })).length).toBe(1);
     });
 
     it(" hides tabs in the group and closes failing tabs", async function(){
+      const tabsLength = 5;
+      const tabs = Session.createTabs({tabsLength});
+      const openTabs = await TestManager.replaceTabs(this.windowId, tabs);
 
+      const tabsToHide = await browser.tabs.query({
+        windowId: this.windowId,
+        active: true,
+      });
+
+      const isHidden = await TabManager.removeTabs(
+        tabsToHide.map(tab => tab.id)
+      );
+
+      expect((await browser.tabs.query({
+        windowId: this.windowId
+      })).length).toBe(tabsLength-1)
+      expect((await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: true
+      })).length).toBe(0);
     });
   });
 

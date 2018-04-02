@@ -55,12 +55,19 @@ TabManager.getTab = function(tab) {
  */
 TabManager.getTabsInWindowId = async function(windowId, {
   withoutRealUrl = true,
-  withPinned = OptionManager.options.pinnedTab.sync
+  withPinned = OptionManager.options.pinnedTab.sync,
+  hidden = (Utils.hasHideFunctions() ? false : undefined)
 }={}) {
   try {
     let selector = {
-      windowId: windowId
+      windowId
     };
+
+
+    if ( hidden !== undefined ) {
+      selector["hidden"] = hidden;
+    }
+
     // Pinned tab
     if ( !withPinned ) {
       selector["pinned"] = false;
@@ -154,12 +161,12 @@ TabManager.countPinnedTabs = function(tabs) {
 }
 
 OptionManager.isClosingAlived = function() {
-  return OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE;
+  //return OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE;
+  return false;
 }
 
 OptionManager.isClosingHidden = function() {
-  //return OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN;
-  return false;
+  return OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN;
 }
 
 /**
@@ -179,53 +186,92 @@ TabManager.openTab = async function(
   if ( OptionManager.isClosingAlived() && (await TabAlive.containTab(tab)) ) {
     tabCreation = TabAlive.wakeupTab(tab, windowId, index);
   }
-  else if ( OptionManager.isClosingHidden() ) {
 
+  if ( OptionManager.isClosingHidden() ) {
+    const wasShown = await TabHidden.showTab(tab.id, windowId, index);
+    if ( wasShown ) {
+      return await browser.tabs.get(tab.id);
+    }
   }
-  else {
-    let url = tab.url;
 
-    let incognitoAllowed = true;
-    if ( Utils.isChrome() ) {
-      incognitoAllowed = !(await browser.windows.get(windowId)).incognito;
+  let url = tab.url;
+
+  let incognitoAllowed = true;
+  /*
+   * TODO: Chrome seems to not be able to open extension pages in Incognito window
+   * Is it the facts that the extension is not able to work in incognito ?
+   */
+  if ( Utils.isChrome() ) {
+    incognitoAllowed = !(await browser.windows.get(windowId)).incognito;
+  }
+
+  if (Utils.isPrivilegedURL(url) && incognitoAllowed) {
+    url = Utils.getPrivilegedURL(tab.title, url, tab.favIconUrl)
+  }
+
+  if (OptionManager.options.groups.discardedOpen && !tab.active
+        && incognitoAllowed ) {
+    url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
+  }
+
+  if (url === "about:privatebrowsing" || url === TabManager.NEW_TAB) {
+    url = undefined;
+  }
+
+  // Create a tab to tab.url or to newtab
+  let tabCreationProperties = {
+    url: url,
+    active: tab.active,
+    pinned: tab.pinned,
+    index: index,
+    windowId: windowId
+  };
+
+
+  if (tab.hasOwnProperty("openerTabId")
+        && tabIdsCrossRef !== undefined) {
+    // Check tab is still present -> was not removed when group was closed
+    // Parent tab has to be opened before children else it will be lost
+    if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
+      tabCreationProperties["openerTabId"] = tabIdsCrossRef[tab.openerTabId];
+    }
+  }
+
+  return await browser.tabs.create(tabCreationProperties);
+}
+
+/**
+ * Remove tabs
+ * If can hide: hide
+ * Else: close
+ */
+TabManager.removeTabs = async function(tabIdsToRemove) {
+  try {
+    let ids = Utils.getCopy(tabIdsToRemove);
+
+    if ( OptionManager.isClosingAlived() && !forceClosing) {
+      await Promise.all(
+        tabIdsToRemove.map((tab)=>TabAlive.sleepTab(tab))
+      );
     }
 
-    if (Utils.isPrivilegedURL(url) && incognitoAllowed) {
-      url = Utils.getPrivilegedURL(tab.title, url, tab.favIconUrl)
-    }
+    if ( OptionManager.isClosingHidden() ) {
+      const results = await Promise.all(
+        ids.map(id => TabHidden.hideTab(id))
+      );
+      ids = ids.filter((id, index) => !results[index]);
 
-    if (OptionManager.options.groups.discardedOpen && !tab.active
-          && incognitoAllowed ) {
-      url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
-    }
-
-    if (url === "about:privatebrowsing" || url === TabManager.NEW_TAB) {
-      url = undefined;
-    }
-
-    // Create a tab to tab.url or to newtab
-    let tabCreationProperties = {
-      url: url,
-      active: tab.active,
-      pinned: tab.pinned,
-      index: index,
-      windowId: windowId
-    };
-
-
-    if (tab.hasOwnProperty("openerTabId")
-          && tabIdsCrossRef !== undefined) {
-      // Check tab is still present -> was not removed when group was closed
-      // Parent tab has to be opened before children else it will be lost
-      if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
-        tabCreationProperties["openerTabId"] = tabIdsCrossRef[tab.openerTabId];
+      if ( ids.length === 0 ) {
+        return;
       }
     }
 
-    tabCreation = await browser.tabs.create(tabCreationProperties);
+    await browser.tabs.remove(ids);
+    await TabManager.waitTabsToBeClosed(ids);
+  } catch (e) {
+    console.error("TabManager.removeTabs failed.");
+    console.error(e);
   }
-
-  return tabCreation;
 }
 
 /**
@@ -239,13 +285,13 @@ TabManager.openTab = async function(
  * @param {Boolean} openAtLeastOne (optional) - if true and tabsToOpen is empty, open at least a new tab
  * @param {Tab} pendingTab (optional) - A tab to close once the fist tab is open; At least one tab has to be open for closing it
  * @return {Proise{Array[Tab]} - created tab
- TODO: ParentId is not tested
  */
 TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
   inLastPos = false,
   openAtLeastOne = false,
   forceOpenNewTab = false, // Force to open a new tab even if already one
   pendingTab = undefined,
+  remove_pinned = OptionManager.options.pinnedTab.sync
 }={}) {
   try {
     // Look if has Tab in tabs
@@ -303,6 +349,9 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
       return tab.active ? index: accu;
     }, -1);
 
+    // Prepare tabs to remove
+    let tabsToRemove = tabs.filter(tab => remove_pinned || !tab.pinned);
+
     if ( activeIndex >= 0 ) {
       let activeTab = tabsToOpen[activeIndex];
       // Open active tab first
@@ -329,13 +378,17 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
       }
 
       if ( pendingTab ) {
+        /* TODO
         if ( OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE
           && GroupManager.getGroupIdFromTabId(pendingTab.id, false) >= 0) {
           await TabAlive.sleepTab(pendingTab);
         } else {
           await browser.tabs.remove(pendingTab.id);
         }
+        */
         pendingTab = undefined;
+
+        await TabManager.removeTabs(tabsToRemove.map(tab => tab.id));
       }
 
       // Update current Index
@@ -365,9 +418,8 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
     return createdTabs;
 
   } catch (e) {
-    let msg = "TabManager.openListOfTabs failed; " + e;
-    console.error(msg);
-    return msg;
+    console.error("TabManager.openListOfTabs failed.");
+    console.error(e);
   }
 }
 
@@ -710,10 +762,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
     } else {
       tabsToRemove = tabsToRemove.map(tab => tab.id)
       await browser.tabs.remove(tabsToRemove);
-
-      if (Utils.isChrome()) { // Chrome Incompatibility: doesn't wait that tabs are unloaded
-        await TabManager.waitTabsToBeClosed(tabsToRemove);
-      }
+      await TabManager.waitTabsToBeClosed(tabsToRemove);
     }
 
     return survivorTab;

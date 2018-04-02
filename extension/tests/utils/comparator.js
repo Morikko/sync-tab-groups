@@ -38,7 +38,7 @@ TestManager.compareTabs = function(tabs, tabs_ref, full = false) {
         false,
         TestManager.compileErrorMsg(title, "Active", tabs[i].active, tabs_ref[i].active)
       ];
-    if (!Utils.isBeforeFF57() && tabs[i].discarded !== tabs_ref[i].discarded) { // Incompatible FF56
+    if ( Utils.hasDiscardFunction() && tabs[i].discarded !== tabs_ref[i].discarded) {
       return [
         false,
         TestManager.compileErrorMsg(title, "Discarded", tabs[i].discarded, tabs_ref[i].discarded)

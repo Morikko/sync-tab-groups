@@ -50,11 +50,11 @@ TabAlive.keepWindowOpened = async function(windowId){
 }
 
 // TODO
-TabAlive.sleepTab = async function(tab) {
+TabAlive.sleepTab = async function(tabId) {
   await TabAlive.start();
 
   // Move
-  let newTab = await browser.tabs.move(tab.id, {
+  let newTab = await browser.tabs.move(tabId, {
     windowId: TabAlive.WINDOW_ID,
     index: -1,
   });
@@ -63,11 +63,11 @@ TabAlive.sleepTab = async function(tab) {
     newTab = newTab[0];
   }
 
-  let groupId = GroupManager.getGroupIdFromTabId(tab.id);
+  let groupId = GroupManager.getGroupIdFromTabId(tabId);
   let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
   GroupManager.groups[groupIndex].tabs.forEach((tabInGroup)=>{
-    if ( tabInGroup.id === tab.id ) {
+    if ( tabInGroup.id === tabId ) {
       tabInGroup.id = newTab.id;
     }
   });

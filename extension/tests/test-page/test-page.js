@@ -8,7 +8,7 @@ var queryString = new jasmine.QueryString({
 
 var specFilter = new jasmine.HtmlSpecFilter({
   filterString: function() {
-    if (Utils.getParameterByName("enable") !== 'true' && false) {
+    if (Utils.getParameterByName("enable") !== 'true') {
       return "@@@@@@@";
     } else {
       return queryString.getParam("spec")
@@ -62,11 +62,11 @@ function insertParam(key, value) {
   document.location.search = kvp.join('&');
 }
 
-var button = document.createElement("button");
-button.innerText = Utils.getParameterByName("enable") === 'true'
+var enableButton = document.createElement("button");
+enableButton.innerText = Utils.getParameterByName("enable") === 'true'
   ? "Disable"
   : "Enable";
-button.addEventListener("click", () => {
+enableButton.addEventListener("click", () => {
   if (Utils.getParameterByName("enable") === 'true') {
     insertParam("enable", "false");
   } else {
@@ -74,14 +74,27 @@ button.addEventListener("click", () => {
   }
 })
 
+var focusButton = document.createElement("button");
+focusButton.innerText = Utils.getParameterByName("doAll") === 'true'
+  ? "Focus Only"
+  : "All";
+focusButton.addEventListener("click", () => {
+  if (Utils.getParameterByName("doAll") === 'true') {
+    insertParam("doAll", "false");
+  } else {
+    insertParam("doAll", "true");
+  }
+})
+
 document.addEventListener("DOMContentLoaded", () => {
-  document.body.insertBefore(button, document.querySelector("ul"));
+  document.body.insertBefore(enableButton, document.querySelector("ul"));
+  document.body.insertBefore(focusButton, enableButton);
   let div = document.createElement('div');
   div.innerText = "Filter: " + Utils.getParameterByName("spec");
-  document.body.insertBefore(div, button);
+  document.body.insertBefore(div, focusButton);
 });
 
-if ( Utils.getParameterByName("enable") !== 'true' ) {
+if ( Utils.getParameterByName("doAll") !== 'true' ) {
   fdescribe('Force only fdescribe and fit to run', ()=>{
 
   });

@@ -62,6 +62,7 @@
  - coherentPositionInGroups
  - sortGroupsLastAccessed
  - sortGroupsAlphabetically
+ - setUniqueTabIds
 
  - filterGroups
 
@@ -671,7 +672,7 @@ GroupManager.updateAllOpenedGroups = async function() {
 GroupManager.renameGroup = function(groupIndex, title) {
   GroupManager.groups[groupIndex].title = title;
 
-  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE && !Utils.isChrome()) {
+  if ( GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE ) {
     WindowManager.setWindowPrefixGroupTitle(GroupManager.groups[groupIndex].windowId, GroupManager.groups[groupIndex]);
   }
 
@@ -984,8 +985,12 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
 
     let newIds = {};
     group.tabs.forEach((tab, index)=>{
-      // Update ids
-        if (!tab.id || !tab.id.length) {
+        if ( Utils.hasHideFunctions() && tab.hidden === "true" ) {
+          return;
+        }
+
+        // Update ids
+        if ( (!tab.id || !tab.id.length) ) {
           let oldId = tab.id;
           tab.id = Date.now() + "-" + group.id + "-" + index;
           newIds[oldId] = tab.id;

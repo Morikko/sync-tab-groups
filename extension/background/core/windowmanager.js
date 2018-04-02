@@ -51,12 +51,12 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
       newGroupId
     );
 
-    let blank_tab = await TabManager.removeTabsInWindow(windowId);
+    //let blank_tab = await TabManager.removeTabsInWindow(windowId);
 
     await TabManager.openListOfTabs(
       GroupManager.groups[newGroupIndex].tabs, windowId, {
         openAtLeastOne: true,
-        pendingTab: blank_tab,
+        pendingTab: true,
     });
 
     await GroupManager.attachWindowWithGroupId(newGroupId, windowId);
@@ -427,6 +427,9 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
  * @param {Group} group
  */
 WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
+  if ( !Utils.hasWindowTitlePreface() ) {
+    return;
+  }
   try {
     if ( windowId === WINDOW_ID_NONE ) {
       return;
@@ -455,7 +458,7 @@ WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
 WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
   try {
     GroupManager.setLastAccessed(groupId, Date.now());
-    if ( Utils.isFF57() || Utils.isBeforeFF57() ) { //FF
+    if ( Utils.hasWindowTitlePreface() ) {
       if (OptionManager.options.groups.showGroupTitleInWindow) {
         let group = GroupManager.groups[
           GroupManager.getGroupIndexFromGroupId(
@@ -465,7 +468,7 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
         WindowManager.setWindowPrefixGroupTitle(windowId, group);
       }
     }
-    if ( Utils.isFF57() ) { // FF57+
+    if ( Utils.hasSessionWindowValue() ) {
       await browser.sessions.setWindowValue(
         windowId, // integer
         WindowManager.WINDOW_GROUPID, // string
@@ -502,7 +505,7 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
       if ( !(await WindowManager.isWindowIdOpen(windowId)) ) {
         return;
       }
-      if ( Utils.isFF57() || Utils.isBeforeFF57() ) { //FF
+      if ( Utils.hasWindowTitlePreface() ) {
         if (OptionManager.options.groups.showGroupTitleInWindow) {
           browser.windows.update(
             windowId, {
@@ -511,7 +514,7 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
           );
         }
       }
-      if ( Utils.isFF57() ) { //FF57+
+      if ( Utils.hasSessionWindowValue() ) {
         await browser.sessions.removeWindowValue(
           windowId, // integer
           WindowManager.WINDOW_GROUPID, // string
@@ -628,7 +631,7 @@ WindowManager.integrateWindow = async function(windowId, {
     }
 
     let id;
-    if ( Utils.isFF57() ) { // FF57+
+    if ( Utils.hasSessionWindowValue() ) {
       id = await WindowManager.integrateWindowWithSession(
         windowId,
         {even_new_one}

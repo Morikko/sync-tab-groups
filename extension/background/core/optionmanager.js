@@ -161,7 +161,7 @@ OptionManager.onBackUpTimerChange = function(timer, value) {
  * @param {boolean} addTitle
  */
 OptionManager.onShowGroupTitleInWindowChange = function(addTitle) {
-  if ( Utils.isChrome() ) { // Chrome Incompatibility: doesn't handle title preface
+  if ( !Utils.hasWindowTitlePreface() ) { 
     return;
   }
   for (let g of GroupManager.groups) {

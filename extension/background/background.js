@@ -363,8 +363,8 @@ browser.runtime.onInstalled.addListener((details) => {
   }
 
   // Development mode detection
-  else if( (!Utils.isChrome() && details.temporary)  // FF
-      || (Utils.isChrome() && details.reason === "update" && (browser.runtime.getManifest()).version === details.previousVersion)) { // Chrome
+  else if( (Utils.isFirefox() && details.temporary)
+      || (Utils.isChrome() && details.reason === "update" && (browser.runtime.getManifest()).version === details.previousVersion)) {
 
     Event.Install.onDevelopmentInstall();
   }
@@ -376,7 +376,7 @@ browser.runtime.onInstalled.addListener((details) => {
   }
 });
 
-if (Utils.isChrome()) {
+if (Utils.isChrome()) { // Extension tabs are closed on update
   browser.runtime.onUpdateAvailable.addListener(TabManager.undiscardAll);
 }
 
