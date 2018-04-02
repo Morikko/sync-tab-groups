@@ -110,6 +110,25 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.5)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Fix: Tabs number not appearing #100"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Translation to Taiwanese Mandarin (thanks @rzfang)"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.4)"
       ),
       React.createElement(

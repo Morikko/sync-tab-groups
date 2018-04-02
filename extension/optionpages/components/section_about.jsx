@@ -54,6 +54,13 @@ class AboutSection extends React.Component {
           </a>
         </div>
         <h2>
+          Release Notes (0.6.5)
+        </h2>
+        <ul>
+          <li>Fix: Tabs number not appearing #100</li>
+          <li>Add: Translation to Taiwanese Mandarin (thanks @rzfang)</li>
+        </ul>
+        <h2>
           Release Notes (0.6.4)
         </h2>
         <ul>

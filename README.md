@@ -17,6 +17,7 @@ I would gladly accept other translations. Select the link related to your langua
  - [German](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/v0.6.0/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/v0.6.0/extension/_locales/de/messages.json) (v0.6.0)
  - [Spanish](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/34c72370b945423baafb5550a23b3ace11e44fa6/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/34c72370b945423baafb5550a23b3ace11e44fa6/extension/_locales/es/messages.json) (v0.4.1)
  - [Russian](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/e9caca3ed60c9108a2c53f6b9d92ab3ad5a338f4/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/e9caca3ed60c9108a2c53f6b9d92ab3ad5a338f4/extension/_locales/ru/messages.json) (v0.4.1)
+ - [Taiwanese Mandarin](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/b8750968b21f7dc7f9a4461f2790e0a700764e6a/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/b8750968b21f7dc7f9a4461f2790e0a700764e6a/extension/_locales/zh_TW/messages.json) (v0.6.5 Partial)
  - [New language](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json) 
 
 # Bugs
@@ -46,10 +47,10 @@ If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-gr
 
 # Credits
 Translation:
- - @bitkleberAST for the German 
- - Александр for the Russian
- - @lucas-mancini for the Spanish
-
+ - German (thanks @bitkleberAST)
+ - Russian (thanks @Александр)
+ - Spanish (thanks @lucas-mancini)
+ - Taiwanese Mandarin (thanks @rzfang)
 Bootstraped from this project: [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups)
 
 [Website Repository](https://github.com/Morikko/synctabgroups)
