@@ -45,7 +45,9 @@ WindowManager.WINDOW_EXCLUDED = {};
  * @param {Number} windowId - the window id where to do it
  * @returns {Promise}
  */
-WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
+WindowManager.openGroupInWindow = async function(newGroupId, windowId, {
+  forceClosing = false,
+}={}) {
   try {
     let newGroupIndex = GroupManager.getGroupIndexFromGroupId(
       newGroupId
@@ -56,7 +58,8 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
     await TabManager.openListOfTabs(
       GroupManager.groups[newGroupIndex].tabs, windowId, {
         openAtLeastOne: true,
-        pendingTab: true,
+        pendingTab: true, // for compatibility
+        forceClosing
     });
 
     await GroupManager.attachWindowWithGroupId(newGroupId, windowId);
@@ -78,13 +81,14 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
  */
 WindowManager.switchGroup = async function(newGroupId) {
   try {
-    let currentWindow = await browser.windows.getLastFocused();
+    const currentWindow = await browser.windows.getLastFocused();
+    let forceClosing = true;
+
     if (GroupManager.isWindowAlreadyRegistered(currentWindow.id)) { // From sync window
-
-      await GroupManager.detachWindow(currentWindow.id);
-
+      await GroupManager.detachWindow(currentWindow.id, {fireEvent: false});
+      forceClosing = false;
     }
-    await WindowManager.openGroupInWindow(newGroupId, currentWindow.id);
+    await WindowManager.openGroupInWindow(newGroupId, currentWindow.id, {forceClosing});
     return currentWindow.id;
   } catch (e) {
     let msg = "WindowManager.switchGroup failed: " + e;

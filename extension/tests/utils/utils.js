@@ -402,11 +402,14 @@ TestManager.changeGroups = async function(
 
 TestManager.clearWindow = async function(windowId){
   // Clear the window
-  await TabManager.removeTabsInWindow(
-    windowId,{
-      openBlankTab: true,
-      remove_pinned: true,
-    });
+  const tabs = await browser.tabs.query({windowId});
+
+  await browser.tabs.create({
+    windowId,
+    url: null,
+  });
+
+  await browser.tabs.remove(tabs.map(tab => tab.id));
   await TestManager.waitAllTabsToBeLoadedInWindowId(windowId);
 }
 

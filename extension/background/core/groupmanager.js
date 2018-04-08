@@ -64,12 +64,23 @@
  - sortGroupsAlphabetically
  - setUniqueTabIds
 
+ - setTabIsHidden
+
  - filterGroups
 
  * Event: EVENT_CHANGE EVENT_PREPARE
  * DelayedTask: store() (Limited mode)
  */
 var GroupManager = GroupManager || {};
+
+GroupManager.setTabIsHidden = function(tabId, hiddenValue, groups=GroupManager.groups) {
+  const tab = groups.map(group => group.tabs)
+                      .reduce((allTabs, tabs) => allTabs.concat(tabs), [])
+                      .filter(tab => tab.id === tabId)
+  if ( tab.length > 0 ) {
+    tab[0].hidden = hiddenValue;
+  }
+}
 
 // Done after a group modification to assure integrity
 GroupManager.EVENT_PREPARE = 'groups-prepare';
@@ -509,7 +520,9 @@ GroupManager.reloadGroupsFromDisk = async function () {
  * Remove the windowId associated to a group (windows was closed)
  * @param {Number} windowId
  */
-GroupManager.detachWindow = async function(windowId) {
+GroupManager.detachWindow = async function(windowId, {
+  fireEvent=true
+}={}) {
   let groupIndex;
   try {
     groupIndex = GroupManager.getGroupIndexFromWindowId(windowId, {error: false});
@@ -527,7 +540,9 @@ GroupManager.detachWindow = async function(windowId) {
       await WindowManager.desassociateGroupIdToWindow(windowId);
     }
 
-    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+    if ( fireEvent ) {
+      GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+    }
 
   } catch (e) {
     let msg = "GroupManager.detachWindow failed; " + e;
@@ -985,7 +1000,7 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
 
     let newIds = {};
     group.tabs.forEach((tab, index)=>{
-        if ( Utils.hasHideFunctions() && tab.hidden === "true" ) {
+        if ( Utils.hasHideFunctions() && tab.hidden === true ) {
           return;
         }
 

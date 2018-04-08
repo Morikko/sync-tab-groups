@@ -1,3 +1,5 @@
+// Not The best tests
+// See test_select_group.js for a good example
 describe("Switch Group - ", ()=>{
 
   // Keep previous states

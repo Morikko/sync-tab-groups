@@ -1,10 +1,11 @@
-fdescribe("When Hidden Closing State is enabled, ", ()=>{
+describe("When Hidden Closing State is enabled, ", ()=>{
   // Keep previous states
   beforeAll(TestManager.initIntegrationBeforeAll());
   // Set back previous states
   afterAll(TestManager.initIntegrationAfterAll());
 
   beforeAll(async function(){
+    OptionManager.updateOption("groups-syncNewWindow", false);
     OptionManager.updateOption("groups-closingState", OptionManager.CLOSE_HIDDEN);
     this.windowId = await TestManager.openWindow();
   });
@@ -218,5 +219,93 @@ fdescribe("When Hidden Closing State is enabled, ", ()=>{
     });
   });
 
+  fdescribe("WindowManager.switchGroup", () => {
+    beforeEach(async function(){
+      [this.ids, this.groups] = Session.createArrayGroups({
+          groupsLength: 2,
+          tabsLength: 4,
+          global: true,
+          active: 1,
+          title: "Debug switch Groups with hidden"
+        });
+      this.groups = this.ids.map( (id) => GroupManager.groups[
+        GroupManager.getGroupIndexFromGroupId(id, {error: true})
+      ]);
+    });
+
+    afterEach(async function(){
+      for (let id of this.ids ) {
+        if ( GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0 )
+          await GroupManager.removeGroupFromId(id);
+      }
+    });
+
+    it("should open the group and close the previous tabs.", async function(){
+      await TestManager.waitWindowToBeFocused(this.windowId);
+
+      await WindowManager.switchGroup(this.ids[0]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const previousTabs = await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: true,
+      });
+
+      expect(previousTabs.length).toBe(0);
+    });
+
+    it("should close a group by hidding current tabs.", async function(){
+      await TestManager.waitWindowToBeFocused(this.windowId);
+
+      await WindowManager.switchGroup(this.ids[0]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const previousGroupTabs = await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: false,
+      });
+
+      await WindowManager.switchGroup(this.ids[1]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const currentHiddenTabIds = (await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: true,
+      })).map(tab => tab.id);
+
+      expect(currentHiddenTabIds.length).toBe(previousGroupTabs.length);
+      previousGroupTabs.forEach(tab => {
+        expect(currentHiddenTabIds.indexOf(tab.id)).not.toBe(-1);
+      });
+    });
+
+    it("should open a group by showing hidden tabs.", async function(){
+      await TestManager.waitWindowToBeFocused(this.windowId);
+
+      await WindowManager.switchGroup(this.ids[0]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const previousGroupTabs = await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: false,
+      });
+
+      await WindowManager.switchGroup(this.ids[1]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      await WindowManager.switchGroup(this.ids[0]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const currentTabIds = (await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: false,
+      })).map(tab => tab.id);
+
+      expect(currentTabIds.length).toBe(previousGroupTabs.length);
+      previousGroupTabs.forEach(tab => {
+        expect(currentTabIds.indexOf(tab.id)).not.toBe(-1);
+      });
+    });
+  });
 
 });

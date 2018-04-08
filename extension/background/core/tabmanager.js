@@ -245,7 +245,9 @@ TabManager.openTab = async function(
  * If can hide: hide
  * Else: close
  */
-TabManager.removeTabs = async function(tabIdsToRemove) {
+TabManager.removeTabs = async function(tabIdsToRemove, {
+  forceClosing=false,
+}={}) {
   try {
     let ids = Utils.getCopy(tabIdsToRemove);
 
@@ -255,10 +257,11 @@ TabManager.removeTabs = async function(tabIdsToRemove) {
       );
     }
 
-    if ( OptionManager.isClosingHidden() ) {
+    if ( OptionManager.isClosingHidden() && !forceClosing) {
       const results = await Promise.all(
         ids.map(id => TabHidden.hideTab(id))
       );
+      ids.filter((id, index) => results[index]).forEach((id) => GroupManager.setTabIsHidden(id, true));
       ids = ids.filter((id, index) => !results[index]);
 
       if ( ids.length === 0 ) {
@@ -291,7 +294,8 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
   openAtLeastOne = false,
   forceOpenNewTab = false, // Force to open a new tab even if already one
   pendingTab = undefined,
-  remove_pinned = OptionManager.options.pinnedTab.sync
+  remove_pinned = OptionManager.options.pinnedTab.sync,
+  forceClosing = false,
 }={}) {
   try {
     // Look if has Tab in tabs
@@ -388,7 +392,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
         */
         pendingTab = undefined;
 
-        await TabManager.removeTabs(tabsToRemove.map(tab => tab.id));
+        await TabManager.removeTabs(tabsToRemove.map(tab => tab.id), {forceClosing});
       }
 
       // Update current Index
