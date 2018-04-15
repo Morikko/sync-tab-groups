@@ -110,6 +110,30 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.6)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Change UI"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Hiding support in progress ",
+          React.createElement(
+            "a",
+            { href: "https://github.com/Morikko/sync-tab-groups/issues/64" },
+            "#64"
+          )
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.5)"
       ),
       React.createElement(

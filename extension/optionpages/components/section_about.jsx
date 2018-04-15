@@ -54,6 +54,13 @@ class AboutSection extends React.Component {
           </a>
         </div>
         <h2>
+          Release Notes (0.6.6)
+        </h2>
+        <ul>
+          <li>Change UI</li>
+          <li>Hiding support in progress <a href="https://github.com/Morikko/sync-tab-groups/issues/64">#64</a></li>
+        </ul>
+        <h2>
           Release Notes (0.6.5)
         </h2>
         <ul>
