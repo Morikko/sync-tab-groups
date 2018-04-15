@@ -1169,6 +1169,11 @@
   "remove_all_groups": {
     "message": "Remove all groups",
     "description": ""
+  },
+
+  "switch_hidden_disable_sync_pinned": {
+    "message": "Hidden tabs are not compatible with keeping pinned tabs in groups. If you continue pinned tabs are not going to be part of groups any more.\nDo you want to continue ?",
+    "description": ""
   }
 
 }

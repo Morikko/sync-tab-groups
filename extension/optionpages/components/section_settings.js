@@ -311,19 +311,13 @@ class SettingsSection extends React.Component {
           title: "Close",
           onClick: this.clickOnClosingClose.bind(this),
           key: "closing-close",
-          enabled: this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL
-        }),
-        React.createElement(OptionButton, {
-          title: "Alive",
-          onClick: this.clickOnClosingAlive.bind(this),
-          key: "closing-alive",
-          enabled: this.props.options.groups.closingState === OptionManager.CLOSE_ALIVE
+          highlight: this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL
         }),
         React.createElement(OptionButton, {
           title: "Hidden",
           onClick: this.clickOnClosingHidden.bind(this),
           key: "closing-hidden",
-          enabled: this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN
+          highlight: this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN
         })
       )
     });
@@ -490,7 +484,13 @@ class SettingsSection extends React.Component {
   }
 
   clickOnClosingHidden() {
-    this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_HIDDEN);
+    if (this.props.options.pinnedTab.sync) {
+      if (confirm(browser.i18n.getMessage("switch_hidden_disable_sync_pinned"))) {
+        this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_HIDDEN);
+      }
+    } else {
+      this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_HIDDEN);
+    }
   }
 };
 
