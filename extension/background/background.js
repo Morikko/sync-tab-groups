@@ -46,6 +46,8 @@ Background.init = async function() {
   await OptionManager.init();
   await GroupManager.init();
 
+  await TabHidden.onStartInitialization();
+
   Event.Install.prepareExtensionForUpdate(
     Background.lastVersion,
     (browser.runtime.getManifest()).version);

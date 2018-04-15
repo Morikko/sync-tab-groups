@@ -1,4 +1,5 @@
 var TabHidden = TabHidden || {};
+TabHidden.TABHIDDEN_SESSION_KEY = "TABHIDDEN_ID";
 
 /**
  * @param {Number} tabId
@@ -10,6 +11,10 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
   try {
     await browser.tabs.move(tabId, {windowId, index});
     await browser.tabs.show(tabId);
+    browser.sessions.removeTabValue(
+      tabId,
+      TabHidden.TABHIDDEN_SESSION_KEY
+    );
     return true;
   } catch (e) {
     return false;
@@ -27,7 +32,11 @@ TabHidden.hideTab = async function(tabId) {
       () => browser.tabs.discard(tabId),
       2000,
     )
-    
+    browser.sessions.setTabValue(
+      tabId,
+      TabHidden.TABHIDDEN_SESSION_KEY,
+      tabId,
+    );
   }
 
   return result.length !== 0;
@@ -46,6 +55,7 @@ TabHidden.closeAllHiddenTabsInGroups = async function (groups=GroupManager.group
       )
     })
   )
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
 // Close hidden tabs and change hidden property to false if part of a group
@@ -74,4 +84,56 @@ TabHidden.closeHiddenTabs = async function (tabIds) {
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
+TabHidden.onStartInitialization = async function() {
+  if (OptionManager.options.groups.closingState !== OptionManager.CLOSE_HIDDEN) {
+    return;
+  }
 
+  try {
+     // 1. Get all hidden tab ids
+    const hiddenTabIds = (await browser.tabs.query({hidden: true}))
+                            .map(({id}) => id);
+    const updatedHiddenTabIds = {};
+
+    // 2. Bind back to the tabs in the groups
+    await Promise.all(
+      hiddenTabIds.map(async (tabId) => {
+        const keyValue = await browser.sessions.getTabValue(
+          tabId,
+          TabHidden.TABHIDDEN_SESSION_KEY
+        );
+        if ( keyValue == null ) return;
+
+        const oldTabId = parseInt(keyValue)
+        try {
+          const groupId = GroupManager.getGroupIdFromTabId(oldTabId, {error:true});
+          const groupIndex = GroupManager.getGroupIndexFromGroupId(
+            groupId
+          );
+          const tabIndex = GroupManager.getTabIndexFromTabId(
+            oldTabId, groupIndex
+          );
+          GroupManager.groups[groupIndex].tabs[tabIndex].id = tabId;
+          updatedHiddenTabIds[tabId] = true
+        } catch(e) {console.error(e)}
+      })
+    );
+
+    // 3. Update hidden state to missing ones
+    GroupManager.groups.forEach(({tabs}) => {
+      tabs.forEach(tab =>{
+        if ( !tab.hidden ) {
+          return
+        }
+        if ( updatedHiddenTabIds[tab.id] != null ) {
+          return
+        }
+        tab.hidden = false;
+      })
+    })
+
+    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+  } catch (e) {
+    console.error(e)
+  }
+}

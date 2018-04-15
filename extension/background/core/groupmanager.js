@@ -815,11 +815,13 @@ GroupManager.filterGroups = function(groups, filter=undefined) {
 /**
  * Set all windowIds to browser.windows.WINDOW_ID_NONE
  */
-GroupManager.resetAssociatedWindows = function() {
+GroupManager.resetAssociatedWindows = function({fireEvent=true}={}) {
   for (let g of GroupManager.groups) {
     g.windowId = browser.windows.WINDOW_ID_NONE;
   }
-  GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+  if(fireEvent) {
+    GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
+  }
 }
 
 /**
@@ -901,13 +903,14 @@ GroupManager.init = async function() {
     // 1. Set the data
     let groups = await StorageManager.Local.loadGroups();
     GroupManager.groups = GroupManager.check_integrity(groups);
-    GroupManager.resetAssociatedWindows();
+    GroupManager.resetAssociatedWindows({fireEvent:false});
 
     // 2. Integrate open windows
     await GroupManager.integrateAllOpenedWindows();
 
     GroupManager.initEventListener();
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+
     return "GroupManager.init done";
   } catch (e) {
     return "GroupManager.init failed: " + e;
@@ -983,7 +986,7 @@ GroupManager.prepareGroups = function (groups=GroupManager.groups, {
     groups: groups,
     sortingType: OptionManager.options.groups.sortingType
   });
-  GroupManager.coherentActiveTabInGroups({groups: groups});
+  GroupManager.coherentActiveTabInGroups({groups});
   GroupManager.setUniqueTabIds(groups);
 }
 
