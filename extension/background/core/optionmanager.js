@@ -89,7 +89,7 @@ OptionManager.updateOption = async function(optionName, optionValue) {
       await StorageManager.Local.respectMaxBackUp();
       break;
     case "groups-closingState":
-      OptionManager.onClosingStateChange(optionValue);
+      await OptionManager.onClosingStateChange(optionValue);
       break;
   }
   if ( optionName.startsWith("backup-time-") ) {
@@ -111,17 +111,11 @@ OptionManager.getOptionValue = function (optionName) {
 /**
   * Init or stop the automatic back up process
   */
-OptionManager.onClosingStateChange = function(value) {
-  switch(value) {
-    case OptionManager.CLOSE_NORMAL:
-      TabAlive.start();
-      break;
-    case OptionManager.CLOSE_ALIVE:
-      TabAlive.init();
-      break;
-    case OptionManager.CLOSE_HIDDEN:
-      TabAlive.stop();
-      break;
+OptionManager.onClosingStateChange = async function(value) {
+  if ( value === OptionManager.CLOSE_NORMAL ) {
+    await TabHidden.closeAllHiddenTabsInGroups(GroupManager.groups);
+  } else if ( value === OptionManager.CLOSE_HIDDEN) {
+    await OptionManager.updateOption("pinnedTab-sync", false);
   }
 }
 
@@ -161,7 +155,7 @@ OptionManager.onBackUpTimerChange = function(timer, value) {
  * @param {boolean} addTitle
  */
 OptionManager.onShowGroupTitleInWindowChange = function(addTitle) {
-  if ( !Utils.hasWindowTitlePreface() ) { 
+  if ( !Utils.hasWindowTitlePreface() ) {
     return;
   }
   for (let g of GroupManager.groups) {
