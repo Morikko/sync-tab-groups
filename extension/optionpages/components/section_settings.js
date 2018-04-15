@@ -456,7 +456,13 @@ class SettingsSection extends React.Component {
   }
 
   clickOnIncluded() {
-    this.props.onOptionChange("pinnedTab-sync", true);
+    if (this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN) {
+      if (confirm(browser.i18n.getMessage("switch_pinned_included_disable_hidden"))) {
+        this.props.onOptionChange("pinnedTab-sync", true);
+      }
+    } else {
+      this.props.onOptionChange("pinnedTab-sync", true);
+    }
   }
 
   clickOnPrivate() {

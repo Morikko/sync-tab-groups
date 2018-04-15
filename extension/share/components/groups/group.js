@@ -176,13 +176,13 @@ class Group extends React.Component {
       onExpand: this.handleGroupExpandClick,
       onUndoCloseClick: this.handleGroupCloseAbortClick,
       onOpenInNewWindow: this.handleOpenInNewWindowClick,
-      controlsEnable: this.props.controlsEnable
+      controlsEnable: this.props.controlsEnable,
+      onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup
     });
   }
 
   getTabList() {
     let selectionFilter = this.props.selectionFilter !== undefined ? this.props.selectionFilter.tabs : undefined;
-
     return React.createElement(TabList, {
       tabs: this.props.group.tabs,
       group: this.props.group,
@@ -192,6 +192,7 @@ class Group extends React.Component {
       opened: this.state.opened,
       onCloseTab: this.props.onCloseTab,
       onOpenTab: this.props.onOpenTab,
+      onRemoveHiddenTab: this.props.onRemoveHiddenTab,
       searchTabsResults: this.props.searchGroupResult ? this.props.searchGroupResult.searchTabsResults : undefined,
       groups: this.props.groups,
       onChangePinState: this.props.onChangePinState,

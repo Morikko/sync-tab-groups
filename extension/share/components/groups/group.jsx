@@ -192,6 +192,7 @@ class Group extends React.Component {
       onUndoCloseClick={this.handleGroupCloseAbortClick} 
       onOpenInNewWindow={this.handleOpenInNewWindowClick}
       controlsEnable={this.props.controlsEnable}
+      onRemoveHiddenTabsInGroup={this.props.onRemoveHiddenTabsInGroup}
     />
     );
   }
@@ -200,7 +201,6 @@ class Group extends React.Component {
     let selectionFilter = this.props.selectionFilter !== undefined
                       ? this.props.selectionFilter.tabs
                       : undefined;
-
     return (
       <TabList
         tabs={this.props.group.tabs}
@@ -211,6 +211,7 @@ class Group extends React.Component {
         opened={this.state.opened}
         onCloseTab={this.props.onCloseTab}
         onOpenTab={this.props.onOpenTab}
+        onRemoveHiddenTab={this.props.onRemoveHiddenTab}
         searchTabsResults={(
           this.props.searchGroupResult
             ? this.props.searchGroupResult.searchTabsResults

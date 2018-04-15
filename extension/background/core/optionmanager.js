@@ -62,7 +62,7 @@ OptionManager.updateOption = async function(optionName, optionValue) {
       //OptionManager.onPrivateWindowSyncChange(optionValue);
       break;
     case "pinnedTab-sync":
-      OptionManager.onPinnedTabSyncChange();
+      OptionManager.onPinnedTabSyncChange(optionValue);
       break;
     case "groups-removeEmptyGroup":
       OptionManager.onRemoveEmptyGroupChange();
@@ -206,7 +206,13 @@ OptionManager.onPrivateWindowSyncChange = async function(state) {
  * Refresh opened groups to add/remove pinned tabs
  * Pinned tabs in closed groups are not removed
  */
-OptionManager.onPinnedTabSyncChange = async function() {
+OptionManager.onPinnedTabSyncChange = async function(value) {
+  if ( value 
+    && OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN ){
+      await OptionManager.updateOption(
+        "groups-closingState", OptionManager.CLOSE_NORMAL
+      );
+  }
   try {
     await GroupManager.updateAllOpenedGroups();
     return "OptionManager.onPinnedTabSyncChange done!";

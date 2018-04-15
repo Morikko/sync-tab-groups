@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
         onGroupChangePosition: GroupActions.changeGroupPosition,
         onChangePinState: GroupActions.onChangePinState,
         onChangeExpand: GroupActions.onChangeExpand,
+        onRemoveHiddenTabsInGroup: GroupActions.onRemoveHiddenTabsInGroup,
+        onRemoveHiddenTab: GroupActions.onRemoveHiddenTab,
       })
     ),
     document.getElementById("content")

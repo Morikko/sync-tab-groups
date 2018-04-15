@@ -73,7 +73,7 @@ class SaveSectionStandalone extends React.Component {
   }
 
   handleClickOnRemoveAllGroups() {
-  if (confirm(browser.i18n.getMessage("options_remove_groups_confirm"))) {
+    if (confirm(browser.i18n.getMessage("options_remove_groups_confirm"))) {
         this.props.onDeleteAllGroups();
     }
   }

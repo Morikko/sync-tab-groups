@@ -356,6 +356,14 @@ li {
   background: #555;
 }
 
+.hidden-icon {
+  opacity: 0.7;
+  height: 16px;
+  width: 16px;
+  margin: auto 0;
+  margin-right: 3px;
+}
+
 .tab-icon {
   height: 16px;
   width: 16px;

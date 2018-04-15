@@ -106,6 +106,38 @@ class Tab extends React.Component{
       ? (
         <i className="arrow-focus fa fa-fw fa-angle-right"></i>
       ) : null;
+    const pinnedIcon = this.props.tab.pinned 
+      ? (<i className="pinned-icon fa fa-fw fa-thumb-tack"></i>)
+      : null;
+
+    const hiddenIcon = this.props.tab.hidden 
+      ? (<i className="hidden-icon fa fa-fw fa-eye-slash"
+            title="This tab is hidden."  
+        ></i>)
+      : null;
+
+    const tabTitleSpan = (
+      <span className={"tab-title"}>
+        {this.props.tab.title}
+      </span>
+    );
+
+    const tabControls = (
+      <TabControls
+          opened={this.props.opened}
+          onCloseTab={this.handleCloseTabClick}
+          onOpenTab={this.handleOpenTabClick}
+          onPinChange={this.handleChangePin}
+          onRemoveHiddenTab={this.props.onRemoveHiddenTab}
+          isPinned={this.props.tab.pinned}
+          groups={this.props.groups}
+          group={this.props.group}
+          tab={this.props.tab}
+          handleOnMoveTabMenuClick={this.handleOnMoveTabMenuClick}
+          handleOnMoveTabNewMenuClick={this.handleOnMoveTabNewMenuClick}
+          controlsEnable={this.props.controlsEnable}
+       />
+    );
 
     return (
       <li
@@ -143,33 +175,11 @@ class Tab extends React.Component{
           : undefined}
       >
         {checkbox}
-        
-        {
-          this.props.tab.pinned &&
-          <i
-            className="pinned-icon fa fa-fw fa-thumb-tack"
-          ></i>
-        }
+        {pinnedIcon}
+        {hiddenIcon}
         {favicon}
-        {hasFocusIcon}
-        <span
-          className={"tab-title"}
-        >
-          {this.props.tab.title}
-        </span>
-        <TabControls
-          opened={this.props.opened}
-          onCloseTab={this.handleCloseTabClick}
-          onOpenTab={this.handleOpenTabClick}
-          onPinChange={this.handleChangePin}
-          isPinned={this.props.tab.pinned}
-          groups={this.props.groups}
-          group={this.props.group}
-          tab={this.props.tab}
-          handleOnMoveTabMenuClick={this.handleOnMoveTabMenuClick}
-          handleOnMoveTabNewMenuClick={this.handleOnMoveTabNewMenuClick}
-          controlsEnable={this.props.controlsEnable}
-        />
+        {tabTitleSpan}
+        {tabControls}
       </li>);
   }
 

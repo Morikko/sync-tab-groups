@@ -94,6 +94,8 @@ class GroupList extends React.Component {
               onGroupChangePosition= {this.props.onGroupChangePosition}
               onChangePinState= {this.props.onChangePinState}
               onChangeExpand= {this.props.onChangeExpand}
+              onRemoveHiddenTabsInGroup={this.props.onRemoveHiddenTabsInGroup}
+              onRemoveHiddenTab={this.props.onRemoveHiddenTab}
               /*** Data ***/
               key= {this.props.groups[index].id}
               groups= {this.props.groups}

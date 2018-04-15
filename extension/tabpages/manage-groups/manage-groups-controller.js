@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
       onOptionChange: GroupActions.onOptionChange,
       onGroupChangePosition: GroupActions.changeGroupPosition,
       onChangePinState: GroupActions.onChangePinState,
-      onChangeExpand: GroupActions.onChangeExpand
+      onChangeExpand: GroupActions.onChangeExpand,
+      onRemoveHiddenTabsInGroup: GroupActions.onRemoveHiddenTabsInGroup,
+      onRemoveHiddenTab: GroupActions.onRemoveHiddenTab
     })
   ), document.getElementById("content"));
 });

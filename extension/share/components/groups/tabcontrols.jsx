@@ -79,6 +79,23 @@ class TabControls extends React.Component{
   }
 
   createTabActionsPanel() {
+    const hiddenRemoveAction = this.props.tab.hidden 
+     ? (
+      <span
+          className="row"
+          onClick={((event)=>{
+            if (event) {
+              event.stopPropagation();
+            }
+            this.props.onRemoveHiddenTab(this.props.tab.id);
+            this.closeExtraActions();
+          }).bind(this)}>
+          <i className="fa fa-fw fa-eye-slash" />
+          {browser.i18n.getMessage("close_hidden_tab")}
+      </span>
+     )
+     : null;
+    
     return (
       <div className={classNames({
         "tab-actions-panel": true,
@@ -114,6 +131,7 @@ class TabControls extends React.Component{
           <i className="fa fa-fw fa-thumb-tack" />
           {browser.i18n.getMessage(this.props.isPinned ? "unpin_tab" : "pin_tab")}
         </span>
+        {hiddenRemoveAction}
       </div>
     )
   }

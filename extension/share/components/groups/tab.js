@@ -90,6 +90,32 @@ class Tab extends React.Component {
     }) : null;
 
     const hasFocusIcon = this.state.hasFocus ? React.createElement("i", { className: "arrow-focus fa fa-fw fa-angle-right" }) : null;
+    const pinnedIcon = this.props.tab.pinned ? React.createElement("i", { className: "pinned-icon fa fa-fw fa-thumb-tack" }) : null;
+
+    const hiddenIcon = this.props.tab.hidden ? React.createElement("i", { className: "hidden-icon fa fa-fw fa-eye-slash",
+      title: "This tab is hidden."
+    }) : null;
+
+    const tabTitleSpan = React.createElement(
+      "span",
+      { className: "tab-title" },
+      this.props.tab.title
+    );
+
+    const tabControls = React.createElement(TabControls, {
+      opened: this.props.opened,
+      onCloseTab: this.handleCloseTabClick,
+      onOpenTab: this.handleOpenTabClick,
+      onPinChange: this.handleChangePin,
+      onRemoveHiddenTab: this.props.onRemoveHiddenTab,
+      isPinned: this.props.tab.pinned,
+      groups: this.props.groups,
+      group: this.props.group,
+      tab: this.props.tab,
+      handleOnMoveTabMenuClick: this.handleOnMoveTabMenuClick,
+      handleOnMoveTabNewMenuClick: this.handleOnMoveTabNewMenuClick,
+      controlsEnable: this.props.controlsEnable
+    });
 
     return React.createElement(
       "li",
@@ -123,31 +149,11 @@ class Tab extends React.Component {
         onKeyDown: this.props.hotkeysEnable ? Utils.doActivateHotkeys(tabNavigationListener(this), this.props.hotkeysEnable) : undefined
       },
       checkbox,
-      this.props.tab.pinned && React.createElement("i", {
-        className: "pinned-icon fa fa-fw fa-thumb-tack"
-      }),
+      pinnedIcon,
+      hiddenIcon,
       favicon,
-      hasFocusIcon,
-      React.createElement(
-        "span",
-        {
-          className: "tab-title"
-        },
-        this.props.tab.title
-      ),
-      React.createElement(TabControls, {
-        opened: this.props.opened,
-        onCloseTab: this.handleCloseTabClick,
-        onOpenTab: this.handleOpenTabClick,
-        onPinChange: this.handleChangePin,
-        isPinned: this.props.tab.pinned,
-        groups: this.props.groups,
-        group: this.props.group,
-        tab: this.props.tab,
-        handleOnMoveTabMenuClick: this.handleOnMoveTabMenuClick,
-        handleOnMoveTabNewMenuClick: this.handleOnMoveTabNewMenuClick,
-        controlsEnable: this.props.controlsEnable
-      })
+      tabTitleSpan,
+      tabControls
     );
   }
 

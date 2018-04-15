@@ -96,18 +96,18 @@ OptionManager.TEMPLATE = function() {
   return {
     version: 0.1,
     privateWindow: {
-      sync: true,
+      sync: false,
       removeOnClose: true
     },
     pinnedTab: {
-      sync: true
+      sync: false
     },
     bookmarks: {
       sync: false,
       folder: "Default"
     },
     groups: {
-      syncNewWindow: true,
+      syncNewWindow: false,
       removeEmptyGroup: false,
       showGroupTitleInWindow: false,
       sortingType: OptionManager.SORT_OLD_RECENT,

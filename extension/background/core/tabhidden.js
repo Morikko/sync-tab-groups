@@ -10,7 +10,6 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
   try {
     await browser.tabs.move(tabId, {windowId, index});
     await browser.tabs.show(tabId);
-    //browser.tabs.update(tabId, {muted: false});
     return true;
   } catch (e) {
     return false;
@@ -24,8 +23,11 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
 TabHidden.hideTab = async function(tabId) {
   const result = await browser.tabs.hide(tabId);
   if ( result.length !== 0 ) {
-    //browser.tabs.update(tabId, {muted: true});
-    browser.tabs.discard(tabId);
+    setTimeout( // Avoid overloading
+      () => browser.tabs.discard(tabId),
+      2000,
+    )
+    
   }
 
   return result.length !== 0;
@@ -45,3 +47,31 @@ TabHidden.closeAllHiddenTabsInGroups = async function (groups=GroupManager.group
     })
   )
 }
+
+// Close hidden tabs and change hidden property to false if part of a group
+TabHidden.closeHiddenTabs = async function (tabIds) {
+  if ( !Array.isArray(tabIds) ) {
+    tabIds = [tabIds]
+  }
+
+  try {
+    await browser.tabs.remove(tabIds);
+  } catch (e) {console.error(e)}
+
+  tabIds.forEach(tabId => {
+    try {
+      const groupId = GroupManager.getGroupIdFromTabId(tabId);
+      const groupIndex = GroupManager.getGroupIndexFromGroupId(
+        groupId
+      );
+      const tabIndex = GroupManager.getTabIndexFromTabId(
+        tabId, groupIndex
+      );
+      GroupManager.groups[groupIndex].tabs[tabIndex].hidden = false;
+    } catch(e) {console.error(e)}
+  });
+
+  GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+}
+
+

@@ -21,6 +21,7 @@ class TabList extends React.Component {
           onTabClick: this.props.onTabClick,
           onGroupDrop: this.props.onGroupDrop,
           onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
+          onRemoveHiddenTab: this.props.onRemoveHiddenTab,
           opened: this.props.opened,
           onCloseTab: this.props.onCloseTab,
           onOpenTab: this.props.onOpenTab,

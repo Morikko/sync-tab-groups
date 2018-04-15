@@ -102,7 +102,9 @@ class ManagePanelStandAlone extends React.Component {
             onGroupDrop: this.props.onGroupDrop,
             onGroupChangePosition: this.props.onGroupChangePosition,
             onChangePinState: this.props.onChangePinState,
-            onChangeExpand: this.props.onChangeExpand
+            onChangeExpand: this.props.onChangeExpand,
+            onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
+            onRemoveHiddenTab: this.props.onRemoveHiddenTab
             /*** Data ***/
             , groups: this.props.groups,
             currentWindowId: this.props.currentWindowId,
@@ -161,7 +163,9 @@ class ManagePanelStandAlone extends React.Component {
             onGroupDrop: this.props.onGroupDrop,
             onGroupChangePosition: this.props.onGroupChangePosition,
             onChangePinState: this.props.onChangePinState,
-            onChangeExpand: this.props.onChangeExpand
+            onChangeExpand: this.props.onChangeExpand,
+            onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
+            onRemoveHiddenTab: this.props.onRemoveHiddenTab
             /*** Data ***/
             , groups: this.props.groups,
             currentWindowId: this.props.currentWindowId,

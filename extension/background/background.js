@@ -96,6 +96,16 @@ Background.refreshUi = function() {
   });
 };
 
+Background.onRemoveHiddenTab = function({tabId}) {
+  TabHidden.closeHiddenTabs(tabId);
+};
+
+Background.onRemoveHiddenTabsInGroup = function({groupId}) {
+  const groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
+  const tabIds = GroupManager.groups[groupIndex].tabs.map(({id}) => id);
+  TabHidden.closeHiddenTabs(tabIds);
+};
+
 Background.onOpenGroupInNewWindow = function({groupId}) {
   WindowManager.selectGroup(groupId, {newWindow: true});
 };
@@ -175,7 +185,8 @@ Background.onGroupRemove = async function({
 Background.onGroupRename = function({
   groupId,
   title
-}) {
+}) 
+{
   GroupManager.renameGroup(
     GroupManager.getGroupIndexFromGroupId(groupId),
     title

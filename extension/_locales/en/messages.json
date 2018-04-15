@@ -1174,6 +1174,16 @@
   "switch_hidden_disable_sync_pinned": {
     "message": "Hidden tabs are not compatible with keeping pinned tabs in groups. If you continue pinned tabs are not going to be part of groups any more.\nDo you want to continue ?",
     "description": ""
+  },
+
+  "switch_pinned_included_disable_hidden": {
+    "message": "Hidden tabs are not compatible with keeping pinned tabs in groups. If you continue pinned tabs are going to be part of your groups but your tabs are not going to be hidden any more.\nDo you want to continue ?",
+    "description": ""
+  },
+
+  "close_hidden_tab": {
+    "message": "Close hidden tab",
+    "description": "From tab context menu"
   }
 
 }

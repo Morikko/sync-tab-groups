@@ -119,7 +119,19 @@ const GroupActions = {
       groupId: groupId,
       tabIndex: tabIndex
     });
-  }
+  },
+
+  onRemoveHiddenTab: function(tabId) {
+    Utils.sendMessage("Tab:RemoveHiddenTab", {
+      tabId
+    });
+  },
+
+  onRemoveHiddenTabsInGroup: function(groupId) {
+    Utils.sendMessage("Group:RemoveHiddenTabsInGroup", {
+      groupId
+    });
+  },
 };
 
 

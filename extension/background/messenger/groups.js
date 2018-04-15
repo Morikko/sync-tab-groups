@@ -56,5 +56,11 @@ Messenger.Groups.popupMessenger = function(message) {
     case "Group:Expand":
       Background.onChangeExpand(message.params);
       break;
+    case "Tab:RemoveHiddenTab":
+      Background.onRemoveHiddenTab(message.params);
+      break;
+    case "Group:RemoveHiddenTabsInGroup":
+      Background.onRemoveHiddenTabsInGroup(message.params);
+      break;
   }
 }
