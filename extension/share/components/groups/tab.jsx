@@ -63,8 +63,8 @@ class Tab extends React.Component{
       />
     );
 
-    let active = this.props.selected !== undefined
-      ? this.props.selected
+    const active = this.props.selected !== undefined
+      ? false
       : this.props.tab.active;
 
     let tabClasses = classNames({
@@ -102,6 +102,11 @@ class Tab extends React.Component{
       )
       : null;
 
+    const hasFocusIcon = this.state.hasFocus
+      ? (
+        <i className="arrow-focus fa fa-fw fa-angle-right"></i>
+      ) : null;
+
     return (
       <li
         className={tabClasses}
@@ -117,6 +122,7 @@ class Tab extends React.Component{
         title={tabTitle}
         tabIndex="0"
         onFocus={(e)=>{
+          e.stopPropagation();
           if ( (typeof Navigation !== 'undefined')
           && Navigation.KEY_PRESSED_RECENTLY ) {
             this.setState({
@@ -125,6 +131,7 @@ class Tab extends React.Component{
           }
         }}
         onBlur={(e)=>{
+          e.stopPropagation();
           this.setState({
             hasFocus: false,
           })
@@ -136,6 +143,7 @@ class Tab extends React.Component{
           : undefined}
       >
         {checkbox}
+        
         {
           this.props.tab.pinned &&
           <i
@@ -143,6 +151,7 @@ class Tab extends React.Component{
           ></i>
         }
         {favicon}
+        {hasFocusIcon}
         <span
           className={"tab-title"}
         >

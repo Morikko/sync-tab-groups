@@ -60,7 +60,7 @@ class Tab extends React.Component {
       src: this.getfavIconUrl(this.props.tab.favIconUrl)
     });
 
-    let active = this.props.selected !== undefined ? this.props.selected : this.props.tab.active;
+    const active = this.props.selected !== undefined ? false : this.props.tab.active;
 
     let tabClasses = classNames({
       hasFocus: this.state.hasFocus,
@@ -89,6 +89,8 @@ class Tab extends React.Component {
       disabled: false
     }) : null;
 
+    const hasFocusIcon = this.state.hasFocus ? React.createElement("i", { className: "arrow-focus fa fa-fw fa-angle-right" }) : null;
+
     return React.createElement(
       "li",
       {
@@ -105,6 +107,7 @@ class Tab extends React.Component {
         title: tabTitle,
         tabIndex: "0",
         onFocus: e => {
+          e.stopPropagation();
           if (typeof Navigation !== 'undefined' && Navigation.KEY_PRESSED_RECENTLY) {
             this.setState({
               hasFocus: true
@@ -112,6 +115,7 @@ class Tab extends React.Component {
           }
         },
         onBlur: e => {
+          e.stopPropagation();
           this.setState({
             hasFocus: false
           });
@@ -123,6 +127,7 @@ class Tab extends React.Component {
         className: "pinned-icon fa fa-fw fa-thumb-tack"
       }),
       favicon,
+      hasFocusIcon,
       React.createElement(
         "span",
         {

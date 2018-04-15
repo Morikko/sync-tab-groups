@@ -113,46 +113,23 @@ li {
   cursor: pointer;
 }
 
-.group.hasFocus:focus .group-title, .tab.hasFocus:focus .tab-title {
-  font-weight: bold;
-}
-
 .group:focus, .tab:focus {
   outline: 0;
 }
 /* Group in window and active tab */
 
-
 /** Colors **/
-.group.active, .tab.active {
-  background-color: var(--group-open);
-}
-
-.group.active.focusGroup, .focusGroup .tab.active {
-  background-color: var(--group-focus);
-  color: #333;
-}
 
 .group.hoverStyle:hover, .tab.hoverStyle:hover {
-  background-color: var(--group-hover) !important;
-  color: #fff !important;
+  background-color: var(--group-open) !important;
 }
 
-
-.group.incognito {
+.group.incognito:not(.active) {
   background-color: var(--private-debug);
-}
-.group.incognito.active, .incognito .tab.active {
-  background-color: var(--private-open);
-}
-
-.group.incognito.active.focusGroup, .incognito.focusGroup .tab.active {
-  background-color: var(--private-focus);
 }
 
 .group.incognito.hoverStyle:hover, .incognito .tab.hoverStyle:hover {
-  background-color: var(--private-hover)  !important;
-  color: #fff  !important;
+  background-color: var(--private-open)  !important;
 }
 
 .group-control:hover, .tab-edit:hover {
@@ -160,7 +137,7 @@ li {
 }
 
 .incognito .group-control:hover, .incognito .tab-edit:hover {
-  background-color: var(--private-open);
+  background-color: var(--private-focus);
 }
 
 .groupadd-controls i:hover {
@@ -169,11 +146,6 @@ li {
 
 .addButton:hover {
   background-color: var(--not-checked-hover);
-}
-
-.group:hover .group-title > input {
-  color: #fff;
-  border: 1px solid #fff;
 }
 
 .group.closing .group-title, .group.removing .group-title {
@@ -250,6 +222,10 @@ li {
   padding-right: 15px;
   padding-left: 5px;
   box-sizing: border-box;
+}
+
+.focusGroup .group-title {
+  font-weight: bold;
 }
 
 .group-title-text {
@@ -342,11 +318,42 @@ li {
   margin: auto 0;
 }
 
+.tab.active .tab-title {
+  font-weight: bold;
+}
+
 .pinned-icon {
   opacity: 0.7;
   height: 16px;
   width: 16px;
   margin: auto 0;
+}
+
+.arrow-focus {
+  color: #000;
+  height: 16px;
+  width: 16px;
+  font-weight: bold;
+  margin: auto 0;
+}
+
+.window-open {
+  height: 20px;
+  align-self: center;
+  color: #fff;
+  font-weight: bold;
+  background: var(--group-highlight);
+  padding: 0 3px;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+.group.incognito .window-open {
+  background: var(--private-highlight);
+}
+
+.group.closing .window-open, .group.removing .window-open {
+  background: #555;
 }
 
 .tab-icon {

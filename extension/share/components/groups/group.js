@@ -128,13 +128,13 @@ class Group extends React.Component {
   }
 
   getGroupClasses() {
-    let focusGroup = this.props.selectionFilter !== undefined ? false : this.props.currentWindowId === this.props.group.windowId;
+    let groupInWindow = this.props.selectionFilter !== undefined ? false : this.props.currentWindowId === this.props.group.windowId;
 
-    let active = this.props.selectionFilter !== undefined ? this.props.selectionFilter.selected : this.props.group.windowId > -1;
+    let isOpen = this.props.selectionFilter !== undefined ? this.props.selectionFilter.selected : this.props.group.windowId > -1;
     return classNames({
       hasFocus: this.state.hasFocus,
       hoverStyle: this.props.hoverStyle,
-      active: active,
+      active: isOpen,
       editing: this.state.editing,
       closing: this.state.closing,
       removing: this.state.removing,
@@ -142,7 +142,7 @@ class Group extends React.Component {
       dragTopBorder: this.state.dragOnTop,
       dragBottomBorder: this.state.dragOnBottom,
       expanded: this.state.expanded,
-      focusGroup: focusGroup,
+      focusGroup: groupInWindow,
       group: true,
       hiddenBySearch: !(this.props.searchGroupResult ? this.props.searchGroupResult.atLeastOneResult : true),
       incognito: this.props.group.incognito
@@ -168,7 +168,14 @@ class Group extends React.Component {
       editing: this.state.editing,
       expanded: this.state.expanded,
       opened: this.state.opened,
-      onClose: this.handleGroupCloseClick, onRemove: this.handleGroupRemoveClick, onEdit: this.handleGroupEditClick, onEditAbort: this.handleGroupEditAbortClick, onEditSave: this.handleGroupEditSaveClick, onExpand: this.handleGroupExpandClick, onUndoCloseClick: this.handleGroupCloseAbortClick, onOpenInNewWindow: this.handleOpenInNewWindowClick,
+      onClose: this.handleGroupCloseClick,
+      onRemove: this.handleGroupRemoveClick,
+      onEdit: this.handleGroupEditClick,
+      onEditAbort: this.handleGroupEditAbortClick,
+      onEditSave: this.handleGroupEditSaveClick,
+      onExpand: this.handleGroupExpandClick,
+      onUndoCloseClick: this.handleGroupCloseAbortClick,
+      onOpenInNewWindow: this.handleOpenInNewWindowClick,
       controlsEnable: this.props.controlsEnable
     });
   }
@@ -179,13 +186,18 @@ class Group extends React.Component {
     return React.createElement(TabList, {
       tabs: this.props.group.tabs,
       group: this.props.group,
-      onTabClick: this.props.onTabClick, onGroupDrop: this.props.onGroupDrop,
+      onTabClick: this.props.onTabClick,
+      onGroupDrop: this.props.onGroupDrop,
       onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
       opened: this.state.opened,
       onCloseTab: this.props.onCloseTab,
       onOpenTab: this.props.onOpenTab,
-      searchTabsResults: this.props.searchGroupResult ? this.props.searchGroupResult.searchTabsResults : undefined, groups: this.props.groups,
-      onChangePinState: this.props.onChangePinState, visible: this.state.expanded, allowClickSwitch: this.props.allowClickSwitch, hotkeysEnable: this.props.hotkeysEnable,
+      searchTabsResults: this.props.searchGroupResult ? this.props.searchGroupResult.searchTabsResults : undefined,
+      groups: this.props.groups,
+      onChangePinState: this.props.onChangePinState,
+      visible: this.state.expanded,
+      allowClickSwitch: this.props.allowClickSwitch,
+      hotkeysEnable: this.props.hotkeysEnable,
       selectionFilter: selectionFilter,
       hoverStyle: this.props.hoverStyle,
       controlsEnable: this.props.controlsEnable,
@@ -194,13 +206,7 @@ class Group extends React.Component {
   }
 
   render() {
-    let titleElement = this.getTitleElement();
-
-    let groupClasses = this.getGroupClasses();
-
-    let groupTitle = this.getGroupTitle();
-
-    let checkbox = this.props.selectionFilter !== undefined ? React.createElement(NiceCheckbox, {
+    const checkbox = this.props.selectionFilter !== undefined ? React.createElement(NiceCheckbox, {
       checked: this.props.selectionFilter.selected === this.props.group.tabs.length && this.props.selectionFilter.selected > 0,
       onCheckChange: () => {
         this.props.onGroupClick(this.props.group.id, this.props.selectionFilter.selected);
@@ -211,40 +217,64 @@ class Group extends React.Component {
       disabled: this.props.group.tabs.length === 0
     }) : null;
 
+    const onKeyDownListener = this.props.hotkeysEnable ? Utils.doActivateHotkeys(groupNavigationListener(this), this.props.hotkeysEnable) : undefined;
+
+    const onFocusEvent = e => {
+      if (typeof Navigation !== 'undefined' && Navigation["KEY_PRESSED_RECENTLY"]) {
+        this.setState({
+          hasFocus: true
+        });
+      }
+    };
+
+    const onBlurEvent = e => {
+      this.setState({
+        hasFocus: false
+      });
+    };
+
+    const groupStyle = {
+      width: this.props.width
+    };
+
+    const tabList = this.state.waitFirstMount ? this.getTabList() : null;
+
+    const hasFocusIcon = this.state.hasFocus ? React.createElement("i", { className: "arrow-focus fa fa-fw fa-angle-right" }) : null;
+
+    const openedIcon = this.state.opened && this.props.selectionFilter == null ? React.createElement(
+      "span",
+      { className: "window-open" },
+      "OPEN"
+    ) : null;
+
     return React.createElement(
       "li",
       {
-        className: groupClasses,
+        className: this.getGroupClasses(),
         onMouseUp: this.handleGroupClick,
         draggable: this.props.groupDraggable && this.props.draggable,
-        onDragOver: this.handleGroupDragOver, onDragEnter: this.handleGroupDragEnter, onDragLeave: this.handleGroupDragLeave, onDragStart: this.handleGroupDragStart,
+        onDragOver: this.handleGroupDragOver,
+        onDragEnter: this.handleGroupDragEnter,
+        onDragLeave: this.handleGroupDragLeave,
+        onDragStart: this.handleGroupDragStart,
         onDrop: this.handleGroupDrop,
-        title: groupTitle,
-        style: {
-          width: this.props.width
-        },
-        onFocus: e => {
-          if (typeof Navigation !== 'undefined' && Navigation["KEY_PRESSED_RECENTLY"]) {
-            this.setState({
-              hasFocus: true
-            });
-          }
-        },
-        onBlur: e => {
-          this.setState({
-            hasFocus: false
-          });
-        },
+        title: this.getGroupTitle(),
+        style: groupStyle,
+        onFocus: onFocusEvent,
+        onBlur: onBlurEvent,
         tabIndex: "0",
-        onKeyDown: this.props.hotkeysEnable ? Utils.doActivateHotkeys(groupNavigationListener(this), this.props.hotkeysEnable) : undefined },
+        onKeyDown: onKeyDownListener
+      },
       React.createElement(
         "span",
         { className: "group-title" },
         checkbox,
-        titleElement,
+        openedIcon,
+        hasFocusIcon,
+        this.getTitleElement(),
         this.getGroupControls()
       ),
-      this.state.waitFirstMount && this.getTabList()
+      tabList
     );
   }
 
