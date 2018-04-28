@@ -368,6 +368,35 @@ Background.onChangeExpand = function({
   );
 };
 
+Background.refreshData = function({
+  all_tabs=false
+}={}) {
+  if ( all_tabs ) {
+    Background.sendAllTabs();
+  } else {
+    Background.refreshUi();
+  }
+  Background.refreshOptionsUI();
+}
+
+Background.sendAllTabs = async function() {
+  const windows = await browser.windows.getAll({populate: true});
+  const groups = windows.map((window, index) =>{
+    return new GroupManager.Group({
+        id: index,
+        title: "Window " + window.id,
+        tabs: window.tabs,
+        windowId: window.id,
+        incognito: window.incognito
+    })
+  })
+  Utils.sendMessage("Tabs:All", {
+    groups
+  });
+}
+
+
+
 /*** Init CRITICAL Event ***/
 browser.runtime.onInstalled.addListener((details) => {
   // Only when the extension is installed for the first time

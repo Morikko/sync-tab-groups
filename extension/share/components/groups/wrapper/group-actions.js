@@ -72,7 +72,10 @@ const GroupActions = {
   },
 
   askData: function() {
-    Utils.sendMessage("Data:Ask", {});
+    Utils.sendMessage("Data:Ask", window.location != null
+      ? {all_tabs: window.location.search.includes("all_tabs")}
+      : {}
+    );
   },
 
   openSettings: function() {
@@ -134,17 +137,30 @@ const GroupActions = {
   },
 };
 
+function updateWindow() {
+  browser.windows.getLastFocused({
+    windowTypes: ['normal']
+  }).then((w) => {
+    store.dispatch(ActionCreators.setCurrentWindowId(w.id));
+  });
+}
 
 var popupMessenger = function(message) {
   switch (message.task) {
     case "Groups:Changed":
+      if ( window.location 
+            && window.location.search.includes("all_tabs")){
+           break;
+      }
       store.dispatch(ActionCreators.setGroups(message.params.groups));
-      store.dispatch(ActionCreators.setDelayedTask(message.params.delayedTasks));
-      browser.windows.getLastFocused({
-        windowTypes: ['normal']
-      }).then((w) => {
-        store.dispatch(ActionCreators.setCurrentWindowId(w.id));
-      });
+      store.dispatch(
+        ActionCreators.setDelayedTask(message.params.delayedTasks)
+      );
+      updateWindow();
+      break;
+    case "Tabs:All":
+      store.dispatch(ActionCreators.setGroups(message.params.groups));
+      updateWindow();
       break;
     case "Option:Changed":
       store.dispatch(ActionCreators.setOptions(message.params.options));

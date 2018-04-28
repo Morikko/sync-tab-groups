@@ -35,8 +35,7 @@ Messenger.Groups.popupMessenger = function(message) {
       Background.onOpenGroupInNewWindow(message.params);
       break;
     case "Data:Ask":
-      Background.refreshUi();
-      Background.refreshOptionsUI();
+      Background.refreshData(message.params);
       break;
     case "App:OpenSettings":
       Background.onOpenSettings();
