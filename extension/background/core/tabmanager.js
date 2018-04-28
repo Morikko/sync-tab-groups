@@ -190,6 +190,7 @@ TabManager.openTab = async function(
   if ( OptionManager.isClosingHidden() ) {
     const wasShown = await TabHidden.showTab(tab.id, windowId, index);
     if ( wasShown ) {
+      if (tab.active) await browser.tabs.update(tab.id, {active: true});
       return await browser.tabs.get(tab.id);
     }
   }
@@ -293,7 +294,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
   inLastPos = false,
   openAtLeastOne = false,
   forceOpenNewTab = false, // Force to open a new tab even if already one
-  pendingTab = undefined,
+  pendingTab = undefined, // @deprecated
   remove_pinned = OptionManager.options.pinnedTab.sync,
   forceClosing = false,
 }={}) {
