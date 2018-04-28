@@ -178,28 +178,36 @@ class SettingsSection extends React.Component {
           </div>
         }
         content={
-          <div className="double-buttons">
-            <OptionButton
-              title= {"Close"}
-              onClick= {this.clickOnClosingClose.bind(this)}
-              key="closing-close"
-              highlight={this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL}
-            />
-            {
-              /*
-            <OptionButton
-              title= {"Alive"}
-              onClick= {this.clickOnClosingAlive.bind(this)}
-              key="closing-alive"
-              enabled={this.props.options.groups.closingState === OptionManager.CLOSE_ALIVE}
-            />
-              */
-            }
-            <OptionButton
-              title= {"Hidden"}
-              onClick= {this.clickOnClosingHidden.bind(this)}
-              key="closing-hidden"
-              highlight={this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN}
+          <div>
+            <div className="double-buttons">
+              <OptionButton
+                title= {"Close"}
+                onClick= {this.clickOnClosingClose.bind(this)}
+                key="closing-close"
+                highlight={this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL}
+              />
+              {
+                /*
+              <OptionButton
+                title= {"Alive"}
+                onClick= {this.clickOnClosingAlive.bind(this)}
+                key="closing-alive"
+                enabled={this.props.options.groups.closingState === OptionManager.CLOSE_ALIVE}
+              />
+                */
+              }
+              <OptionButton
+                title= {"Hidden"}
+                onClick= {this.clickOnClosingHidden.bind(this)}
+                key="closing-hidden"
+                highlight={this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN}
+              />
+            </div>
+            <NiceCheckbox
+              checked= {this.props.options.groups.discardedHide}
+              label= {browser.i18n.getMessage("setting_discard_hidden_tab")}
+              onCheckChange= {this.props.onOptionChange}
+              id= "groups-discardedHide"
             />
           </div>
         }

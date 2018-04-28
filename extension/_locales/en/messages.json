@@ -1184,6 +1184,11 @@
   "close_hidden_tab": {
     "message": "Close hidden tab",
     "description": "From tab context menu"
+  },
+
+  "setting_discard_hidden_tab": {
+    "message": "Discard the tabs on hiding",
+    "description": "From tab context menu"
   }
 
 }

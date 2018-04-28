@@ -306,18 +306,28 @@ class SettingsSection extends React.Component {
       ),
       content: React.createElement(
         "div",
-        { className: "double-buttons" },
-        React.createElement(OptionButton, {
-          title: "Close",
-          onClick: this.clickOnClosingClose.bind(this),
-          key: "closing-close",
-          highlight: this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL
-        }),
-        React.createElement(OptionButton, {
-          title: "Hidden",
-          onClick: this.clickOnClosingHidden.bind(this),
-          key: "closing-hidden",
-          highlight: this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN
+        null,
+        React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: "Close",
+            onClick: this.clickOnClosingClose.bind(this),
+            key: "closing-close",
+            highlight: this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL
+          }),
+          React.createElement(OptionButton, {
+            title: "Hidden",
+            onClick: this.clickOnClosingHidden.bind(this),
+            key: "closing-hidden",
+            highlight: this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN
+          })
+        ),
+        React.createElement(NiceCheckbox, {
+          checked: this.props.options.groups.discardedHide,
+          label: browser.i18n.getMessage("setting_discard_hidden_tab"),
+          onCheckChange: this.props.onOptionChange,
+          id: "groups-discardedHide"
         })
       )
     });

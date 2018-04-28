@@ -112,6 +112,7 @@ OptionManager.TEMPLATE = function() {
       showGroupTitleInWindow: false,
       sortingType: OptionManager.SORT_OLD_RECENT,
       discardedOpen: true,
+      discardedHide: true,
       closingState: OptionManager.CLOSE_NORMAL,
     },
     popup: {

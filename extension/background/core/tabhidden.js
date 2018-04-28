@@ -28,10 +28,13 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
 TabHidden.hideTab = async function(tabId) {
   const result = await browser.tabs.hide(tabId);
   if ( result.length !== 0 ) {
-    setTimeout( // Avoid overloading
-      () => browser.tabs.discard(tabId),
-      2000,
-    )
+    if (OptionManager.options.groups.discardedHide) {
+      setTimeout( // Avoid overloading
+        () => browser.tabs.discard(tabId),
+        2000,
+      )
+    }
+    
     browser.sessions.setTabValue(
       tabId,
       TabHidden.TABHIDDEN_SESSION_KEY,
