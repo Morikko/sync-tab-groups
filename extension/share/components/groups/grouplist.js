@@ -165,7 +165,11 @@ class GroupList extends React.Component {
       if (tabSearchValue.length) {
         for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
           // Search in tab title
-          if (!Utils.search(this.props.groups[i].tabs[j].title, tabSearchValue)) {
+          const currentTab = this.props.groups[i].tabs[j];
+          const tabUrl = new URL(Utils.extractTabUrl(currentTab.url));
+          const tabHost = tabUrl.hostname.slice(0, tabUrl.hostname.lastIndexOf('.'));
+          const tabSearchPart = currentTab.title + " " + tabHost;
+          if (!Utils.search(tabSearchPart, tabSearchValue)) {
             searchGroupsResults[i].searchTabsResults[j] = false;
           } else {
             searchGroupsResults[i].atLeastOneResult = true;
