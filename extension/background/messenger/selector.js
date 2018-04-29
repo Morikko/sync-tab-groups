@@ -11,6 +11,9 @@ Messenger.Selector.selectorMessenger = function(message) {
     case "Selector:Finish":
       Messenger.Selector.manageFinish(message.params);
       break;
+    case "Ask:Options":
+      Background.refreshOptionsUI();
+      break;
   }
 }
 

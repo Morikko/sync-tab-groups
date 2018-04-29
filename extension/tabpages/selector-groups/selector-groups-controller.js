@@ -5,6 +5,10 @@ class SelectorActions {
     Utils.sendMessage("Ask:SelectorGroups", {});
   }
 
+  static getOptions() {
+    Utils.sendMessage("Ask:Options", {});
+  }
+
   static finish({
     filter,
     importType = undefined
@@ -20,6 +24,9 @@ var selectorMessenger = function (message) {
   switch (message.task) {
     case "Selector:Groups":
       store.dispatch(ActionCreators.setGroups(message.params.groups));
+      break;
+    case "Option:Changed":
+      store.dispatch(ActionCreators.setOptions(message.params.options));
       break;
   }
 };

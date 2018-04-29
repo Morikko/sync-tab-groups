@@ -118,7 +118,8 @@ class WrapperStandAlone extends React.Component {
 const Wrapper = (() => {
   return ReactRedux.connect(state => {
     return {
-      groups: state.get("groups")
+      groups: state.get("groups"),
+      options: state.get("options")
     };
   }, ActionCreators)(WrapperStandAlone);
 })();
