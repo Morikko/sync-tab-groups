@@ -87,6 +87,15 @@ TabHidden.closeHiddenTabs = async function (tabIds) {
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
+TabHidden.removeAllHiddenTabs = async function(){
+  const allTabs = await browser.tabs.query({});
+  const allHiddenTabsIds = allTabs
+    .filter(({hidden}) => hidden)
+    .map(({id}) => id);
+  
+  await TabHidden.closeHiddenTabs(allHiddenTabsIds);
+}
+
 TabHidden.onStartInitialization = async function() {
   if (OptionManager.options.groups.closingState !== OptionManager.CLOSE_HIDDEN) {
     return;

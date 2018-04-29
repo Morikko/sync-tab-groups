@@ -288,7 +288,7 @@ class SettingsSection extends React.Component {
           { className: "double-buttons" },
           React.createElement(OptionButton, {
             title: browser.i18n.getMessage("options_behaviors_tabsopening_reload"),
-            onClick: this.handleClickOnUndiscardAllTabs.bind(this),
+            onClick: this.handleClickOnCloseAllHiddenTabs.bind(this),
             highlight: true
           })
         )
@@ -328,7 +328,16 @@ class SettingsSection extends React.Component {
           label: browser.i18n.getMessage("setting_discard_hidden_tab"),
           onCheckChange: this.props.onOptionChange,
           id: "groups-discardedHide"
-        })
+        }),
+        React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("setting_close_all_hidden_tabs"),
+            onClick: this.handleClickOnCloseAllHiddenTabs.bind(this),
+            highlight: true
+          })
+        )
       )
     });
   }
@@ -431,8 +440,8 @@ class SettingsSection extends React.Component {
 
   async handleClickOnUndiscardAllTabs() {
 
-    let tabs = await browser.tabs.query({}),
-        hadDiscarded = false;
+    const tabs = await browser.tabs.query({});
+    let hadDiscarded = false;
     tabs.forEach(async tab => {
       if (tab.url.includes(Utils.LAZY_PAGE_URL)) {
         hadDiscarded = true;
@@ -449,6 +458,23 @@ class SettingsSection extends React.Component {
         "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
         "title": "Sync Tab Groups",
         "message": browser.i18n.getMessage("options_behaviors_tabsopening_nothing_reload")
+      });
+    }
+  }
+
+  async handleClickOnCloseAllHiddenTabs() {
+    const hiddenTabs = await browser.tabs.query({ hidden: true });
+
+    if (hiddenTabs.length > 0) {
+      if (confirm(browser.i18n.getMessage("setting_confirm_close_all_hidden_tabs"))) {
+        this.props.onCloseAllHiddenTabs();
+      }
+    } else {
+      browser.notifications.create("CLOSE_HIDDEN_TABS", {
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+        "title": "Sync Tab Groups",
+        "message": browser.i18n.getMessage("setting_nothin_close_all_hidden_tabs")
       });
     }
   }

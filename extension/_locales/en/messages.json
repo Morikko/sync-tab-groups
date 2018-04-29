@@ -1117,7 +1117,7 @@
   },
 
   "options_behaviors_tabsopening_confirm_reload": {
-    "message": "Do you want to load all the tabs in extension discarded mode ?",
+    "message": "Are you sure, do you want to load all the tabs in extension discarded mode ?",
     "description": ""
   },
 
@@ -1188,7 +1188,21 @@
 
   "setting_discard_hidden_tab": {
     "message": "Discard the tabs on hiding",
-    "description": "From tab context menu"
-  }
+    "description": ""
+  },
 
+  "setting_close_all_hidden_tabs": {
+    "message": "Close ALL the hidden tabs in Firefox.",
+    "description": ""
+  },
+
+  "setting_confirm_close_all_hidden_tabs": {
+    "message": "Are you sure, do you want to close all the hidden tabs in Firefox ?",
+    "description": ""
+  },
+
+  "setting_nothin_close_all_hidden_tabs": {
+    "message": "There is no open hidden tab in Firefox.",
+    "description": ""
+  }
 }

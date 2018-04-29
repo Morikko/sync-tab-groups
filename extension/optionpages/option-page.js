@@ -50,6 +50,10 @@ const Actions = {
     Utils.sendMessage("Option:UndiscardLazyTabs", {});
   },
 
+  onCloseAllHiddenTabs: function() {
+    Utils.sendMessage("Option:CloseAllHiddenTabs", {});
+  },
+
   onRemoveBackUp: function(id) {
     Utils.sendMessage("Option:RemoveBackUp", {
       id: id
@@ -85,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onReloadGroups: Actions.onReloadGroups,
         onOpenGuide: Actions.onOpenGuide,
         onUndiscardLazyTabs: Actions.onUndiscardLazyTabs,
+        onCloseAllHiddenTabs: Actions.onCloseAllHiddenTabs,
         onRemoveBackUp: Actions.onRemoveBackUp,
         onImportBackUp: Actions.onImportBackUp,
         onExportBackUp: Actions.onExportBackUp,

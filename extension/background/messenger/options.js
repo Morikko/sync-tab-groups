@@ -35,6 +35,9 @@ Messenger.Options.optionMessenger = function(message) {
     case "Option:UndiscardLazyTabs":
       TabManager.undiscardAll();
       break;
+    case "Option:CloseAllHiddenTabs":
+      TabHidden.removeAllHiddenTabs();
+      break;
     case "Option:RemoveBackUp":
       Background.onRemoveBackUp(message.params.id);
     break;

@@ -4,8 +4,12 @@ class OptionsPanel extends React.Component {
       "div",
       { id: "panel" },
       React.createElement(SettingsSection, {
-        options: this.props.options, onOptionChange: this.props.onOptionChange,
-        selected: this.props.selected, onUndiscardLazyTabs: this.props.onUndiscardLazyTabs }),
+        options: this.props.options,
+        onOptionChange: this.props.onOptionChange,
+        selected: this.props.selected,
+        onUndiscardLazyTabs: this.props.onUndiscardLazyTabs,
+        onCloseAllHiddenTabs: this.props.onCloseAllHiddenTabs
+      }),
       React.createElement(ShortcutsSection, {
         options: this.props.options, onOptionChange: this.props.onOptionChange,
         selected: this.props.selected }),
