@@ -13,10 +13,7 @@ ContextMenu.again = false;
 
 ContextMenu.createMoveTabMenu = async function() {
   try {
-    if ( GroupManager.groups.length === ContextMenu.MoveTabMenuIds.length-3 ) {
-      // No change nothing to do
-      return;
-    }
+    // Security for avoiding concurrency
     if ( ContextMenu.occupied ) {
         ContextMenu.again = true;
         return;
@@ -55,9 +52,10 @@ ContextMenu.createMoveTabMenu = async function() {
     let sortedIndex = GroupManager.getIndexSortByPosition(groups);
     for (let i of sortedIndex) {
       ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
+      const openPrefix = groups[i].windowId !== WINDOW_ID_NONE ? "[OPEN]" : "";
       await browser.contextMenus.create({
         id: ContextMenu.MoveTabMenu_ID + groups[i].id,
-        title: Utils.getGroupTitle(groups[i]),
+        title: openPrefix + " " + Utils.getGroupTitle(groups[i]),
         contexts: contexts,
         parentId: parentId,
         enabled: currentWindow.id !== groups[i].windowId,
