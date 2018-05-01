@@ -886,8 +886,6 @@ describe("TabManager", ()=>{
 
         await TabManager.undiscardAll();
 
-        console.log("Undiscard done")
-
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
@@ -899,7 +897,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        console.error(e);
+        LogManager.error(e, {arguments});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -950,7 +948,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs[1]).toEqualTabs(expectedTabs[1]);
 
       } catch(e) {
-        console.error(e);
+        LogManager.error(e, {arguments});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -992,7 +990,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        console.error(e);
+        LogManager.error(e, {arguments});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -1033,7 +1031,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        console.error(e);
+        LogManager.error(e, {arguments});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }

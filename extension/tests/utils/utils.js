@@ -39,9 +39,7 @@ TestManager.splitOnHalfScreen = async function(windowId){
         state: "normal",
     });
   } catch (e) {
-    let msg = "TestManager.splitOnHalfScreen failed on window " + windowId + " and " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -54,9 +52,7 @@ TestManager.splitOnHalfTopScreen = async function(windowId){
         height: Math.round(screen.width/2),
     });
   } catch (e) {
-    let msg = "TestManager.splitOnHalfTopScreen failed on window " + windowId + " and " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -69,9 +65,7 @@ TestManager.splitOnHalfBottomScreen = async function(windowId){
         height: Math.round(screen.width/2),
     });
   } catch (e) {
-    let msg = "TestManager.splitOnHalfBottomScreen failed on window " + windowId + " and " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -159,7 +153,7 @@ TestManager.waitAllTabsToBeLoadedInWindowId = async function ( windowId ) {
 
     // Waited too much
     if (i === LIMIT) {
-      console.error("TestManager.waitAllTabsToBeLoadedInWindowId: Waited too much...");
+      LogManager.warning("TestManager.waitAllTabsToBeLoadedInWindowId: Waited too much...");
       break;
     }
   }
@@ -274,8 +268,7 @@ TestManager.removeGroups = async function(groupIds) {
       try {
         await GroupManager.removeGroupFromId(groupId);
       } catch(e) {
-        console.error(e);
-        console.error(`An error happened on id: ${groupId} in function TestManager.removeGroups`);
+        LogManager.error(e, {arguments});
       }
     }
   }
@@ -285,7 +278,7 @@ TestManager.getRandomGroupId = function(groups) {
   let index = TestManager.getRandom(0, groups.length-1);
 
   if (!groups[index]) {
-    console.log(index);
+    LogManager.warning("Index not found: " + index);
   }
   return groups[
     index

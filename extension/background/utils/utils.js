@@ -483,9 +483,7 @@ Utils.openUrlOncePerWindow = async function(url, active=true) {
       });
     }
   } catch (e) {
-    let msg = "Utils.openUrlOncePerWindow failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -555,7 +553,7 @@ Utils.isDeadObject = function (obj) {
     return false;
   }
   catch (e) {
-    console.log("Sync Tab Groups: " + obj + " is probably dead...");
+    LogManager.warning("Sync Tab Groups: " + obj + " is probably dead...");
     return true;
   }
 }

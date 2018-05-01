@@ -64,9 +64,7 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
     return "WindowManager.openGroupInWindow done!";
 
   } catch (e) {
-    let msg = "WindowManager.openGroupInWindow failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -87,9 +85,7 @@ WindowManager.switchGroup = async function(newGroupId) {
     await WindowManager.openGroupInWindow(newGroupId, currentWindow.id);
     return currentWindow.id;
   } catch (e) {
-    let msg = "WindowManager.switchGroup failed: " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -112,9 +108,7 @@ WindowManager.closeWindowFromGroupId = async function(groupId) {
     }
 
   } catch (e) {
-    let msg = "TabManager.closeWindowFromGroupId failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -166,9 +160,7 @@ WindowManager.closeGroup = async function(groupId, {close_window = false}={}) {
     return "WindowManager.closeGroup done!";
 
   } catch (e) {
-    let msg = "WindowManager.closeGroup failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -201,7 +193,7 @@ WindowManager.decoratorCurrentlyChanging = function (func) {
       result = await func.apply(this, arguments);
 
     } catch(e) {
-      console.log("WindowManager.decoratorCurrentlyChanging: There was an error.")
+      LogManager.error(e, {arguments});
     } finally { // Clean
       if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
           currentWindow.id
@@ -247,9 +239,7 @@ WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
     }
     return windowId;
   } catch (e) {
-    let msg = "WindowManager.selectGroup failed: " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -326,8 +316,7 @@ WindowManager.selectNextGroup = async function({
 
     return nextGroupId;
   } catch (e) {
-    let msg = "WindowManager.selectNextGroup failed; " + e;
-    console.error(msg);
+    LogManager.error(e, {arguments});
     return -1;
   }
 }
@@ -371,9 +360,7 @@ WindowManager.removeGroup = async function(groupId = -1) {
     return "WindowManager.removeGroup done on groupId " + groupId;
 
   } catch (e) {
-    let msg = "WindowManager.removeGroup failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -398,9 +385,6 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
 
     let count = 0;
     while( !(await browser.windows.get(w.id)).focused ) {
-      if ( Utils.DEBUG_MODE ) {
-        console.log("NOT SYNCHRONIZED");
-      }
       if ( count > 50 ) {
         throw Error("WindowManager.openGroupInNewWindow was unable to focus the window.");
       }
@@ -413,8 +397,7 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
     return w.id;
 
   } catch (e) {
-    let msg = "WindowManager.openGroupInNewWindow failed; " + e;
-    console.error(msg);
+    LogManager.error(e, {arguments});
     WindowManager.WINDOW_EXCLUDED[w.id];
   } finally {
     //delete WindowManager.WINDOW_EXCLUDED[w.id];
@@ -439,9 +422,7 @@ WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
       }
     );
   } catch (e) {
-    let msg = "WindowManager.setWindowPrefixGroupTitle failed on New Window with window " + windowId + " and " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 };
 
@@ -474,9 +455,7 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
     }
     return "WindowManager.associateGroupIdToWindow done";
   } catch (e) {
-    let msg = "WindowManager.associateGroupIdToWindow failed on window " + windowId + " and on groupId " + groupId + " and " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -486,9 +465,7 @@ WindowManager.isWindowIdOpen = async function(windowId) {
     return windows.filter(w => w.id === windowId).length>0;
 
   } catch (e) {
-    let msg = "WindowManager.isWindowIdOpen failed on window " + windowId + " and " + e;
-    console.error(msg);
-    return false;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -519,9 +496,7 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
       }
       return "WindowManager.desassociateGroupIdToWindow done";
     } catch (e) {
-      let msg = "WindowManager.desassociateGroupIdToWindow failed on window " + windowId + " and " + e;
-      console.error(msg);
-      return msg;
+      LogManager.error(e, {arguments});
     }
 }
 
@@ -545,8 +520,7 @@ WindowManager.addGroupFromWindow = async function(windowId) {
     );
     return newGroupId;
   } catch (e) {
-    let msg = "WindowManager.integrateWindow failed on New Window with window " + windowId + " and " + e;
-    console.error(msg);
+    LogManager.error(e, {arguments});
     return -1;
   }
 }
@@ -571,8 +545,7 @@ WindowManager.integrateWindowWithTabsComparaison = async function(windowId, {
       }
       return id;
     } catch (e) {
-      let msg = "WindowManager.integrateWindowWithTabsComparaison failed for windowId " + windowId + "\n Error msg: " + e;
-      console.error(msg);
+      LogManager.error(e, {arguments});
       return -1;
     }
 }
@@ -596,8 +569,7 @@ WindowManager.integrateWindowWithSession = async function(windowId, {
       }
       return id;
     } catch (e) {
-      let msg = "WindowManager.integrateWindowWithSession failed on Get Key Value for windowId " + windowId + "\n Error msg: " + e;
-      console.error(msg);
+      LogManager.error(e, {arguments});
       return -1;
     }
 }
@@ -650,8 +622,7 @@ WindowManager.integrateWindow = async function(windowId, {
 
     return id;
   } catch (e) {
-    let msg = "WindowManager.integrateWindow for windowId " + windowId + "\n Error msg: " + e;
-    console.error(msg);
+    LogManager.error(e, {arguments});
     return -1;
   }
 }

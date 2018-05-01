@@ -88,9 +88,7 @@ ContextMenu.createMoveTabMenu = async function() {
       ContextMenu.again = false;
     }
   } catch (e) {
-    let msg = "ContextMenu.createMoveTabMenu failed " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   } finally {
     ContextMenu.occupied = false;
   }
@@ -121,8 +119,7 @@ ContextMenu.updateMoveFocus = async function(disabledId) {
       return Promise.resolve();
     }));
   } catch (e) {
-    let msg = "ContextMenu.updateFocus failed " + e;
-    console.error(msg);
+    LogManager.error(e);
   } finally {
     ContextMenu.occupied = false;
   }

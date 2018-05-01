@@ -297,7 +297,7 @@ GroupManager.changeExpandState = function(groupIds, expandState, {groups = Group
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
     let msg = "GroupManager.changeExpandState failed; " + e.message;
-    console.error(msg);
+    (msg);
   }
 }
 
@@ -333,7 +333,7 @@ GroupManager.changeGroupPosition = function(groupId, position, {
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
     let msg = "GroupManager.changeGroupPosition failed; " + e.message;
-    console.error(msg);
+    (msg);
   }
 }
 
@@ -387,7 +387,7 @@ GroupManager.setLastAccessed = function(groupId, time, {groups = GroupManager.gr
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
     let msg = "GroupManager.setLastAccessed failed; " + e.message;
-    console.error(msg);
+    (msg);
   }
 }
 
@@ -432,7 +432,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
     let msg = "GroupManager.setTabsInGroupId failed; " + e.message;
-    console.error(msg);
+    (msg);
   }
 }
 
@@ -449,7 +449,7 @@ GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
 
   } catch (e) {
     let msg = "GroupManager.attachWindowWithGroupId failed; " + e.message;
-    console.error(msg);
+    (msg);
     return;
   }
 }
@@ -480,7 +480,7 @@ GroupManager.detachWindowFromGroupId = async function(groupId) {
 
   } catch (e) {
     let msg = "GroupManager.detachWindowFromGroupId failed; " + e;
-    console.error(msg);
+    (msg);
     return;
   }
 }
@@ -530,7 +530,7 @@ GroupManager.detachWindow = async function(windowId) {
 
   } catch (e) {
     let msg = "GroupManager.detachWindow failed; " + e;
-    console.error(msg);
+    (msg);
     return;
   }
 }
@@ -550,7 +550,7 @@ GroupManager.removeGroupsInPrivateWindow = async function(groups=GroupManager.gr
     return "GroupManager.removeGroupsInPrivateWindow done!";
   } catch (e) {
     let msg = "GroupManager.removeGroupsInPrivateWindow failed; " + e;
-    console.error(msg);
+    (msg);
     return;
   }
 }
@@ -572,7 +572,7 @@ GroupManager.removeGroupFromId = async function(groupId) {
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
     let msg = "GroupManager.removeGroupFromId failed on " + groupId + " because " + e;
-    console.error(msg);
+    (msg);
     return msg;
   }
 }
@@ -602,7 +602,7 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, {
 
   } catch (e) {
     let msg = "GroupManager.removeTabFromIndexInGroupId done because group " + groupId + " was already removed.";
-    console.error(msg);
+    (msg);
     return msg;
   }
 
@@ -648,7 +648,7 @@ GroupManager.addTabInGroupId = async function(groupId, tab, {
 
   } catch (e) {
     let msg = "GroupManager.addTabInGroupId failed on group " + groupId + " because " + e;
-    console.error(msg);
+    (msg);
     return msg;
   }
 
@@ -1009,7 +1009,7 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
 GroupManager.checkCorruptedGroups = function(groups = GroupManager.groups) {
   let corrupted;
   if ( (corrupted = Utils.checkCorruptedObject(groups)) ) {
-    console.error("GroupManager.checkCorruptedGroups has detected a corrupted groups: ");
+    ("GroupManager.checkCorruptedGroups has detected a corrupted groups: ");
     // Don't fix data in debug mode for allowing to analyze
     if ( !Utils.DEBUG_MODE ) {
       GroupManager.reloadGroupsFromDisk();

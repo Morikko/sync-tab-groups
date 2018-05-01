@@ -1,0 +1,188 @@
+var LogManager = LogManager || {};
+var Utils = Utils || {};
+
+LogManager.LOG_NUMBER_LIMIT = 10000;
+LogManager.NOTIFICATION_ID = "LOG_ERROR"
+LogManager.logs = [];
+
+const extensionPrefix = browser.extension.getURL('/');
+
+/**
+ * Tell something about the extension
+ */
+LogManager.information = function(message, data=null, {
+    print=Utils.DEBUG_MODE,
+    logs=LogManager.logs,
+}={}) {
+    const informationLog = {
+        type: 'information',
+        time: Date(),
+        message,
+        data,
+    };
+
+    LogManager.addLog(informationLog, {logs});
+    if (print) {
+        console.log(informationLog)
+    }
+    return informationLog;
+}
+
+/**
+ * Something not normal happened but it is not critical
+ */
+LogManager.warning = function(message, data=null, {
+    print=Utils.DEBUG_MODE,
+    logs=LogManager.logs,
+}={}) {
+    const warningLog = {
+        type: 'warning',
+        time: Date(),
+        message,
+        trace: LogManager.getStack(Error().stack),
+        data,
+    };
+
+    LogManager.addLog(warningLog, {logs});
+    if (print) {
+        console.warning(warningLog)
+    }
+    return warningLog;
+}
+
+/**
+ * Something that shouldn't happened
+ * @param {Error/String} error
+ * @param {Object} data added to the log 
+ */
+LogManager.error = function(error, data = null, {
+    print=Utils.DEBUG_MODE,
+    logs=LogManager.logs,
+}={}) {
+    let fullError = error;
+    if(! (fullError instanceof Error)) {
+        fullError = Error(error)
+    }
+
+    const errorLog = {
+        type: 'error',
+        time: Date(),
+        message: fullError.message,
+        fileName: fullError.fileName.replace(extensionPrefix, '/'),
+        lineNumber: fullError.lineNumber,
+        columnNumber: fullError.lineNumber,
+        trace: LogManager.getStack(fullError.stack),
+        data,
+    }
+
+    LogManager.addLog(errorLog, {logs});
+    if (print) {
+        console.error(errorLog)
+    }
+    LogManager.showErrorNotification();
+    return errorLog;
+};
+
+// Parse the stack trace to be better readable
+LogManager.getStack = function(stack) {
+    return stack.split('@')
+        .map(line => line.replace(extensionPrefix, '/'))
+        .map(line => line.replace('\n', ' => '))
+}
+
+// Add the log to the array
+// Limit the log number to LogManager.LOG_NUMBER_LIMIT
+LogManager.addLog = function(log, {
+    logs=LogManager.logs,
+}={}){
+    if ( Background != null ) {
+        logs.push(log);
+        if (logs.length > LogManager.LOG_NUMBER_LIMIT) {
+            logs.shift();
+        }
+    } else { // From remote window
+        LogManager.sendLog(log);
+    }
+}
+
+LogManager.downloadLog = async function downloadLog(logs=LogManager.logs) {
+    try {
+        let d = new Date();
+        let url = URL.createObjectURL(new Blob([
+            JSON.stringify({
+                version: ["SyncTabGroups", 1],
+                logs,
+            }, null, 2)
+            ], {
+            type: 'application/json'
+        }));
+        let filename = "SyncTabGroups" + "-" + "Log" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
+
+        let id = await browser.downloads.download({
+            url: url,
+            filename: filename,
+            saveAs: true
+        });
+
+        await Utils.waitDownload(id);
+
+        URL.revokeObjectURL(url);
+        return true;
+
+    } catch (e) {
+        LogManager.error(e);
+        return false;
+    }
+}
+
+LogManager.sendLog = function(log) {
+    Utils.sendMessage("LogManager:Add", {
+        log,
+    });
+}
+
+LogManager.showErrorNotification = function () {
+    browser.notifications.create(LogManager.NOTIFICATION_ID, {
+        type: 'basic',
+        iconUrl: browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+        title: "Error caught in Sync Tab Groups",
+        message: "An unexpected behavior happened in Sync Tab Groups. In order to improve the extension, could you send me the error back. Click on this notification to open the explanation on how to do it.",
+    });
+}
+
+// Add event listener on click notification when error
+// Add event listener on log received through extension service
+LogManager.init = function() {
+    const logManagerNotificationEvent = (notificationId)=>{
+        if ( notificationId === LogManager.NOTIFICATION_ID ) {
+            Background.onOpenSettings(true);
+            Utils.openUrlOncePerWindow(
+                "https://github.com/Morikko/sync-tab-groups/wiki/How-to-help-me-solve-bugs"
+            );
+        }
+    }
+
+    const logManagerMessenger = function(message) {
+        switch (message.task) {
+          case "LogManager:Add":
+            LogManager.addLog(message.params.log);
+            break;
+        case "LogManager:Download":
+            LogManager.downloadLog(LogManager.logs);
+            break;
+        }
+    }
+
+    LogManager.addWindowOnErrorListener();
+
+    browser.notifications.onClicked.addListener(logManagerNotificationEvent);
+    browser.runtime.onMessage.addListener(logManagerMessenger);
+}
+
+// Catch error not caught
+LogManager.addWindowOnErrorListener = function() {
+    window.onerror = function(...args) {
+        const [message, file, line, col, error] = args;
+        LogManager.error(error, "Caught by window.onerror")
+    }
+}

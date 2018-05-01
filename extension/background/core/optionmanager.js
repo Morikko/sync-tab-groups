@@ -182,9 +182,7 @@ OptionManager.onPrivateWindowSyncChange = async function(state) {
     }
     return "OptionManager.onPrivateWindowSyncChange done!";
   } catch (e) {
-    let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 }
 
@@ -197,9 +195,7 @@ OptionManager.onPinnedTabSyncChange = async function() {
     await GroupManager.updateAllOpenedGroups();
     return "OptionManager.onPinnedTabSyncChange done!";
   } catch (e) {
-    let msg = "OptionManager.onPinnedTabSyncChange failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 }
 
@@ -222,9 +218,7 @@ OptionManager.init = async function() {
     OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
     return "OptionManager.init done";
   } catch (e) {
-    let msg = "OptionManager.init failed: " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 }
 
@@ -275,7 +269,7 @@ OptionManager.reloadOptionsFromDisk = async function () {
 OptionManager.checkCorruptedOptions = function (options=OptionManager.options) {
   let corrupted;
   if ( (corrupted = Utils.checkCorruptedObject(options)) ) {
-    console.error("OptionManager.checkCorruptedOptions has detected a corrupted options: ");
+    LogManager.warning("OptionManager.checkCorruptedOptions has detected a corrupted options: ");
     // Don't fix data in debug mode for allowing to analyze
     if ( !Utils.DEBUG_MODE ) {
       OptionManager.reloadOptionsFromDisk();

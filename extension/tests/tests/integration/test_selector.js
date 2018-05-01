@@ -20,7 +20,6 @@ describe('Selector - ', () => {
       await TestManager.waitAllTabsToBeLoadedInWindowId(Selector.WINDOW_ID);
       const w = await browser.windows.get(Selector.WINDOW_ID, {populate: true});
 
-      console.log(w)
       expect(w.tabs.length).toEqual(1);
       expect(
         w.tabs[0].title.includes(title)

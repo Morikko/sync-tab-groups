@@ -77,8 +77,7 @@ TabManager.getTabsInWindowId = async function(windowId, {
     return tabs;
 
   } catch (e) {
-    let msg = "TabManager.getTabsInWindowId failed on window " + windowId + " with " + e;
-    console.error(msg);
+    LogManager.error(e, {arguments});
     throw Error(msg);
   }
 }
@@ -135,9 +134,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
     return "TabManager.updateTabsInGroup done on window id " + windowId;
 
   } catch (e) {
-    let msg = "TabManager.updateTabsInGroup failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 }
 
@@ -334,9 +331,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
     return createdTabs;
 
   } catch (e) {
-    let msg = "TabManager.openListOfTabs failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 }
 
@@ -360,9 +355,12 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
 
     return "TabManager.activeTabInWindow done!";
   } catch (e) {
-    let msg = "TabManager.activeTabInWindow: tab " + tabIndex + " in window " + windowId + " not found. " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {
+      args: {
+        windowId,
+        tabIndex
+      }
+    });
   }
 }
 
@@ -388,9 +386,7 @@ TabManager.changePinState = async function(groupId, tabIndex) {
     }
     return "TabManager.changePinState done!";
   } catch (e) {
-    let msg = "TabManager.changePinState failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -448,9 +444,7 @@ TabManager.moveOpenTabToGroup = async function(tab, windowId, targetIndex = -1) 
     });
     return "TabManager.moveOpenTabToGroup done!";
   } catch (e) {
-    let msg = "TabManager.moveOpenTabToGroup failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -500,9 +494,7 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex, 
     return "TabManager.moveTabBetweenGroups done!";
 
   } catch (e) {
-    let msg = "TabManager.moveTabBetweenGroups failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -532,9 +524,7 @@ TabManager.moveUnFollowedTabToGroup = async function(tabId, targetGroupId) {
     return "TabManager.moveUnFollowedTabToGroup done!";
 
   } catch (e) {
-    let msg = "TabManager.moveUnFollowedTabToGroup failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -557,8 +547,7 @@ TabManager.moveTabToNewGroup = async function(sourceGroupId, tabIndex, title = "
 
     return id;
   } catch (e) {
-    let msg = "TabManager.moveTabToNewGroup failed; " + e;
-    console.error(msg);
+    LogManager.error(e, {arguments});
     return -1;
   }
 }
@@ -577,8 +566,7 @@ TabManager.moveUnFollowedTabToNewGroup = async function(tabId) {
 
     return id;
   } catch (e) {
-    let msg = "TabManager.moveUnFollowedTabToNewGroup failed; " + e;
-    console.error(msg);
+    LogManager.error(e, {arguments});
     return -1;
   }
 }
@@ -614,9 +602,7 @@ TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
 
     return "TabManager.selectTab done!";
   } catch (e) {
-    let msg = "TabManager.selectTab failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -677,10 +663,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
 
     return survivorTab;
   } catch (e) {
-    let msg = "TabManager.removeTabsInWindow failed; " + e;
-    console.error(msg);
-    console.error(e);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 

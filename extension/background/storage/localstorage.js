@@ -17,9 +17,7 @@ StorageManager.Local.saveGroups = async function(groups) {
   try {
     await browser.storage.local.set({groups: export_groups});
   } catch (e) {
-    let msg = "StorageManager.Local.saveGroups failed :" + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 

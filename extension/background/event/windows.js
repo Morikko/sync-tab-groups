@@ -40,9 +40,7 @@ Event.Windows.initWindowsEventListener = function() {
         GroupManager.setLastAccessed(groupId, Date.now());
       }
     } catch (e) {
-      let msg = "onFocusChanged.listener failed; " + e;
-      console.error(msg);
-      return msg;
+      LogManager.error(e, {arguments});
     }
   });
 }
