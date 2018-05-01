@@ -110,6 +110,35 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.7)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Add: search in tab urls (hostname only)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Groups are renamed in tab move menu on tabbar #103"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: [OPEN] information in tab move menu on tabbar"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Tabs number in exporting/importing menu #105"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.6)"
       ),
       React.createElement(
