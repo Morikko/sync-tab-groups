@@ -172,11 +172,11 @@ class SettingsSection extends React.Component {
                 key="private-window-private"
               />
               <OptionButton
-                title= {browser.i18n.getMessage("options_behaviors_private_invisible")}
-                onClick= {this.clickOnPrivateInvisible}
-                highlight={!this.props.options.privateWindow.sync}
-                key="private-window-invisible"
-              />
+                  title= {browser.i18n.getMessage("options_behaviors_private_invisible")}
+                  onClick= {this.clickOnPrivateInvisible}
+                  highlight={!this.props.options.privateWindow.sync}
+                  key="private-window-invisible"
+                />
             </div>
           }
         />
@@ -184,12 +184,21 @@ class SettingsSection extends React.Component {
           title={browser.i18n.getMessage("options_settings_others")}
           tooltip={undefined}
           content = {
-            <NiceCheckbox
-              checked= {this.props.options.groups.removeEmptyGroup}
-              label= {browser.i18n.getMessage("remove_empty_groups")}
-              onCheckChange= {this.props.onOptionChange}
-              id= "groups-removeEmptyGroup"
-            />
+            <div>
+              <NiceCheckbox
+                checked= {this.props.options.groups.removeEmptyGroup}
+                label= {browser.i18n.getMessage("remove_empty_groups")}
+                onCheckChange= {this.props.onOptionChange}
+                id= "groups-removeEmptyGroup"
+              />
+              <div className="double-buttons">
+                <OptionButton
+                  title= {browser.i18n.getMessage("setting_download_error_log")}
+                  onClick= {(event) => this.props.downloadErrorLog()}
+                  highlight={true}
+                />
+              </div>
+            </div>
           }
         />
       </div>

@@ -361,12 +361,25 @@ class SettingsSection extends React.Component {
       React.createElement(SubSection, {
         title: browser.i18n.getMessage("options_settings_others"),
         tooltip: undefined,
-        content: React.createElement(NiceCheckbox, {
-          checked: this.props.options.groups.removeEmptyGroup,
-          label: browser.i18n.getMessage("remove_empty_groups"),
-          onCheckChange: this.props.onOptionChange,
-          id: "groups-removeEmptyGroup"
-        })
+        content: React.createElement(
+          "div",
+          null,
+          React.createElement(NiceCheckbox, {
+            checked: this.props.options.groups.removeEmptyGroup,
+            label: browser.i18n.getMessage("remove_empty_groups"),
+            onCheckChange: this.props.onOptionChange,
+            id: "groups-removeEmptyGroup"
+          }),
+          React.createElement(
+            "div",
+            { className: "double-buttons" },
+            React.createElement(OptionButton, {
+              title: browser.i18n.getMessage("setting_download_error_log"),
+              onClick: event => this.props.downloadErrorLog(),
+              highlight: true
+            })
+          )
+        )
       })
     );
   }

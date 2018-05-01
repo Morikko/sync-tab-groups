@@ -5,7 +5,8 @@ class OptionsPanel extends React.Component {
       { id: "panel" },
       React.createElement(SettingsSection, {
         options: this.props.options, onOptionChange: this.props.onOptionChange,
-        selected: this.props.selected, onUndiscardLazyTabs: this.props.onUndiscardLazyTabs }),
+        selected: this.props.selected, onUndiscardLazyTabs: this.props.onUndiscardLazyTabs,
+        downloadErrorLog: this.props.downloadErrorLog }),
       React.createElement(ShortcutsSection, {
         options: this.props.options, onOptionChange: this.props.onOptionChange,
         selected: this.props.selected }),

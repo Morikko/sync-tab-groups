@@ -67,6 +67,10 @@ const Actions = {
       id: id
     });
   },
+
+  onDownloadErrorLog: function() {
+    Utils.sendMessage("LogManager:Download", {});
+  }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -88,6 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onRemoveBackUp: Actions.onRemoveBackUp,
         onImportBackUp: Actions.onImportBackUp,
         onExportBackUp: Actions.onExportBackUp,
+        downloadErrorLog: Actions.onDownloadErrorLog,
       })
     ),
     document.getElementById("content")

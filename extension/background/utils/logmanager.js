@@ -65,6 +65,9 @@ LogManager.error = function(error, data = null, {
         fullError = Error(error)
     }
 
+    const fullTrace = LogManager.getStack(Error().stack);
+    fullTrace.shift();
+
     const errorLog = {
         type: 'Error',
         time: Date(),
@@ -73,6 +76,7 @@ LogManager.error = function(error, data = null, {
         lineNumber: fullError.lineNumber,
         columnNumber: fullError.lineNumber,
         trace: LogManager.getStack(fullError.stack),
+        fullTrace,
         data,
     }
 

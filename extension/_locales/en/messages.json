@@ -1169,6 +1169,11 @@
   "remove_all_groups": {
     "message": "Remove all groups",
     "description": ""
+  },
+
+  "setting_download_error_log": {
+    "message": "Download Error Log",
+    "description": ""
   }
 
 }
