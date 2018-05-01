@@ -1,3 +1,6 @@
+/**
+ * You should create Error with bg.Error in order to pass `instanceof Error` in background window.
+ */
 describe("Logmanager", () => {
     beforeAll(TestManager.initUnitBeforeAll());
     beforeEach(TestManager.initBeforeEach());
@@ -6,8 +9,13 @@ describe("Logmanager", () => {
         it("should report error passed in argument", () => {
             const logs = [];
             const msg = 'Coucou';
-            LogManager.error(Error(msg), null, {logs})
+            LogManager.error(bg.Error(msg), null, {
+                logs,
+                print: false,
+                showNotification: false,
+            })
 
+            expect(logs[0].type).toBe('Error')
             expect(logs.length).toBe(1);
             expect(logs[0].message).toBe(msg);
         })
@@ -15,7 +23,11 @@ describe("Logmanager", () => {
         it("should report an error from a string passed in argument", () => {
             const logs = [];
             const msg = 'Coucou';
-            LogManager.error(msg, null, {logs})
+            LogManager.error(msg, null, {
+                logs,
+                print: false,
+                showNotification: false,
+            })
 
             expect(logs.length).toBe(1);
             expect(logs[0].message).toBe(msg);
@@ -28,11 +40,26 @@ describe("Logmanager", () => {
                 one: 'one',
                 two: 'two',
             }
-            LogManager.error(Error(msg), null, {logs})
+            LogManager.error(bg.Error(msg), data, {
+                logs,
+                print: false,
+                showNotification: false,
+            })
 
             expect(logs.length).toBe(1);
             expect(logs[0].data).toBe(data);
         })
         
+    })
+
+    describe(".getStack", () => {
+
+        it("should split stack", () => {
+            const stack = LogManager.getStack(Error().stack)
+
+            expect(Array.isArray(stack)).toBe(true);
+            expect(stack.length).toBeGreaterThan(3);
+        })
+
     })
 })

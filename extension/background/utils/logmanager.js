@@ -15,7 +15,7 @@ LogManager.information = function(message, data=null, {
     logs=LogManager.logs,
 }={}) {
     const informationLog = {
-        type: 'information',
+        type: 'Information',
         time: Date(),
         message,
         data,
@@ -36,7 +36,7 @@ LogManager.warning = function(message, data=null, {
     logs=LogManager.logs,
 }={}) {
     const warningLog = {
-        type: 'warning',
+        type: 'Warning',
         time: Date(),
         message,
         trace: LogManager.getStack(Error().stack),
@@ -58,14 +58,15 @@ LogManager.warning = function(message, data=null, {
 LogManager.error = function(error, data = null, {
     print=Utils.DEBUG_MODE,
     logs=LogManager.logs,
+    showNotification=true,
 }={}) {
     let fullError = error;
-    if(! (fullError instanceof Error)) {
+    if(!(fullError instanceof Error)) {
         fullError = Error(error)
     }
 
     const errorLog = {
-        type: 'error',
+        type: 'Error',
         time: Date(),
         message: fullError.message,
         fileName: fullError.fileName.replace(extensionPrefix, '/'),
@@ -79,7 +80,10 @@ LogManager.error = function(error, data = null, {
     if (print) {
         console.error(errorLog)
     }
-    LogManager.showErrorNotification();
+    if (showNotification) {
+        LogManager.showErrorNotification();
+    }
+
     return errorLog;
 };
 

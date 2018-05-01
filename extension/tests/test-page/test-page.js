@@ -43,6 +43,7 @@ var waitInit = (async () => {
   StorageManager = bg.StorageManager;
   Selector = bg.Selector;
   Background = bg.Background;
+  LogManager = bg.LogManager;
   Event = bg.Event;
 })()
 
