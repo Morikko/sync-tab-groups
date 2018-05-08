@@ -3,6 +3,15 @@ var Utils = Utils || {};
 
 LogManager.LOG_NUMBER_LIMIT = 10000;
 LogManager.NOTIFICATION_ID = "LOG_ERROR"
+
+LogManager.EXTENSION_INSTALLED = "EXTENSION_INSTALLED"
+LogManager.EXTENSION_UPDATED = "EXTENSION_UPDATED"
+LogManager.EXTENSION_START = "EXTENSION_START"
+LogManager.EXTENSION_INITIALIZED = "EXTENSION_INITIALIZED"
+LogManager.EXTENSION_UPDATED = "EXTENSION_UPDATED"
+
+LogManager.SWITCH_GROUP_WITH_LOST = "SWITCH_GROUP_WITH_LOST"
+
 LogManager.logs = [];
 
 const extensionPrefix = browser.extension.getURL('/');
@@ -120,6 +129,7 @@ LogManager.downloadLog = async function downloadLog(logs=LogManager.logs) {
             JSON.stringify({
                 version: ["SyncTabGroups", 1],
                 logs,
+                options: OptionManager.options,
             }, null, 2)
             ], {
             type: 'application/json'

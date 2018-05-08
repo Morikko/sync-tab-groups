@@ -43,6 +43,9 @@ var Background = Background || {};
 Background.updateNotificationId = "UPDATE_NOTIFICATION";
 
 Background.init = async function() {
+  LogManager.init();
+  LogManager.information(LogManager.EXTENSION_START);
+
   await OptionManager.init();
   await GroupManager.init();
 
@@ -54,7 +57,6 @@ Background.init = async function() {
   Event.Tabs.initTabsEventListener();
   Event.Windows.initWindowsEventListener();
   Event.Commands.initCommandsEventListener();
-  LogManager.init();
 
   browser.runtime.onMessage.addListener(Messenger.Groups.popupMessenger);
   browser.runtime.onMessage.addListener(Messenger.Options.optionMessenger);
@@ -74,6 +76,14 @@ Background.init = async function() {
   StorageManager.Local.planBackUp();
   StorageManager.Backup.init();
   Background.install = false;
+
+  LogManager.information(LogManager.EXTENSION_INITIALIZED, {
+    groups: GroupManager.groups.map((group) => ({
+      id: group.id,
+      tabsLength: group.tabs.length,
+      windowId: group.windowId,
+    })),
+  });
 };
 
 Background.refreshOptionsUI = function() {
@@ -351,6 +361,7 @@ browser.runtime.onInstalled.addListener((details) => {
   // Only when the extension is installed for the first time
   if ( details.reason === "install" ) {
     Event.Install.onNewInstall();
+    LogManager.information(LogManager.EXTENSION_INSTALLED);
   }
 
   // Development mode detection
@@ -364,6 +375,7 @@ browser.runtime.onInstalled.addListener((details) => {
   else if ( details.reason === "update"
       && (browser.runtime.getManifest()).version !== details.previousVersion ) {
       Event.Install.onUpdate();
+      LogManager.information(LogManager.EXTENSION_UPDATED);
   }
 });
 
