@@ -19,18 +19,29 @@ LogManager.logs = [];
 
 const extensionPrefix = browser.extension.getURL('/');
 
+LogManager.isEnable = function(){
+    try {
+        return OptionManager.options.log.enable;
+    } catch(e) {
+        return false;
+    }
+}
+
 /**
  * Tell something about the extension
  */
 LogManager.information = function(message, data=null, {
     print=Utils.DEBUG_MODE,
     logs=LogManager.logs,
+    enable=LogManager.isEnable(),
 }={}) {
+    if(!enable) return;
+
     const informationLog = {
         type: 'Information',
         time: Date(),
         message,
-        data,
+        data: Utils.getCopy(data),
     };
 
     LogManager.addLog(informationLog, {logs});
@@ -46,13 +57,16 @@ LogManager.information = function(message, data=null, {
 LogManager.warning = function(message, data=null, {
     print=Utils.DEBUG_MODE,
     logs=LogManager.logs,
+    enable=LogManager.isEnable(),
 }={}) {
+    if(!enable) return;
+
     const warningLog = {
         type: 'Warning',
         time: Date(),
         message,
         trace: LogManager.getStack(Error().stack),
-        data,
+        data: Utils.getCopy(data),
     };
 
     LogManager.addLog(warningLog, {logs});
@@ -71,7 +85,10 @@ LogManager.error = function(error, data = null, {
     print=Utils.DEBUG_MODE,
     logs=LogManager.logs,
     showNotification=true,
+    enable=LogManager.isEnable(),
 }={}) {
+    if(!enable) return;
+
     let fullError = error;
     if(!(fullError instanceof Error)) {
         fullError = Error(error)

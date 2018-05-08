@@ -1174,6 +1174,10 @@
   "setting_download_error_log": {
     "message": "Download Error Log",
     "description": ""
-  }
+  },
 
+  "setting_enable_error_log": {
+    "message": "Enable the extension to log errors.",
+    "description": ""
+  }
 }

@@ -370,13 +370,20 @@ class SettingsSection extends React.Component {
             onCheckChange: this.props.onOptionChange,
             id: "groups-removeEmptyGroup"
           }),
+          React.createElement(NiceCheckbox, {
+            checked: this.props.options.log.enable,
+            label: browser.i18n.getMessage("setting_enable_error_log"),
+            onCheckChange: this.props.onOptionChange,
+            id: "log-enable"
+          }),
           React.createElement(
             "div",
             { className: "double-buttons" },
             React.createElement(OptionButton, {
               title: browser.i18n.getMessage("setting_download_error_log"),
               onClick: event => this.props.downloadErrorLog(),
-              highlight: true
+              highlight: true,
+              disabled: !this.props.options.log.enable
             })
           )
         )

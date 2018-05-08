@@ -91,7 +91,7 @@ OptionManager.TEMPLATE = function() {
       removeOnClose: true
     },
     pinnedTab: {
-      sync: true
+      sync: false,
     },
     bookmarks: {
       sync: false,
@@ -101,7 +101,7 @@ OptionManager.TEMPLATE = function() {
       syncNewWindow: true,
       removeEmptyGroup: false,
       showGroupTitleInWindow: false,
-      sortingType: OptionManager.SORT_OLD_RECENT,
+      sortingType: OptionManager.SORT_LAST_ACCESSED,
       discardedOpen: true
     },
     popup: {
@@ -124,6 +124,9 @@ OptionManager.TEMPLATE = function() {
         intervalTime: 1,
         maxSave: 48,
       }
+    },
+    log: {
+      enable: true,
     }
   };
 };
