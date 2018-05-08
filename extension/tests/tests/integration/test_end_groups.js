@@ -92,7 +92,7 @@ describe("End of Groups - ", ()=>{
 
       let pinnedTab = [GroupManager.groups[this.groups[1].groupIndex].tabs[0]];
 
-      await WindowManager.switchGroup(this.groups[1].id);
+      await WindowManager.switchGroupInCurrentWindow(this.groups[1].id);
       await WindowManager.closeGroup(this.groups[1].id);
 
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
@@ -121,7 +121,7 @@ describe("End of Groups - ", ()=>{
         });
         await Utils.wait(500);
 
-        await WindowManager.switchGroup(this.groups[0].id);
+        await WindowManager.switchGroupInCurrentWindow(this.groups[0].id);
         await WindowManager.removeGroup(this.groups[0].id);
       } catch ( e ) {
         LogManager.error(e, {arguments});

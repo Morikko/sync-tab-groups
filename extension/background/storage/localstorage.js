@@ -189,11 +189,13 @@ StorageManager.Local.respectMaxBackUp = async function({
   maxSave=OptionManager.options.backup.local.maxSave,
   fireEvent=true,
 }={}){
-  const outnumbering = Object.entries( await StorageManager.Local.getBackUpList())
-                            // Desc: recent first
-                            .sort((a,b) => b[1].date - a[1].date)
-                            // Too much
-                            .filter((el, index)=> index>=maxSave);
+  const outnumbering = Object.entries( 
+    await StorageManager.Local.getBackUpList()
+  )
+    // Desc: recent first
+    .sort((a,b) => b[1].date - a[1].date)
+    // Too much
+    .filter((el, index)=> index>=maxSave);
 
   // Sequential remove
   let queue = Promise.resolve();

@@ -44,7 +44,7 @@ describe("Switch Group - ", ()=>{
       let previousLength = GroupManager.groups.length;
       let previoustabs = Utils.getCopy(GroupManager.groups[this.groups[0].groupIndex].tabs);
 
-      await WindowManager.switchGroup(this.groups[0].id);
+      await WindowManager.switchGroupInCurrentWindow(this.groups[0].id);
       await Utils.wait(1000);
 
       let currentTabs = await TabManager.getTabsInWindowId(this.windowId);
@@ -63,7 +63,7 @@ describe("Switch Group - ", ()=>{
       let previousLength = GroupManager.groups.length;
       let previoustabs = Utils.getCopy(GroupManager.groups[this.groups[1].groupIndex].tabs);
 
-      await WindowManager.switchGroup(this.groups[1].id);
+      await WindowManager.switchGroupInCurrentWindow(this.groups[1].id);
       await Utils.wait(1000);
 
       let currentTabs = await TabManager.getTabsInWindowId(this.windowId);

@@ -229,7 +229,8 @@ GroupManager.getWindowIdFromGroupId = function(groupId) {
  * Return the windowId for a specific group
  * If no window opened: throw Error
  * @param {Number} - group id
- * @returns {Number} - windowId
+ * @returns {Group} - group (success)
+ * @returns {null} - (failure and error false)
  */
 GroupManager.getGroupFromGroupId = function(groupId, {
   groups=GroupManager.groups,
@@ -249,7 +250,7 @@ GroupManager.getGroupFromGroupId = function(groupId, {
   if (error) {
     throw Error("GroupManager.getGroupFromGroupId: Failed to find group index for id:  " + groupId);
   } else {
-    return -1;
+    return null;
   }
 }
 

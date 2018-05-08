@@ -9,9 +9,9 @@
  - selectNextGroup
 
  Low-level
-  - openGroupInWindow
-  - switchGroup
+  - switchGroupInCurrentWindow
   - closeWindowFromGroupId
+  - openGroupInWindow (never use directly, prefer switchGroupInCurrentWindow)
 
  Integration
  - associateGroupIdToWindow
@@ -41,6 +41,7 @@ WindowManager.WINDOW_EXCLUDED = {};
  * Close all the current tabs and open the tabs from the selected group
  * in the window with windowId
  * The active tab will be the last one active in the opened group
+ * Never use directly, prefer switchGroupInCurrentWindow
  * @param {Number} newGroupId - the group id to open
  * @param {Number} windowId - the window id where to do it
  * @returns {Promise}
@@ -69,25 +70,124 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId) {
 }
 
 /**
+ * Wrap the function for acting only if the targeted window is available
+ * Release the Semaphore even in case of error
+ * Return the value of func executed
+ *
+ */
+WindowManager.decoratorCurrentlyChanging = function (func) {
+  return async function() {
+    let result, currentWindow;
+    try {
+      currentWindow = await browser.windows.getLastFocused();
+      if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
+          currentWindow.id
+        )) {
+        browser.notifications.create({
+          "type": "basic",
+          "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+          "title": "Can't change Group now",
+          "message": "Reason: the current window has not finished to switch to a group.",
+          "eventTime": 4000,
+        });
+        return func.name + " not done because the current window has not finished to switch to a group.";
+      }
+      WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id] = true;
+
+      // Do your job
+      result = await func.apply(this, arguments);
+
+    } catch(e) {
+      LogManager.error(e, {arguments});
+    } finally { // Clean
+      if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
+          currentWindow.id
+        )) {
+        delete WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id];
+      }
+      return result;
+    }
+  };
+}
+
+
+// Verify that the snap(s) are still present in the groups and with the right number of tabs
+// Verufy also by title
+function checkGroupMatchSnap(snapGroup, {
+  groups=GroupManager.groups,
+}={}) {
+  let actualGroup;
+  function reportFalse(msg) {
+    LogManager.error(
+      msg,
+      {
+        snapGroup,
+        actualGroup,
+      }
+    )
+  }
+
+  if (snapGroup == null) return reportFalse("Snap doesn't exist.");
+  actualGroup = GroupManager.getGroupFromGroupId(snapGroup.id, {
+    groups,
+    error: false,
+  });
+  if(actualGroup == null) return reportFalse("Group has disappeared.");
+
+  if(actualGroup.title !== snapGroup.title) return reportFalse("Title has changed.");
+  if(actualGroup.tabs.length !== snapGroup.tabsLength) return reportFalse("Tabs length has changed.");
+
+  return true;
+}
+
+// Keep only the id / number of tabs / title
+function makeSnapOfGroup(group) {
+  return {
+    title: group.title,
+    id: group.id,
+    tabsLength: group.tabs.length,
+  }
+}
+
+
+/**
  * Open newGroupId in current window, close the previous group if has
  * Secure: don't switch a window if it is already switching
  * @param {Number} newGroupId
  * @return {Promise:Number} windowId
  */
-WindowManager.switchGroup = async function(newGroupId) {
+WindowManager.switchGroupInCurrentWindow = async function(newGroupId) {
+  let snapNewGroup;
+  let snapOldGroup; 
   try {
+    const snapNewGroup = makeSnapOfGroup(
+      GroupManager.getGroupFromGroupId(newGroupId)
+    );
+
     let currentWindow = await browser.windows.getLastFocused();
-    if (GroupManager.isWindowAlreadyRegistered(currentWindow.id)) { // From sync window
-
+    if (GroupManager.isWindowAlreadyRegistered(currentWindow.id)) {
+      snapOldGroup = makeSnapOfGroup(
+        GroupManager.getGroupFromGroupId(
+          GroupManager.getGroupIdInWindow(currentWindow.id)
+        )
+      );
       await GroupManager.detachWindow(currentWindow.id);
-
     }
     await WindowManager.openGroupInWindow(newGroupId, currentWindow.id);
+
+    checkGroupMatchSnap(snapNewGroup);
+    if (snapOldGroup) checkGroupMatchSnap(snapOldGroup);
+
     return currentWindow.id;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {
+      arguments,
+      snapNewGroup,
+      snapOldGroup,
+    });
   }
 }
+WindowManager.switchGroupInCurrentWindow = WindowManager.decoratorCurrentlyChanging(WindowManager.switchGroupInCurrentWindow);
 
 /**
  * Close an open window and detach the group from it
@@ -164,47 +264,6 @@ WindowManager.closeGroup = async function(groupId, {close_window = false}={}) {
   }
 }
 
-/**
- * Wrap the function for acting only if the targeted window is available
- * Release the Semaphore even in case of error
- * Return the value of func executed
- *
- */
-WindowManager.decoratorCurrentlyChanging = function (func) {
-  return async function() {
-    let result, currentWindow;
-    try {
-      currentWindow = await browser.windows.getLastFocused();
-      if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
-          currentWindow.id
-        )) {
-        browser.notifications.create({
-          "type": "basic",
-          "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
-          "title": "Can't change Group now",
-          "message": "Reason: the current window has not finished to switch to a group.",
-          "eventTime": 4000,
-        });
-        return func.name + " not done because the current window has not finished to switch to a group.";
-      }
-      WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id] = true;
-
-      // Do your job
-      result = await func.apply(this, arguments);
-
-    } catch(e) {
-      LogManager.error(e, {arguments});
-    } finally { // Clean
-      if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
-          currentWindow.id
-        )) {
-        delete WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id];
-      }
-      return result;
-    }
-  };
-}
-
 
 /**
  * Selects a given group, with the tab active was the last one before closing.
@@ -234,7 +293,7 @@ WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
       if ( newWindow ) {
         windowId = await WindowManager.openGroupInNewWindow(newGroupId);
       } else {
-        windowId = await WindowManager.switchGroup(newGroupId);
+        windowId = await WindowManager.switchGroupInCurrentWindow(newGroupId);
       }
     }
     return windowId;
@@ -392,13 +451,13 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
       await Utils.wait(100);
     }
 
-    await WindowManager.switchGroup(groupId);
-    WindowManager.WINDOW_EXCLUDED[w.id];
+    await WindowManager.switchGroupInCurrentWindow(groupId);
+    delete WindowManager.WINDOW_EXCLUDED[w.id];
     return w.id;
 
   } catch (e) {
     LogManager.error(e, {arguments});
-    WindowManager.WINDOW_EXCLUDED[w.id];
+    delete WindowManager.WINDOW_EXCLUDED[w.id];
   } finally {
     //delete WindowManager.WINDOW_EXCLUDED[w.id];
   }
@@ -626,8 +685,3 @@ WindowManager.integrateWindow = async function(windowId, {
     return -1;
   }
 }
-
-// TODO: add ES6 support for more beautiful syntac + cf babel compiler
-WindowManager.switchGroup = WindowManager.decoratorCurrentlyChanging(WindowManager.switchGroup);
-//WindowManager.openGroupInNewWindow = WindowManager.decoratorCurrentlyChanging(WindowManager.openGroupInNewWindow);
-//WindowManager.closeGroup = WindowManager.decoratorCurrentlyChanging(WindowManager.closeGroup);
