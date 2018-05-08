@@ -2,7 +2,10 @@ var LogManager = LogManager || {};
 var Utils = Utils || {};
 
 LogManager.LOG_NUMBER_LIMIT = 10000;
-LogManager.NOTIFICATION_ID = "LOG_ERROR"
+LogManager.NOTIFICATION_ID = "LOG_ERROR";
+LogManager.BACK = "LOG_BACK";
+LogManager.BACK = "LOG_FRONT";
+LogManager.LOCATION = LogManager.BACK;
 
 LogManager.EXTENSION_INSTALLED = "EXTENSION_INSTALLED"
 LogManager.EXTENSION_UPDATED = "EXTENSION_UPDATED"
@@ -54,7 +57,7 @@ LogManager.warning = function(message, data=null, {
 
     LogManager.addLog(warningLog, {logs});
     if (print) {
-        console.warning(warningLog)
+        console.warn(warningLog)
     }
     return warningLog;
 }
@@ -86,7 +89,7 @@ LogManager.error = function(error, data = null, {
         columnNumber: fullError.lineNumber,
         trace: LogManager.getStack(fullError.stack),
         fullTrace,
-        data,
+        data: Utils.getCopy(data),
     }
 
     LogManager.addLog(errorLog, {logs});
@@ -112,13 +115,28 @@ LogManager.getStack = function(stack) {
 LogManager.addLog = function(log, {
     logs=LogManager.logs,
 }={}){
-    if ( Background != null ) {
+    if ( LogManager.LOCATION === LogManager.BACK ) {
         logs.push(log);
         if (logs.length > LogManager.LOG_NUMBER_LIMIT) {
             logs.shift();
         }
     } else { // From remote window
         LogManager.sendLog(log);
+    }
+}
+
+LogManager.sendLog = function(log) {
+    Utils.sendMessage("LogManager:Add", {
+        log,
+    });
+}
+
+
+// Catch error not caught
+LogManager.addWindowOnErrorListener = function() {
+    window.onerror = function(...args) {
+        const [message, file, line, col, error] = args;
+        LogManager.error(error, "Caught by window.onerror")
     }
 }
 
@@ -151,12 +169,6 @@ LogManager.downloadLog = async function downloadLog(logs=LogManager.logs) {
         LogManager.error(e);
         return false;
     }
-}
-
-LogManager.sendLog = function(log) {
-    Utils.sendMessage("LogManager:Add", {
-        log,
-    });
 }
 
 LogManager.showErrorNotification = function () {
@@ -195,12 +207,4 @@ LogManager.init = function() {
 
     browser.notifications.onClicked.addListener(logManagerNotificationEvent);
     browser.runtime.onMessage.addListener(logManagerMessenger);
-}
-
-// Catch error not caught
-LogManager.addWindowOnErrorListener = function() {
-    window.onerror = function(...args) {
-        const [message, file, line, col, error] = args;
-        LogManager.error(error, "Caught by window.onerror")
-    }
 }
