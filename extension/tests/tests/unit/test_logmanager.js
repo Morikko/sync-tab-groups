@@ -47,7 +47,7 @@ describe("Logmanager", () => {
             })
 
             expect(logs.length).toBe(1);
-            expect(logs[0].data).toBe(data);
+            expect(logs[0].data).toEqual(data);
         })
         
     })

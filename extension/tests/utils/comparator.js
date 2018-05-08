@@ -169,10 +169,10 @@ var tabGroupsMatchers = {
           [result.pass, result.message] = TestManager.compareTabs(actual, expected);
 
           if ( !result.pass ) {
-            LogManager.error(e, {
+            LogManager.error("toEqualTabs didn't pass", {
               arguments,
               resultMessage: result.message,
-            });
+            }, {logs: null});
           }
         }
         return result;

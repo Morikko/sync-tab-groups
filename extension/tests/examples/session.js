@@ -179,7 +179,7 @@ Session.createArrayGroups = function(params={}) {
           arguments,
           paramName: pro,
           paramValue: params[pro],
-        });
+        }, {logs: null});
       throw Error("");
     }
   }
@@ -420,7 +420,7 @@ Session.keepOneWindowOpen = async function() {
     }
     return "WindowManager.keepOneWindowOpen done";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {arguments}, {logs: null});
   }
 }
 
@@ -444,7 +444,7 @@ Session.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
 
     return w.id;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {arguments}, {logs: null});
   }
 }
 

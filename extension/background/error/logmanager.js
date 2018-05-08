@@ -44,7 +44,7 @@ LogManager.information = function(message, data=null, {
         data: Utils.getCopy(data),
     };
 
-    LogManager.addLog(informationLog, {logs});
+    if (logs) LogManager.addLog(informationLog, {logs});
     if (print) {
         console.log(informationLog)
     }
@@ -53,6 +53,7 @@ LogManager.information = function(message, data=null, {
 
 /**
  * Something not normal happened but it is not critical
+ * if logs is null, do not save it
  */
 LogManager.warning = function(message, data=null, {
     print=Utils.DEBUG_MODE,
@@ -69,7 +70,7 @@ LogManager.warning = function(message, data=null, {
         data: Utils.getCopy(data),
     };
 
-    LogManager.addLog(warningLog, {logs});
+    if (logs) LogManager.addLog(warningLog, {logs});
     if (print) {
         console.warn(warningLog)
     }
@@ -109,7 +110,7 @@ LogManager.error = function(error, data = null, {
         data: Utils.getCopy(data),
     }
 
-    LogManager.addLog(errorLog, {logs});
+    if (logs) LogManager.addLog(errorLog, {logs});
     if (print) {
         console.error(errorLog)
     }

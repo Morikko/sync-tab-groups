@@ -39,7 +39,7 @@ TestManager.splitOnHalfScreen = async function(windowId){
         state: "normal",
     });
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {arguments}, {logs: null});
   }
 }
 
@@ -52,7 +52,7 @@ TestManager.splitOnHalfTopScreen = async function(windowId){
         height: Math.round(screen.width/2),
     });
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {arguments}, {logs: null});
   }
 }
 
@@ -65,7 +65,7 @@ TestManager.splitOnHalfBottomScreen = async function(windowId){
         height: Math.round(screen.width/2),
     });
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {arguments}, {logs: null});
   }
 }
 
@@ -268,7 +268,7 @@ TestManager.removeGroups = async function(groupIds) {
       try {
         await GroupManager.removeGroupFromId(groupId);
       } catch(e) {
-        LogManager.error(e, {arguments});
+        LogManager.error(e, {arguments}, {logs: null});
       }
     }
   }
@@ -278,7 +278,7 @@ TestManager.getRandomGroupId = function(groups) {
   let index = TestManager.getRandom(0, groups.length-1);
 
   if (!groups[index]) {
-    LogManager.warning("Index not found: " + index);
+    LogManager.warning("Index not found: " + index, null, {logs: null});
   }
   return groups[
     index
@@ -329,7 +329,7 @@ const ACTIONS = [
     let groupId = TestManager.getRandomGroupId(groups);
     await GroupManager.addTabInGroupId(
       groupId,
-      Session.getRandomNormalTab(),
+      Session.getFakeTab(),
       TestManager.getRandomTabIndex(groups, groupId)
     );
   },
@@ -360,7 +360,7 @@ const ACTIONS = [
   async (groups) =>{
     let tabs = [];
     for(let i=0; i<TestManager.getRandom(1,15); i++) {
-      tabs.push(Session.getRandomNormalTab());
+      tabs.push(Session.getFakeTab());
     }
     GroupManager.addGroupWithTab(
       tabs, {

@@ -117,13 +117,13 @@ describe("TabManager", ()=>{
         // Add 2 Pinned Tabs
         await Session.addTabToGroup(
           this.id,
-          Session.getRandomNormalTab({
+          Session.getFakeTab({
             pinned:true,
           })
         );
         await Session.addTabToGroup(
           this.id,
-          Session.getRandomNormalTab({
+          Session.getFakeTab({
             pinned:true,
           })
         );
@@ -897,7 +897,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        LogManager.error(e, {arguments});
+        LogManager.error(e, {arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -948,7 +948,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs[1]).toEqualTabs(expectedTabs[1]);
 
       } catch(e) {
-        LogManager.error(e, {arguments});
+        LogManager.error(e, {arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -990,7 +990,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        LogManager.error(e, {arguments});
+        LogManager.error(e, {arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -1004,7 +1004,7 @@ describe("TabManager", ()=>{
         this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[4].id);
         await TestManager.splitOnHalfScreen(this.windowIds);
 
-        let newTab = Session.getRandomNormalTab();
+        let newTab = Session.getFakeTab();
 
         let expectedTabs = Utils.getCopy(this.groups[4].tabs);
         expectedTabs.splice(this.groups[4].tabs.length-2, 1);
@@ -1031,7 +1031,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        LogManager.error(e, {arguments});
+        LogManager.error(e, {arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
