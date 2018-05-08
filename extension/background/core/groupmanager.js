@@ -8,6 +8,7 @@
  - getGroupIdFromTabId
  - getTabIndexFromTabId
  - getWindowIdFromGroupId
+ - getGroupFromGroupId
 
  Setter Group
  - changeExpandState
@@ -222,6 +223,34 @@ GroupManager.getWindowIdFromGroupId = function(groupId) {
     }
 
   throw Error("GroupManager.getWindowIdFromGroupId: Failed to find opened window for id:  " + groupId);
+}
+
+/**
+ * Return the windowId for a specific group
+ * If no window opened: throw Error
+ * @param {Number} - group id
+ * @returns {Number} - windowId
+ */
+GroupManager.getGroupFromGroupId = function(groupId, {
+  groups=GroupManager.groups,
+  copy=false,
+  error=true,
+}={}) {
+  const index = GroupManager.getGroupIndexFromGroupId(groupId, {
+    groups, error
+  }) 
+
+  if ( index > -1 && index < groups.length ) {
+    return copy
+      ? Utils.getCopy(groups[index])
+      : groups[index]
+  }
+
+  if (error) {
+    throw Error("GroupManager.getGroupFromGroupId: Failed to find group index for id:  " + groupId);
+  } else {
+    return -1;
+  }
 }
 
 GroupManager.isWindowAlreadyRegistered = function(windowId) {
