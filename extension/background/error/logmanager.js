@@ -102,12 +102,18 @@ LogManager.error = function(error, data = null, {
         type: 'Error',
         time: Date(),
         message: fullError.message,
-        fileName: fullError.fileName.replace(extensionPrefix, '/'),
-        lineNumber: fullError.lineNumber,
-        columnNumber: fullError.lineNumber,
+
         trace: LogManager.getStack(fullError.stack),
         fullTrace,
         data: Utils.getCopy(data),
+    }
+
+    if(!Utils.isChrome()) {
+        errorLog = Object.assign(errorLog, {
+            fileName: fullError.fileName.replace(extensionPrefix, '/'),
+            lineNumber: fullError.lineNumber,
+            columnNumber: fullError.lineNumber,
+        });
     }
 
     if (logs) LogManager.addLog(errorLog, {logs});
@@ -123,9 +129,15 @@ LogManager.error = function(error, data = null, {
 
 // Parse the stack trace to be better readable
 LogManager.getStack = function(stack) {
-    return stack.split('@')
-        .map(line => line.replace(extensionPrefix, '/'))
-        .map(line => line.replace('\n', ' => '))
+    if(!Utils.isChrome()) {
+        return stack.split('@')
+            .map(line => line.replace(extensionPrefix, '/'))
+            .map(line => line.replace('\n', ' => '))
+    } else {
+        return stack.split('at ')
+            .map(line => line.replace(extensionPrefix, '/'))
+            .map(line => line.replace('\n', ''))
+    }
 }
 
 // Add the log to the array
