@@ -95,16 +95,11 @@ LogManager.error = function(error, data = null, {
         fullError = Error(error)
     }
 
-    const fullTrace = LogManager.getStack(Error().stack);
-    fullTrace.shift();
-
     const errorLog = {
         type: 'Error',
         time: Date(),
         message: fullError.message,
-
         trace: LogManager.getStack(fullError.stack),
-        fullTrace,
         data: Utils.getCopy(data),
     }
 
