@@ -110,6 +110,41 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.8)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Add: Automatic Error Log"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Check ",
+          React.createElement(
+            "a",
+            { href: "https://github.com/Morikko/sync-tab-groups/wiki/How-to-help-me-solve-bugs" },
+            "the wiki page"
+          ),
+          " to know how you can help me solved extensions bugs."
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Notification when an error happened, so you can restore your groups and save the log"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Error management in popup, avoid the \"empty bubble\""
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.7)"
       ),
       React.createElement(
