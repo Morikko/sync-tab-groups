@@ -51,12 +51,14 @@ Background.init = async function() {
 
   Event.Install.prepareExtensionForUpdate(
     Background.lastVersion,
-    (browser.runtime.getManifest()).version);
+    (browser.runtime.getManifest()).version
+  );
 
-  Event.Extension.initDataEventListener();
+  Event.Extension.initSendDataEventListener();
   Event.Tabs.initTabsEventListener();
   Event.Windows.initWindowsEventListener();
   Event.Commands.initCommandsEventListener();
+  ContextMenu.initContextMenus();
 
   browser.runtime.onMessage.addListener(Messenger.Groups.popupMessenger);
   browser.runtime.onMessage.addListener(Messenger.Options.optionMessenger);

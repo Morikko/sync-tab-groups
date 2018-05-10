@@ -288,16 +288,18 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
   }
 };
 
+ContextMenu.initContextMenus = function() {
+  browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
+  browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
+  GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
+    () => {
+      ContextMenu.repeatedtask.add(
+        () => {
+          ContextMenu.createMoveTabMenu();
+        }
+      )
+    });
 
-browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
-browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
-GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
-  () => {
-    ContextMenu.repeatedtask.add(
-      () => {
-        ContextMenu.createMoveTabMenu();
-      }
-    )
-  });
+  ContextMenu.createSpecialActionMenu();
+}
 
-ContextMenu.createSpecialActionMenu();

@@ -55,7 +55,7 @@
 
  Initialization:
  - init
- - initEventListener
+ - initGroupManagerEventListener
  - store
 
  Preparation tools:
@@ -326,8 +326,7 @@ GroupManager.changeExpandState = function(groupIds, expandState, {groups = Group
     })
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    let msg = "GroupManager.changeExpandState failed; " + e.message;
-    (msg);
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -362,8 +361,7 @@ GroupManager.changeGroupPosition = function(groupId, position, {
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    let msg = "GroupManager.changeGroupPosition failed; " + e.message;
-    (msg);
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -416,8 +414,7 @@ GroupManager.setLastAccessed = function(groupId, time, {groups = GroupManager.gr
     groups[groupIndex].lastAccessed = time;
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    let msg = "GroupManager.setLastAccessed failed; " + e.message;
-    (msg);
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -461,8 +458,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    let msg = "GroupManager.setTabsInGroupId failed; " + e.message;
-    (msg);
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -478,9 +474,7 @@ GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
   } catch (e) {
-    let msg = "GroupManager.attachWindowWithGroupId failed; " + e.message;
-    (msg);
-    return;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -509,9 +503,7 @@ GroupManager.detachWindowFromGroupId = async function(groupId) {
     await GroupManager.detachWindow(windowId);
 
   } catch (e) {
-    let msg = "GroupManager.detachWindowFromGroupId failed; " + e;
-    (msg);
-    return;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -559,9 +551,7 @@ GroupManager.detachWindow = async function(windowId) {
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 
   } catch (e) {
-    let msg = "GroupManager.detachWindow failed; " + e;
-    (msg);
-    return;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -579,9 +569,7 @@ GroupManager.removeGroupsInPrivateWindow = async function(groups=GroupManager.gr
     }
     return "GroupManager.removeGroupsInPrivateWindow done!";
   } catch (e) {
-    let msg = "GroupManager.removeGroupsInPrivateWindow failed; " + e;
-    (msg);
-    return;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -601,9 +589,7 @@ GroupManager.removeGroupFromId = async function(groupId) {
     GroupManager.groups.splice(groupIndex, 1);
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    let msg = "GroupManager.removeGroupFromId failed on " + groupId + " because " + e;
-    (msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -631,9 +617,7 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, {
     return "GroupManager.removeTabFromIndexInGroupId done!";
 
   } catch (e) {
-    let msg = "GroupManager.removeTabFromIndexInGroupId done because group " + groupId + " was already removed.";
-    (msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 
 }
@@ -677,9 +661,7 @@ GroupManager.addTabInGroupId = async function(groupId, tab, {
     return "GroupManager.addTabInGroupId done!";
 
   } catch (e) {
-    let msg = "GroupManager.addTabInGroupId failed on group " + groupId + " because " + e;
-    (msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 
 }
@@ -920,11 +902,11 @@ GroupManager.init = async function() {
     // 2. Integrate open windows
     await GroupManager.integrateAllOpenedWindows();
 
-    GroupManager.initEventListener();
+    GroupManager.initGroupManagerEventListener();
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
     return "GroupManager.init done";
   } catch (e) {
-    return "GroupManager.init failed: " + e;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -948,6 +930,7 @@ GroupManager.integrateAllOpenedWindows = async function() {
  */
 GroupManager.store = function() {
   if ( GroupManager.checkCorruptedGroups(GroupManager.groups) ) {
+    LogManager.information("Corrupted groups, saved not done.")
     return;
   }
   StorageManager.Local.saveGroups(GroupManager.getCopy());
@@ -958,7 +941,7 @@ GroupManager.store = function() {
   */
 }
 
-GroupManager.initEventListener = function() {
+GroupManager.initGroupManagerEventListener = function() {
   GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE, () => {
     GroupManager.repeatedtask.add(() => {
       GroupManager.store();
@@ -985,20 +968,24 @@ GroupManager.initEventListener = function() {
 GroupManager.prepareGroups = function (groups=GroupManager.groups, {
   removeEmptyGroup=OptionManager.options.groups.removeEmptyGroup,
 }={}) {
-  if (removeEmptyGroup) {
-    GroupManager.removeEmptyGroup({
-      groups,
-      fireEvent: false,
-    });
-  }
+  try {
+    if (removeEmptyGroup) {
+      GroupManager.removeEmptyGroup({
+        groups,
+        fireEvent: false,
+      });
+    }
 
-  GroupManager.setAllIndexes(groups);
-  GroupManager.setAllPositions({
-    groups: groups,
-    sortingType: OptionManager.options.groups.sortingType
-  });
-  GroupManager.coherentActiveTabInGroups({groups: groups});
-  GroupManager.setUniqueTabIds(groups);
+    GroupManager.setAllIndexes(groups);
+    GroupManager.setAllPositions({
+      groups: groups,
+      sortingType: OptionManager.options.groups.sortingType
+    });
+    GroupManager.coherentActiveTabInGroups({groups});
+    GroupManager.setUniqueTabIds(groups);
+  } catch (e) {
+    LogManager.error(e);
+  }
 }
 
 /**
