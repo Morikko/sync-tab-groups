@@ -79,6 +79,7 @@ LogManager.warning = function(message, data=null, {
 
 /**
  * Something that shouldn't happened
+ * From async trace enable in Firefox: javascript.options.asyncstack
  * @param {Error/String} error
  * @param {Object} data added to the log 
  */

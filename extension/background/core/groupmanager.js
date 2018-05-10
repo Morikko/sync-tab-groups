@@ -479,7 +479,7 @@ GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
 }
 
 /**
- * Check that group objects in groups array have all the good propreties
+ * Check that group objects in groups array have all the good properties
  * @param {Array[GroupManager.Group]} groups
  * @return {Array[GroupManager.Group]} groups - verified
  */
@@ -1023,19 +1023,74 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
  * Check if groups is corrupted
  * If so, try to reload the groups from the disk
  */
-GroupManager.checkCorruptedGroups = function(groups = GroupManager.groups) {
-  const {is: isCorrupted, msg: corruptedMessage} = Utils.checkCorruptedObject(groups, "groups");
-  if ( isCorrupted ) {
-    LogManager.error(
-      `Sync Tab Groups has detected a corrupted: ${corruptedMessage}`
+GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
+  shouldBefixed=true,
+  withMessage=false,
+}={}) {
+  const checkCorruptedTab = function(tab, index) {
+    const properties = [ "title", "url", "hidden", "lastAccessed", "pinned", "windowId", "active", "id"];
+    if( Utils.isChrome() || Utils.isFF57()) {
+      properties.push("discarded")
+    }
+    return Utils.ojectPropertiesAreUndefined(
+      tab,
+      properties,
+      `tabs[${index}]`
     );
-    // Don't fix data in debug mode for allowing to analyze
-    if ( !Utils.DEBUG_MODE ) {
-      GroupManager.reloadGroupsFromDisk();
-      LogManager.information('Tried to correct corruption...');
+  }
+
+  const checkCorruptedTabs = function(tabs, prefix) {
+    const results = tabs.map(checkCorruptedTab)
+      .filter(([isCorrupted, __]) => isCorrupted);
+    
+    if (results.length === 0) {
+      return [false, ""];
+    } else {
+      return [true, prefix + "." + results.map(([is, msg])=> msg).join(',')];
     }
   }
-  return isCorrupted;
+
+  const checkCorruptedGroup = function(group, index) {
+    const result = Utils.ojectPropertiesAreUndefined(
+      group,
+      [ "title", "tabs", "id", "windowId", "index", "position", "expand", "lastAccessed", "incognito"],
+      `group[${index}]`
+    )
+    if(result[0]) return result;
+
+    return checkCorruptedTabs(group.tabs, `group[${index}]`);
+  }
+
+  let areGroupsCorrupted = false;
+  let corruptedMessage = "";
+  const isDeadObject = Utils.isDeadObject(groups);
+
+  if(isDeadObject) {
+    areGroupsCorrupted = true; 
+    corruptedMessage = "Groups are dead";
+  } else {
+    const results = groups.map(checkCorruptedGroup)
+      .filter(([isCorrupted, __]) => isCorrupted);
+
+    if(results.length>0) {
+      areGroupsCorrupted = true; 
+      corruptedMessage = results.map(([is, msg])=> msg).join(',');
+    }
+  }
+
+  if ( areGroupsCorrupted ) {
+    LogManager.error(
+      `Sync Tab Groups has detected a corruption in your groups: ${corruptedMessage}`
+    );
+    // Don't fix data in debug mode for allowing to analyze
+    if (!Utils.DEBUG_MODE && shouldBefixed) {
+      GroupManager.reloadGroupsFromDisk();
+      LogManager.information('Tried to correct groups corruption...');
+    }
+  }
+  return withMessage
+    ? [areGroupsCorrupted, corruptedMessage]
+    : areGroupsCorrupted;
 }
 
 /**

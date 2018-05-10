@@ -17,24 +17,46 @@ describe("Check Corrupted: ", ()=>{
     it("No corruption", async function(){
       let groups = Session.createArrayGroups({groupsLength:1, tabsLength: 7, pinnedTabs: 2});
 
-      await GroupManager.checkCorruptedGroups(groups);
+      const isCorrupted = await GroupManager.checkCorruptedGroups(groups);
+      expect(isCorrupted).toBe(false);
       expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(0);
     });
 
-    it("A  group is undefined", async function(){
-      let corrupted = await GroupManager.checkCorruptedGroups([undefined]);
+    it("A group is undefined", async function(){
+      let [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        [undefined], {withMessage: true}
+      );
       expect(corrupted).toBe(true);
+      expect(message).toBe("group[0](ALL)")
       expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(1);
+
+      const group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      group.incognito = undefined;
+
+      [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        [group], {withMessage: true}
+      );
+      expect(corrupted).toBe(true);
+      expect(message).toBe('group[0]["incognito"]')
+      expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(2);
     });
 
     it("A Tabs Group is undefined", async function(){
       let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
 
       group.tabs[0].url = undefined;
-      await GroupManager.checkCorruptedGroups([group]);
+      let [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        [group], {withMessage: true}
+      );
+      expect(corrupted).toBe(true);
+      expect(message).toBe('group[0].tabs[0]["url"]')
 
-      group.tabs = undefined;
-      await GroupManager.checkCorruptedGroups([group]);
+      group.tabs = undefined; 
+      [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        [group], {withMessage: true}
+      );
+      expect(corrupted).toBe(true);
+      expect(message).toBe('group[0]["tabs"]')
 
       expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(2);
     });

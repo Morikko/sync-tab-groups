@@ -223,7 +223,7 @@ OptionManager.init = async function() {
 }
 
 /**
- * Check that options object has all the good propreties
+ * Check that options object has all the good properties
  * @param {Object} options
  * @return {Object} options - verified
  */

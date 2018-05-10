@@ -333,7 +333,7 @@ Utils.isChrome = function() {
 }
 
 /**
- * Return true if the browser is FF57
+ * Return true if the browser is FF57 or above
  * @return {Boolean}
  */
 Utils.isFF57 = function() {
@@ -528,7 +528,8 @@ Utils.getGroupTitle = function(group) {
 };
 
 /**
- * Return true if at least the object or one of its properties is undefined
+ * Return true if at least the object or one of its properties is 
+ * Go deep in the object
  * @return {Array[{Boolean} hasUndefined, {String} path to the undefined]}
  */
 Utils.objectHasUndefined = function(object, name="default") {
@@ -547,6 +548,31 @@ Utils.objectHasUndefined = function(object, name="default") {
     }
   }
   return [false, name];
+}
+
+/**
+ * Check that the main object and the properties are not undefined
+ * @param {Object} object
+ * @param {Array[String]} properties
+ * @param {String} name
+ * @return {Array[{Boolean} hasUndefined, {String} path to the undefined]}
+ */
+Utils.ojectPropertiesAreUndefined = function(
+  object, properties, name="default"
+) {
+  if ( object === undefined ) {
+    return [true, name + "(ALL)"];
+  }
+  let hasUndefined = false;
+  const listMessage = [];
+
+  for (let pro of properties) {
+    if ( object[pro] === undefined ) {
+      hasUndefined = true;
+      listMessage.push(`${name}["${pro}"]`);
+    }
+  }
+  return [hasUndefined, listMessage.join(',')];
 }
 
 /**
