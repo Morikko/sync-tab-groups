@@ -86,6 +86,17 @@ Background.init = async function() {
       windowId: group.windowId,
     })),
   });
+
+  if(Utils.DEBUG_MODE) {
+    setInterval(async function checkGroupsAreIdenticalOnDisk(){
+      const groups = await StorageManager.Local.loadGroups();
+
+      if (JSON.stringify(groups) !== JSON.stringify(GroupManager.groups)) {
+        LogManager.information("Groups in extension doesn't match groups saved on the disk.")
+      }
+
+    }, 10 * 1000);
+  }
 };
 
 Background.refreshOptionsUI = function() {
@@ -255,7 +266,10 @@ Background.changeSynchronizationStateOfWindow = function({
       );
       GroupManager.removeGroupFromId(currentGroupId);
     } catch (e) {
-      LogManager.error(e);
+      LogManager.error(e, {
+        isSync,
+        windowId,
+      });
     }
   }
 };

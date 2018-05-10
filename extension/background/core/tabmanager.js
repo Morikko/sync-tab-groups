@@ -78,7 +78,7 @@ TabManager.getTabsInWindowId = async function(windowId, {
 
   } catch (e) {
     LogManager.error(e, {arguments});
-    throw Error(msg);
+    throw Error();
   }
 }
 

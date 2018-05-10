@@ -16,6 +16,7 @@ StorageManager.Local.saveGroups = async function(groups) {
   let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
   try {
     await browser.storage.local.set({groups: export_groups});
+    if(export_groups.length === 0) LogManager.information(`StorageManager.Local.saveGroups saved empty group.`)
   } catch (e) {
     LogManager.error(e, {arguments});
   }
@@ -28,7 +29,9 @@ StorageManager.Local.saveGroups = async function(groups) {
  */
 StorageManager.Local.loadGroups = async function() {
   try {
-    return (await browser.storage.local.get({"groups": []})).groups;
+    const {groups} = await browser.storage.local.get({"groups": []})
+    if(groups.length === 0) LogManager.information(`StorageManager.Local.loadGroups loaded empty group.`)
+    return groups;
   } catch (e) {
     return "StorageManager.Local.loadGroups failed... " + e;
   }

@@ -44,7 +44,7 @@ LogManager.information = function(message, data=null, {
         data: Utils.getCopy(data),
     };
 
-    if (logs) LogManager.addLog(informationLog, {logs});
+    if (logs) LogManager.addLog(informationLog, {logs, print});
     if (print) {
         console.log(informationLog)
     }
@@ -70,7 +70,7 @@ LogManager.warning = function(message, data=null, {
         data: Utils.getCopy(data),
     };
 
-    if (logs) LogManager.addLog(warningLog, {logs});
+    if (logs) LogManager.addLog(warningLog, {logs, print});
     if (print) {
         console.warn(warningLog)
     }
@@ -109,14 +109,14 @@ LogManager.error = function(error, data = null, {
     }
 
     if(!Utils.isChrome()) {
-        errorLog = Object.assign(errorLog, {
+        Object.assign(errorLog, {
             fileName: fullError.fileName.replace(extensionPrefix, '/'),
             lineNumber: fullError.lineNumber,
             columnNumber: fullError.lineNumber,
         });
     }
 
-    if (logs) LogManager.addLog(errorLog, {logs});
+    if (logs) LogManager.addLog(errorLog, {logs, print});
     if (print) {
         console.error(errorLog)
     }
@@ -144,9 +144,13 @@ LogManager.getStack = function(stack) {
 // Limit the log number to LogManager.LOG_NUMBER_LIMIT
 LogManager.addLog = function(log, {
     logs=LogManager.logs,
+    print=Utils.DEBUG_MODE,
 }={}){
     if ( LogManager.LOCATION === LogManager.BACK ) {
+        // Avoid duplication
+        if(logs.length>0 && logs[logs.length-1].message === log.message) return;
         logs.push(log);
+        if(print) console.log(`Next Message Index: ${logs.length-1}`);
         if (logs.length > LogManager.LOG_NUMBER_LIMIT) {
             logs.shift();
         }
@@ -175,7 +179,7 @@ LogManager.downloadLog = async function downloadLog(logs=LogManager.logs) {
         let d = new Date();
         let url = URL.createObjectURL(new Blob([
             JSON.stringify({
-                version: ["SyncTabGroups", 1],
+                version: ["SyncTabGroups", browser.runtime.getManifest().version],
                 logs,
                 options: OptionManager.options,
             }, null, 2)
