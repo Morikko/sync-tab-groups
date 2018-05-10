@@ -44,7 +44,7 @@ LogManager.information = function(message, data=null, {
         data: Utils.getCopy(data),
     };
 
-    if (logs) LogManager.addLog(informationLog, {logs, print});
+    if (logs) LogManager.addLog(informationLog, {logs, print, enable});
     if (print) {
         console.log(informationLog)
     }
@@ -70,7 +70,7 @@ LogManager.warning = function(message, data=null, {
         data: Utils.getCopy(data),
     };
 
-    if (logs) LogManager.addLog(warningLog, {logs, print});
+    if (logs) LogManager.addLog(warningLog, {logs, print, enable});
     if (print) {
         console.warn(warningLog)
     }
@@ -112,7 +112,7 @@ LogManager.error = function(error, data = null, {
         });
     }
 
-    if (logs) LogManager.addLog(errorLog, {logs, print});
+    if (logs) LogManager.addLog(errorLog, {logs, print, enable});
     if (print) {
         console.error(errorLog)
     }
@@ -141,12 +141,16 @@ LogManager.getStack = function(stack) {
 LogManager.addLog = function(log, {
     logs=LogManager.logs,
     print=Utils.DEBUG_MODE,
+    enable=LogManager.isEnable()
 }={}){
+    if(!enable) return;
     if ( LogManager.LOCATION === LogManager.BACK ) {
         // Avoid duplication
         if(logs.length>0 && logs[logs.length-1].message === log.message) return;
         logs.push(log);
-        if(print) console.log(`Next Message Index: ${logs.length-1}`);
+        if(print) {
+            console.log(`Next Message Index: ${logs.length-1}`);
+        }
         if (logs.length > LogManager.LOG_NUMBER_LIMIT) {
             logs.shift();
         }
@@ -163,10 +167,12 @@ LogManager.sendLog = function(log) {
 
 
 // Catch error not caught
-LogManager.addWindowOnErrorListener = function() {
+LogManager.addWindowOnErrorListener = function({
+    enable=LogManager.isEnable()
+}={}) {
     window.onerror = function(...args) {
         const [message, file, line, col, error] = args;
-        LogManager.error(error, "Caught by window.onerror")
+        LogManager.error(error, "Caught by window.onerror", {enable})
     }
 }
 

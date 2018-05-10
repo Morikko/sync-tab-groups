@@ -1,2 +1,3 @@
 LogManager.LOCATION = LogManager.FRONT
-LogManager.addWindowOnErrorListener();
+// Always sent error, let the back decides if to save
+LogManager.addWindowOnErrorListener({enable: true});

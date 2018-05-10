@@ -13,27 +13,39 @@ class TabList extends React.Component {
       this.props.tabs.map((tab, index) => {
         let selected = this.props.selectionFilter !== undefined ? this.props.selectionFilter[index] : undefined;
 
-        return React.createElement(Tab, {
-          key: index,
-          group: this.props.group,
-          tabIndex: index,
-          tab: tab,
-          onTabClick: this.props.onTabClick,
-          onGroupDrop: this.props.onGroupDrop,
-          onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
-          opened: this.props.opened,
-          onCloseTab: this.props.onCloseTab,
-          onOpenTab: this.props.onOpenTab,
-          searchTabResult: this.props.searchTabsResults ? this.props.searchTabsResults[index] : true,
-          groups: this.props.groups,
-          onChangePinState: this.props.onChangePinState,
-          allowClickSwitch: this.props.allowClickSwitch,
-          hotkeysEnable: this.props.hotkeysEnable,
-          selected: selected,
-          hoverStyle: this.props.hoverStyle,
-          controlsEnable: this.props.controlsEnable,
-          draggable: this.props.draggable
-        });
+        return React.createElement(
+          ErrorBoundary,
+          {
+            key: index,
+            fallback: React.createElement(
+              "div",
+              null,
+              "Error on Tab at index ",
+              index
+            )
+          },
+          React.createElement(Tab, {
+            key: index,
+            group: this.props.group,
+            tabIndex: index,
+            tab: tab,
+            onTabClick: this.props.onTabClick,
+            onGroupDrop: this.props.onGroupDrop,
+            onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
+            opened: this.props.opened,
+            onCloseTab: this.props.onCloseTab,
+            onOpenTab: this.props.onOpenTab,
+            searchTabResult: this.props.searchTabsResults ? this.props.searchTabsResults[index] : true,
+            groups: this.props.groups,
+            onChangePinState: this.props.onChangePinState,
+            allowClickSwitch: this.props.allowClickSwitch,
+            hotkeysEnable: this.props.hotkeysEnable,
+            selected: selected,
+            hoverStyle: this.props.hoverStyle,
+            controlsEnable: this.props.controlsEnable,
+            draggable: this.props.draggable
+          })
+        );
       })
     );
   }
