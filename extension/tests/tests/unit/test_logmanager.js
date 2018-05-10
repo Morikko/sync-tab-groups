@@ -13,6 +13,7 @@ describe("Logmanager", () => {
                 logs,
                 print: false,
                 showNotification: false,
+                enable: true,
             })
 
             expect(logs[0].type).toBe('Error')
@@ -27,6 +28,7 @@ describe("Logmanager", () => {
                 logs,
                 print: false,
                 showNotification: false,
+                enable: true,
             })
 
             expect(logs.length).toBe(1);
@@ -44,6 +46,7 @@ describe("Logmanager", () => {
                 logs,
                 print: false,
                 showNotification: false,
+                enable: true,
             })
 
             expect(logs.length).toBe(1);

@@ -426,7 +426,7 @@ GroupManager.updateLastAccessedFromTabs = function(groups = GroupManager.groups)
   for (let g of groups) {
     let lastAccessed = g.lastAccessed;
     for (let tab of g.tabs) { // If no tab, keep the old value
-      if (tab.lastAccessed > lastAccessed) {
+      if (tab.lastAccessed != null && tab.lastAccessed > lastAccessed) {
         lastAccessed = tab.lastAccessed;
       }
     }
@@ -1028,9 +1028,12 @@ GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
   withMessage=false,
 }={}) {
   const checkCorruptedTab = function(tab, index) {
-    const properties = [ "title", "url", "hidden", "lastAccessed", "pinned", "windowId", "active", "id"];
+    const properties = [ "title", "url", "pinned", "windowId", "active", "id"];
     if( Utils.isChrome() || Utils.isFF57()) {
       properties.push("discarded")
+    }
+    if (!Utils.isChrome()) {
+      properties.push("lastAccessed")
     }
     return Utils.ojectPropertiesAreUndefined(
       tab,
@@ -1046,7 +1049,7 @@ GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
     if (results.length === 0) {
       return [false, ""];
     } else {
-      return [true, prefix + "." + results.map(([is, msg])=> msg).join(',')];
+      return [true, results.map(([is, msg])=>  `${prefix}.${msg}`).join(',')];
     }
   }
 
