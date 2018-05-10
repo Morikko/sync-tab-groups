@@ -5,7 +5,7 @@
             "name": "Sync Tab Groups",
             "type": "firefox",
             "request": "attach",
-            "port": 46031,
+            "port": <port>,
             "addonType": "webExtension",
             "addonPath": "${workspaceFolder}/extension"
         }
