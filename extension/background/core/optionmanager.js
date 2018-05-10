@@ -267,13 +267,13 @@ OptionManager.reloadOptionsFromDisk = async function () {
 }
 
 OptionManager.checkCorruptedOptions = function (options=OptionManager.options) {
-  let corrupted;
-  if ( (corrupted = Utils.checkCorruptedObject(options)) ) {
-    LogManager.warning("OptionManager.checkCorruptedOptions has detected a corrupted options: ");
+  const {is: isCorrupted, msg: corruptedMessage} = Utils.checkCorruptedObject(options, "options");
+  if (isCorrupted) {
+    LogManager.warning("OptionManager.checkCorruptedOptions has detected a corrupted options: " + corruptedMessage);
     // Don't fix data in debug mode for allowing to analyze
     if ( !Utils.DEBUG_MODE ) {
       OptionManager.reloadOptionsFromDisk();
     }
   }
-  return corrupted;
+  return isCorrupted;
 }

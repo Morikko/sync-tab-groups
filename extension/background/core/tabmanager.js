@@ -74,6 +74,11 @@ TabManager.getTabsInWindowId = async function(windowId, {
       });
     }
 
+    // Remove sharingState field that could be undefined
+    tabs.forEach((tab) => {
+      if(tab["sharingState"]) delete tab["sharingState"]
+    })
+
     return tabs;
 
   } catch (e) {

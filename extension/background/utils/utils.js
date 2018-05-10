@@ -529,22 +529,24 @@ Utils.getGroupTitle = function(group) {
 
 /**
  * Return true if at least the object or one of its properties is undefined
+ * @return {Array[{Boolean} hasUndefined, {String} path to the undefined]}
  */
-Utils.objectHasUndefined = function(object) {
+Utils.objectHasUndefined = function(object, name="default") {
   if ( object === undefined ) {
-    return true;
+    return [true, name];
   }
   for (let pro in object) {
     if ( object[pro] === undefined ) {
-      return true;
+      return [true, `${name}["${pro}"]`];
     }
     if ("object" === typeof object[pro]) {
-      if ( Utils.objectHasUndefined(object[pro]) ) {
-        return true;
+      const result = Utils.objectHasUndefined(object[pro], `${name}["${pro}"]`)
+      if ( result[0] ) {
+        return result
       }
     }
   }
-  return false;
+  return [false, name];
 }
 
 /**
@@ -568,13 +570,27 @@ Utils.isDeadObject = function (obj) {
   * @param {Object} obj
   * @return {Boolean} corrupted state
   */
-Utils.checkCorruptedObject = function( obj ) {
-  let corrupted = false;
+Utils.checkCorruptedObject = function( obj, name="default" ) {
+  const corrupted = {
+    is: false,
+    msg: "",
+  };
   try {
-    corrupted = corrupted || Utils.isDeadObject(obj);
-    corrupted = corrupted || Utils.objectHasUndefined(obj);
+    const isDeadObject = Utils.isDeadObject(obj);
+    if (isDeadObject) {
+      corrupted.is = isDeadObject;
+      corrupted.msg = "Dead Object";
+      return corrupted;
+    }
+    const [isUndefined, pathObject] = Utils.objectHasUndefined(obj, name);
+    if (isUndefined) {
+      corrupted.is = isUndefined;
+      corrupted.msg = "Undefined: " +  pathObject;
+      return corrupted;
+    }
   } catch (e) {
-    corrupted = true;
+    corrupted.is = true;
+    corrupted.msg = "Catch on error.";
   }
 
   return corrupted;

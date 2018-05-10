@@ -1024,16 +1024,18 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
  * If so, try to reload the groups from the disk
  */
 GroupManager.checkCorruptedGroups = function(groups = GroupManager.groups) {
-  let corrupted;
-  if ( (corrupted = Utils.checkCorruptedObject(groups)) ) {
-    ("GroupManager.checkCorruptedGroups has detected a corrupted groups: ");
+  const {is: isCorrupted, msg: corruptedMessage} = Utils.checkCorruptedObject(groups, "groups");
+  if ( isCorrupted ) {
+    LogManager.error(
+      `Sync Tab Groups has detected a corrupted: ${corruptedMessage}`
+    );
     // Don't fix data in debug mode for allowing to analyze
     if ( !Utils.DEBUG_MODE ) {
       GroupManager.reloadGroupsFromDisk();
-      console.log('Tried to correct corruption...')
+      LogManager.information('Tried to correct corruption...');
     }
   }
-  return corrupted;
+  return isCorrupted;
 }
 
 /**
