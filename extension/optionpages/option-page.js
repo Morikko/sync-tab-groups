@@ -1,5 +1,3 @@
-const store = Redux.createStore(Reducer);
-
 const Actions = {
   askOptions: function() {
     Utils.sendMessage("Option:Ask", {});

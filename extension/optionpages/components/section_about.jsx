@@ -58,7 +58,7 @@ class AboutSection extends React.Component {
         </h2>
         <ul>
           <li>Add: Automatic Error Log</li>
-          <li>Check <a href="https://github.com/Morikko/sync-tab-groups/wiki/How-to-help-me-solve-bugs">the wiki page</a> to know how you can help me solved extensions bugs.</li>
+          <li>Check <a href="https://github.com/Morikko/sync-tab-groups/wiki/How-to-help-me-solve-bugs">the wiki page</a> to know how you can help me solved extensions bugs</li>
           <li>Add: Notification when an error happened, so you can restore your groups and save the log</li>
           <li>Add: Error management in popup, avoid the "empty bubble"</li>
         </ul>

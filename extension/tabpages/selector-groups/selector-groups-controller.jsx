@@ -1,5 +1,3 @@
-const store = Redux.createStore(Reducer);
-
 class SelectorActions {
   static getGroups() {
     Utils.sendMessage("Ask:SelectorGroups", {});

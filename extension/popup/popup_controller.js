@@ -1,5 +1,3 @@
-const store = Redux.createStore(Reducer);
-
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
     React.createElement(

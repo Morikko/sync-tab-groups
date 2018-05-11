@@ -76,7 +76,7 @@ GroupManager.EVENT_PREPARE = 'groups-prepare';
 // Done after a group modification when groups are safe
 GroupManager.EVENT_CHANGE = 'groups-change';
 GroupManager.eventlistener = new EventListener();
-GroupManager.repeatedtask = new TaskManager.RepeatedTask(3000);
+GroupManager.repeatedtask = new TaskManager.RepeatedTask(5000);
 // Reference to the interval that checks if groups are corrupted
 GroupManager.checkerInterval = undefined;
 

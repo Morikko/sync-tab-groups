@@ -1,5 +1,3 @@
-const store = Redux.createStore(Reducer);
-
 document.addEventListener("DOMContentLoaded", () => {
   // Set tab title
   document.title = browser.i18n.getMessage("group_manager");

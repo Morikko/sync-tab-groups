@@ -28,7 +28,7 @@ OptionManager.EVENT_CHANGE = 'options-change';
 OptionManager.eventlistener = new EventListener();
 OptionManager.checkerInterval = undefined;
 
-OptionManager.repeatedtask = new TaskManager.RepeatedTask(3000);
+OptionManager.repeatedtask = new TaskManager.RepeatedTask(5000);
 
 /**
  * Change option value

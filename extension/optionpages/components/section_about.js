@@ -129,7 +129,7 @@ class AboutSection extends React.Component {
             { href: "https://github.com/Morikko/sync-tab-groups/wiki/How-to-help-me-solve-bugs" },
             "the wiki page"
           ),
-          " to know how you can help me solved extensions bugs."
+          " to know how you can help me solved extensions bugs"
         ),
         React.createElement(
           "li",
