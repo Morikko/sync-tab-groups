@@ -21,6 +21,9 @@ class GroupAddButton extends React.Component{
     this.handleClick = this.handleClick.bind(this);
     this.handleGroupDragOver = this.handleGroupDragOver.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
+    this.handleDragEnter = this.handleDragEnter.bind(this);
+    this.handleDragLeave = this.handleDragLeave.bind(this);
+    
   }
 
   render() {
