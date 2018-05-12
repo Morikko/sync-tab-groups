@@ -93,6 +93,11 @@ queue.then(function(lastResponse) {
 })();
 
 (async function() {
+  await StorageManager.Local.loadGroups()
+})();
+
+
+(async function() {
   await browser.tabs.create()
 })();
 

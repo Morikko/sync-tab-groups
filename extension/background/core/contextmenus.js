@@ -20,29 +20,34 @@ ContextMenu.createMoveTabMenu = async function() {
     }
     ContextMenu.occupied = true;
 
-    if ( Utils.isChrome() ) { // Incompatible Chrome: "tab" in context menus
-      return "";
-    }
     for (let id of ContextMenu.MoveTabMenuIds) {
-      await browser.contextMenus.remove(id);
+      try {
+        await browser.contextMenus.remove(id);
+      } catch(e) {}
     }
     await Utils.wait(100)
-    ContextMenu.MoveTabMenuIds = [];
+    ContextMenu.MoveTabMenuIds.length = 0;
 
-    let contexts = ["tab"];
+    const contexts = ["page"];
+    if ( !Utils.isChrome() ) { // Incompatible Chrome: "tab" in context menus
+      contexts.push("tab");
+    }
 
     let parentId = ContextMenu.MoveTabMenu_ID + "title";
     ContextMenu.MoveTabMenuIds.push(parentId);
-    await browser.contextMenus.create({
+
+    const contextManageGroups = {
       id: parentId,
       title: browser.i18n.getMessage("move_tab_group"),
       contexts: contexts,
-      icons: {
+    };
+    if (!Utils.isChrome()) {
+      contextManageGroups.icons = {
         "64": "/share/icons/tabspace-active-64.png",
         "32": "/share/icons/tabspace-active-32.png"
-      },
-    });
-
+      };
+    }
+    await browser.contextMenus.create(contextManageGroups);
 
     let currentWindow = await browser.windows.getLastFocused({
       windowTypes: ['normal']
@@ -132,7 +137,7 @@ ContextMenu.createSpecialActionMenu = function() {
     contexts: ['browser_action'],
 
   };
-  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) {
     contextManageGroups.icons = {
       "64": "/share/icons/list-64.png",
       "32": "/share/icons/list-32.png"
@@ -145,7 +150,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("export_groups"),
     contexts: ['browser_action'],
   };
-  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) {
     contextExportGroups.icons = {
       "64": "/share/icons/upload-64.png",
       "32": "/share/icons/upload-32.png"
@@ -158,7 +163,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("contextmenu_backup"),
     contexts: ['browser_action'],
   };
-  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) { 
     contextBackUp.icons = {
       "64": "/share/icons/hdd-o-64.png",
       "32": "/share/icons/hdd-o-32.png"
@@ -193,7 +198,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("contextmenu_preferences"),
     contexts: ['browser_action'],
   };
-  if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
+  if (!Utils.isChrome()) {
     contextOpenPreferences.icons = {
       "64": "/share/icons/gear-64.png",
       "32": "/share/icons/gear-32.png"
@@ -291,6 +296,9 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
 ContextMenu.initContextMenus = function() {
   browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
   browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
+  ContextMenu.createMoveTabMenu();
+  ContextMenu.createSpecialActionMenu();
+
   GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     () => {
       ContextMenu.repeatedtask.add(
@@ -299,7 +307,4 @@ ContextMenu.initContextMenus = function() {
         }
       )
     });
-
-  ContextMenu.createSpecialActionMenu();
 }
-

@@ -93,7 +93,9 @@ LogManager.error = function(error, data = null, {
 
     let fullError = error;
     if(!(fullError instanceof Error)) {
-        fullError = Error(error)
+        fullError = Error(
+            error["message"] ? error["message"] : error
+        )
     }
 
     const errorLog = {
