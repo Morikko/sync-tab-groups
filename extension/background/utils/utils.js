@@ -325,8 +325,8 @@ Utils.wait = async function(time) {
  * @return {Boolean}
  */
 Utils.isChrome = function() {
-  if (browser.sessions.getWindowValue === undefined &&
-    browser.tabs.discard !== undefined) {
+  if (browser.sessions.getWindowValue == null &&
+    browser.tabs.discard != null) {
     return true;
   }
   return false;

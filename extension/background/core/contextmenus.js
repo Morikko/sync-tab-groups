@@ -107,7 +107,7 @@ ContextMenu.updateMoveFocus = async function(disabledId) {
     }
     ContextMenu.occupied = true;
 
-    return Promise.all(ContextMenu.MoveTabMenuIds.map((id) => {
+    await Promise.all(ContextMenu.MoveTabMenuIds.map((id) => {
       let order = id.substring(ContextMenu.MoveTabMenu_ID.length);
       let groupId = parseInt(order);
       if (groupId >= 0) {
@@ -123,8 +123,10 @@ ContextMenu.updateMoveFocus = async function(disabledId) {
       }
       return Promise.resolve();
     }));
+    ContextMenu.occupied = false;
+    return;
   } catch (e) {
-    LogManager.error(e);
+    LogManager.error(e, null, {showNotification: false});
   } finally {
     ContextMenu.occupied = false;
   }
