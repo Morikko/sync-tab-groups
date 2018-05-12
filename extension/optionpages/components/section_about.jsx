@@ -54,6 +54,15 @@ class AboutSection extends React.Component {
           </a>
         </div>
         <h2>
+          Release Notes (0.6.9)
+        </h2>
+        <ul>
+          <li>Improve groups interface performance #114</li>
+          <li>Add: Context Menu to move tab on right click on page #115</li>
+          <li>Fix: Error Notifications popped for no good reason #116</li>
+          <li>Fix: Change window focus was not well taken in account (Chrome) #110</li>
+        </ul>
+        <h2>
           Release Notes (0.6.8)
         </h2>
         <ul>

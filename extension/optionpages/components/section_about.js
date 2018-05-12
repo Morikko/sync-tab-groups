@@ -110,6 +110,35 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.9)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Improve groups interface performance #114"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Context Menu to move tab on right click on page #115"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Error Notifications popped for no good reason #116"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Change window focus was not well taken in account (Chrome) #110"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.8)"
       ),
       React.createElement(
