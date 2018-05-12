@@ -73,12 +73,12 @@ TabHidden.closeHiddenTabs = async function (tabIds) {
 
   tabIds.forEach(tabId => {
     try {
-      const groupId = GroupManager.getGroupIdFromTabId(tabId);
+      const groupId = GroupManager.getGroupIdFromTabId(tabId, {error: true});
       const groupIndex = GroupManager.getGroupIndexFromGroupId(
-        groupId
+        groupId, {error: true}
       );
       const tabIndex = GroupManager.getTabIndexFromTabId(
-        tabId, groupIndex
+        tabId, groupIndex, {error: true}
       );
       GroupManager.groups[groupIndex].tabs[tabIndex].hidden = false;
     } catch(e) {LogManager.error(e)}

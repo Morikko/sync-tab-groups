@@ -56,7 +56,7 @@ TabManager.getTab = function(tab) {
 TabManager.getTabsInWindowId = async function(windowId, {
   withoutRealUrl = true,
   withPinned = OptionManager.options.pinnedTab.sync,
-  hidden = (Utils.hasHideFunctions() ? false : undefined)
+  hidden = (Utils.hasHideFunction() ? false : undefined)
 }={}) {
   try {
     let selector = {

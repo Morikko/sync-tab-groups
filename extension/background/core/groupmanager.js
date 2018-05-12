@@ -1024,7 +1024,7 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
 
     let newIds = {};
     group.tabs.forEach((tab, index)=>{
-        if ( Utils.hasHideFunctions() && tab.hidden === true ) {
+        if ( Utils.hasHideFunction() && tab.hidden === true ) {
           return;
         }
 
@@ -1057,11 +1057,14 @@ GroupManager.checkCorruptedTab = function(tab, index) {
     "windowId": WINDOW_ID_NONE,
     "active": false,
   } 
-  if( Utils.isChrome() || Utils.isFF57()) {
+  if( Utils.hasDiscardFunction() || Utils.isFF57()) {
     properties["discarded"] = false;
   }
-  if (!Utils.isChrome()) {
-    properties["lastAccessed"] = 0
+  if (Utils.isFirefox()) {
+    properties["lastAccessed"] = 0;
+  }
+  if (!Utils.hasHideFunction()) {
+    properties["hidden"] = false;
   }
   return Utils.ojectPropertiesAreUndefined(
     tab,

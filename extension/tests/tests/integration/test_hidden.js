@@ -11,18 +11,18 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   // Keep test session clean in between :)
   afterEach(async function() {
-    if ( !Utils.hasHideFunctions() ) return;
+    if ( !Utils.hasHideFunction() ) return;
     await TestManager.clearWindow(this.windowId);
   });
   beforeEach(async function() {
-    if ( !Utils.hasHideFunctions() ) return;
+    if ( !Utils.hasHideFunction() ) return;
     OptionManager.updateOption("groups-closingState", OptionManager.CLOSE_HIDDEN);
     await TestManager.clearWindow(this.windowId);
   });
 
   describe("TabHidden.hideTab", ()=>{
     it(" hides a tab if it is possible and return true", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -49,7 +49,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it(" does nothing if it is impossible to hide and return false", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -78,7 +78,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   describe("TabHidden.showTab", ()=>{
     it(" shows a tab if it is possible and return true", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -101,7 +101,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it(" does nothing if it is impossible to show and return false", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -126,7 +126,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   describe("TabManager.openListOfTabs", ()=>{
     it(" shows tabs previously hidden", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -161,7 +161,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it(" shows tabs previously hidden and opens missing tabs", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -198,7 +198,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   describe("TabManager.removeTabs", ()=>{
     it(" hides tabs in the window", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -226,7 +226,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it(" hides tabs in the group and closes failing tabs", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -276,7 +276,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it("should open the group and close the previous tabs.", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -294,7 +294,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it("should close a group by hidding current tabs.", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -323,7 +323,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it("should open a group by showing hidden tabs.", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -377,7 +377,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it("should switch from hidden to normal closing and close all hidden tabs in the groups", async function(){
-      if ( !Utils.hasHideFunctions() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }

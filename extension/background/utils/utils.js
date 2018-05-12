@@ -23,7 +23,7 @@ Objects:
  - hasDiscardFunction
  - hasSessionWindowValue
  - hasWindowTitlePreface
- - hasHideFunctions
+ - hasHideFunction
 
  URLs
  - extractTabUrl
@@ -339,7 +339,7 @@ Utils.isChrome = () => !Utils.isFirefox();
 Utils.hasDiscardFunction = () => browser.tabs.discard != null;
 Utils.hasSessionWindowValue = () => browser.sessions.getWindowValue != null;
 Utils.hasWindowTitlePreface = () => Utils.isFirefox();
-Utils.hasHideFunctions = () =>  browser.tabs.hide != null;
+Utils.hasHideFunction = () =>  browser.tabs.hide != null;
 
 /**
  * Return true if the browser is Chrome
