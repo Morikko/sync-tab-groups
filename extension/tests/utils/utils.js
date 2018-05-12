@@ -218,6 +218,9 @@ TestManager.closeWindows = async function(windowIds) {
   }
 }
 
+/**
+ * @return {Integer} windowId
+ */
 TestManager.openWindow = async function({
   focused=true,
   url=null,

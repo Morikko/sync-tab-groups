@@ -355,7 +355,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
   });
 
-  describe("WindowManager.switchGroupInCurrentWindow", () => {
+  describe("[Close] TabHidden.", () => {
     beforeEach(async function(){
       [this.ids, this.groups] = Session.createArrayGroups({
           groupsLength: 2,
@@ -376,7 +376,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
       }
     });
 
-    it("should switch from hidden to normal closing and close all hidden tabs in the groups", async function(){
+    it(".closeAllHiddenTabsInGroups should close all hidden tabs in the groups", async function(){
       if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
@@ -414,6 +414,89 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
       expect(currentHiddenTabIds.length).toBe(0);
       expect(countHiddenTabsInGroups(GroupManager.groups)).toBe(0);
+    });
+
+    fit(".closeHiddenTabs should close some hidden tabs specified.", async function(){
+      if ( !Utils.hasHideFunction() ){
+          pending("No hidden functionality.")
+          return;
+      }
+      const tabsLength = 7;
+      const hiddenTabsToRemoveNumber = 4;
+      // Open hidden tabs in window 1
+      await TestManager.waitWindowToBeFocused(this.windowId);
+
+      const listTabs = Session.createTabs({tabsLength: 7, active: 0});
+      await TabManager.openListOfTabs(listTabs, this.windowId);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const tabIdsToHide = (await browser.tabs.query({
+        windowId: this.windowId,
+        active: false,
+      })).map(tab => tab.id);
+      await browser.tabs.hide(tabIdsToHide)
+
+      const beforeHiddenTabIds = (await browser.tabs.query({
+        hidden: true,
+      }));
+      expect(beforeHiddenTabIds.length).toBe(tabIdsToHide.length);
+
+
+      const hiddenTabIdsToClose = tabIdsToHide.slice(0,4);
+      await TabHidden.closeHiddenTabs(hiddenTabIdsToClose);
+
+      const currentHiddenTabIds = (await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: true,
+      }));
+
+      expect(currentHiddenTabIds.length)
+        .toBe(tabsLength-hiddenTabsToRemoveNumber);
+    });
+
+    fit(".removeAllHiddenTabs should close all hidden tabs.", async function(){
+      if ( !Utils.hasHideFunction() ){
+          pending("No hidden functionality.")
+          return;
+      }
+      // Open hidden tabs in window 1
+      const listTabs = Session.createTabs({tabsLength: 4, active: 0});
+      await TabManager.openListOfTabs(listTabs, this.windowId);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      // Open hidden tabs in window 2
+      const windowId_bis = await TestManager.openWindow();
+      const listTabs_bis = Session.createTabs({tabsLength: 4, active: 0});
+      await TabManager.openListOfTabs(listTabs_bis, windowId_bis);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(windowId_bis);
+
+      const tabIdsToHide = (await browser.tabs.query({
+        windowId: this.windowId,
+        active: false,
+      }))
+        .concat(
+          await browser.tabs.query({
+            windowId: windowId_bis,
+            active: false,
+          })
+        )
+        .map(tab => tab.id);
+      await browser.tabs.hide(tabIdsToHide)
+
+      const beforeHiddenTabIds = (await browser.tabs.query({
+        hidden: true,
+      }));
+      expect(beforeHiddenTabIds.length).toBe(tabIdsToHide.length);
+
+      await TabHidden.removeAllHiddenTabs();
+
+      const currentHiddenTabIds = (await browser.tabs.query({
+        hidden: true,
+      }));
+
+      expect(currentHiddenTabIds.length).toBe(0);
+
+      await TestManager.closeWindows(windowId_bis);
     });
   });
 
