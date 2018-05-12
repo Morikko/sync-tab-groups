@@ -1,0 +1,1 @@
+LogManager.LOCATION = LogManager.BACK

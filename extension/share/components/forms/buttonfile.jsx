@@ -35,8 +35,7 @@ class ButtonFile extends React.Component {
         filename: files[0].name,
       });
     } catch (e) {
-      let msg = "ButtonFile.handleClick failed: " + e;
-      console.error(msg);
+      console.error(e)
       return msg;
     }
   }

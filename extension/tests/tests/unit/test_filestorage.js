@@ -2,6 +2,17 @@ describe('FileStorage', ()=>{
   beforeAll(TestManager.initUnitBeforeAll());
   beforeEach(TestManager.initBeforeEach());
 
+  beforeAll(async function () {
+    this.previousOptions = TestManager.swapOptions();
+    await TestManager.changeSomeOptions({
+      "groups-sortingType": OptionManager.SORT_OLD_RECENT,
+    })
+  })
+
+  afterAll(function(){
+    TestManager.swapOptions(this.previousOptions);
+  })
+
   describe(' on import file', ()=>{
     describe(' of type Sync Tab Groups', ()=>{
       it(' should import file', ()=>{

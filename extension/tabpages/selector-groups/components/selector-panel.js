@@ -114,7 +114,7 @@ class Panel extends React.Component {
           stateless: true,
           width: width,
           hotkeysEnable: false,
-          showTabsNumber: false,
+          showTabsNumber: this.props.options.popup.showTabsNumber,
           groupDraggable: false,
           draggable: false,
           hoverStyle: false,

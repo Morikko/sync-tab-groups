@@ -84,6 +84,6 @@ StorageManager.Backup.backup = async function (time, groups=GroupManager.groups)
     });
     URL.revokeObjectURL(url);
   } catch (e) {
-    console.error("StorageManager.Backup.backup: " + e);
+    LogManager.error(e, {arguments});
   }
 }

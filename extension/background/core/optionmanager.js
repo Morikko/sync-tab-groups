@@ -28,7 +28,7 @@ OptionManager.EVENT_CHANGE = 'options-change';
 OptionManager.eventlistener = new EventListener();
 OptionManager.checkerInterval = undefined;
 
-OptionManager.repeatedtask = new TaskManager.RepeatedTask(3000);
+OptionManager.repeatedtask = new TaskManager.RepeatedTask(5000);
 
 /**
  * Change option value
@@ -196,9 +196,7 @@ OptionManager.onPrivateWindowSyncChange = async function(state) {
     }
     return "OptionManager.onPrivateWindowSyncChange done!";
   } catch (e) {
-    let msg = "OptionManager.onPrivateWindowSyncChange failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 }
 
@@ -217,9 +215,7 @@ OptionManager.onPinnedTabSyncChange = async function(value) {
     await GroupManager.updateAllOpenedGroups();
     return "OptionManager.onPinnedTabSyncChange done!";
   } catch (e) {
-    let msg = "OptionManager.onPinnedTabSyncChange failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 }
 
@@ -242,14 +238,12 @@ OptionManager.init = async function() {
     OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
     return "OptionManager.init done";
   } catch (e) {
-    let msg = "OptionManager.init failed: " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 }
 
 /**
- * Check that options object has all the good propreties
+ * Check that options object has all the good properties
  * @param {Object} options
  * @return {Object} options - verified
  */
@@ -293,13 +287,13 @@ OptionManager.reloadOptionsFromDisk = async function () {
 }
 
 OptionManager.checkCorruptedOptions = function (options=OptionManager.options) {
-  let corrupted;
-  if ( (corrupted = Utils.checkCorruptedObject(options)) ) {
-    console.error("OptionManager.checkCorruptedOptions has detected a corrupted options: ");
+  const {is: isCorrupted, msg: corruptedMessage} = Utils.checkCorruptedObject(options, "options");
+  if (isCorrupted) {
+    LogManager.warning("OptionManager.checkCorruptedOptions has detected a corrupted options: " + corruptedMessage);
     // Don't fix data in debug mode for allowing to analyze
     if ( !Utils.DEBUG_MODE ) {
       OptionManager.reloadOptionsFromDisk();
     }
   }
-  return corrupted;
+  return isCorrupted;
 }

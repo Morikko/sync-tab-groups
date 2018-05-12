@@ -26,7 +26,7 @@ class MainBar extends React.Component {
 
     let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
 
-    let labelSynchronized = browser.i18n.getMessage(this.props.isSync ? "synchronized_window" : "unsynchronized_window");
+    let labelSynchronized = browser.i18n.getMessage("synchronized_window");
     let titleSynchronized = browser.i18n.getMessage(this.props.isSync ? "change_window_invisible" : "change_window_visible");
 
     return React.createElement(

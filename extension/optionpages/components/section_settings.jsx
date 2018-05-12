@@ -269,18 +269,34 @@ class SettingsSection extends React.Component {
 
   getOthersSubsection() {
     return (
-      <SubSection
-        title={browser.i18n.getMessage("options_settings_others")}
-        tooltip={undefined}
-        content = {
-          <NiceCheckbox
-            checked= {this.props.options.groups.removeEmptyGroup}
-            label= {browser.i18n.getMessage("remove_empty_groups")}
-            onCheckChange= {this.props.onOptionChange}
-            id= "groups-removeEmptyGroup"
-          />
-        }
-      />
+        <SubSection
+          title={browser.i18n.getMessage("options_settings_others")}
+          tooltip={undefined}
+          content = {
+            <div>
+              <NiceCheckbox
+                checked= {this.props.options.groups.removeEmptyGroup}
+                label= {browser.i18n.getMessage("remove_empty_groups")}
+                onCheckChange= {this.props.onOptionChange}
+                id= "groups-removeEmptyGroup"
+              />
+              <NiceCheckbox
+                checked={this.props.options.log.enable}
+                label={browser.i18n.getMessage("setting_enable_error_log")}
+                onCheckChange= {this.props.onOptionChange}
+                id="log-enable"
+              />
+              <div className="double-buttons">
+                <OptionButton
+                  title= {browser.i18n.getMessage("setting_download_error_log")}
+                  onClick= {(event) => this.props.downloadErrorLog()}
+                  highlight={true}
+                  disabled={!this.props.options.log.enable}
+                />
+              </div>
+            </div>
+          }
+        />
     );
   }
 

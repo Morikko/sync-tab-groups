@@ -14,6 +14,11 @@ let consoleFactory = function({good="Good", bad="Bad"}={}) {
   conso.call(null, arguments);
 }
 
+function testErrorArgs(arg1, arg2 = "test", {arg3="bis"}={}){
+  const that = this;
+  LogManager.error(Error("Test testErrorArgs"), {arguments, env: that})
+}
+
 
 var initialWindows = 0 || initialWindows;
 (async function() {
@@ -86,6 +91,11 @@ queue.then(function(lastResponse) {
 (async function() {
   await browser.tabs.hide()
 })();
+
+(async function() {
+  await StorageManager.Local.loadGroups()
+})();
+
 
 (async function() {
   await browser.tabs.create()

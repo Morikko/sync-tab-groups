@@ -8,6 +8,7 @@ class OptionsPanel extends React.Component{
           selected={this.props.selected} 
           onUndiscardLazyTabs={this.props.onUndiscardLazyTabs}
           onCloseAllHiddenTabs={this.props.onCloseAllHiddenTabs}
+          downloadErrorLog={this.props.downloadErrorLog}
         />
         <ShortcutsSection
           options={this.props.options} onOptionChange={this.props.onOptionChange}

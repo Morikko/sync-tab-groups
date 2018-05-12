@@ -43,6 +43,9 @@ var Background = Background || {};
 Background.updateNotificationId = "UPDATE_NOTIFICATION";
 
 Background.init = async function() {
+  LogManager.init();
+  LogManager.information(LogManager.EXTENSION_START);
+
   await OptionManager.init();
   await GroupManager.init();
 
@@ -50,12 +53,14 @@ Background.init = async function() {
 
   Event.Install.prepareExtensionForUpdate(
     Background.lastVersion,
-    (browser.runtime.getManifest()).version);
+    (browser.runtime.getManifest()).version
+  );
 
-  Event.Extension.initDataEventListener();
+  Event.Extension.initSendDataEventListener();
   Event.Tabs.initTabsEventListener();
   Event.Windows.initWindowsEventListener();
   Event.Commands.initCommandsEventListener();
+  ContextMenu.initContextMenus();
 
   browser.runtime.onMessage.addListener(Messenger.Groups.popupMessenger);
   browser.runtime.onMessage.addListener(Messenger.Options.optionMessenger);
@@ -77,6 +82,14 @@ Background.init = async function() {
   StorageManager.Local.planBackUp();
   StorageManager.Backup.init();
   Background.install = false;
+
+  LogManager.information(LogManager.EXTENSION_INITIALIZED, {
+    groups: GroupManager.groups.map((group) => ({
+      id: group.id,
+      tabsLength: group.tabs.length,
+      windowId: group.windowId,
+    })),
+  });
 };
 
 Background.refreshOptionsUI = function() {
@@ -122,7 +135,7 @@ Background.onGroupAdd = function({title}) {
   try {
     GroupManager.addGroup({title});
   } catch (e) {
-    console.error("Controller - onGroupAdd failed: " + e);
+    LogManager.error(e);
   }
 };
 
@@ -151,9 +164,7 @@ Background.onGroupClose = function({
       Background.refreshUi();
       return "Background.onGroupClose done!";
     } catch (e) {
-      let msg = "Background.onGroupClose failed; " + e;
-      console.error(msg);
-      return msg;
+      LogManager.error(e);
     }
   };
 
@@ -259,9 +270,10 @@ Background.changeSynchronizationStateOfWindow = function({
       );
       GroupManager.removeGroupFromId(currentGroupId);
     } catch (e) {
-      let msg = "synchronizeWindowManager failed; " + e;
-      console.error(msg);
-      return msg;
+      LogManager.error(e, {
+        isSync,
+        windowId,
+      });
     }
   }
 };
@@ -276,9 +288,7 @@ Background.onTabClose = async function({
       tabIndex
     );
   } catch (e) {
-    let msg = "Background.onTabClose failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 };
 
@@ -293,9 +303,7 @@ Background.onTabOpen = async function({
         inLastPos: true,
     })
   } catch (e) {
-    let msg = "Background.onTabOpen failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   }
 };
 
@@ -402,6 +410,7 @@ browser.runtime.onInstalled.addListener((details) => {
   // Only when the extension is installed for the first time
   if ( details.reason === "install" ) {
     Event.Install.onNewInstall();
+    LogManager.information(LogManager.EXTENSION_INSTALLED);
   }
 
   // Development mode detection
@@ -415,6 +424,7 @@ browser.runtime.onInstalled.addListener((details) => {
   else if ( details.reason === "update"
       && (browser.runtime.getManifest()).version !== details.previousVersion ) {
       Event.Install.onUpdate();
+      LogManager.information(LogManager.EXTENSION_UPDATED);
   }
 });
 

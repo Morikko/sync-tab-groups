@@ -13,8 +13,6 @@ TestManager.compareTab = function(tabs, tabs_ref, full = false) {
 }
 
 TestManager.compareTabs = function(tabs, tabs_ref, full = false) {
-  /*console.log(tabs);
-  console.log(tabs_ref);*/
   let title = "Tabs comparator";
   if (tabs.length !== tabs_ref.length)
     return [
@@ -171,11 +169,10 @@ var tabGroupsMatchers = {
           [result.pass, result.message] = TestManager.compareTabs(actual, expected);
 
           if ( !result.pass ) {
-            console.error(result.message);
-            console.error("Actual Tabs");
-            console.error(actual);
-            console.error("Expected Tabs");
-            console.error(expected);
+            LogManager.error("toEqualTabs didn't pass", {
+              arguments,
+              resultMessage: result.message,
+            }, {logs: null});
           }
         }
         return result;

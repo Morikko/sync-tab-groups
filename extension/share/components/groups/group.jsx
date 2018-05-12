@@ -276,7 +276,7 @@ class Group extends React.Component {
       width: this.props.width
     };
 
-    const tabList = this.state.waitFirstMount
+    const tabList = this.state.waitFirstMount && this.state.expanded
       ? this.getTabList()
       : null;
 

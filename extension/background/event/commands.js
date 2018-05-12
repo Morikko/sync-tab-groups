@@ -39,9 +39,7 @@ Event.Commands.initCommandsEventListener = function() {
         default:
       }
     } catch (e) {
-      let msg = "Commands.listener failed on " + command + " " + e;
-      console.error(msg);
-      return msg;
+      LogManager.error(e, {arguments});
     }
   });
 };

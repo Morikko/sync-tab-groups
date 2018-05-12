@@ -81,47 +81,59 @@ class GroupList extends React.Component {
       }
       let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
       for (let index of sortedIndex) {
-        groups.push(React.createElement(Group
-        /*** Functions ***/
-        , { onGroupClick: this.props.onGroupClick,
-          onGroupDrop: this.props.onGroupDrop,
-          onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
-          onGroupCloseClick: this.props.onGroupCloseClick,
-          onGroupRemoveClick: this.props.onGroupRemoveClick,
-          onGroupTitleChange: this.props.onGroupTitleChange,
-          onTabClick: this.props.onTabClick,
-          onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
-          onCloseTab: this.props.onCloseTab,
-          onOpenTab: this.props.onOpenTab,
-          onGroupChangePosition: this.props.onGroupChangePosition,
-          onChangePinState: this.props.onChangePinState,
-          onChangeExpand: this.props.onChangeExpand,
-          onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
-          onRemoveHiddenTab: this.props.onRemoveHiddenTab
-          /*** Data ***/
-          , key: this.props.groups[index].id,
-          groups: this.props.groups,
-          group: this.props.groups[index],
-          currentWindowId: this.props.currentWindowId,
-          currentlyClosing: this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id),
-          currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id),
-          selectionFilter: this.props.selectionFilter ? this.props.selectionFilter[this.props.groups[index].id] : undefined
-          /*** Options ***/
-          , searchGroupResult: this.state.searchGroupsResults ? this.state.searchGroupsResults[index] : undefined,
-          currentlySearching: this.state.searchGroupsResults ? true : false,
-          showTabsNumber: this.props.showTabsNumber,
-          allowClickSwitch: this.props.allowClickSwitch,
-          stateless: this.props.stateless,
-          width: this.props.width,
-          hotkeysEnable: this.props.hotkeysEnable,
-          hoverStyle: this.props.hoverStyle,
-          controlsEnable: this.props.controlsEnable,
-          groupDraggable: this.props.groupDraggable,
-          draggable: this.props.draggable
-          /*** actions ***/
-          , forceExpand: this.props.forceExpand,
-          forceReduce: this.props.forceReduce
-        }));
+        groups.push(React.createElement(
+          ErrorBoundary,
+          {
+            key: index,
+            fallback: React.createElement(
+              "div",
+              null,
+              "Error on Group at index ",
+              index
+            )
+          },
+          React.createElement(Group
+          /*** Functions ***/
+          , { onGroupClick: this.props.onGroupClick,
+            onGroupDrop: this.props.onGroupDrop,
+            onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
+            onGroupCloseClick: this.props.onGroupCloseClick,
+            onGroupRemoveClick: this.props.onGroupRemoveClick,
+            onGroupTitleChange: this.props.onGroupTitleChange,
+            onTabClick: this.props.onTabClick,
+            onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
+            onCloseTab: this.props.onCloseTab,
+            onOpenTab: this.props.onOpenTab,
+            onGroupChangePosition: this.props.onGroupChangePosition,
+            onChangePinState: this.props.onChangePinState,
+            onChangeExpand: this.props.onChangeExpand,
+            onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
+            onRemoveHiddenTab: this.props.onRemoveHiddenTab
+            /*** Data ***/
+            , key: index,
+            groups: this.props.groups,
+            group: this.props.groups[index],
+            currentWindowId: this.props.currentWindowId,
+            currentlyClosing: this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id),
+            currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id),
+            selectionFilter: this.props.selectionFilter ? this.props.selectionFilter[this.props.groups[index].id] : undefined
+            /*** Options ***/
+            , searchGroupResult: this.state.searchGroupsResults ? this.state.searchGroupsResults[index] : undefined,
+            currentlySearching: this.state.searchGroupsResults ? true : false,
+            showTabsNumber: this.props.showTabsNumber,
+            allowClickSwitch: this.props.allowClickSwitch,
+            stateless: this.props.stateless,
+            width: this.props.width,
+            hotkeysEnable: this.props.hotkeysEnable,
+            hoverStyle: this.props.hoverStyle,
+            controlsEnable: this.props.controlsEnable,
+            groupDraggable: this.props.groupDraggable,
+            draggable: this.props.draggable
+            /*** actions ***/
+            , forceExpand: this.props.forceExpand,
+            forceReduce: this.props.forceReduce
+          })
+        ));
       }
     } else {
       groups = React.createElement(
@@ -167,7 +179,11 @@ class GroupList extends React.Component {
       if (tabSearchValue.length) {
         for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
           // Search in tab title
-          if (!Utils.search(this.props.groups[i].tabs[j].title, tabSearchValue)) {
+          const currentTab = this.props.groups[i].tabs[j];
+          const tabUrl = new URL(Utils.extractTabUrl(currentTab.url));
+          const tabHost = tabUrl.hostname.slice(0, tabUrl.hostname.lastIndexOf('.'));
+          const tabSearchPart = currentTab.title + " " + tabHost;
+          if (!Utils.search(tabSearchPart, tabSearchValue)) {
             searchGroupsResults[i].searchTabsResults[j] = false;
           } else {
             searchGroupsResults[i].atLeastOneResult = true;

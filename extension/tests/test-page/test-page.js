@@ -33,6 +33,7 @@ var waitInit = (async () => {
   Selector = bg.Selector;
   Background = bg.Background;
   TabHidden = bg.TabHidden;
+  LogManager = bg.LogManager;
   Event = bg.Event;
 })()
 

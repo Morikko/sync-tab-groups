@@ -9,14 +9,14 @@ Event.Windows.initWindowsEventListener = function() {
     }
 
     // Let time for opening well and be sure it is a new one
-    setTimeout(() => {
+    setTimeout(function(){
       if ( !WindowManager.WINDOW_EXCLUDED[window.id] ) {
         WindowManager.integrateWindow(window.id);
       }
     }, 300); // Below 400, it can fail
   });
 
-  browser.windows.onRemoved.addListener((windowId) => {
+  browser.windows.onRemoved.addListener(function(windowId) {
     WindowManager.WINDOW_CURRENTLY_CLOSING[windowId] = true;
     Selector.wasClosedGroupsSelector(windowId);
 
@@ -28,7 +28,7 @@ Event.Windows.initWindowsEventListener = function() {
   });
   /* TODO: doenst update context menu well if right click on a tab from another window
    */
-  browser.windows.onFocusChanged.addListener(async (windowId) => {
+  browser.windows.onFocusChanged.addListener(async function(windowId){
     Background.refreshUi();
 
     try {
@@ -40,9 +40,7 @@ Event.Windows.initWindowsEventListener = function() {
         GroupManager.setLastAccessed(groupId, Date.now());
       }
     } catch (e) {
-      let msg = "onFocusChanged.listener failed; " + e;
-      console.error(msg);
-      return msg;
+      LogManager.error(e, {arguments});
     }
   });
 }

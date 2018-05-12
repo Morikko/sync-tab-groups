@@ -76,8 +76,7 @@ describe("End of Groups - ", ()=>{
         await WindowManager.closeGroup(this.groups[0].id);
         await Utils.wait(500);
       } catch ( e ) {
-        let msg = "Closing Another Window failed on window " + windowId + " and " + e;
-        console.error(msg);
+        LogManager.error(e, {arguments}, {logs: null});
       }
 
       expect(previousLength).toEqual(GroupManager.groups.length);
@@ -93,7 +92,7 @@ describe("End of Groups - ", ()=>{
 
       let pinnedTab = [GroupManager.groups[this.groups[1].groupIndex].tabs[0]];
 
-      await WindowManager.switchGroup(this.groups[1].id);
+      await WindowManager.switchGroupInCurrentWindow(this.groups[1].id);
       await WindowManager.closeGroup(this.groups[1].id);
 
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
@@ -122,11 +121,10 @@ describe("End of Groups - ", ()=>{
         });
         await Utils.wait(500);
 
-        await WindowManager.switchGroup(this.groups[0].id);
+        await WindowManager.switchGroupInCurrentWindow(this.groups[0].id);
         await WindowManager.removeGroup(this.groups[0].id);
       } catch ( e ) {
-        let msg = "Removing Current Window failed on window " + windowId + " and " + e;
-        console.error(msg);
+        LogManager.error(e, {arguments}, {logs: null});
       }
 
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
@@ -156,8 +154,7 @@ describe("End of Groups - ", ()=>{
 
         await WindowManager.removeGroup(this.groups[1].id);
       } catch ( e ) {
-        let msg = "Removing Another Window failed on window " + windowId + " and " + e;
-        console.error(msg);
+        LogManager.error(e, {arguments}, {logs: null});
       }
       expect(previousLength).toEqual(GroupManager.groups.length+1);
       expect(windowsNumber).toEqual((await browser.windows.getAll()).length+1);

@@ -142,6 +142,10 @@ describe("TabManager[Add/Remove]", ()=>{
 
         // Last New Tab
         expect(resultingTabs.length).toEqualTabs(previousTabs.length+1);
+
+        if(resultingTabs[resultingTabs.length-1].url === 'about:blank') {
+          resultingTabs[resultingTabs.length-1].url = TabManager.NEW_TAB;
+        }
         expect(resultingTabs[resultingTabs.length-1].url).toEqual(TabManager.NEW_TAB);
 
         // Previous has not changed

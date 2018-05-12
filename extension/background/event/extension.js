@@ -4,7 +4,7 @@
 var Event = Event || {};
 Event.Extension = Event.Extension || {};
 
-Event.Extension.initDataEventListener = function() {
+Event.Extension.initSendDataEventListener = function() {
   GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     () => {
       Background.refreshUi();

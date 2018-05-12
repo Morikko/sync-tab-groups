@@ -69,7 +69,7 @@ TabHidden.closeHiddenTabs = async function (tabIds) {
 
   try {
     await browser.tabs.remove(tabIds);
-  } catch (e) {console.error(e)}
+  } catch (e) {LogManager.error(e)}
 
   tabIds.forEach(tabId => {
     try {
@@ -81,7 +81,7 @@ TabHidden.closeHiddenTabs = async function (tabIds) {
         tabId, groupIndex
       );
       GroupManager.groups[groupIndex].tabs[tabIndex].hidden = false;
-    } catch(e) {console.error(e)}
+    } catch(e) {LogManager.error(e)}
   });
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
@@ -127,7 +127,7 @@ TabHidden.onStartInitialization = async function() {
           );
           GroupManager.groups[groupIndex].tabs[tabIndex].id = tabId;
           updatedHiddenTabIds[tabId] = true
-        } catch(e) {console.error(e)}
+        } catch(e) {LogManager.error(e)}
       })
     );
 
@@ -146,6 +146,6 @@ TabHidden.onStartInitialization = async function() {
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    console.error(e)
+    LogManager.error(e)
   }
 }

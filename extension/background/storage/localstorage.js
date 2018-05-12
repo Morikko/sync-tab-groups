@@ -16,10 +16,9 @@ StorageManager.Local.saveGroups = async function(groups) {
   let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
   try {
     await browser.storage.local.set({groups: export_groups});
+    if(export_groups.length === 0) LogManager.information(`StorageManager.Local.saveGroups saved empty group.`)
   } catch (e) {
-    let msg = "StorageManager.Local.saveGroups failed :" + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -30,7 +29,9 @@ StorageManager.Local.saveGroups = async function(groups) {
  */
 StorageManager.Local.loadGroups = async function() {
   try {
-    return (await browser.storage.local.get({"groups": []})).groups;
+    const {groups} = await browser.storage.local.get({"groups": []})
+    if(groups.length === 0) LogManager.information(`StorageManager.Local.loadGroups loaded empty group.`)
+    return groups;
   } catch (e) {
     return "StorageManager.Local.loadGroups failed... " + e;
   }
@@ -191,11 +192,13 @@ StorageManager.Local.respectMaxBackUp = async function({
   maxSave=OptionManager.options.backup.local.maxSave,
   fireEvent=true,
 }={}){
-  const outnumbering = Object.entries( await StorageManager.Local.getBackUpList())
-                            // Desc: recent first
-                            .sort((a,b) => b[1].date - a[1].date)
-                            // Too much
-                            .filter((el, index)=> index>=maxSave);
+  const outnumbering = Object.entries( 
+    await StorageManager.Local.getBackUpList()
+  )
+    // Desc: recent first
+    .sort((a,b) => b[1].date - a[1].date)
+    // Too much
+    .filter((el, index)=> index>=maxSave);
 
   // Sequential remove
   let queue = Promise.resolve();

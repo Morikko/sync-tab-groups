@@ -176,8 +176,11 @@ Session.createArrayGroups = function(params={}) {
   for(let pro in params) {
     if ( typeof params[pro] !== "string" && params[pro].length !== undefined
       && params[pro].length !== params.groupsLength ) {
-      console.error("Session.createArrayGroups: Params length are not right, it should be either 1 or the nbr of groups. Error on " + pro + " with value: ");
-      console.error(params[pro]);
+        LogManager.error(e, {
+          arguments,
+          paramName: pro,
+          paramValue: params[pro],
+        }, {logs: null});
       throw Error("");
     }
   }
@@ -443,9 +446,7 @@ Session.keepOneWindowOpen = async function() {
     }
     return "WindowManager.keepOneWindowOpen done";
   } catch (e) {
-    let msg = "WindowManager.keepOneWindowOpen failed " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments}, {logs: null});
   }
 }
 
@@ -469,9 +470,7 @@ Session.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
 
     return w.id;
   } catch (e) {
-    let msg = "Session.closeAllAndOpenOnlyOneNewWindow failed " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments}, {logs: null});
   }
 }
 

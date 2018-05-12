@@ -10,36 +10,43 @@ class TabList extends React.Component{
     return (
       <ul className ={"tab-list "
         + (this.props.visible?"":"hiddenBySearch")}>
-        {this.props.tabs.map((tab, index) => {
-          let selected = this.props.selectionFilter !== undefined
-            ? this.props.selectionFilter[index]
-            : undefined;
+        {this.props.tabs.map(
+          (tab, index) => {
+            let selected = this.props.selectionFilter !== undefined
+              ? this.props.selectionFilter[index]
+              : undefined;
 
-          return (
-            <Tab
-              key={index}
-              group={this.props.group}
-              tabIndex={index}
-              tab={tab}
-              onTabClick={this.props.onTabClick}
-              onGroupDrop={this.props.onGroupDrop}
-              onMoveTabToNewGroup={this.props.onMoveTabToNewGroup}
-              onRemoveHiddenTab={this.props.onRemoveHiddenTab}
-              opened={this.props.opened}
-              onCloseTab={this.props.onCloseTab}
-              onOpenTab={this.props.onOpenTab}
-              searchTabResult={this.props.searchTabsResults?this.props.searchTabsResults[index]:true}
-              groups={this.props.groups}
-              onChangePinState={this.props.onChangePinState}
-              allowClickSwitch={this.props.allowClickSwitch}
-              hotkeysEnable={this.props.hotkeysEnable}
-              selected={selected}
-              hoverStyle={this.props.hoverStyle}
-              controlsEnable={this.props.controlsEnable}
-              draggable={this.props.draggable}
-            />
-          );
-          })}
+            return (
+              <ErrorBoundary 
+                key={index} 
+                fallback={<div>Error on Tab at index {index}</div>}
+              >
+                <Tab
+                  key={index}
+                  group={this.props.group}
+                  tabIndex={index}
+                  tab={tab}
+                  onTabClick={this.props.onTabClick}
+                  onGroupDrop={this.props.onGroupDrop}
+                  onMoveTabToNewGroup={this.props.onMoveTabToNewGroup}
+                  onRemoveHiddenTab={this.props.onRemoveHiddenTab}    
+                  opened={this.props.opened}
+                  onCloseTab={this.props.onCloseTab}
+                  onOpenTab={this.props.onOpenTab}
+                  searchTabResult={this.props.searchTabsResults?this.props.searchTabsResults[index]:true}
+                  groups={this.props.groups}
+                  onChangePinState={this.props.onChangePinState}
+                  allowClickSwitch={this.props.allowClickSwitch}
+                  hotkeysEnable={this.props.hotkeysEnable}
+                  selected={selected}
+                  hoverStyle={this.props.hoverStyle}
+                  controlsEnable={this.props.controlsEnable}
+                  draggable={this.props.draggable}
+                />
+              </ErrorBoundary>
+            );
+          }
+        )}
       </ul>
     );
   }

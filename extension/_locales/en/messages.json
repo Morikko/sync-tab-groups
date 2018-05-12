@@ -1204,5 +1204,15 @@
   "setting_nothin_close_all_hidden_tabs": {
     "message": "There is no open hidden tab in Firefox.",
     "description": ""
+  },
+
+  "setting_download_error_log": {
+    "message": "Download Error Log",
+    "description": ""
+  },
+
+  "setting_enable_error_log": {
+    "message": "Enable the extension to log errors.",
+    "description": ""
   }
 }

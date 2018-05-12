@@ -1,5 +1,3 @@
-const store = Redux.createStore(Reducer);
-
 const Actions = {
   askOptions: function() {
     Utils.sendMessage("Option:Ask", {});
@@ -71,6 +69,10 @@ const Actions = {
       id: id
     });
   },
+
+  onDownloadErrorLog: function() {
+    Utils.sendMessage("LogManager:Download", {});
+  }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -93,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onRemoveBackUp: Actions.onRemoveBackUp,
         onImportBackUp: Actions.onImportBackUp,
         onExportBackUp: Actions.onExportBackUp,
+        downloadErrorLog: Actions.onDownloadErrorLog,
       })
     ),
     document.getElementById("content")

@@ -110,6 +110,99 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.6.9)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Improve groups interface performance #114"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Context Menu to move tab on right click on page #115"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Error Notifications popped for no good reason #116"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Change window focus was not well taken in account (Chrome) #110"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
+        "Release Notes (0.6.8)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Add: Automatic Error Log"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Check ",
+          React.createElement(
+            "a",
+            { href: "https://github.com/Morikko/sync-tab-groups/wiki/How-to-help-me-solve-bugs" },
+            "the wiki page"
+          ),
+          " to know how you can help me solved extensions bugs"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Notification when an error happened, so you can restore your groups and save the log"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Error management in popup, avoid the \"empty bubble\""
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
+        "Release Notes (0.6.7)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Add: search in tab urls (hostname only)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Groups are renamed in tab move menu on tabbar #103"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: [OPEN] information in tab move menu on tabbar"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Tabs number in exporting/importing menu #105"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.6)"
       ),
       React.createElement(

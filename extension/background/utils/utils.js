@@ -100,17 +100,17 @@ OptionManager.TEMPLATE = function() {
       removeOnClose: true
     },
     pinnedTab: {
-      sync: false
+      sync: false,
     },
     bookmarks: {
       sync: false,
       folder: "Default"
     },
     groups: {
-      syncNewWindow: false,
+      syncNewWindow: true,
       removeEmptyGroup: false,
       showGroupTitleInWindow: false,
-      sortingType: OptionManager.SORT_OLD_RECENT,
+      sortingType: OptionManager.SORT_LAST_ACCESSED,
       discardedOpen: true,
       discardedHide: true,
       closingState: OptionManager.CLOSE_NORMAL,
@@ -135,6 +135,9 @@ OptionManager.TEMPLATE = function() {
         intervalTime: 1,
         maxSave: 48,
       }
+    },
+    log: {
+      enable: true,
     }
   };
 };
@@ -329,14 +332,39 @@ Utils.wait = async function(time) {
 }
 
 
-Utils.isFirefox = () => browser.runtime.getBrowserInfo !== undefined;
+Utils.isFirefox = () => browser.runtime.getBrowserInfo != null;
 Utils.isChrome = () => !Utils.isFirefox();
 
 
-Utils.hasDiscardFunction = () => browser.tabs.discard !== undefined;
-Utils.hasSessionWindowValue = () => browser.sessions.getWindowValue !== undefined;
+Utils.hasDiscardFunction = () => browser.tabs.discard != null;
+Utils.hasSessionWindowValue = () => browser.sessions.getWindowValue != null;
 Utils.hasWindowTitlePreface = () => Utils.isFirefox();
-Utils.hasHideFunctions = () =>  browser.tabs.hide !== undefined;
+Utils.hasHideFunctions = () =>  browser.tabs.hide != null;
+
+/**
+ * Return true if the browser is Chrome
+ * @return {Boolean}
+ * @deprecated
+ */
+Utils.isChrome = function() {
+  if (browser.sessions.getWindowValue == null &&
+    browser.tabs.discard != null) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Return true if the browser is FF57 or above
+ * @return {Boolean}
+ * @deprecated
+ */
+Utils.isFF57 = function() {
+  if (browser.sessions.getWindowValue !== undefined) {
+    return true;
+  }
+  return false;
+}
 
 
 /**
@@ -470,9 +498,7 @@ Utils.openUrlOncePerWindow = async function(url, active=true) {
       });
     }
   } catch (e) {
-    let msg = "Utils.openUrlOncePerWindow failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -514,23 +540,55 @@ Utils.getGroupTitle = function(group) {
 };
 
 /**
- * Return true if at least the object or one of its properties is undefined
+ * Return true if at least the object or one of its properties is 
+ * Go deep in the object
+ * @return {Array[{Boolean} hasUndefined, {String} path to the undefined]}
  */
-Utils.objectHasUndefined = function(object) {
+Utils.objectHasUndefined = function(object, name="default") {
   if ( object === undefined ) {
-    return true;
+    return [true, name];
   }
   for (let pro in object) {
     if ( object[pro] === undefined ) {
-      return true;
+      return [true, `${name}["${pro}"]`];
     }
     if ("object" === typeof object[pro]) {
-      if ( Utils.objectHasUndefined(object[pro]) ) {
-        return true;
+      const result = Utils.objectHasUndefined(object[pro], `${name}["${pro}"]`)
+      if ( result[0] ) {
+        return result
       }
     }
   }
-  return false;
+  return [false, name];
+}
+
+/**
+ * Check that the main object and the properties are not undefined
+ * @param {Object} object
+ * @param {Object[key] = replaceValue} properties if replaceValue is null, it is critical
+ * @param {String} name
+ * @return {Array[{Boolean} hasUndefined, {String} path to the undefined]}
+ */
+Utils.ojectPropertiesAreUndefined = function(
+  object, properties, name="default"
+) {
+  if ( object == null ) {
+    return [true, [name]];
+  }
+  let isCritical = false;
+  const listMessages = [];
+
+  for (let pro in properties) {
+    if ( object[pro] == null ) {
+      if (properties[pro] == null) {
+        isCritical = true;
+      } else {
+        object[pro] = properties[pro]
+      }
+      listMessages.push(`${name}["${pro}"]`);
+    }
+  }
+  return [isCritical, listMessages];
 }
 
 /**
@@ -542,7 +600,7 @@ Utils.isDeadObject = function (obj) {
     return false;
   }
   catch (e) {
-    console.log("Sync Tab Groups: " + obj + " is probably dead...");
+    LogManager.warning("Sync Tab Groups: " + obj + " is probably dead...");
     return true;
   }
 }
@@ -554,13 +612,27 @@ Utils.isDeadObject = function (obj) {
   * @param {Object} obj
   * @return {Boolean} corrupted state
   */
-Utils.checkCorruptedObject = function( obj ) {
-  let corrupted = false;
+Utils.checkCorruptedObject = function( obj, name="default" ) {
+  const corrupted = {
+    is: false,
+    msg: "",
+  };
   try {
-    corrupted = corrupted || Utils.isDeadObject(obj);
-    corrupted = corrupted || Utils.objectHasUndefined(obj);
+    const isDeadObject = Utils.isDeadObject(obj);
+    if (isDeadObject) {
+      corrupted.is = isDeadObject;
+      corrupted.msg = "Dead Object";
+      return corrupted;
+    }
+    const [isUndefined, pathObject] = Utils.objectHasUndefined(obj, name);
+    if (isUndefined) {
+      corrupted.is = isUndefined;
+      corrupted.msg = "Undefined: " +  pathObject;
+      return corrupted;
+    }
   } catch (e) {
-    corrupted = true;
+    corrupted.is = true;
+    corrupted.msg = "Catch on error.";
   }
 
   return corrupted;

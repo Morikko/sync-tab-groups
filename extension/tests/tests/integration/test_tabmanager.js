@@ -117,11 +117,15 @@ describe("TabManager", ()=>{
         // Add 2 Pinned Tabs
         await Session.addTabToGroup(
           this.id,
-          Session.getFakeTab()
+          Session.getFakeTab({
+            pinned:true,
+          })
         );
         await Session.addTabToGroup(
           this.id,
-          Session.getFakeTab()
+          Session.getFakeTab({
+            pinned:true,
+          })
         );
         await Utils.wait(400);
       });
@@ -882,8 +886,6 @@ describe("TabManager", ()=>{
 
         await TabManager.undiscardAll();
 
-        console.log("Undiscard done")
-
         await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowIds);
 
         let resultingTabs = await TabManager.getTabsInWindowId(
@@ -895,7 +897,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        console.error(e);
+        LogManager.error(e, {arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -946,7 +948,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs[1]).toEqualTabs(expectedTabs[1]);
 
       } catch(e) {
-        console.error(e);
+        LogManager.error(e, {arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -988,7 +990,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        console.error(e);
+        LogManager.error(e, {arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -1029,7 +1031,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        console.error(e);
+        LogManager.error(e, {arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -1058,7 +1060,7 @@ describe("TabManager", ()=>{
       const tabsLength = 5;
       const tabs = Session.createTabs({tabsLength});
 
-      const openTabs = await TabManager.openListOfTabs(tabs);
+      const openTabs = await TabManager.openListOfTabs(tabs, this.windowId);
       const tabsToRemove = openTabs.splice(0,3).map(tab=>tab.id);
 
       setTimeout(()=>{
@@ -1086,11 +1088,11 @@ describe("TabManager", ()=>{
       let openTabs, tabsToRemove;
 
       await TestManager.focusedWindow(this.windowId);
-      openTabs = await TabManager.openListOfTabs(tabs);
+      openTabs = await TabManager.openListOfTabs(tabs, this.windowId);
       tabsToRemove = openTabs.splice(0,2).map(tab=>tab.id);
 
       await TestManager.focusedWindow(windowId_bis);
-      openTabs = await TabManager.openListOfTabs(tabs);
+      openTabs = await TabManager.openListOfTabs(tabs, windowId_bis);
       tabsToRemove = tabsToRemove.concat(
         openTabs.splice(0,2).map(tab=>tab.id)
       );

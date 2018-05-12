@@ -13,39 +13,41 @@ ContextMenu.again = false;
 
 ContextMenu.createMoveTabMenu = async function() {
   try {
-    if ( GroupManager.groups.length === ContextMenu.MoveTabMenuIds.length-3 ) {
-      // No change nothing to do
-      return;
-    }
+    // Security for avoiding concurrency
     if ( ContextMenu.occupied ) {
         ContextMenu.again = true;
         return;
     }
     ContextMenu.occupied = true;
 
-    if ( Utils.isChrome() ) { // Incompatible Chrome: "tab" in context menus
-      return;
-    }
     for (let id of ContextMenu.MoveTabMenuIds) {
-      await browser.contextMenus.remove(id);
+      try {
+        await browser.contextMenus.remove(id);
+      } catch(e) {}
     }
-    await Utils.wait(500)
-    ContextMenu.MoveTabMenuIds = [];
+    await Utils.wait(100)
+    ContextMenu.MoveTabMenuIds.length = 0;
 
-    let contexts = ["tab"];
+    const contexts = ["page"];
+    if ( !Utils.isChrome() ) { // Incompatible Chrome: "tab" in context menus
+      contexts.push("tab");
+    }
 
     let parentId = ContextMenu.MoveTabMenu_ID + "title";
     ContextMenu.MoveTabMenuIds.push(parentId);
-    await browser.contextMenus.create({
+
+    const contextManageGroups = {
       id: parentId,
       title: browser.i18n.getMessage("move_tab_group"),
       contexts: contexts,
-      icons: {
+    };
+    if (!Utils.isChrome()) {
+      contextManageGroups.icons = {
         "64": "/share/icons/tabspace-active-64.png",
         "32": "/share/icons/tabspace-active-32.png"
-      },
-    });
-
+      };
+    }
+    await browser.contextMenus.create(contextManageGroups);
 
     let currentWindow = await browser.windows.getLastFocused({
       windowTypes: ['normal']
@@ -55,9 +57,10 @@ ContextMenu.createMoveTabMenu = async function() {
     let sortedIndex = GroupManager.getIndexSortByPosition(groups);
     for (let i of sortedIndex) {
       ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
+      const openPrefix = groups[i].windowId !== WINDOW_ID_NONE ? "[OPEN]" : "";
       await browser.contextMenus.create({
         id: ContextMenu.MoveTabMenu_ID + groups[i].id,
-        title: Utils.getGroupTitle(groups[i]),
+        title: openPrefix + " " + Utils.getGroupTitle(groups[i]),
         contexts: contexts,
         parentId: parentId,
         enabled: currentWindow.id !== groups[i].windowId,
@@ -90,9 +93,7 @@ ContextMenu.createMoveTabMenu = async function() {
       ContextMenu.again = false;
     }
   } catch (e) {
-    let msg = "ContextMenu.createMoveTabMenu failed " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e);
   } finally {
     ContextMenu.occupied = false;
   }
@@ -106,7 +107,7 @@ ContextMenu.updateMoveFocus = async function(disabledId) {
     }
     ContextMenu.occupied = true;
 
-    return Promise.all(ContextMenu.MoveTabMenuIds.map((id) => {
+    await Promise.all(ContextMenu.MoveTabMenuIds.map((id) => {
       let order = id.substring(ContextMenu.MoveTabMenu_ID.length);
       let groupId = parseInt(order);
       if (groupId >= 0) {
@@ -122,9 +123,10 @@ ContextMenu.updateMoveFocus = async function(disabledId) {
       }
       return Promise.resolve();
     }));
+    ContextMenu.occupied = false;
+    return;
   } catch (e) {
-    let msg = "ContextMenu.updateFocus failed " + e;
-    console.error(msg);
+    LogManager.error(e, null, {showNotification: false});
   } finally {
     ContextMenu.occupied = false;
   }
@@ -137,7 +139,7 @@ ContextMenu.createSpecialActionMenu = function() {
     contexts: ['browser_action'],
 
   };
-  if (Utils.isFirefox()) { // Incompatible Chrome: "tab" in context menus
+  if (Utils.isFirefox()) {
     contextManageGroups.icons = {
       "64": "/share/icons/list-64.png",
       "32": "/share/icons/list-32.png"
@@ -150,7 +152,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("export_groups"),
     contexts: ['browser_action'],
   };
-  if (Utils.isFirefox()) { // Incompatible Chrome: "tab" in context menus
+  if (Utils.isFirefox()) {
     contextExportGroups.icons = {
       "64": "/share/icons/upload-64.png",
       "32": "/share/icons/upload-32.png"
@@ -163,7 +165,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("contextmenu_backup"),
     contexts: ['browser_action'],
   };
-  if (Utils.isFirefox()) { // Incompatible Chrome: "tab" in context menus
+  if (Utils.isFirefox()) {
     contextBackUp.icons = {
       "64": "/share/icons/hdd-o-64.png",
       "32": "/share/icons/hdd-o-32.png"
@@ -198,7 +200,7 @@ ContextMenu.createSpecialActionMenu = function() {
     title: browser.i18n.getMessage("contextmenu_preferences"),
     contexts: ['browser_action'],
   };
-  if (Utils.isFirefox()) { // Incompatible Chrome: "tab" in context menus
+  if (Utils.isFirefox()) {
     contextOpenPreferences.icons = {
       "64": "/share/icons/gear-64.png",
       "32": "/share/icons/gear-32.png"
@@ -293,16 +295,18 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
   }
 };
 
+ContextMenu.initContextMenus = function() {
+  browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
+  browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
+  ContextMenu.createMoveTabMenu();
+  ContextMenu.createSpecialActionMenu();
 
-browser.contextMenus.onClicked.addListener(ContextMenu.SpecialActionMenuListener);
-browser.contextMenus.onClicked.addListener(ContextMenu.MoveTabMenuListener);
-GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
-  () => {
-    ContextMenu.repeatedtask.add(
-      () => {
-        ContextMenu.createMoveTabMenu();
-      }
-    )
-  });
-
-ContextMenu.createSpecialActionMenu();
+  GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
+    () => {
+      ContextMenu.repeatedtask.add(
+        () => {
+          ContextMenu.createMoveTabMenu();
+        }
+      )
+    });
+}

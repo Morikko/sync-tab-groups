@@ -475,7 +475,6 @@ describe("GroupManager", () => {
 
       let index = GroupManager.getIndexSortByPosition(groups);
 
-      console.log(groups)
       expect(index.length).toEqual(groups.length)
       expect(index).toEqual(expectIndex);
     });

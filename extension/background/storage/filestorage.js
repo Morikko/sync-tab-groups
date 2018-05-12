@@ -30,7 +30,7 @@ StorageManager.File.downloadGroups = async function(groups) {
     return true;
 
   } catch (e) {
-    console.error("StorageManager.File.downloadGroups: " + e);
+    LogManager.error(e, {arguments});
     return false;
   }
 }
@@ -62,7 +62,7 @@ StorageManager.File.importGroupsFromFile = function(content_file) {
       "message": e.message,
       "eventTime": 4000,
     });
-    console.error(e.message);
+    LogManager.error(e, {arguments});
   }
 }
 

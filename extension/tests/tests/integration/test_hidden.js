@@ -11,15 +11,21 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   // Keep test session clean in between :)
   afterEach(async function() {
+    if ( !Utils.hasHideFunctions() ) return;
     await TestManager.clearWindow(this.windowId);
   });
   beforeEach(async function() {
+    if ( !Utils.hasHideFunctions() ) return;
     OptionManager.updateOption("groups-closingState", OptionManager.CLOSE_HIDDEN);
     await TestManager.clearWindow(this.windowId);
   });
 
   describe("TabHidden.hideTab", ()=>{
     it(" hides a tab if it is possible and return true", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const tabsLength = 5;
       const tabs = Session.createTabs({tabsLength, active: 0});
 
@@ -43,6 +49,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it(" does nothing if it is impossible to hide and return false", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const tabsLength = 3;
       const tabs = Session.createTabs({tabsLength, active: tabsLength-1, pinnedTabs: 1});
 
@@ -68,6 +78,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   describe("TabHidden.showTab", ()=>{
     it(" shows a tab if it is possible and return true", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const tabsLength = 3;
       const tabs = Session.createTabs({tabsLength, active: 0});
 
@@ -87,6 +101,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it(" does nothing if it is impossible to show and return false", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const tabsLength = 3;
       const tabs = Session.createTabs({tabsLength, active: 0});
 
@@ -108,6 +126,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   describe("TabManager.openListOfTabs", ()=>{
     it(" shows tabs previously hidden", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const tabsLength = 5;
       const tabs = Session.createTabs({tabsLength});
       const openTabs = await TestManager.replaceTabs(this.windowId, tabs);
@@ -139,6 +161,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it(" shows tabs previously hidden and opens missing tabs", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const tabsLength = 5;
       const tabs = Session.createTabs({tabsLength});
       const openTabs = await TestManager.replaceTabs(this.windowId, tabs);
@@ -172,6 +198,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   describe("TabManager.removeTabs", ()=>{
     it(" hides tabs in the window", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const tabsLength = 5;
       const tabs = Session.createTabs({tabsLength});
       const openTabs = await TestManager.replaceTabs(this.windowId, tabs);
@@ -196,6 +226,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it(" hides tabs in the group and closes failing tabs", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const tabsLength = 5;
       const tabs = Session.createTabs({tabsLength});
       const openTabs = await TestManager.replaceTabs(this.windowId, tabs);
@@ -219,7 +253,8 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
   });
 
-  describe("WindowManager.switchGroup", () => {
+  describe("WindowManager.switchGroupInCurrentWindow", () => {
+    
     beforeEach(async function(){
       [this.ids, this.groups] = Session.createArrayGroups({
           groupsLength: 2,
@@ -241,9 +276,13 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it("should open the group and close the previous tabs.", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       await TestManager.waitWindowToBeFocused(this.windowId);
 
-      await WindowManager.switchGroup(this.ids[0]);
+      await WindowManager.switchGroupInCurrentWindow(this.ids[0]);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
       const previousTabs = await browser.tabs.query({
@@ -255,9 +294,13 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it("should close a group by hidding current tabs.", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       await TestManager.waitWindowToBeFocused(this.windowId);
 
-      await WindowManager.switchGroup(this.ids[0]);
+      await WindowManager.switchGroupInCurrentWindow(this.ids[0]);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
       const previousGroupTabs = await browser.tabs.query({
@@ -265,7 +308,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
         hidden: false,
       });
 
-      await WindowManager.switchGroup(this.ids[1]);
+      await WindowManager.switchGroupInCurrentWindow(this.ids[1]);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
       const currentHiddenTabIds = (await browser.tabs.query({
@@ -280,9 +323,13 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it("should open a group by showing hidden tabs.", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       await TestManager.waitWindowToBeFocused(this.windowId);
 
-      await WindowManager.switchGroup(this.ids[0]);
+      await WindowManager.switchGroupInCurrentWindow(this.ids[0]);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
       const previousGroupTabs = await browser.tabs.query({
@@ -290,10 +337,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
         hidden: false,
       });
 
-      await WindowManager.switchGroup(this.ids[1]);
+      await WindowManager.switchGroupInCurrentWindow(this.ids[1]);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
-      await WindowManager.switchGroup(this.ids[0]);
+      await WindowManager.switchGroupInCurrentWindow(this.ids[0]);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
       const currentTabIds = (await browser.tabs.query({
@@ -308,7 +355,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
   });
 
-  fdescribe("WindowManager.switchGroup", () => {
+  describe("WindowManager.switchGroupInCurrentWindow", () => {
     beforeEach(async function(){
       [this.ids, this.groups] = Session.createArrayGroups({
           groupsLength: 2,
@@ -330,6 +377,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     });
 
     it("should switch from hidden to normal closing and close all hidden tabs in the groups", async function(){
+      if ( !Utils.hasHideFunctions() ){
+          pending("No hidden functionality.")
+          return;
+      }
       const countHiddenTabsInGroups = (groups) => {
         return groups.reduce((acc, group) => {
             acc += group.tabs.reduce((acc, tab) => {
@@ -344,10 +395,10 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
       await TestManager.waitWindowToBeFocused(this.windowId);
 
-      await WindowManager.switchGroup(this.ids[0]);
+      await WindowManager.switchGroupInCurrentWindow(this.ids[0]);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
-      await WindowManager.switchGroup(this.ids[1]);
+      await WindowManager.switchGroupInCurrentWindow(this.ids[1]);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
       expect(countHiddenTabsInGroups(GroupManager.groups)).toBe(GroupManager.groups[

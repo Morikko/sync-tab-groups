@@ -238,7 +238,7 @@ class Group extends React.Component {
       width: this.props.width
     };
 
-    const tabList = this.state.waitFirstMount ? this.getTabList() : null;
+    const tabList = this.state.waitFirstMount && this.state.expanded ? this.getTabList() : null;
 
     const hasFocusIcon = this.state.hasFocus ? React.createElement("i", { className: "arrow-focus fa fa-fw fa-angle-right" }) : null;
 
