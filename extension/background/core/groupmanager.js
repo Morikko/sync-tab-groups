@@ -1068,7 +1068,7 @@ GroupManager.checkCorruptedGroup = function(group, index) {
     group, {
       "title": "",
       "tabs": null,
-      "id":  Math.floor(Math.random() * 10000) + 50,
+      "id":  Math.floor(Math.random() * 100) + 500*index,
       "windowId": WINDOW_ID_NONE,
       "expand": false,
       "lastAccessed": 0,
