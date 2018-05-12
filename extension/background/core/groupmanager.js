@@ -988,6 +988,11 @@ GroupManager.prepareGroups = function (groups=GroupManager.groups, {
   }
 }
 
+
+GroupManager.getUniqueTabId = function(id, index) {
+  return Date.now() + "-" + id + "-" + index;
+}
+
 /**
  * Give a new unique tabId for closed groups
  * Avoid collision of new tabs in open groups
@@ -1004,7 +1009,7 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
       // Update ids
         if (!tab.id || !tab.id.length) {
           let oldId = tab.id;
-          tab.id = Date.now() + "-" + group.id + "-" + index;
+          tab.id = GroupManager.getUniqueTabId(group.id, index);
           newIds[oldId] = tab.id;
         }
     });
@@ -1019,6 +1024,91 @@ GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
   });
 }
 
+GroupManager.checkCorruptedTab = function(tab, index) {
+  // Other fields are changed elsewhere
+  // id: GroupManager.setUniqueTabIds
+  // index & postion: prepare groups
+  const properties = {
+    "title": "Title lost, you need to reopen the tab",
+    "url": null,
+    "pinned": false, 
+    "windowId": WINDOW_ID_NONE,
+    "active": false,
+  } 
+  if( Utils.isChrome() || Utils.isFF57()) {
+    properties["discarded"] = false;
+  }
+  if (!Utils.isChrome()) {
+    properties["lastAccessed"] = 0
+  }
+  return Utils.ojectPropertiesAreUndefined(
+    tab,
+    properties,
+    `tabs[${index}]`
+  );
+}
+
+GroupManager.checkCorruptedTabs = function(tabs, prefix) {
+  const results = tabs.map(GroupManager.checkCorruptedTab)
+    .filter(([__, msg]) => msg.length>0);
+  
+  if (results.length === 0) {
+    return [false, ""];
+  } else {
+    return [
+      results.filter(([isCritical, __]) => isCritical).length>0,
+      results.map(([__, msgs])=>  msgs.map(msg => `${prefix}.${msg}`).join(',')).join(',')
+    ];
+  }
+}
+
+GroupManager.checkCorruptedGroup = function(group, index) {
+  const prefix = `GroupManager.groups[${index}]`
+  const results = Utils.ojectPropertiesAreUndefined(
+    group, {
+      "title": "",
+      "tabs": null,
+      "id":  Math.floor(Math.random() * 10000) + 50,
+      "windowId": WINDOW_ID_NONE,
+      "expand": false,
+      "lastAccessed": 0,
+      "incognito": false,
+    },
+    prefix
+  )
+  const criticalIndex = 0;
+  const messagesIndex = 1;
+  if(group && group.tabs != null) {
+    const tabsResults = GroupManager.checkCorruptedTabs(group.tabs, prefix);
+    results[criticalIndex] = results[criticalIndex] || tabsResults[criticalIndex]
+    if(tabsResults[messagesIndex].length>0) {
+      results[messagesIndex].push(tabsResults[messagesIndex])
+    } 
+  }
+
+  if (results[messagesIndex].length === 0) {
+    return [false, ""];
+  } else {
+    return [
+      results[criticalIndex],
+      results[messagesIndex].join(','),
+    ];
+  }
+}
+
+GroupManager.checkCorruptedGroupsArray = function(groups) {
+  if(groups != null) {
+    const results = groups.map(GroupManager.checkCorruptedGroup)
+              .filter(([__, msg]) => msg.length>0);
+    return [
+      results.filter(([isCritical, __]) => isCritical).length>0,
+      results.map(([__, msg])=>  msg).join(',')
+    ];
+  } else {
+    return [true, "GroupManager.groups"]
+  }
+}
+
 /**
  * Check if groups is corrupted
  * If so, try to reload the groups from the disk
@@ -1027,43 +1117,6 @@ GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
   shouldBefixed=true,
   withMessage=false,
 }={}) {
-  const checkCorruptedTab = function(tab, index) {
-    const properties = [ "title", "url", "pinned", "windowId", "active", "id"];
-    if( Utils.isChrome() || Utils.isFF57()) {
-      properties.push("discarded")
-    }
-    if (!Utils.isChrome()) {
-      properties.push("lastAccessed")
-    }
-    return Utils.ojectPropertiesAreUndefined(
-      tab,
-      properties,
-      `tabs[${index}]`
-    );
-  }
-
-  const checkCorruptedTabs = function(tabs, prefix) {
-    const results = tabs.map(checkCorruptedTab)
-      .filter(([isCorrupted, __]) => isCorrupted);
-    
-    if (results.length === 0) {
-      return [false, ""];
-    } else {
-      return [true, results.map(([is, msg])=>  `${prefix}.${msg}`).join(',')];
-    }
-  }
-
-  const checkCorruptedGroup = function(group, index) {
-    const result = Utils.ojectPropertiesAreUndefined(
-      group,
-      [ "title", "tabs", "id", "windowId", "index", "position", "expand", "lastAccessed", "incognito"],
-      `group[${index}]`
-    )
-    if(result[0]) return result;
-
-    return checkCorruptedTabs(group.tabs, `group[${index}]`);
-  }
-
   let areGroupsCorrupted = false;
   let corruptedMessage = "";
   const isDeadObject = Utils.isDeadObject(groups);
@@ -1072,13 +1125,8 @@ GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
     areGroupsCorrupted = true; 
     corruptedMessage = "Groups are dead";
   } else {
-    const results = groups.map(checkCorruptedGroup)
-      .filter(([isCorrupted, __]) => isCorrupted);
-
-    if(results.length>0) {
-      areGroupsCorrupted = true; 
-      corruptedMessage = results.map(([is, msg])=> msg).join(',');
-    }
+    [areGroupsCorrupted, corruptedMessage] 
+      = GroupManager.checkCorruptedGroupsArray(groups)
   }
 
   if ( areGroupsCorrupted ) {
@@ -1090,6 +1138,10 @@ GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
       GroupManager.reloadGroupsFromDisk();
       LogManager.information('Tried to correct groups corruption...');
     }
+  } else if(corruptedMessage.length > 0) {
+    LogManager.information(
+      `Sync Tab Groups has detected a corruption in your groups and fixed it: ${corruptedMessage}`
+    );
   }
   return withMessage
     ? [areGroupsCorrupted, corruptedMessage]

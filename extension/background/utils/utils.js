@@ -553,26 +553,30 @@ Utils.objectHasUndefined = function(object, name="default") {
 /**
  * Check that the main object and the properties are not undefined
  * @param {Object} object
- * @param {Array[String]} properties
+ * @param {Object[key] = replaceValue} properties if replaceValue is null, it is critical
  * @param {String} name
  * @return {Array[{Boolean} hasUndefined, {String} path to the undefined]}
  */
 Utils.ojectPropertiesAreUndefined = function(
   object, properties, name="default"
 ) {
-  if ( object === undefined ) {
-    return [true, name + "(ALL)"];
+  if ( object == null ) {
+    return [true, [name]];
   }
-  let hasUndefined = false;
-  const listMessage = [];
+  let isCritical = false;
+  const listMessages = [];
 
-  for (let pro of properties) {
-    if ( object[pro] === undefined ) {
-      hasUndefined = true;
-      listMessage.push(`${name}["${pro}"]`);
+  for (let pro in properties) {
+    if ( object[pro] == null ) {
+      if (properties[pro] == null) {
+        isCritical = true;
+      } else {
+        object[pro] = properties[pro]
+      }
+      listMessages.push(`${name}["${pro}"]`);
     }
   }
-  return [hasUndefined, listMessage.join(',')];
+  return [isCritical, listMessages];
 }
 
 /**
