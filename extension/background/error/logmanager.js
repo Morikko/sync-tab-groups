@@ -181,9 +181,16 @@ LogManager.addWindowOnErrorListener = function({
 LogManager.downloadLog = async function downloadLog(logs=LogManager.logs) {
     try {
         let d = new Date();
+        const browserInfo = Utils.isChrome()
+                        ? "Chrome"
+                        : await browser.runtime.getBrowserInfo()
         let url = URL.createObjectURL(new Blob([
             JSON.stringify({
-                version: ["SyncTabGroups", browser.runtime.getManifest().version],
+                version: {
+                    "SyncTabGroups": browser.runtime.getManifest().version,
+                    browser: browserInfo,
+                    os: (await browser.runtime.getPlatformInfo()).os,
+                },
                 logs,
                 options: OptionManager.options,
             }, null, 2)
