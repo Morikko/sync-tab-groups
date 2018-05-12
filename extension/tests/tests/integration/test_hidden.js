@@ -416,17 +416,16 @@ describe("When Hidden Closing State is enabled, ", ()=>{
       expect(countHiddenTabsInGroups(GroupManager.groups)).toBe(0);
     });
 
-    fit(".closeHiddenTabs should close some hidden tabs specified.", async function(){
+    it(".closeHiddenTabs should close some hidden tabs specified.", async function(){
       if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
       const tabsLength = 7;
       const hiddenTabsToRemoveNumber = 4;
-      // Open hidden tabs in window 1
       await TestManager.waitWindowToBeFocused(this.windowId);
 
-      const listTabs = Session.createTabs({tabsLength: 7, active: 0});
+      const listTabs = Session.createTabs({tabsLength, active: 0});
       await TabManager.openListOfTabs(listTabs, this.windowId);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
@@ -454,17 +453,15 @@ describe("When Hidden Closing State is enabled, ", ()=>{
         .toBe(tabsLength-hiddenTabsToRemoveNumber);
     });
 
-    fit(".removeAllHiddenTabs should close all hidden tabs.", async function(){
+    it(".removeAllHiddenTabs should close all hidden tabs.", async function(){
       if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
-      // Open hidden tabs in window 1
       const listTabs = Session.createTabs({tabsLength: 4, active: 0});
       await TabManager.openListOfTabs(listTabs, this.windowId);
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
 
-      // Open hidden tabs in window 2
       const windowId_bis = await TestManager.openWindow();
       const listTabs_bis = Session.createTabs({tabsLength: 4, active: 0});
       await TabManager.openListOfTabs(listTabs_bis, windowId_bis);
@@ -499,5 +496,141 @@ describe("When Hidden Closing State is enabled, ", ()=>{
       await TestManager.closeWindows(windowId_bis);
     });
   });
+
+  describe("[Reference] TabHidden.", () => {
+    it("onStartInitialization should bind back the hidden tabs with the groups.", async function(){
+            if ( !Utils.hasHideFunction() ){
+          pending("No hidden functionality.")
+          return;
+      }
+      const [groupIds, groups] = Session.createArrayGroups({
+          groupsLength: 2,
+          tabsLength: 4,
+          global: true,
+          active: 1,
+          title: "Debug switch Groups with hidden"
+        });
+
+      await WindowManager.switchGroupInCurrentWindow(groupIds[0]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      await WindowManager.switchGroupInCurrentWindow(groupIds[1]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const indexGroup0 = GroupManager.getGroupIndexFromGroupId(groupIds[0]);
+      const initialIds = GroupManager.groups[indexGroup0].tabs
+        .map(tab => tab.id);
+
+      await Promise.all(
+        GroupManager.groups[indexGroup0].tabs.map(async (tab) => {
+          const previousId = tab.id;
+          tab.id += 1000;
+          // Map the wrong id to the good tab
+          await browser.sessions.setTabValue(
+            previousId,
+            TabHidden.TABHIDDEN_SESSION_KEY,
+            tab.id,
+          );
+          return;
+        })
+      );
+
+      await TabHidden.onStartInitialization();
+
+      expect(
+        GroupManager.groups[indexGroup0].tabs.map(tab => tab.id)
+      ).toEqual(initialIds);
+
+      expect(
+        GroupManager.groups[indexGroup0].tabs.map(tab => tab.hidden)
+      ).toEqual(Array(4).fill(true));
+
+      await WindowManager.switchGroupInCurrentWindow(groupIds[0]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const currentTabIds = (await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: false,
+      }));
+
+      expect(currentTabIds.map(tab => tab.id))
+        .toEqual(initialIds);
+      TestManager.removeGroups(groupIds)
+    })
+
+    it("onStartInitialization should change hidden property to false for tabs that didn't find back.", async function(){
+            const [groupIds, groups] = Session.createArrayGroups({
+          groupsLength: 2,
+          tabsLength: 4,
+          global: true,
+          active: 1,
+          title: "Debug switch Groups with hidden"
+        });
+
+      await WindowManager.switchGroupInCurrentWindow(groupIds[0]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      await WindowManager.switchGroupInCurrentWindow(groupIds[1]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const indexGroup0 = GroupManager.getGroupIndexFromGroupId(groupIds[0]);
+      const initialIds = GroupManager.groups[indexGroup0].tabs
+        .map(tab => tab.id);
+
+      await Promise.all(
+        GroupManager.groups[indexGroup0].tabs.map(async (tab) => {
+          const previousId = tab.id;
+          tab.id += 1000;
+          // Map the wrong id to the good tab
+          await browser.sessions.setTabValue(
+            previousId,
+            TabHidden.TABHIDDEN_SESSION_KEY,
+            tab.id,
+          );
+          return;
+        })
+      );
+
+      const size = 2;
+      const tabIdsToBeClose = initialIds.slice(0, size);
+      
+      await TestManager.removeTabs(tabIdsToBeClose);
+
+      await TabHidden.onStartInitialization();
+
+      expect(
+        GroupManager.groups[indexGroup0].tabs
+          .slice(0, size)
+          .map(tab => tab.hidden)
+      ).toEqual([false, false]);
+
+      expect(
+        GroupManager.groups[indexGroup0].tabs
+          .slice(size)
+          .map(tab => tab.id)
+      ).toEqual(initialIds.slice(size));
+
+      await WindowManager.switchGroupInCurrentWindow(groupIds[0]);
+      await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId);
+
+      const currentTabIds = (await browser.tabs.query({
+        windowId: this.windowId,
+        hidden: false,
+      }));
+
+      expect(
+        GroupManager.groups[indexGroup0].tabs
+          .slice(0, size)
+          .map(tab => tab.hidden)
+      ).not.toEqual(initialIds.slice(0, size));
+
+      expect(
+        GroupManager.groups[indexGroup0].tabs
+          .slice(size)
+          .map(tab => tab.id)
+      ).toEqual(initialIds.slice(size));
+      TestManager.removeGroups(groupIds)
+    })
+  })
 
 });
