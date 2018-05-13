@@ -1,5 +1,6 @@
 var TabHidden = TabHidden || {};
 TabHidden.TABHIDDEN_SESSION_KEY = "TABHIDDEN_ID";
+TabHidden.cleaningUnknownHiddenTabsProcess = null;
 
 /**
  * @param {Number} tabId
@@ -8,11 +9,11 @@ TabHidden.TABHIDDEN_SESSION_KEY = "TABHIDDEN_ID";
  * @return {Boolean} is tab shown
  */
 TabHidden.showTab = async function(tabId, windowId, index=-1) {
+  // Closed tab Id
+  if(typeof tabId === 'string') {
+    return false;
+  }
   try {
-    // Closed tab Id
-    if(typeof tabId === 'string') {
-      return false;
-    }
     await browser.tabs.move(tabId, {windowId, index});
     await browser.tabs.show(tabId);
     browser.sessions.removeTabValue(
@@ -120,12 +121,13 @@ TabHidden.removeAllHiddenTabs = async function(){
 }
 
 TabHidden.onStartInitialization = async function() {
-  if (OptionManager.options.groups.closingState !== OptionManager.CLOSE_HIDDEN) {
+  if (OptionManager.options.groups.closingState 
+    !== OptionManager.CLOSE_HIDDEN) {
     return;
   }
 
   try {
-     // 1. Get all hidden tab ids
+    // 1. Get all hidden tab ids
     const hiddenTabIds = (await browser.tabs.query({hidden: true}))
                             .map(({id}) => id);
     const updatedHiddenTabIds = {};
@@ -181,3 +183,52 @@ TabHidden.onStartInitialization = async function() {
     LogManager.error(e)
   }
 }
+
+// Close hidden tabs not in any group 
+TabHidden.closeUnknownHiddenTabs = async function() {
+  try {
+    const hiddenTabIds = (await browser.tabs.query({hidden: true}))
+                            .map(({id}) => id);
+    
+    await Promise.all(
+      hiddenTabIds.map(async (tabId) => {
+        const groupId = GroupManager.getGroupIdFromTabId(
+          tabId,  {error:false}
+        );
+        if(groupId>-1) return;
+
+        try {
+          console.log(tabId)
+          await browser.tabs.remove(tabId);
+        } catch (e) {LogManager.error(e)}
+
+        return;
+      })
+    );
+  } catch(e) {
+    LogManager.error(e);
+  }
+}
+
+TabHidden.startCleaningUnknownHiddenTabsProcess = async function(doItNow=false) {
+  if (!OptionManager.options.groups.removeUnknownHiddenTabs) {
+    return;
+  }
+
+  if(doItNow) {
+    await TabHidden.closeUnknownHiddenTabs();
+  }
+
+  TabHidden.cleaningUnknownHiddenTabsProcess = setInterval(
+    TabHidden.closeUnknownHiddenTabs,
+    2 * 60 * 1000
+  );
+}
+
+TabHidden.stopCleaningUnknownHiddenTabsProcess = function() {
+  if (TabHidden.cleaningUnknownHiddenTabsProcess) {
+    clearInterval(TabHidden.cleaningUnknownHiddenTabsProcess);
+    TabHidden.cleaningUnknownHiddenTabsProcess = null;
+  }
+}
+

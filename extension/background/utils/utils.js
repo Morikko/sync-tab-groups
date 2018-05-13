@@ -112,8 +112,9 @@ OptionManager.TEMPLATE = function() {
       showGroupTitleInWindow: false,
       sortingType: OptionManager.SORT_LAST_ACCESSED,
       discardedOpen: true,
-      discardedHide: true,
       closingState: OptionManager.CLOSE_NORMAL,
+      discardedHide: false,
+      removeUnknownHiddenTabs: false,
     },
     popup: {
       maximized: false,

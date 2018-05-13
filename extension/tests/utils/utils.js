@@ -445,3 +445,15 @@ TestManager.removeTabs = async function(ids) {
   await browser.tabs.remove(ids);
   await TabManager.waitTabsToBeClosed(ids);
 }
+
+TestManager.countHiddenTabsInGroups = (groups) => {
+  return groups.reduce((acc, group) => {
+      acc += group.tabs.reduce((acc, tab) => {
+        if ( tab.hidden ) {
+          acc++;
+        }
+        return acc;
+      }, 0);
+      return acc;
+  }, 0);
+}
