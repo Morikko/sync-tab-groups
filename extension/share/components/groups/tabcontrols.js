@@ -141,11 +141,12 @@ class TabControls extends React.Component {
   }
 
   createMoveTabToGroupPanel() {
-    let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
-    let subMenusMoveTab = [];
+    const sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
+    const subMenusMoveTab = [];
 
     for (let i of sortedIndex) {
-      let g = this.props.groups[i];
+      const g = this.props.groups[i];
+      const prefix = g.windowId !== WINDOW_ID_NONE ? "[OPEN] " : "";
       subMenusMoveTab.push(React.createElement(
         "span",
         {
@@ -159,7 +160,7 @@ class TabControls extends React.Component {
             this.props.handleOnMoveTabMenuClick(e);
             this.closeExtraActions();
           }).bind(this) },
-        Utils.getGroupTitle(g)
+        prefix + Utils.getGroupTitle(g)
       ));
     }
 
