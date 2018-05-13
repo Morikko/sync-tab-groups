@@ -1018,6 +1018,9 @@ GroupManager.getUniqueTabId = function(id, index) {
  */
 GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
   groups.forEach((group) => {
+    if( WindowManager.GROUP_CURRENTLY_SWITCHING[group.id] === true ) {
+      return;
+    }
     if( group.windowId !== -1 ) {
       return;
     }

@@ -33,6 +33,7 @@ var WindowManager = WindowManager || {};
 WindowManager.WINDOW_GROUPID = "groupId";
 
 WindowManager.WINDOW_CURRENTLY_SWITCHING = {};
+WindowManager.GROUP_CURRENTLY_SWITCHING = {};
 WindowManager.WINDOW_CURRENTLY_CLOSING = {};
 // Window ids not taken in account when a new window is created
 WindowManager.WINDOW_EXCLUDED = {};
@@ -80,7 +81,7 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId, {
  */
 WindowManager.decoratorCurrentlyChanging = function (func) {
   return async function() {
-    let result, currentWindow;
+    let result, currentWindow, previousGroupId;
     try {
       currentWindow = await browser.windows.getLastFocused();
       if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
@@ -96,6 +97,14 @@ WindowManager.decoratorCurrentlyChanging = function (func) {
         return func.name + " not done because the current window has not finished to switch to a group.";
       }
       WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id] = true;
+      previousGroupId = GroupManager.getGroupIdInWindow(
+        currentWindow.id, {
+          error: false
+      });
+
+      if(previousGroupId != null && previousGroupId>-1) {
+        WindowManager.GROUP_CURRENTLY_SWITCHING[previousGroupId] = true;
+      } 
 
       // Do your job
       result = await func.apply(this, arguments);
@@ -103,10 +112,18 @@ WindowManager.decoratorCurrentlyChanging = function (func) {
     } catch(e) {
       LogManager.error(e, {arguments});
     } finally { // Clean
-      if (WindowManager.WINDOW_CURRENTLY_SWITCHING.hasOwnProperty(
-          currentWindow.id
-        )) {
+      const windowShouldBeClear = WindowManager.WINDOW_CURRENTLY_SWITCHING
+        .hasOwnProperty(currentWindow.id);
+      if (windowShouldBeClear) {
         delete WindowManager.WINDOW_CURRENTLY_SWITCHING[currentWindow.id];
+      }
+
+      if(previousGroupId != null && previousGroupId>-1) {
+        const windowShouldBeClear = WindowManager.GROUP_CURRENTLY_SWITCHING
+          .hasOwnProperty(previousGroupId);
+        if (windowShouldBeClear) {
+          delete WindowManager.GROUP_CURRENTLY_SWITCHING[previousGroupId];
+        }
       }
       return result;
     }

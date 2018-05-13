@@ -35,29 +35,34 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
  * @return {Boolean} is tab hidden
  */
 TabHidden.hideTab = async function(tabId) {
-  const result = await browser.tabs.hide(tabId);
-  if ( result.length !== 0 ) {
-    if (OptionManager.options.groups.discardedHide) {
-      setTimeout( // Avoid overloading
-        async () => {
-          try {
-            await browser.tabs.discard(tabId)
-          } catch (e) {
-            LogManager.warning(e.message, {arguments});
-          }
-        },
-        2000,
-      )
+  try {
+    const result = await browser.tabs.hide(tabId);
+    if ( result.length !== 0 ) {
+      if (OptionManager.options.groups.discardedHide) {
+        setTimeout( // Avoid overloading
+          async () => {
+            try {
+              await browser.tabs.discard(tabId)
+            } catch (e) {
+              LogManager.warning(e.message, {arguments});
+            }
+          },
+          2000,
+        )
+      }
+      
+      browser.sessions.setTabValue(
+        tabId,
+        TabHidden.TABHIDDEN_SESSION_KEY,
+        tabId,
+      );
     }
-    
-    browser.sessions.setTabValue(
-      tabId,
-      TabHidden.TABHIDDEN_SESSION_KEY,
-      tabId,
-    );
+    return result.length !== 0;
+  } catch(e) {
+    LogManager.warning(e.message, {arguments});
+    return false;
   }
 
-  return result.length !== 0;
 }
 
 
