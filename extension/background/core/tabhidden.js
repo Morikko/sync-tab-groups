@@ -82,6 +82,26 @@ TabHidden.closeAllHiddenTabsInGroups = async function (groups=GroupManager.group
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
+// Change value of tabId in groups if present
+// return true if done else false
+TabHidden.changeHiddenStateForTab = function(tabId, value=false) {
+  const groupId = GroupManager.getGroupIdFromTabId(tabId, {error: false});
+  if(groupId===-1) return false;
+
+  const groupIndex = GroupManager.getGroupIndexFromGroupId(
+    groupId, {error: false}
+  );
+  if(groupIndex===-1) return false;
+
+  const tabIndex = GroupManager.getTabIndexFromTabId(
+    tabId, groupIndex, {error: false}
+  );
+  if(tabIndex===-1) return false;
+  GroupManager.groups[groupIndex].tabs[tabIndex].hidden = value;
+
+  return true;
+} 
+
 // Close hidden tabs and change hidden property to false if part of a group
 TabHidden.closeHiddenTabs = async function (tabIds) {
   if ( !Array.isArray(tabIds) ) {
@@ -92,21 +112,7 @@ TabHidden.closeHiddenTabs = async function (tabIds) {
     await browser.tabs.remove(tabIds);
   } catch (e) {LogManager.error(e, {arguments})}
 
-  tabIds.forEach(tabId => {
-    const groupId = GroupManager.getGroupIdFromTabId(tabId, {error: false});
-    if(groupId===-1) return;
-
-    const groupIndex = GroupManager.getGroupIndexFromGroupId(
-      groupId, {error: false}
-    );
-    if(groupIndex===-1) return;
-
-    const tabIndex = GroupManager.getTabIndexFromTabId(
-      tabId, groupIndex, {error: false}
-    );
-    if(tabIndex===-1) return;
-    GroupManager.groups[groupIndex].tabs[tabIndex].hidden = false;
-  });
+  tabIds.forEach(TabHidden.changeHiddenStateForTab);
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }

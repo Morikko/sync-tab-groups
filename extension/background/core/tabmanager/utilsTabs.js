@@ -30,17 +30,6 @@ TabManager.countPinnedTabs = function(tabs) {
   return tabs.filter(tab => tab.pinned).length;
 }
 
-OptionManager.isClosingAlived = function() {
-  //return OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE;
-  return false;
-}
-
-OptionManager.isClosingHidden = function() {
-  return OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN;
-}
-
-
-
 /**
  * Take an index and return the value for
  *   pinned tabs are always before normal tabs

@@ -13,7 +13,7 @@ Event.Tabs.initTabsEventListener = function() {
   browser.tabs.onCreated.addListener((tab) => {
     TabManager.updateTabsInGroup(tab.windowId);
   });
-  browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     /* Bug: onRemoved is fired before the tab is really close
      * Workaround: keep a delay
      * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
@@ -23,6 +23,9 @@ Event.Tabs.initTabsEventListener = function() {
         TabManager.updateTabsInGroup(removeInfo.windowId);
       }
     }, 300);
+    if( Utils.hasHideFunction() && OptionManager.isClosingHidden() ) {
+      TabHidden.changeHiddenStateForTab(tabId);
+    }
   });
   browser.tabs.onMoved.addListener((tabId, moveInfo) => {
     TabManager.updateTabsInGroup(moveInfo.windowId);

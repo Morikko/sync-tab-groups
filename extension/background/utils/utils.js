@@ -155,6 +155,15 @@ Utils.setObjectPropertiesWith = function(obj, val)  {
   return obj2;
 }
 
+OptionManager.isClosingAlived = function() {
+  //return OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE;
+  return false;
+}
+
+OptionManager.isClosingHidden = function() {
+  return OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN;
+}
+
 var GroupManager = GroupManager || {};
 
 /**
