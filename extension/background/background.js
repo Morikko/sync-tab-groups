@@ -81,6 +81,7 @@ Background.init = async function() {
   await Utils.wait(2000);
   StorageManager.Local.planBackUp();
   StorageManager.Backup.init();
+  TabHidden.startCleaningUnknownHiddenTabsProcess();
   Background.install = false;
 
   LogManager.information(LogManager.EXTENSION_INITIALIZED, {

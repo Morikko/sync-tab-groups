@@ -198,7 +198,6 @@ TabHidden.closeUnknownHiddenTabs = async function() {
         if(groupId>-1) return;
 
         try {
-          console.log(tabId)
           await browser.tabs.remove(tabId);
         } catch (e) {LogManager.error(e)}
 
@@ -210,7 +209,10 @@ TabHidden.closeUnknownHiddenTabs = async function() {
   }
 }
 
-TabHidden.startCleaningUnknownHiddenTabsProcess = async function(doItNow=false) {
+
+TabHidden.startCleaningUnknownHiddenTabsProcess = async function({
+  doItNow=false
+}={}) {
   if (!OptionManager.options.groups.removeUnknownHiddenTabs) {
     return;
   }

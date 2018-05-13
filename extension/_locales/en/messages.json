@@ -1191,6 +1191,16 @@
     "description": ""
   },
 
+  "setting_remove_unknown_hidden_tabs": {
+    "message": "Remove the hidden tabs not part of any groups automatically",
+    "description": ""
+  },
+
+  "setting_confirm_unknown_hidden_tabs": {
+    "message": "Are you sure, do you want to close all the hidden tabs not in any groups ?",
+    "description": ""
+  },
+
   "setting_close_all_hidden_tabs": {
     "message": "Close ALL the hidden tabs in Firefox.",
     "description": ""

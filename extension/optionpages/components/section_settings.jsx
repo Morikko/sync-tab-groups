@@ -8,6 +8,8 @@ class SettingsSection extends React.Component {
     this.clickOnIncluded = this.clickOnIncluded.bind(this);
     this.clickOnPrivate = this.clickOnPrivate.bind(this);
     this.clickOnPrivateInvisible = this.clickOnPrivateInvisible.bind(this);
+    this.handleRemoveUnknownHiddenTabsCheckboxChange =    
+      this.handleRemoveUnknownHiddenTabsCheckboxChange.bind(this);
   }
   render() {
     return (
@@ -186,16 +188,6 @@ class SettingsSection extends React.Component {
                 key="closing-close"
                 highlight={this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL}
               />
-              {
-                /*
-              <OptionButton
-                title= {"Alive"}
-                onClick= {this.clickOnClosingAlive.bind(this)}
-                key="closing-alive"
-                enabled={this.props.options.groups.closingState === OptionManager.CLOSE_ALIVE}
-              />
-                */
-              }
               <OptionButton
                 title= {"Hidden"}
                 onClick= {this.clickOnClosingHidden.bind(this)}
@@ -208,6 +200,14 @@ class SettingsSection extends React.Component {
               label= {browser.i18n.getMessage("setting_discard_hidden_tab")}
               onCheckChange= {this.props.onOptionChange}
               id= "groups-discardedHide"
+            />
+            <NiceCheckbox
+              checked= {this.props.options.groups.removeUnknownHiddenTabs}
+              label= {browser.i18n.getMessage("setting_remove_unknown_hidden_tabs")}
+              onCheckChange= {
+                this.handleRemoveUnknownHiddenTabsCheckboxChange
+              }
+              id="groups-removeUnknownHiddenTabs"
             />
             <div className="double-buttons">
               <OptionButton
@@ -222,6 +222,15 @@ class SettingsSection extends React.Component {
         }
       />
     );
+  }
+
+  handleRemoveUnknownHiddenTabsCheckboxChange(id, val) {
+    const msg = browser.i18n.getMessage("setting_confirm_unknown_hidden_tabs")
+    if( val && !confirm(msg)) {
+      this.props.onOptionChange(id, !val);
+      return;
+    }
+    this.props.onOptionChange(id, val);
   }
 
   getPrivateWindowsSubsection() {

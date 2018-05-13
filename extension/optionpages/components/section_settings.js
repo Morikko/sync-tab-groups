@@ -8,6 +8,7 @@ class SettingsSection extends React.Component {
     this.clickOnIncluded = this.clickOnIncluded.bind(this);
     this.clickOnPrivate = this.clickOnPrivate.bind(this);
     this.clickOnPrivateInvisible = this.clickOnPrivateInvisible.bind(this);
+    this.handleRemoveUnknownHiddenTabsCheckboxChange = this.handleRemoveUnknownHiddenTabsCheckboxChange.bind(this);
   }
   render() {
     return React.createElement(
@@ -329,6 +330,12 @@ class SettingsSection extends React.Component {
           onCheckChange: this.props.onOptionChange,
           id: "groups-discardedHide"
         }),
+        React.createElement(NiceCheckbox, {
+          checked: this.props.options.groups.removeUnknownHiddenTabs,
+          label: browser.i18n.getMessage("setting_remove_unknown_hidden_tabs"),
+          onCheckChange: this.handleRemoveUnknownHiddenTabsCheckboxChange,
+          id: "groups-removeUnknownHiddenTabs"
+        }),
         React.createElement(
           "div",
           { className: "double-buttons" },
@@ -340,6 +347,15 @@ class SettingsSection extends React.Component {
         )
       )
     });
+  }
+
+  handleRemoveUnknownHiddenTabsCheckboxChange(id, val) {
+    const msg = browser.i18n.getMessage("setting_confirm_unknown_hidden_tabs");
+    if (val && !confirm(msg)) {
+      this.props.onOptionChange(id, !val);
+      return;
+    }
+    this.props.onOptionChange(id, val);
   }
 
   getPrivateWindowsSubsection() {

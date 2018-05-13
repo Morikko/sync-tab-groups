@@ -48,7 +48,7 @@ class NiceCheckbox extends React.Component {
   handleClick(event) {
     event.stopPropagation();
     this.props.onCheckChange(this.props.id, !this.state.checked);
-
+  
     this.setState({
       checked: !this.state.checked
     });

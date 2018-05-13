@@ -91,6 +91,9 @@ OptionManager.updateOption = async function(optionName, optionValue) {
     case "groups-closingState":
       await OptionManager.onClosingStateChange(optionValue);
       break;
+    case "groups-removeUnknownHiddenTabs":
+      await OptionManager.onRemoveUnknownHiddenTabsChange(optionValue);
+      break;
   }
   if ( optionName.startsWith("backup-time-") ) {
     OptionManager.onBackUpTimerChange(
@@ -116,6 +119,14 @@ OptionManager.onClosingStateChange = async function(value) {
     await TabHidden.closeAllHiddenTabsInGroups(GroupManager.groups);
   } else if ( value === OptionManager.CLOSE_HIDDEN) {
     await OptionManager.updateOption("pinnedTab-sync", false);
+  }
+}
+
+OptionManager.onRemoveUnknownHiddenTabsChange = async function(value) {
+  if(value){
+    await TabHidden.startCleaningUnknownHiddenTabsProcess({doItNow: true});
+  } else {
+    TabHidden.stopCleaningUnknownHiddenTabsProcess();
   }
 }
 

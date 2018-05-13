@@ -10,6 +10,7 @@ Event.Install = Event.Install || {};
 Event.Install.DEV_TABS = [
   "/tests/test-page/unit.html",
   "/tests/test-page/integration.html",
+  "/optionpages/option-page.html#settings",
   //"/tests/test-page/integration.html?spec=Selector%20-%20",
   //"/optionpages/option-page.html#groups"
 ]
