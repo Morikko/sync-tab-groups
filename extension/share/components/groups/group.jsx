@@ -409,6 +409,9 @@ class Group extends React.Component {
     if (event) {
       event.stopPropagation();
     }
+    if(this.state.closing || this.state.removing) {
+      return;
+    }
 
     if (this.props.allowClickSwitch) {
       if (this.props.currentWindowId !== this.props.group.windowId) {

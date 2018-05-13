@@ -1,14 +1,21 @@
-/*
-Copyright (c) 2017 Eric Masseran
-
-From: https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
 class GroupControls extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      menuPosition: TabControls.POSITION.MIDDLE,
+      show: false,
+      panel: "main",
+      waitFirstMount: false,
+      maxHeight: window.innerHeight/2,
+    };
+
+    this.closeMenuTimeout = undefined;
+  }
+
   getEditControls() {
-    let controls;
     if (this.props.editing) {
-      controls = [
+      return [
         <i
           key="rename_agree"
           className="group-edit group-control fa fa-fw fa-check"
@@ -20,25 +27,14 @@ class GroupControls extends React.Component {
           onClick={this.props.onEditAbort}
         ></i>
       ];
-    } else {
-      controls = (<i
-        key="rename"
-        title={browser.i18n.getMessage("rename_group")}
-        className={"group-edit group-control fa fa-fw fa-pencil"}
-        onClick={this.props.onEdit}
-      ></i>);
-    }
-
-    return controls;
+    } 
   }
 
-  getClosingControls() {
-    let overHelp;
-    if (this.props.closing) {
-      overHelp = browser.i18n.getMessage("undo_closing");
-    } else if (this.props.removing) {
-      overHelp = browser.i18n.getMessage("undo_removing");
-    }
+  getUndoControls() {
+    const overHelp = this.props.closing
+      ? browser.i18n.getMessage("undo_closing")
+      : browser.i18n.getMessage("undo_removing");
+
     return [
       <i
         title={overHelp}
@@ -50,75 +46,7 @@ class GroupControls extends React.Component {
   }
 
   render() {
-    let controls = [];
-
-    if ( this.props.controlsEnable ) {
-      if (!(this.props.closing || this.props.removing)) {
-        controls.push(this.getEditControls());
-      }
-
-      if (!this.props.editing) {
-        // Open in new window button
-        if (!this.props.opened &&
-          !this.props.closing &&
-          !this.props.removing) {
-          controls.push(
-            <i
-              key="open_window"
-              className="group-edit group-control fa fa-fw fa-window-maximize"
-              title={browser.i18n.getMessage("open_window_group")}
-              onClick={this.props.onOpenInNewWindow}
-            ></i>
-          );
-        }
-
-        // Before closing
-        if (this.props.closing) {
-          controls.push(this.getClosingControls());
-        }
-
-        // Close button
-        if (this.props.opened && !this.props.removing) {
-          let overHelp;
-          if (this.props.closing) {
-            overHelp = browser.i18n.getMessage("force_closing");
-          } else {
-            overHelp = browser.i18n.getMessage("close_group");
-          }
-          controls.push(
-            <i
-              key="close"
-              title={overHelp}
-              className="group-close group-control fa fa-fw fa-times"
-              onClick={this.props.onClose}
-            ></i>
-          );
-        }
-
-        if (!this.props.closing) {
-          let overHelp;
-          if (this.props.removing) {
-            overHelp = browser.i18n.getMessage("force_removing");
-          } else {
-            overHelp = browser.i18n.getMessage("remove_group");
-          }
-          controls.push(
-            <i
-              key="remove"
-              title={overHelp}
-              className="group-close group-control fa fa-fw fa-trash"
-              onClick={this.props.onRemove}
-            ></i>
-          );
-        }
-
-        if (this.props.removing) {
-          controls.push(this.getClosingControls());
-        }
-      }
-    } 
-
-    let expanderClasses = classNames({
+    const expanderClasses = classNames({
       "group-expand": true,
       "group-control": true,
       "fa": true,
@@ -127,30 +55,250 @@ class GroupControls extends React.Component {
       "fa-chevron-up": this.props.expanded
     });
 
-    let expand_title = this.props.expanded ? browser.i18n.getMessage("hide_tabs") : browser.i18n.getMessage("show_tabs");
     return (
       <span
         className="group-controls"
         onMouseUp={(e)=>e.stopPropagation()}>
-      {controls}
+      {this.getOpenNewWindowButton()}
+      {this.getUndoClosingButton()}
+      {this.getUndoRemovingButton()}
+      {this.getCloseButton()}
+      {this.getRemoveButton()}
+      {this.getEditButtons()}
+      {this.getTooltipOpenerButton()}
       <i
         className={expanderClasses}
         onClick={this.props.onExpand}
-        title={expand_title}
+        title={this.getExpandTitle()}
       ></i>
     </span>);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if ( nextProps.expanded !== this.props.expanded
-    || nextProps.opened !== this.props.opened
-    || nextProps.closing !== this.props.closing
-    || nextProps.removing !== this.props.removing
-    || nextProps.editing !== this.props.editing) {
-      return true;
+  getEditButtons(){
+    if (this.props.controlsEnable && !this.props.closing 
+      && !this.props.removing ) {
+      return this.getEditControls();
+    }
+  }
+
+  getRemoveButton(){
+    if ( this.props.controlsEnable && !this.props.editing
+      && !this.props.closing) {
+      const overHelp = this.props.removing
+        ? browser.i18n.getMessage("force_removing")
+        : browser.i18n.getMessage("remove_group");
+    
+      return (
+        <i
+          key="remove"
+          title={overHelp}
+          className="group-close group-control fa fa-fw fa-trash"
+          onClick={this.props.onRemove}
+        ></i>
+      );
+    }
+  }
+
+  getCloseButton(){
+    if ( this.props.controlsEnable && !this.props.editing
+      && this.props.opened && !this.props.removing) {
+      const overHelp = this.props.closing
+        ? browser.i18n.getMessage("force_closing")
+        : browser.i18n.getMessage("close_group");
+    
+      return (
+        <i
+          key="close"
+          title={overHelp}
+          className="group-close group-control fa fa-fw fa-times"
+          onClick={this.props.onClose}
+        ></i>
+      );
+    }
+  }
+
+  getUndoRemovingButton(){
+    if ( this.props.controlsEnable && !this.props.editing
+      && this.props.removing) {
+      return this.getUndoControls();
+    }
+  }
+
+  getUndoClosingButton() {
+    if ( this.props.controlsEnable && !this.props.editing
+      && this.props.closing) {
+      return this.getUndoControls();
+    }
+  }
+
+  getOpenNewWindowButton(){
+    if ( this.props.controlsEnable && !this.props.closing
+      && !this.props.removing && !this.props.opened 
+      && !this.props.editing) {
+      return (
+        <i
+            key="open_window"
+            className="group-edit group-control fa fa-fw fa-window-maximize"
+            title={browser.i18n.getMessage("open_window_group")}
+            onClick={this.props.onOpenInNewWindow}
+        ></i>
+      );
+    }
+  }
+
+  getTooltipOpenerButton() {
+    if( !this.props.closing && !this.props.removing 
+      && this.props.controlsEnable && !this.props.editing ){
+      return (
+        <i
+          key="tooltip"
+          title={browser.i18n.getMessage("tab_show_actions_menu")}
+          className="group-edit group-control fa fa-fw fa-exchange tab-actions"
+          onClick={this.handleOpenExtraActions.bind(this)}
+          onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
+          onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}
+        >
+          {this.state.waitFirstMount && this.createExtraActionsMenu()}
+        </i>
+      );
+    }
+  }
+
+  getExpandTitle() {
+    return this.props.expanded 
+      ? browser.i18n.getMessage("hide_tabs") 
+      : browser.i18n.getMessage("show_tabs");
+  }
+
+  componentDidMount() {
+    if ( !this.state.waitFirstMount ) {
+      this.differedTimeOut = setTimeout(()=>{
+        this.setState({
+          waitFirstMount: true,
+        });
+      }, 500);
+    }
+  }
+
+  createExtraActionsMenu() {
+    return (
+      <div  className={classNames({
+        "tab-actions-menu": true,
+        "top": this.state.menuPosition === TabControls.POSITION.TOP,
+        "bottom": this.state.menuPosition === TabControls.POSITION.BOTTOM,
+        "middle": this.state.menuPosition === TabControls.POSITION.MIDDLE,
+        "show": this.state.show,
+      })}>
+        {this.createActionsPanel()}
+      </div>
+    );
+  }
+
+  getHiddenRemoveActionTooltip() {
+    if(false && this.props.hidden) {
+      return (
+        <span
+            className="row"
+            onClick={((event)=>{
+              if (event) {
+                event.stopPropagation();
+              }
+              //this.props.onRemoveHiddenTab(this.props.tab.id);
+              this.closeExtraActions();
+            })}>
+            <i className="fa fa-fw fa-eye-slash" />
+            {browser.i18n.getMessage("close_hidden_tab")}
+        </span>
+     )
+    }
+  }
+
+  getEditActionTooltip() {
+    if(!this.props.editing) {
+      return (
+        <span
+          className="row"
+          onClick={((event)=>{
+            if (event) {
+              event.stopPropagation();
+            }
+            this.props.onEdit();
+            this.closeExtraActions();
+          })}>
+          <i className="fa fa-fw fa-pencil" />
+          {browser.i18n.getMessage("rename_group")}
+        </span>
+     )
+    }
+  }
+
+  createActionsPanel() {
+    return (
+      <div className={classNames({
+        "tab-actions-panel": true,
+        "hiddenBySearch": this.state.panel !== "main",
+      })}>
+        {this.getEditActionTooltip()}
+        {this.getHiddenRemoveActionTooltip()}
+      </div>
+    )
+  }
+
+  handleOpenExtraActions(event) {
+    if (event) {
+      event.stopPropagation();
     }
 
-    return false;
+    let parentGroupList = Utils.getParentElement(event.target, "group-list");
+
+    let pos = Utils.getOffset(event.target, parentGroupList),
+      height = parentGroupList.clientHeight;
+
+    let menuPosition = TabControls.POSITION.MIDDLE;
+
+    if ( pos < (height/2 + 34) ) {
+      menuPosition = TabControls.POSITION.TOP;
+    } else {
+      menuPosition = TabControls.POSITION.BOTTOM;
+    }
+
+    this.setState({
+      menuPosition: menuPosition,
+      show: !this.state.show,
+      panel: "main",
+      maxHeight: height/2,
+    })
+  }
+
+  handleMouseLeaveExtraActions(event) {
+    //return; // For debug
+    this.closeMenuTimeout = setTimeout(()=>{
+      this.closeExtraActions();
+      this.closeMenuTimeout = undefined;
+    }, 500);
+  }
+
+  handleMouseEnterExtraActions(event) {
+    if ( this.closeMenuTimeout ) {
+      clearTimeout(this.closeMenuTimeout);
+    }
+  }
+
+  closeExtraActions() {
+    this.setState({
+      show: false,
+      panel: "main",
+    });
+  }
+
+  componentWillUnmount() {
+    if ( this.differedTimeOut ) {
+      clearTimeout(this.differedTimeOut);
+    }
+
+    if ( this.closeMenuTimeout ) {
+      clearTimeout(this.closeMenuTimeout);
+    }
   }
 };
 

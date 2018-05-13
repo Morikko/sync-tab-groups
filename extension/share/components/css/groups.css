@@ -24,6 +24,7 @@ ul, li {
     color: #000;
     background-color: #f1f1f1;
     box-shadow: 1px 1px 4px #555;
+    font-size: 14px;
 }
 .tab-actions-menu.top {
     top: -5px;
@@ -213,7 +214,7 @@ li {
 .group-title {
   display: flex;
   justify-content: space-between;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;

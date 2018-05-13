@@ -55,7 +55,7 @@
   },
 
   "rename_group": {
-    "message": "Rename",
+    "message": "Rename the group",
     "description": "Hover help for rename button"
   },
 
