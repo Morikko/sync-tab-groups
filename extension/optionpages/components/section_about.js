@@ -110,6 +110,35 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.7 Alpha)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Tab hiding support #64"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: Group context menu in the popup"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Add: \"[OPEN]\" to opened groups in contextual tab move menu (popup)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: False Error when dropping a tab on \"Add Button\" #118"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.6.9)"
       ),
       React.createElement(

@@ -417,7 +417,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
       expect(TestManager.countHiddenTabsInGroups(GroupManager.groups)).toBe(0);
     });
 
-    fit(".closeUnknownHiddenTabs should close all hidden tabs NOT in the groups", async function(){
+    it(".closeUnknownHiddenTabs should close all hidden tabs NOT in the groups", async function(){
       if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
@@ -593,7 +593,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
 
   describe("[Reference] TabHidden.", () => {
     it("onStartInitialization should bind back the hidden tabs with the groups.", async function(){
-            if ( !Utils.hasHideFunction() ){
+      if ( !Utils.hasHideFunction() ){
           pending("No hidden functionality.")
           return;
       }
@@ -653,7 +653,11 @@ describe("When Hidden Closing State is enabled, ", ()=>{
     })
 
     it("onStartInitialization should change hidden property to false for tabs that didn't find back.", async function(){
-            const [groupIds, groups] = Session.createArrayGroups({
+      if ( !Utils.hasHideFunction() ){
+          pending("No hidden functionality.")
+          return;
+      }
+      const [groupIds, groups] = Session.createArrayGroups({
           groupsLength: 2,
           tabsLength: 4,
           global: true,
