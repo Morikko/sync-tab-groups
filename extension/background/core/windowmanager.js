@@ -155,7 +155,13 @@ function checkGroupMatchSnap(snapGroup, {
   if(actualGroup == null) return reportFalse("Group has disappeared.");
 
   if(actualGroup.title !== snapGroup.title) return reportFalse("Title has changed.");
-  if(actualGroup.tabs.length !== snapGroup.tabsLength) return reportFalse("Tabs length has changed.");
+
+  const emptyGroupSetWithNewTab = snapGroup.tabsLength === 0 
+    && actualGroup.tabs.length === 1;
+  if(actualGroup.tabs.length !== snapGroup.tabsLength
+    && !emptyGroupSetWithNewTab) {
+      return reportFalse("Tabs length has changed.");
+  } 
 
   return true;
 }
