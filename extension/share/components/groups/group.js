@@ -177,7 +177,9 @@ class Group extends React.Component {
       onUndoCloseClick: this.handleGroupCloseAbortClick,
       onOpenInNewWindow: this.handleOpenInNewWindowClick,
       controlsEnable: this.props.controlsEnable,
-      onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup
+      onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
+      hasHiddenTabs: this.props.group.tabs.filter(tab => tab.hidden).length > 0,
+      groupId: this.props.group.id
     });
   }
 

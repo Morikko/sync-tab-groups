@@ -169,7 +169,7 @@ class GroupControls extends React.Component {
   }
 
   getHiddenRemoveActionTooltip() {
-    if (false && this.props.hidden) {
+    if (this.props.hasHiddenTabs) {
       return React.createElement(
         "span",
         {
@@ -178,11 +178,11 @@ class GroupControls extends React.Component {
             if (event) {
               event.stopPropagation();
             }
-            //this.props.onRemoveHiddenTab(this.props.tab.id);
+            this.props.onRemoveHiddenTabsInGroup(this.props.groupId);
             this.closeExtraActions();
           } },
         React.createElement("i", { className: "fa fa-fw fa-eye-slash" }),
-        browser.i18n.getMessage("close_hidden_tab")
+        browser.i18n.getMessage("close_hidden_tabs_in_group")
       );
     }
   }

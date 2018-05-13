@@ -1182,7 +1182,12 @@
   },
 
   "close_hidden_tab": {
-    "message": "Close hidden tab",
+    "message": "Close the hidden tab",
+    "description": "From tab context menu"
+  },
+
+  "close_hidden_tabs_in_group": {
+    "message": "Close the hidden tabs in the group",
     "description": "From tab context menu"
   },
 
