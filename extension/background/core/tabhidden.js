@@ -9,6 +9,10 @@ TabHidden.TABHIDDEN_SESSION_KEY = "TABHIDDEN_ID";
  */
 TabHidden.showTab = async function(tabId, windowId, index=-1) {
   try {
+    // Closed tab Id
+    if(typeof tabId === 'string') {
+      return false;
+    }
     await browser.tabs.move(tabId, {windowId, index});
     await browser.tabs.show(tabId);
     browser.sessions.removeTabValue(
@@ -17,6 +21,10 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
     );
     return true;
   } catch (e) {
+    if(Utils.DEBUG_MODE) {
+      e.message = "Impossible to show tab: " + e.message;
+      LogManager.warning(e.message, {arguments});
+    }
     return false;
   }
 }
@@ -30,7 +38,13 @@ TabHidden.hideTab = async function(tabId) {
   if ( result.length !== 0 ) {
     if (OptionManager.options.groups.discardedHide) {
       setTimeout( // Avoid overloading
-        () => browser.tabs.discard(tabId),
+        async () => {
+          try {
+            await browser.tabs.discard(tabId)
+          } catch (e) {
+            LogManager.warning(e.message, {arguments});
+          }
+        },
         2000,
       )
     }
@@ -47,17 +61,23 @@ TabHidden.hideTab = async function(tabId) {
 
 
 TabHidden.closeAllHiddenTabsInGroups = async function (groups=GroupManager.groups) {
-  await Promise.all(
-    groups.map(group => {
-      Promise.all(
+
+  const removeHiddenTab = async function(tab) {
+    try {
+      await browser.tabs.remove(tab.id);
+    } catch (e) {LogManager.error(e)}
+    tab.hidden = false;
+    return;
+  }
+
+  const removeHiddenTabsInGroup = async function(group) {
+    return Promise.all(
         group.tabs.filter(tab => tab.hidden)
-                  .map((tab) => {
-                    browser.tabs.remove(tab.id);
-                    tab.hidden = false;
-                  })
-      )
-    })
-  )
+                  .map(removeHiddenTab)
+    )
+  }
+
+  await Promise.all(groups.map(removeHiddenTabsInGroup));
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
@@ -69,20 +89,22 @@ TabHidden.closeHiddenTabs = async function (tabIds) {
 
   try {
     await browser.tabs.remove(tabIds);
-  } catch (e) {LogManager.error(e)}
+  } catch (e) {LogManager.error(e, {arguments})}
 
   tabIds.forEach(tabId => {
-    try {
-      const groupId = GroupManager.getGroupIdFromTabId(tabId, {error: false});
-      if(groupId===-1) return;
-      const groupIndex = GroupManager.getGroupIndexFromGroupId(
-        groupId, {error: true}
-      );
-      const tabIndex = GroupManager.getTabIndexFromTabId(
-        tabId, groupIndex, {error: true}
-      );
-      GroupManager.groups[groupIndex].tabs[tabIndex].hidden = false;
-    } catch(e) {LogManager.error(e)}
+    const groupId = GroupManager.getGroupIdFromTabId(tabId, {error: false});
+    if(groupId===-1) return;
+
+    const groupIndex = GroupManager.getGroupIndexFromGroupId(
+      groupId, {error: false}
+    );
+    if(groupIndex===-1) return;
+
+    const tabIndex = GroupManager.getTabIndexFromTabId(
+      tabId, groupIndex, {error: false}
+    );
+    if(tabIndex===-1) return;
+    GroupManager.groups[groupIndex].tabs[tabIndex].hidden = false;
   });
 
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
@@ -117,18 +139,27 @@ TabHidden.onStartInitialization = async function() {
         );
         if ( keyValue == null ) return;
 
-        const oldTabId = parseInt(keyValue)
-        try {
-          const groupId = GroupManager.getGroupIdFromTabId(oldTabId, {error:true});
-          const groupIndex = GroupManager.getGroupIndexFromGroupId(
-            groupId
-          );
-          const tabIndex = GroupManager.getTabIndexFromTabId(
-            oldTabId, groupIndex
-          );
-          GroupManager.groups[groupIndex].tabs[tabIndex].id = tabId;
-          updatedHiddenTabIds[tabId] = true
-        } catch(e) {LogManager.error(e)}
+        const oldTabId = parseInt(keyValue);
+
+        const groupId = GroupManager.getGroupIdFromTabId(
+          oldTabId,  {error:false}
+        );
+        if(groupId===-1) return;
+
+        const groupIndex = GroupManager.getGroupIndexFromGroupId(
+          groupId,  {error:false}
+        );
+        if(groupIndex===-1) return;
+
+        const tabIndex = GroupManager.getTabIndexFromTabId(
+          oldTabId, groupIndex,  {error:false}
+        );
+        if(tabIndex===-1) return;
+
+        GroupManager.groups[groupIndex].tabs[tabIndex].id = tabId;
+        updatedHiddenTabIds[tabId] = true;
+
+        return;
       })
     );
 
