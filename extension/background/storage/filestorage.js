@@ -153,7 +153,7 @@ StorageManager.File.importTabGroups = function(content_file) {
 
       if (JSON.parse(t['extData']['tabview-tab'])) { // Normal tab
         let i = cross_ref[JSON.parse(t['extData']['tabview-tab'])['groupID']];
-        groups[i].tabs.push(TabManager.getTab(tab));
+        groups[i].tabs.push(TabManager.getTabFactory(tab));
       } else { // Pinned tabs
         tab.pinned = true;
         pinnedTabs.push(tab);

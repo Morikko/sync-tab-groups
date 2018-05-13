@@ -101,7 +101,7 @@ GroupManager.Group = function({
   incognito = false
 }={}) {
   this.title = title;
-  this.tabs = tabs.map(tab => TabManager.getTab(tab));
+  this.tabs = tabs.map(tab => TabManager.getTabFactory(tab));
   this.id = id; // Unique in all group
   this.windowId = windowId;
   this.index = -1; // Position of this Group in an Array
