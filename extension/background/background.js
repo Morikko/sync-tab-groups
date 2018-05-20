@@ -428,7 +428,7 @@ browser.runtime.onInstalled.addListener((details) => {
   // Extension update detection
   else if ( details.reason === "update"
       && (browser.runtime.getManifest()).version !== details.previousVersion ) {
-      Event.Install.onUpdate();
+      Event.Install.onUpdate(details.previousVersion);
       LogManager.information(LogManager.EXTENSION_UPDATED);
   }
 });

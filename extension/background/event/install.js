@@ -35,8 +35,8 @@ Event.Install.onNewInstall = function() {
   Background.onOpenSettings(false);
 }
 
-Event.Install.onUpdate = function() {
-  Background.lastVersion = details.previousVersion;
+Event.Install.onUpdate = function(previousVersion) {
+  Background.lastVersion = previousVersion;
   // Focus Settings if click on notification
   browser.notifications.onClicked.addListener((notificationId)=>{
     if ( notificationId === Background.updateNotificationId ) {
