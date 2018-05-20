@@ -120,7 +120,7 @@ StorageManager.Local.planBackUp = async function(
   // Or set specific timer
   //StorageManager.Local.planBackUp();
   StorageManager.Local.BACKUP_TIMEOUT_PROMISE = new Promise((resolve, reject)=>{
-    StorageManager.Local.BACKUP_TIMEOUT = setTimeout(async () => {
+    StorageManager.Local.BACKUP_TIMEOUT = setTimeout(async function doBackUpAfterTimeout() {
       await StorageManager.Local.addBackup({groups});
       await StorageManager.Local.planBackUp(groups);
       resolve();

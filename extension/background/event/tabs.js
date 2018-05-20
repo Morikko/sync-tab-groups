@@ -6,7 +6,7 @@ Event.Tabs.initTabsEventListener = function() {
   browser.tabs.onActivated.addListener(async (activeInfo) => {
     // Necessary for Chrome, this event is fired before the onRemovedWindow event
     // Else the group is finally updated with empty tabs.
-    setTimeout(() => {
+    setTimeout(async function updateGroupWhenTabActivated () {
       TabManager.updateTabsInGroup(activeInfo.windowId);
     }, 300);
   });
@@ -18,7 +18,7 @@ Event.Tabs.initTabsEventListener = function() {
      * Workaround: keep a delay
      * https://bugzilla.mozilla.org/show_bug.cgi?id=1396758
      */
-    setTimeout(() => {
+    setTimeout(async function updateGroupWhenTabRemoved() {
       if ( !removeInfo.isWindowClosing ) {
         TabManager.updateTabsInGroup(removeInfo.windowId);
       }

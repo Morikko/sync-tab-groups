@@ -40,7 +40,7 @@ TabHidden.hideTab = async function(tabId) {
     if ( result.length !== 0 ) {
       if (OptionManager.options.groups.discardedHide) {
         setTimeout( // Avoid overloading
-          async () => {
+          async function discardTabsAfterHiding() {
             try {
               await browser.tabs.discard(tabId)
             } catch (e) {
