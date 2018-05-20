@@ -621,23 +621,18 @@ WindowManager.addGroupFromWindow = async function(windowId) {
 WindowManager.integrateWindowWithTabsComparaison = async function(windowId, {
   even_new_one = OptionManager.options.groups.syncNewWindow
 }={}) {
-    try {
-      // Get tabs
-      const tabs = await TabManager.getTabsInWindowId(windowId);
+  // Get tabs
+  const tabs = await TabManager.getTabsInWindowId(windowId);
 
-      // Compare to all groups
-      let bestId = GroupManager.bestMatchGroup(tabs);
+  // Compare to all groups
+  let bestId = GroupManager.bestMatchGroup(tabs);
 
-      let id = -1;
-      if ( bestId > 0 ) { // Keep the best result
-        await GroupManager.attachWindowWithGroupId(bestId, windowId);
-        id = bestId;
-      }
-      return id;
-    } catch (e) {
-      LogManager.error(e, {arguments});
-      return -1;
-    }
+  let id = -1;
+  if ( bestId > 0 ) { // Keep the best result
+    await GroupManager.attachWindowWithGroupId(bestId, windowId);
+    id = bestId;
+  }
+  return id;
 }
 
 /**
@@ -646,22 +641,17 @@ WindowManager.integrateWindowWithTabsComparaison = async function(windowId, {
 WindowManager.integrateWindowWithSession = async function(windowId, {
   even_new_one = OptionManager.options.groups.syncNewWindow
 }={}) {
-    try {
-      const key = await browser.sessions.getWindowValue(
-        windowId, // integer
-        WindowManager.WINDOW_GROUPID // string
-      );
+  const key = await browser.sessions.getWindowValue(
+    windowId, // integer
+    WindowManager.WINDOW_GROUPID // string
+  );
 
-      let id = -1;
-      if (key !== undefined && GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), {error: false}) !== -1) { // Update Group
-        await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
-        id = parseInt(key, 10);
-      }
-      return id;
-    } catch (e) {
-      LogManager.error(e, {arguments});
-      return -1;
-    }
+  let id = -1;
+  if (key !== undefined && GroupManager.getGroupIndexFromGroupId(parseInt(key, 10), {error: false}) !== -1) { // Update Group
+    await GroupManager.attachWindowWithGroupId(parseInt(key, 10), windowId);
+    id = parseInt(key, 10);
+  }
+  return id;
 }
 /**
  * Link an existing window to the groups
@@ -712,7 +702,15 @@ WindowManager.integrateWindow = async function(windowId, {
 
     return id;
   } catch (e) {
-    LogManager.error(e, {arguments});
-    return -1;
+    if (e.message.includes("No window with id") // Chrome
+      || e.message.includes("Invalid window ID") // Firefox
+    ) {
+      LogManager.warning("The window to integrate doesn't exist any more.",
+        {windowId}
+      );
+      return -1;
+    } else {
+      throw e;
+    }
   }
 }

@@ -935,11 +935,15 @@ GroupManager.init = async function() {
 GroupManager.integrateAllOpenedWindows = async function() {
   const windowInfoArray = await browser.windows.getAll();
   for (let windowInfo of windowInfoArray) {
-    // Don't create
-    await WindowManager.integrateWindow(
-      windowInfo.id,
-      {even_new_one: Background.install?true:false} // When installed add all, else none
-    );
+    // Don't 
+    try {
+      await WindowManager.integrateWindow(
+        windowInfo.id,
+        {even_new_one: Background.install?true:false} // When installed add all, else none
+      );
+    } catch (e) {
+      LogManager.error(e);
+    }
   }
 }
 

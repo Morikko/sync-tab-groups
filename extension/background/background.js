@@ -258,24 +258,28 @@ Background.onReloadGroups = function() {
   GroupManager.reloadGroupsFromDisk();
 };
 
-Background.changeSynchronizationStateOfWindow = function({
+Background.changeSynchronizationStateOfWindow = async function({
   isSync,
   windowId
 }) {
-  if (isSync) {
-    WindowManager.integrateWindow(windowId, {even_new_one: true});
-  } else {
-    try {
-      let currentGroupId = GroupManager.getGroupIdInWindow(
-        windowId
-      );
-      GroupManager.removeGroupFromId(currentGroupId);
-    } catch (e) {
-      LogManager.error(e, {
-        isSync,
-        windowId,
-      });
+  try {
+    if (isSync) {
+      await WindowManager.integrateWindow(windowId, {even_new_one: true});
+    } else {
+      try {
+        let currentGroupId = GroupManager.getGroupIdInWindow(
+          windowId
+        );
+        GroupManager.removeGroupFromId(currentGroupId);
+      } catch (e) {
+        LogManager.error(e, {
+          isSync,
+          windowId,
+        });
+      }
     }
+  } catch (e) {
+    LogManager.error(e, {arguments});
   }
 };
 
