@@ -127,9 +127,13 @@ GroupManager.getGroupIdInWindow = function(windowId, {error = true}={}) {
       }
     }
 
+  const msg = "Failed to find group in window";
   if (error) {
-    throw Error("getGroupIdInWindow: Failed to find group in window " + windowId);
+    throw Error(msg + " " + windowId);
   } else {
+    LogManager.warning(msg,
+      {arguments}
+    );
     return -1;
   }
 

@@ -702,15 +702,23 @@ WindowManager.integrateWindow = async function(windowId, {
 
     return id;
   } catch (e) {
-    if (e.message.includes("No window with id") // Chrome
-      || e.message.includes("Invalid window ID") // Firefox
-    ) {
-      LogManager.warning("The window to integrate doesn't exist any more.",
-        {windowId}
-      );
+    if (WindowManager.isErrorWindowNotExists(e, windowId)) {
       return -1;
     } else {
       throw e;
     }
+  }
+}
+
+WindowManager.isErrorWindowNotExists = function(err, windowId) {
+  if (err.message.includes("No window with id") // Chrome
+      || err.message.includes("Invalid window ID") // Firefox
+    ) {
+    LogManager.warning("The window to integrate doesn't exist any more.",
+      {windowId}
+    );
+    return true;
+  } else {
+    return false;
   }
 }

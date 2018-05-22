@@ -10,8 +10,8 @@ Event.Tabs.initTabsEventListener = function() {
       TabManager.updateTabsInGroup(activeInfo.windowId);
     }, 300);
   });
-  browser.tabs.onCreated.addListener((tab) => {
-    TabManager.updateTabsInGroup(tab.windowId);
+  browser.tabs.onCreated.addListener(async (tab) => {
+    await TabManager.updateTabsInGroup(tab.windowId);
   });
   browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     /* Bug: onRemoved is fired before the tab is really close
@@ -20,23 +20,23 @@ Event.Tabs.initTabsEventListener = function() {
      */
     setTimeout(async function updateGroupWhenTabRemoved() {
       if ( !removeInfo.isWindowClosing ) {
-        TabManager.updateTabsInGroup(removeInfo.windowId);
+        await TabManager.updateTabsInGroup(removeInfo.windowId);
       }
     }, 300);
     if( Utils.hasHideFunction() && OptionManager.isClosingHidden() ) {
       TabHidden.changeHiddenStateForTab(tabId);
     }
   });
-  browser.tabs.onMoved.addListener((tabId, moveInfo) => {
-    TabManager.updateTabsInGroup(moveInfo.windowId);
+  browser.tabs.onMoved.addListener(async (tabId, moveInfo) => {
+    await TabManager.updateTabsInGroup(moveInfo.windowId);
   });
-  browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    TabManager.updateTabsInGroup(tab.windowId);
+  browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    await TabManager.updateTabsInGroup(tab.windowId);
   });
-  browser.tabs.onAttached.addListener((tabId, attachInfo) => {
-    TabManager.updateTabsInGroup(attachInfo.newWindowId);
+  browser.tabs.onAttached.addListener(async (tabId, attachInfo) => {
+    await TabManager.updateTabsInGroup(attachInfo.newWindowId);
   });
-  browser.tabs.onDetached.addListener((tabId, detachInfo) => {
-    TabManager.updateTabsInGroup(detachInfo.oldWindowId);
+  browser.tabs.onDetached.addListener(async (tabId, detachInfo) => {
+    await TabManager.updateTabsInGroup(detachInfo.oldWindowId);
   });
 }

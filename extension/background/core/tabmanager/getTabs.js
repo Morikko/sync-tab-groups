@@ -9,6 +9,7 @@ var TabManager = TabManager || {};
 /**
  * Return all the tabs in the window with windowId
  * Pinned tabs are inlcuded/excluded depending options.pinnedTab.sync
+ * If the window doesn't exist return an empty array 
  * @param {Number} windowId
  * @return {Array[Tab]} tabs
  */
@@ -17,43 +18,37 @@ TabManager.getTabsInWindowId = async function(windowId, {
   withPinned = OptionManager.options.pinnedTab.sync,
   hidden = (Utils.hasHideFunction() ? false : undefined)
 }={}) {
-  try {
-    let selector = {
-      windowId
-    };
+  let selector = {
+    windowId
+  };
 
 
-    if ( hidden !== undefined ) {
-      selector["hidden"] = hidden;
-    }
-
-    // Pinned tab
-    if ( !withPinned ) {
-      selector["pinned"] = false;
-    }
-    let tabs = await browser.tabs.query(selector);
-
-    // Remove fancy pages
-    if (withoutRealUrl) {
-      tabs.forEach((tab) => {
-        tab.url = Utils.extractTabUrl(tab.url);
-        if ( tab.hasOwnProperty('isArticle') && tab.isArticle === undefined ) {
-          tab.isArticle = false;
-        }
-      });
-    }
-
-    // Remove sharingState field that could be undefined
-    tabs.forEach((tab) => {
-      if(tab["sharingState"]) delete tab["sharingState"]
-    })
-
-    return tabs;
-
-  } catch (e) {
-    LogManager.error(e, {arguments});
-    throw Error();
+  if ( hidden !== undefined ) {
+    selector["hidden"] = hidden;
   }
+
+  // Pinned tab
+  if ( !withPinned ) {
+    selector["pinned"] = false;
+  }
+  let tabs = await browser.tabs.query(selector);
+
+  // Remove fancy pages
+  if (withoutRealUrl) {
+    tabs.forEach((tab) => {
+      tab.url = Utils.extractTabUrl(tab.url);
+      if ( tab.hasOwnProperty('isArticle') && tab.isArticle === undefined ) {
+        tab.isArticle = false;
+      }
+    });
+  }
+
+  // Remove sharingState field that could be undefined
+  tabs.forEach((tab) => {
+    if(tab["sharingState"]) delete tab["sharingState"]
+  })
+
+  return tabs;
 }
 
 /**
@@ -96,7 +91,8 @@ TabManager.updateTabsInGroup = async function(windowId) {
       return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window is not synchronized";
     }
 
-    let groupId = GroupManager.getGroupIdInWindow(windowId);
+    let groupId = GroupManager.getGroupIdInWindow(windowId, {error: false});
+    if(groupId === -1) return false;
     const tabs = await TabManager.getTabsInWindowId(windowId);
 
     // In case of delay
@@ -108,6 +104,6 @@ TabManager.updateTabsInGroup = async function(windowId) {
     return "TabManager.updateTabsInGroup done on window id " + windowId;
 
   } catch (e) {
-    LogManager.error(e);
+    LogManager.error(e, {arguments});
   }
 }
