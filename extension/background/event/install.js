@@ -88,8 +88,8 @@ Event.Install.prepareExtensionForUpdate = function(lastVersion, newVersion) {
     return;
   }
 
-  if (isVersionBelow(lastVersion, "0.6.2")
-        && !isVersionBelow(newVersion, "0.6.2") ){
+  if (Event.Install.isVersionBelow(lastVersion, "0.6.2")
+        && !Event.Install.isVersionBelow(newVersion, "0.6.2") ){
     Event.Install.updateFromBelow_0_6_2();
   }
 }

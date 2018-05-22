@@ -237,6 +237,8 @@ describe("WindowManager: ", ()=>{
   describe("OpenGroupInNewWindow: ", ()=>{
 
     beforeEach( function(){
+      OptionManager.updateOption("groups-syncNewWindow", true);
+
       // Create Group
       this.length = 7;
       [this.id, this.group] = Session.createGroup({

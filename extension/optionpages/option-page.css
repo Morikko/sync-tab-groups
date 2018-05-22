@@ -349,3 +349,20 @@ input[type=checkbox]:checked ~ label{
   width: 92px;
   cursor: pointer;
 }
+
+.experimental:before {
+  content: "Experimental: ";
+  font-weight: bold;
+  color: red;
+}
+
+.experimental {
+  border: 1px #ff4d4d solid;
+  padding: 5px;
+  border-radius: 3px;
+  box-shadow: 0 0 5px red;
+  background-color: #ffe6e6;
+  color: black;
+  text-align: justify;
+}
+

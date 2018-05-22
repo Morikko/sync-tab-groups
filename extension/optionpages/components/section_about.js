@@ -110,7 +110,7 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
-        "Release Notes (0.7 Alpha)"
+        "Release Notes (0.7)"
       ),
       React.createElement(
         "ul",
@@ -118,7 +118,12 @@ class AboutSection extends React.Component {
         React.createElement(
           "li",
           null,
-          "Tab hiding support #64"
+          "Tab hiding support #64 (Firefox only)"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Use new permission \"tabHide\" for the hiding API"
         ),
         React.createElement(
           "li",
@@ -134,6 +139,11 @@ class AboutSection extends React.Component {
           "li",
           null,
           "Fix: False Error when dropping a tab on \"Add Button\" #118"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: wrong error notifications #118 #122 #123"
         )
       ),
       React.createElement(
