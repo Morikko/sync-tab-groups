@@ -49,9 +49,16 @@ ContextMenu.createMoveTabMenu = async function() {
     }
     await browser.contextMenus.create(contextManageGroups);
 
-    let currentWindow = await browser.windows.getLastFocused({
-      windowTypes: ['normal']
-    });
+
+    let currentWindowId;
+    try {
+      currentWindowId = (await browser.windows.getLastFocused({
+        windowTypes: ['normal']
+      })).id;
+    } catch(e) {
+      LogManager.warning(e.message);
+    }
+ 
 
     let groups = GroupManager.getCopy();
     let sortedIndex = GroupManager.getIndexSortByPosition(groups);
@@ -63,7 +70,7 @@ ContextMenu.createMoveTabMenu = async function() {
         title: openPrefix + " " + Utils.getGroupTitle(groups[i]),
         contexts: contexts,
         parentId: parentId,
-        enabled: currentWindow.id !== groups[i].windowId,
+        enabled: currentWindowId !== groups[i].windowId,
       });
     }
 
