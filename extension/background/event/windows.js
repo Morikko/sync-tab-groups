@@ -41,9 +41,11 @@ Event.Windows.initWindowsEventListener = function() {
       const w = await browser.windows.getLastFocused();
       await ContextMenu.updateMoveFocus(w.id);
 
-      let groupId = GroupManager.getGroupIdInWindow(windowId, {error: false});
-      if (groupId >= 0) { // Only grouped window
-        GroupManager.setLastAccessed(groupId, Date.now());
+      if ( windowId >= 0 ) {
+        let groupId = GroupManager.getGroupIdInWindow(windowId, {error: false});
+        if (groupId >= 0) { // Only grouped window
+          GroupManager.setLastAccessed(groupId, Date.now());
+        }
       }
     } catch (e) {
       LogManager.error(e, {arguments});
