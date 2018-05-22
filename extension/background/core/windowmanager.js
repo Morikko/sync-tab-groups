@@ -593,26 +593,21 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
 /**
  * Take the tabs from a current opened window and create a new group
  * @param {Number} windowId
- * @return {Number} groupId created or -1
+ * @return {Number} groupId created
  */
 WindowManager.addGroupFromWindow = async function(windowId) {
-  try {
-    const tabs = await TabManager.getTabsInWindowId(windowId);
-    const w = await browser.windows.get(windowId);
+  const tabs = await TabManager.getTabsInWindowId(windowId);
+  const w = await browser.windows.get(windowId);
 
-    let newGroupId = GroupManager.addGroupWithTab(tabs, {
-      windowId,
-      incognito: w.incognito
-    });
-    await WindowManager.associateGroupIdToWindow(
-      windowId,
-      newGroupId
-    );
-    return newGroupId;
-  } catch (e) {
-    LogManager.error(e, {arguments});
-    return -1;
-  }
+  let newGroupId = GroupManager.addGroupWithTab(tabs, {
+    windowId,
+    incognito: w.incognito
+  });
+  await WindowManager.associateGroupIdToWindow(
+    windowId,
+    newGroupId
+  );
+  return newGroupId;
 }
 
 /**
