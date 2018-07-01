@@ -310,23 +310,6 @@ class SettingsSection extends React.Component {
         null,
         React.createElement(
           "div",
-          { className: "experimental" },
-          "All the features related to the hidden tabs are experimental. Please refer to the ",
-          React.createElement(
-            "a",
-            { href: "https://github.com/Morikko/sync-tab-groups/wiki/Hiding-support" },
-            "manual page"
-          ),
-          " to know how to use them. Note that the features might not work as you expect, take your precaution. The hiding support is only provided by Firefox as an experimental feature. You need to activate the hiding functionality in theee Firefox settings. For any issue, ",
-          React.createElement(
-            "a",
-            { href: "https://github.com/Morikko/sync-tab-groups/issues/64" },
-            "please report here"
-          ),
-          "."
-        ),
-        React.createElement(
-          "div",
           { className: "double-buttons" },
           React.createElement(OptionButton, {
             title: "Close",
