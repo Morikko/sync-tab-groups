@@ -30,11 +30,12 @@ body {
 
 .grouped-button {
   height: 100%;
-  flex: 40;
+  flex: 60;
   display: inline-flex;
   cursor: pointer;
   background-color: var(--not-checked);
   color: #444;
+  font-size: 12px;
 }
 
 .grouped-button.group-visible {
@@ -49,7 +50,7 @@ body {
   flex: 1;
   margin: auto 0;
   text-align: center;
-  line-height: 12px;
+  line-height: 14px;
 }
 
 .manage-button {

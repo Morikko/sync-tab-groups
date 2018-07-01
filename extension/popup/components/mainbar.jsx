@@ -26,7 +26,9 @@ class MainBar extends React.Component {
 
     let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
 
-    let labelSynchronized = browser.i18n.getMessage("synchronized_window");
+    let labelSynchronized = this.props.isSync 
+      ? browser.i18n.getMessage("to_unsynchronize_window")
+      : browser.i18n.getMessage("to_synchronize_window")
     let titleSynchronized = browser.i18n.getMessage(
       (this.props.isSync?"change_window_invisible":"change_window_visible")
     );
@@ -37,17 +39,11 @@ class MainBar extends React.Component {
           id="change-visibility"
           className={classNames({
             "grouped-button": true,
-            "group-visible": this.props.isSync,
+            "group-visible": !this.props.isSync,
             "incognito": this.props.isIncognito,
           })}
           onClick={this.handleCheckChange}
           title={titleSynchronized}>
-          <i className={classNames({
-            "app-pref": true,
-            "fa fa-fw": true,
-            "fa-check-square-o": this.props.isSync,
-            "fa-square-o": !this.props.isSync,
-          })}/>
           <span>{labelSynchronized}</span>
         </div>
         <div  className="manage-button"
