@@ -110,6 +110,30 @@ class AboutSection extends React.Component {
       React.createElement(
         "h2",
         null,
+        "Release Notes (0.7.1)"
+      ),
+      React.createElement(
+        "ul",
+        null,
+        React.createElement(
+          "li",
+          null,
+          "Tab hiding is official since Firefox 61"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Fix: Chevron was not visible before tabs when moving with the keyboard"
+        ),
+        React.createElement(
+          "li",
+          null,
+          "Rename bottom left button in the popup menu"
+        )
+      ),
+      React.createElement(
+        "h2",
+        null,
         "Release Notes (0.7)"
       ),
       React.createElement(

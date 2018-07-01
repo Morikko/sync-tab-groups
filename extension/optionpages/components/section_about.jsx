@@ -54,6 +54,14 @@ class AboutSection extends React.Component {
           </a>
         </div>
         <h2>
+          Release Notes (0.7.1)
+        </h2>
+        <ul>
+          <li>Tab hiding is official since Firefox 61</li>
+          <li>Fix: Chevron was not visible before tabs when moving with the keyboard</li>
+          <li>Rename bottom left button in the popup menu</li>
+        </ul>
+        <h2>
           Release Notes (0.7)
         </h2>
         <ul>
