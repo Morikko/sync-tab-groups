@@ -347,12 +347,12 @@
     "message": "Choisir la façon de trier les groupes",
     "description": ""
   },
-  "synchronized_window": {
-    "message": "Fenêtre Synchronisée",
+  "to_synchronize_window": {
+    "message": "Créer un nouveau groupe à partir des onglets de la fenêtre",
     "description": "Label for group visible in the popup"
   },
-  "unsynchronized_window": {
-    "message": "Groupe Invisible",
+  "to_unsynchronize_window": {
+    "message": "Supprimer le groupe de la fenêtre en gardant les onglets ouverts",
     "description": "Status in Mainbar (Menu) when a group is invisible"
   },
   "contextmenu_backup": {

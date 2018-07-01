@@ -434,13 +434,12 @@
     "description": ""
   },
 
-  "synchronized_window": {
-    "message": "Group Visible",
+  "to_synchronize_window": {
+    "message": "Create a new group from the tabs in the window",
     "description": "Label for group visible in the popup"
   },
-
-  "unsynchronized_window": {
-    "message": "Group Invisible",
+  "to_unsynchronize_window": {
+    "message": "Remove the group in the window and keep the tabs opened",
     "description": "Status in Mainbar (Menu) when a group is invisible"
   },
 
