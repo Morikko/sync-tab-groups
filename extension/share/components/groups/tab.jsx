@@ -178,6 +178,7 @@ class Tab extends React.Component{
         {pinnedIcon}
         {hiddenIcon}
         {favicon}
+        {hasFocusIcon}
         {tabTitleSpan}
         {tabControls}
       </li>);
