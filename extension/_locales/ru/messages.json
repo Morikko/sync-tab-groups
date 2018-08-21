@@ -1,6 +1,6 @@
 {
   "extension_description": {
-    "message": "Группы вкладок синхронизации - это простой способ организовать ваши текущие вкладки в зависимости от темы. Каждая открытая группа синхронизируется с окном, так что все изменения вкладок сохраняются. Следовательно, вы можете закрыть текущий вкладки при открытии другого.",
+    "message": "Sync Tab Groups - это простой способ организовать ваши текущие вкладки в зависимости от темы. Каждая открытая группа синхронизируется с окном, так что все изменения вкладок сохраняются. Следовательно, вы можете закрыть текущие вкладки при открытии другой группы.",
     "description": "Description of the extension"
   },
 
@@ -20,12 +20,12 @@
   },
 
   "unnamed_group": {
-    "message": "Без имени",
+    "message": "Группа без имени",
     "description": "Default name for unnamed group"
   },
 
   "synchronized_window": {
-    "message": "Синхронизировать окно",
+    "message": "Окно синхронизации",
     "description": "Label for synchronizing window in popup"
   },
 
@@ -85,12 +85,12 @@
   },
 
   "force_removing": {
-    "message": "Быстро удалить",
+    "message": "Удалить быстро",
     "description": "Hover help for force removing button"
   },
 
   "force_closing": {
-    "message": "Быстро закрыть",
+    "message": "Закрыть быстро",
     "description": "Hover help for force closing button"
   },
 
@@ -145,7 +145,7 @@
   },
 
   "new_private_window": {
-    "message": "Новое открытое приватное окно автоматически создает новую группу.",
+    "message": "Новое открытое Приватное окно автоматически создает новую группу.",
     "description": "Label new private window"
   },
 
@@ -175,7 +175,7 @@
   },
 
   "bookmark_help_moving": {
-    "message": "Чтобы изменить местоположение корня, переместите папку SyncTabGroups в любом месте ваших закладок.",
+    "message": "Чтобы изменить местоположение корня, переместите папку SyncTabGroups в любое место ваших закладок.",
     "description": ""
   },
 
@@ -255,7 +255,7 @@
   },
 
   "open_url_help_method": {
-    "message": "Вы можете открыть его:",
+    "message": "Вы можете открыть:",
     "description": ""
   },
 
@@ -275,7 +275,7 @@
   },
 
   "privileged_url_help_warning": {
-    "message": "ВНИМАНИЕ: эти URL-адреса автоматически закрываются Firefox, когда расширение обновляется или отключается.",
+    "message": "ВНИМАНИЕ: эти URL-адреса Firefox автоматически закроет если расширение обновляется или отключается.",
     "description": ""
   },
 
@@ -284,32 +284,32 @@
     "description": ""
   },
 
-  "command_description_swtich-next-group": {
+  "command_description_swtich_next_group": {
     "message": "Переключиться на следующую закрытую группу.",
     "description": ""
   },
 
-  "command_description_swtich-previous-group": {
+  "command_description_swtich_previous_group": {
     "message": "Перейти к предыдущей закрытой группе.",
     "description": ""
   },
 
-  "command_description_create-group-swtich": {
+  "command_description_create_group_swtich": {
     "message": "Создать и переключитесь на новую группу.",
     "description": ""
   },
 
-  "command_description_focus-next-group": {
+  "command_description_focus_next_group": {
     "message": "Фокус на Окно со следующей открытой группой.",
     "description": ""
   },
 
-  "command_description_focus-previous-group": {
+  "command_description_focus_previous_group": {
     "message": "Фокус на Окно с предыдущей открытой группой.",
     "description": ""
   },
 
-  "command_description_remove-group-swtich": {
+  "command_description_remove_group_swtich": {
     "message": "Закройте и удалите текущую группу в окне и переключитесь на следующую.",
     "description": ""
   },
@@ -332,6 +332,95 @@
   "command_description": {
     "message": "Описание",
     "description": ""
-  }
+  },
 
+  "toolbar_menu": {
+    "message": "Меню панели инструментов",
+    "description": ""
+  },
+
+  "icon_option": {
+    "message": "Используйте белый значок вместо черного",
+    "description": ""
+  },
+
+  "show_tabs_number": {
+    "message": "Показывать количество вкладок в скобках после названия группы",
+    "description": ""
+  },
+
+  "show_search_bar": {
+    "message": "Показать панель поиска",
+    "description": ""
+  },
+
+  "shortcuts": {
+    "message": "Ярлыки",
+    "description": ""
+  },
+
+  "allow_global_shortcuts": {
+    "message": "Разрешить ярлыки быстрого доступа из любого места в браузере",
+    "description": ""
+  },
+
+  "show_title_window": {
+    "message": "Отображение имени группы в качестве префикса заголовка во всех окнах",
+    "description": ""
+  },
+
+  "group_name": {
+    "message": "Имя",
+    "description": ""
+  },
+
+  "bookmarks_weak_help": {
+    "message": "Авто-сохранение закладок может быть проблематичным. Рекомендуем не использовать его, пока не будет исправлено.",
+    "description": ""
+  },
+
+  "label_select_sorting_type": {
+    "message": "Выберите вариант сортировки для групп",
+    "description": ""
+  },
+
+  "label_sort_custom": {
+    "message": "Стандарт",
+    "description": ""
+  },
+
+  "label_sort_old": {
+    "message": "Вначале старые",
+    "description": ""
+  },
+
+  "label_sort_recent": {
+    "message": "Недавно созданные вперед",
+    "description": ""
+  },
+
+  "label_sort_alphabetical": {
+    "message": "По алфавиту",
+    "description": ""
+  },
+
+  "label_sort_accessed": {
+    "message": "По времени выбора",
+    "description": "Name of sorting in select in option page"
+  },
+
+  "unpin_tab": {
+    "message": "Открепить вкладку",
+    "description": "In context menu on tab in menu"
+  },
+
+  "pin_tab": {
+    "message": "Прикрепить вкладку",
+    "description": "In context menu on tab in menu"
+  },
+
+  "open_group": {
+    "message": "Нажмите, чтобы перейти к этой группе в текущем окне.",
+    "description": "Hover help for open group click"
+  }
 }

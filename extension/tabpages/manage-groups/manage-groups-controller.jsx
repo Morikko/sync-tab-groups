@@ -1,8 +1,6 @@
-const store = Redux.createStore(Reducer);
-
 document.addEventListener("DOMContentLoaded", () => {
   // Set tab title
-  document.title = "Manage Groups";
+  document.title = browser.i18n.getMessage("group_manager");
   // Set tab icon
   Utils.setIcon("/share/icons/tabspace-active-64.png");
 
@@ -26,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
         onGroupChangePosition={GroupActions.changeGroupPosition}
         onChangePinState={GroupActions.onChangePinState}
         onChangeExpand={GroupActions.onChangeExpand}
+        onRemoveHiddenTabsInGroup={GroupActions.onRemoveHiddenTabsInGroup}
+        onRemoveHiddenTab={GroupActions.onRemoveHiddenTab}
       />
     </ReactRedux.Provider>
     , document.getElementById("content"));

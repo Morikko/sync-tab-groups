@@ -33,7 +33,8 @@ class PopupMenuStandAlone extends React.Component {
     if (this.props.options.popup.showSearchBar) {
       searchbar = (
         <SearchBar
-            onSearchChange={this.onSearchChange.bind(this)} />
+          onSearchChange={this.onSearchChange.bind(this)}
+          hotkeysEnable={this.props.options.shortcuts.navigation}/>
       );
     }
 
@@ -51,45 +52,55 @@ class PopupMenuStandAlone extends React.Component {
 
     let width = this.state.maximized?800:450;
     return (
-      <ul className={menuClasses}>
-          <li>
-            {searchbar}
-          </li>
-            <GroupList
-              /*** Functions ***/
-              onMoveTabToNewGroup= {this.props.onGroupAddDrop}
-              onGroupCloseClick= {this.props.onGroupCloseClick}
-              onGroupRemoveClick= {this.props.onGroupRemoveClick}
-              onGroupTitleChange= {this.props.onGroupTitleChange}
-              onTabClick= {this.props.onTabClick}
-              onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
-              onCloseTab= {this.props.onCloseTab}
-              onOpenTab= {this.props.onOpenTab}
-              onGroupClick= {this.props.onGroupClick}
-              onGroupDrop= {this.props.onGroupDrop}
-              onGroupChangePosition= {this.props.onGroupChangePosition}
-              onChangePinState= {this.props.onChangePinState}
-              onChangeExpand= {this.props.onChangeExpand}
-              /*** Data ***/
-              groups= {this.props.groups}
-              options= {this.props.options}
-              currentWindowId= {this.props.currentWindowId}
-              delayedTasks= {this.props.delayedTasks}
-              /*** Options ***/
-              id="popup"
-              searchfilter= {this.state.searchfilter}
-              allowClickSwitch={true}
-              stateless={false}
-              width={width}
-              /*** actions ***/
-              forceExpand={false}
-              forceReduce={false}
-            />
-          <li>
-            <GroupAddButton
-                onClick= {this.props.onGroupAddClick}
-                onDrop= {this.props.onGroupAddDrop}
-                currentlySearching= {this.state.searchfilter.length > 0}
+      <ul
+        id="popup-menu"
+        className={menuClasses}>
+        <li>
+          {searchbar}
+        </li>
+        <GroupList
+          /*** Functions ***/
+          onMoveTabToNewGroup= {this.props.onGroupAddDrop}
+          onGroupCloseClick= {this.props.onGroupCloseClick}
+          onGroupRemoveClick= {this.props.onGroupRemoveClick}
+          onGroupTitleChange= {this.props.onGroupTitleChange}
+          onTabClick= {this.props.onTabClick}
+          onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
+          onCloseTab= {this.props.onCloseTab}
+          onOpenTab= {this.props.onOpenTab}
+          onGroupClick= {this.props.onGroupClick}
+          onGroupDrop= {this.props.onGroupDrop}
+          onGroupChangePosition= {this.props.onGroupChangePosition}
+          onChangePinState= {this.props.onChangePinState}
+          onChangeExpand= {this.props.onChangeExpand}
+          onRemoveHiddenTabsInGroup={this.props.onRemoveHiddenTabsInGroup}
+          onRemoveHiddenTab={this.props.onRemoveHiddenTab}
+          /*** Data ***/
+          groups= {this.props.groups}
+          currentWindowId= {this.props.currentWindowId}
+          delayedTasks= {this.props.delayedTasks}
+          /*** Options ***/
+          id="popup"
+          searchfilter= {this.state.searchfilter}
+          allowClickSwitch={true}
+          hotkeysEnable={this.props.options.shortcuts.navigation}
+          stateless={false}
+          width={width}
+          showTabsNumber={this.props.options.popup.showTabsNumber}
+          groupDraggable= {this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM}
+          draggable={true}
+          hoverStyle={true}
+          controlsEnable={true}
+          /*** actions ***/
+          forceExpand={false}
+          forceReduce={false}
+        />
+        <li>
+          <GroupAddButton
+            onClick= {this.props.onGroupAddClick}
+            onDrop= {this.props.onGroupAddDrop}
+            currentlySearching= {this.state.searchfilter.length > 0}
+            hotkeysEnable={this.props.options.shortcuts.navigation}
             />
           </li>
           <MainBar
@@ -130,67 +141,21 @@ class PopupMenuStandAlone extends React.Component {
   }
 
   componentDidMount() {
-    /* TODO: window not focus by default
-    var body = document.querySelector('body');
+    //document.querySelector('#search-input').focus();
 
-    // Give the document focus
-    window.focus();
+    Navigation.setTarget(document.getElementById("popup-menu"));
 
-    // Remove focus from any focused element
-    if (document.activeElement) {
-        document.activeElement.blur();
+    if ( this.props.options.shortcuts.navigation ) {
+      document.body.addEventListener("keydown", generalNavigationListener);
+      document.body.addEventListener("keydown", popupSpecialNavigationListener);
     }
+  }
 
-    document.querySelector('#search-input').focus();
-
-    body.onkeydown = function(e) {
-      if (!e.metaKey) {
-        e.preventDefault();
-      }
-
-      console.log("Key from body");
-
-      // Add new group
-      if (e.keyCode === 45) { // Insert
-        document.querySelector('.addButton').click();
-      }
-      // From Tab: Up tab Or group if first
-      // From Group: Up Group Or last tab
-      if (e.keyCode === 38) { // Up
-        document.querySelector('.addButton');
-      }
-      // From Tab: Down tab Or next group if last
-      // From Group: Down Group or first tab
-      if (e.keyCode === 40) { // Down
-        document.querySelector('body');
-      }
-      // Only up group
-      if (e.keyCode === 33) { // Page up
-        document.querySelector('body');
-      }
-
-      // Only down group
-      if (e.keyCode === 33) { // Page down
-        document.querySelector('body');
-      }
-
-      // Go first group
-      if (e.keyCode === 36) { // Home (First)
-        document.querySelector('body');
-      }
-
-      // Go last group
-      if (e.keyCode === 35) { // End
-        document.querySelector('body');
-      }
-
-      // Focus the search bar
-      if ( e.ctrlKey && e.keyCode === 70 ) { // Ctrl + F
-        document.querySelector('#search-input').focus();
-      }
-
-    };
-    */
+  componentWillUnmount() {
+    if ( this.props.options.shortcuts.navigation ) {
+      document.body.removeEventListener("keydown", generalNavigationListener);
+      document.body.removeEventListener("keydown", popupSpecialNavigationListener);
+    }
   }
 
 };
@@ -218,7 +183,7 @@ PopupMenuStandAlone.propTypes = {
 const PopupMenu = (() =>{
   return ReactRedux.connect((state) => {
     return {
-      groups: state.get("tabgroups"),
+      groups: state.get("groups"),
       currentWindowId: state.get("currentWindowId"),
       delayedTasks: state.get("delayedTasks"),
       options: state.get("options")

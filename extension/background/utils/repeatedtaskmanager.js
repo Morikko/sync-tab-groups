@@ -68,9 +68,7 @@ TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, force =
     }
   } catch (e) {
     this.remove(refId);
-    let msg = "DelayedTask.DelayedTask.prototype.addIntervalTask failed on " + delayedFunction + " with error: " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 };
 

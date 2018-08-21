@@ -1,3 +1,7 @@
+/**
+ * Groups for testing importing files
+ */
+
 var Examples = Examples || {};
 
 Examples.importedGroups = [{
@@ -25,7 +29,7 @@ Examples.importedGroups = [{
     "favIconUrl": "chrome://branding/content/icon32.png"
   }, {
     "title": "Nouvel onglet",
-    "url": "about:newtab",
+    "url": TabManager.NEW_TAB,
     "pinned": false,
     "active": false,
     "discarded": false,
@@ -34,24 +38,34 @@ Examples.importedGroups = [{
     "title": "Options des groupes d'onglets",
     "url": "about:tabgroups",
     "pinned": false,
-    "active": false,
+    "active": true,
     "discarded": false,
     "favIconUrl": "chrome://branding/content/icon32.png"
   }],
-  "id": -1,
-  "windowId": -1
+  "id": 0,
+  "windowId": -1,
+  "incognito": false,
+  "lastAccessed": 0,
+  "expand": false,
+  "position": 0,
+  "index": 0,
 }, {
   "title": "Mobile",
   "tabs": [{
     "title": "Navigateurs mobiles pour iOS et Android | Firefox",
     "url": "https://www.mozilla.org/fr/firefox/mobile/?utm_campaign=desktop&utm_content=ios&utm_medium=tiles&utm_source=directory-tiles",
     "pinned": false,
-    "active": false,
+    "active": true,
     "discarded": false,
     "favIconUrl": "chrome://branding/content/icon32.png"
   }],
-  "id": -1,
-  "windowId": -1
+  "id": 1,
+  "windowId": -1,
+  "incognito": false,
+  "lastAccessed": 0,
+  "expand": false,
+  "position": 1,
+  "index": 1
 }, {
   "title": "Window 2",
   "tabs": [{
@@ -72,12 +86,17 @@ Examples.importedGroups = [{
     "title": "GitHub - Quicksaver/Tab-Groups: Reimplementation of Firefox Tab Groups as an add-on.",
     "url": "https://github.com/Quicksaver/Tab-Groups",
     "pinned": false,
-    "active": false,
+    "active": true,
     "discarded": false,
     "favIconUrl": "chrome://branding/content/icon32.png"
   }],
-  "id": -1,
-  "windowId": -1
+  "id": 2,
+  "windowId": -1,
+  "incognito": false,
+  "lastAccessed": 0,
+  "expand": false,
+  "position": 2,
+  "index": 2
 }];
 
 Examples.syncTabGroups_2w_3g = {
@@ -107,7 +126,7 @@ Examples.syncTabGroups_2w_3g = {
       "favIconUrl": "chrome://branding/content/icon32.png"
     }, {
       "title": "Nouvel onglet",
-      "url": "about:newtab",
+      "url": TabManager.NEW_TAB,
       "pinned": false,
       "active": false,
       "discarded": false,
@@ -237,7 +256,7 @@ Examples.tabGroups_2w_3g = {
       "image": "https://webmaker.org/favicon.ico"
     }, {
       "entries": [{
-        "url": "about:newtab",
+        "url": TabManager.NEW_TAB,
         "title": "Nouvel onglet",
         "charset": "",
         "ID": 28,
@@ -448,7 +467,7 @@ Examples.tabGroups_2w_3g_session = {
       "iconLoadingPrincipal": "ZT4OTT7kRfqycpfCC8AeuAAAAAAAAAAAwAAAAAAAAEYB3pRy0IA0EdOTmQAQS6D9QJIHOlRteE8wkTq4cYEyCMYAAAAC/////wAAAbsBAAAAS2h0dHBzOi8vd2VibWFrZXIub3JnLz91dG1fc291cmNlPWRpcmVjdG9yeS10aWxlcyZ1dG1fbWVkaXVtPWZpcmVmb3gtYnJvd3NlcgAAAAAAAAAFAAAACAAAAAwAAAAI/////wAAAAj/////AAAACAAAAAwAAAAUAAAANwAAABQAAAABAAAAFAAAAAEAAAAVAAAAAAAAABX/////AAAAAP////8AAAAWAAAANQAAABT/////AQAAAAAAAAAAAAAAAA=="
     }, {
       "entries": [{
-        "url": "about:newtab",
+        "url": TabManager.NEW_TAB,
         "title": "Nouvel onglet",
         "charset": "",
         "ID": 28,

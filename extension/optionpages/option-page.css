@@ -1,6 +1,7 @@
 html {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,Cantarell,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
 }
+
 
 /*
 .option-section:not([hidden])~.option-section {
@@ -10,8 +11,13 @@ html {
 }
 */
 
-li, div span {
-  font-size: 18px;
+body {
+  font-size: 17px;
+}
+
+.option-section {
+  max-width: 1000px;
+  margin: auto;
 }
 
 .option-button, .option-input-text {
@@ -70,6 +76,7 @@ li, div span {
   height: 50px;
   cursor: pointer;
   text-decoration: none;
+  outline: 0;
   color: #c4cdd4;
 }
 
@@ -95,7 +102,6 @@ li, div span {
 
 /** Button for responsive design **/
 .show-menu {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-decoration: none;
     float: right;
     color: #fff;
@@ -150,6 +156,7 @@ input[type=checkbox]:checked ~ label{
   width: 95%;
   margin: auto;
   color: #484848;
+  padding-bottom: 50px;
 }
 
 .invisible {
@@ -159,17 +166,14 @@ input[type=checkbox]:checked ~ label{
 /** Sub panel -- section **/
 .section-title {
   margin-bottom: 30px;
+  margin-top: 20px;
   font-size: 2em;
   border-bottom: #2aa1c0 solid 2px;
 }
 
 .option-button, .button-file {
   display: inline-block !important;
-  width: 220px;
-}
-
-.option-button, .button-file {
-  margin-right: 30px;
+  width: 140px;
 }
 
 /*** Tooltip ****/
@@ -177,9 +181,17 @@ input[type=checkbox]:checked ~ label{
   width: 50%;
 }
 
+.subsection-content {
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
 .tooltip {
-    position: relative;
-    /*display: inline-block;*/
+  position: relative;
+}
+
+.tooltip > h2 {
+  align-self: flex-start;
 }
 
 /* Tooltip text */
@@ -194,20 +206,26 @@ input[type=checkbox]:checked ~ label{
 
     /* Position the tooltip text */
     position: absolute;
-    z-index: 1;
-    top: -5px;
-    left: 105%;
+    z-index: 2;
+    left: 100%;
 
     /* Fade in tooltip */
     opacity: 0;
     transition: opacity 1s;
 }
 
+.tooltiptext.tooltip-top {
+  top: -5px;
+}
+
+.tooltiptext.tooltip-bottom {
+  bottom: -5px;
+}
+
 /* Tooltip arrow */
 .tooltip .tooltiptext::after {
     content: " ";
     position: absolute;
-    top: 22%;
     right: 100%; /* To the left of the tooltip */
     margin-top: -5px;
     border-width: 5px;
@@ -215,8 +233,16 @@ input[type=checkbox]:checked ~ label{
     border-color: transparent black transparent transparent;
 }
 
+.tooltiptext.tooltip-top::after {
+  top: 22%;
+}
+
+.tooltiptext.tooltip-bottom::after {
+  bottom: 22%;
+}
+
 /* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
+.tooltip-visible .tooltiptext {
     visibility: visible;
     opacity: 1;
 }
@@ -231,3 +257,112 @@ input[type=checkbox]:checked ~ label{
 }
 
 /*** END Tooltip ****/
+
+
+/*** End Button in dangerous zone *****/
+
+/**** Shortcuts *****/
+.shortcut-subtitle {
+  cursor: pointer;
+
+}
+
+.option-section.shortcuts table {
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-left: 30px;
+}
+
+.option-section.shortcuts tr>th {
+  padding-bottom: 10px;
+}
+
+.option-section.shortcuts tr>td {
+  padding-bottom: 5px;
+}
+
+.command_shortcuts {
+  padding-right: 15px;
+}
+
+.command_description {
+  padding-left: 15px;
+  border-left: 1px solid black;
+}
+/**** End Shortcuts *****/
+
+.option-section.about {
+  text-align: justify;
+}
+
+.double-column-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.double-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.double-buttons .option-button {
+  border-radius: 0px;
+}
+
+.double-buttons .option-button:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.double-buttons .option-button:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.row-about {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.row-about div {
+  min-width:200px;
+  max-width:300px;
+  padding: 0 20px;
+}
+
+.row-about-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.row-about-center img {
+  padding: 0 30px;
+  height: 92px;
+  width: 92px;
+  cursor: pointer;
+}
+
+.experimental:before {
+  content: "Experimental: ";
+  font-weight: bold;
+  color: red;
+}
+
+.experimental {
+  border: 1px #ff4d4d solid;
+  padding: 5px;
+  border-radius: 3px;
+  box-shadow: 0 0 5px red;
+  background-color: #ffe6e6;
+  color: black;
+  text-align: justify;
+}
+

@@ -6,7 +6,7 @@ class InterfaceSection extends React.Component {
       React.createElement(
         "h1",
         { className: "section-title" },
-        "Interface"
+        browser.i18n.getMessage("options_interface")
       ),
       React.createElement(SubSection, {
         title: browser.i18n.getMessage("label_select_sorting_type"),
@@ -41,32 +41,32 @@ class InterfaceSection extends React.Component {
           React.createElement(
             "li",
             null,
-            "Custom: Drag & Drop to position your groups"
+            browser.i18n.getMessage("options_interface_sortexplanation_custom")
           ),
           React.createElement(
             "li",
             null,
-            "Alphabetical: Sort by Name"
+            browser.i18n.getMessage("options_interface_sortexplanation_alphabetical")
           ),
           React.createElement(
             "li",
             null,
-            "Last Accessed: Sort by last utilisation"
+            browser.i18n.getMessage("options_interface_sortexplanation_last")
           ),
           React.createElement(
             "li",
             null,
-            "Old Created First"
+            browser.i18n.getMessage("options_interface_sortexplanation_old")
           ),
           React.createElement(
             "li",
             null,
-            "Recent Created First"
+            browser.i18n.getMessage("options_interface_sortexplanation_recent")
           )
         )
       }),
       React.createElement(SubSection, {
-        title: "Groups",
+        title: browser.i18n.getMessage("options_interface_groups"),
         content: React.createElement(
           "div",
           null,
@@ -97,16 +97,16 @@ class InterfaceSection extends React.Component {
           })
         )
       }),
-      React.createElement(
-        "h2",
-        null,
-        "Windows"
-      ),
-      React.createElement(NiceCheckbox, {
-        checked: this.props.options.groups.showGroupTitleInWindow,
-        label: browser.i18n.getMessage("show_title_window"),
-        onCheckChange: this.props.onOptionChange,
-        id: "groups-showGroupTitleInWindow" })
+      React.createElement(SubSection, {
+        title: browser.i18n.getMessage("options_interface_windows"),
+        tooltip: undefined,
+        content: React.createElement(NiceCheckbox, {
+          checked: this.props.options.groups.showGroupTitleInWindow,
+          label: browser.i18n.getMessage("show_title_window"),
+          onCheckChange: this.props.onOptionChange,
+          id: "groups-showGroupTitleInWindow"
+        })
+      })
     );
   }
 };

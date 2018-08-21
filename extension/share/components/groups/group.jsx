@@ -1,9 +1,3 @@
-/*
-Copyright (c) 2017 Eric Masseran
-
-From: https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
 class Group extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +8,8 @@ class Group extends React.Component {
       removing: this.props.currentlyRemoving,
       editing: false,
       currentlySearching: this.props.currentlySearching,
-      expanded: this.props.stateless?false:this.props.group.expand,
+      expanded: this.props.stateless ?
+        false : this.props.group.expand,
       opened: openWindow,
       draggingOverCounter: 0, // Many drag enter/leave are fired, know if it is a really entering
       draggingOver: false,
@@ -22,6 +17,7 @@ class Group extends React.Component {
       dragOnBottom: false,
       newTitle: Utils.getGroupTitle(this.props.group),
       waitFirstMount: false,
+      hasFocus: false,
     };
 
     this.handleOpenInNewWindowClick = this.handleOpenInNewWindowClick.bind(this);
@@ -52,16 +48,16 @@ class Group extends React.Component {
   }
 
   findExpandedState(current_state, current_searching) {
-    if ( this.props.forceExpand ) {
+    if (this.props.forceExpand) {
       return true;
     }
-    if ( this.props.forceReduce ) {
+    if (this.props.forceReduce) {
       return false;
     }
     if (current_searching) {
       return true;
     } else {
-      if ( this.props.stateless )
+      if (this.props.stateless)
         return this.state.expanded
       else
         return current_state;
@@ -71,10 +67,7 @@ class Group extends React.Component {
   // When a component got new props, use this to update
   componentWillReceiveProps(nextProps) {
     let openWindow = nextProps.group.windowId !== browser.windows.WINDOW_ID_NONE;
-    let expanded_state = this.findExpandedState(
-      nextProps.group.expand,
-      nextProps.currentlySearching
-    );
+    let expanded_state = this.findExpandedState(nextProps.group.expand, nextProps.currentlySearching);
 
     this.setState({
       closing: this.getClosingState(openWindow, nextProps),
@@ -82,52 +75,51 @@ class Group extends React.Component {
       opened: openWindow,
       expanded: expanded_state,
       currentlySearching: nextProps.currentlySearching,
+      newTitle: Utils.getGroupTitle(nextProps.group)
     });
   }
 
   componentDidMount() {
-    if ( !this.state.waitFirstMount ) {
-      this.differedTimeOut = setTimeout((()=>{
-        this.setState({
-          waitFirstMount: true,
-        });
-      }).bind(this), 0);
+    if (!this.state.waitFirstMount) {
+      this.differedTimeOut = setTimeout((() => {
+          this.setState({
+            waitFirstMount: true
+          });
+        })
+        .bind(this), 0);
     }
   }
 
   componentWillUnmount() {
-    if ( this.differedTimeOut ) {
+    if (this.differedTimeOut) {
       clearTimeout(this.differedTimeOut);
     }
-    if ( this.expandedTimeOut ) {
+    if (this.expandedTimeOut) {
       clearTimeout(this.expandedTimeOut);
     }
   }
 
-  render() {
-    //console.log("Group Render");
+  getTitleElement() {
     let titleElement;
     if (this.state.editing) {
       titleElement = (
         <input
           className=""
-          id={"text-editiong-"+this.props.group.id}
-          autoFocus
+          id={"text-editiong-" + this.props.group.id}
+          autoFocus="autoFocus"
           type="text"
           value={this.state.newTitle}
           onChange={((event) => {
-            this.setState({
-              newTitle: event.target.value
-            });
+            this.setState({newTitle: event.target.value});
           }).bind(this)}
-          onClick={(event) => {
-            event.stopPropagation();
-          }}
+          onMouseUp={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
           onFocus={(e) => {
             e.target.select();
           }}
           onKeyUp={this.handleGroupTitleInputKey}
-        />);
+        />
+      );
     } else {
       let title = Utils.getGroupTitle(this.props.group);
       if (this.props.showTabsNumber) {
@@ -135,12 +127,25 @@ class Group extends React.Component {
       }
       titleElement = (
         <span className="group-title-text">
-        {title}
+          {title}
         </span>);
     }
+    return titleElement;
+  }
 
-    let groupClasses = classNames({
-      active: (this.props.group.windowId > -1),
+  getGroupClasses() {
+    let groupInWindow = this.props.selectionFilter !== undefined
+                      ? false
+                      : (this.props.currentWindowId
+                          === this.props.group.windowId);
+
+    let isOpen = this.props.selectionFilter !== undefined
+                      ? this.props.selectionFilter.selected
+                      : (this.props.group.windowId > -1);
+    return classNames({
+      hasFocus: this.state.hasFocus,
+      hoverStyle: this.props.hoverStyle,
+      active: isOpen,
       editing: this.state.editing,
       closing: this.state.closing,
       removing: this.state.removing,
@@ -148,81 +153,191 @@ class Group extends React.Component {
       dragTopBorder: this.state.dragOnTop,
       dragBottomBorder: this.state.dragOnBottom,
       expanded: this.state.expanded,
-      focusGroup: this.props.currentWindowId === this.props.group.windowId,
+      focusGroup: groupInWindow,
       group: true,
-      hiddenBySearch: !(this.props.searchGroupResult?this.props.searchGroupResult.atLeastOneResult:true),
-      incognito: this.props.group.incognito,
+      hiddenBySearch: !(
+        this.props.searchGroupResult ?
+        this.props.searchGroupResult.atLeastOneResult :
+        true),
+      incognito: this.props.group.incognito
     });
+  }
 
+  getGroupTitle() {
     let groupTitle;
-    if (Utils.DEGUG_MODE) {
-      groupTitle = "Group Id: " + this.props.group.id + "\n";
-      groupTitle += "Group Index: " + this.props.group.index + "\n";
-      groupTitle += "Group Window: " + this.props.group.windowId + "\n";
-      groupTitle += "Group Position: " + this.props.group.position + "\n";
-      groupTitle += "Incognito: " + this.props.group.incognito;
+    if (Utils.DEBUG_MODE) {
+      const groupWithoutTabs = Utils.getCopy(this.props.group);
+      groupWithoutTabs.tabs =  groupWithoutTabs.tabs.length + " tabs"
+      groupTitle = JSON.stringify(groupWithoutTabs, null, 4);
     } else {
       groupTitle = browser.i18n.getMessage("open_group");
     }
+    return groupTitle;
+  }
+
+  getGroupControls(){
+    return (
+    <GroupControls
+      closing={this.state.closing}
+      removing={this.state.removing}
+      editing={this.state.editing}
+      expanded={this.state.expanded}
+      opened={this.state.opened}
+      onClose={this.handleGroupCloseClick} 
+      onRemove={this.handleGroupRemoveClick} 
+      onEdit={this.handleGroupEditClick} 
+      onEditAbort={this.handleGroupEditAbortClick} 
+      onEditSave={this.handleGroupEditSaveClick} 
+      onExpand={this.handleGroupExpandClick} 
+      onUndoCloseClick={this.handleGroupCloseAbortClick} 
+      onOpenInNewWindow={this.handleOpenInNewWindowClick}
+      controlsEnable={this.props.controlsEnable}
+      onRemoveHiddenTabsInGroup={this.props.onRemoveHiddenTabsInGroup}
+      hasHiddenTabs={this.props.group.tabs.filter(tab => tab.hidden).length > 0}
+      groupId={this.props.group.id}
+    />
+    );
+  }
+
+  getTabList() {
+    let selectionFilter = this.props.selectionFilter !== undefined
+                      ? this.props.selectionFilter.tabs
+                      : undefined;
+    return (
+      <TabList
+        tabs={this.props.group.tabs}
+        group={this.props.group}
+        onTabClick={this.props.onTabClick} 
+        onGroupDrop={this.props.onGroupDrop}
+        onMoveTabToNewGroup={this.props.onMoveTabToNewGroup}
+        opened={this.state.opened}
+        onCloseTab={this.props.onCloseTab}
+        onOpenTab={this.props.onOpenTab}
+        onRemoveHiddenTab={this.props.onRemoveHiddenTab}
+        searchTabsResults={(
+          this.props.searchGroupResult
+            ? this.props.searchGroupResult.searchTabsResults
+            : undefined)} 
+        groups={this.props.groups}
+        onChangePinState={this.props.onChangePinState} 
+        visible={this.state.expanded} 
+        allowClickSwitch={this.props.allowClickSwitch} 
+        hotkeysEnable={this.props.hotkeysEnable}
+        selectionFilter={selectionFilter}
+        hoverStyle={this.props.hoverStyle}
+        controlsEnable={this.props.controlsEnable}
+        draggable={this.props.draggable}
+      />
+    );
+  }
+
+  render() {
+    const checkbox = this.props.selectionFilter !== undefined
+      ? (
+        <NiceCheckbox
+          checked= {
+            this.props.selectionFilter.selected===this.props.group.tabs.length
+            && this.props.selectionFilter.selected > 0
+          }
+          onCheckChange= {()=>{
+            this.props.onGroupClick(
+              this.props.group.id,
+              this.props.selectionFilter.selected
+            );
+          }}
+          label= {""}
+          indeterminate={this.props.selectionFilter.selected>0
+            && this.props.selectionFilter.selected
+          !==this.props.group.tabs.length}
+          id={"selected-group-"+this.props.group.id}
+          disabled={this.props.group.tabs.length===0}
+        />
+      )
+      : null;
+
+    const onKeyDownListener = this.props.hotkeysEnable
+      ? Utils.doActivateHotkeys(groupNavigationListener(this), this.props.hotkeysEnable)
+      : undefined;
+
+    const onFocusEvent = (e)=>{
+      if ( (typeof Navigation !== 'undefined')
+      && Navigation["KEY_PRESSED_RECENTLY"] ) {
+        this.setState({
+          hasFocus: true,
+        })
+      }
+    };
+
+    const onBlurEvent = (e)=>{
+      this.setState({
+        hasFocus: false,
+      })
+    };
+
+    const groupStyle = {
+      width: this.props.width
+    };
+
+    const tabList = this.state.waitFirstMount && this.state.expanded
+      ? this.getTabList()
+      : null;
+
+    const hasFocusIcon = this.state.hasFocus
+      ? (
+        <i className="arrow-focus fa fa-fw fa-angle-right"></i>
+      ) : null;
+
+
+    const openedIcon = (this.state.opened && this.props.selectionFilter == null)
+      ? (
+        <span className="window-open">
+        OPEN
+        </span>
+        )
+      : null;
 
     return (
       <li
-          className={groupClasses}
-          onClick={this.handleGroupClick}
-          draggable={this.props.groupDraggable}
-          onDragOver={this.handleGroupDragOver}
-          onDragEnter={this.handleGroupDragEnter}
-          onDragLeave={this.handleGroupDragLeave}
-          onDragStart={this.handleGroupDragStart}
-          onDrop={this.handleGroupDrop}
-          title={groupTitle}
-          style={{width: this.props.width}}
-        >
-        <span
-            className={"group-title"}
-          >
-          {titleElement}
-          <GroupControls
-              closing= {this.state.closing}
-              removing= {this.state.removing}
-              editing= {this.state.editing}
-              expanded= {this.state.expanded}
-              opened= {this.state.opened}
-              onClose= {this.handleGroupCloseClick}
-              onRemove= {this.handleGroupRemoveClick}
-              onEdit= {this.handleGroupEditClick}
-              onEditAbort= {this.handleGroupEditAbortClick}
-              onEditSave= {this.handleGroupEditSaveClick}
-              onExpand= {this.handleGroupExpandClick}
-              onUndoCloseClick= {this.handleGroupCloseAbortClick}
-              onOpenInNewWindow= {this.handleOpenInNewWindowClick}
-            />
+        className={this.getGroupClasses()}
+        onMouseUp={this.handleGroupClick}
+        draggable={this.props.groupDraggable && this.props.draggable}
+        onDragOver={this.handleGroupDragOver} 
+        onDragEnter={this.handleGroupDragEnter} 
+        onDragLeave={this.handleGroupDragLeave} 
+        onDragStart={this.handleGroupDragStart}
+        onDrop={this.handleGroupDrop}
+        title={this.getGroupTitle()}
+        style={groupStyle}
+        onFocus={onFocusEvent}
+        onBlur={onBlurEvent}
+        tabIndex="0"
+        onKeyDown={onKeyDownListener}
+      >
+
+        <span className={"group-title"}>
+          {checkbox}
+          {openedIcon}
+          {hasFocusIcon}
+          {this.getTitleElement()}
+          {this.getGroupControls()}
         </span>
-        {this.state.waitFirstMount /*&& this.state.expanded*/ && <TabList
-            tabs= {this.props.group.tabs}
-            group= {this.props.group}
-            onTabClick= {this.props.onTabClick}
-            onGroupDrop= {this.props.onGroupDrop}
-            onMoveTabToNewGroup= {this.props.onMoveTabToNewGroup}
-            opened= {this.state.opened}
-            onCloseTab= {this.props.onCloseTab}
-            onOpenTab= {this.props.onOpenTab}
-            searchTabsResults= {(this.props.searchGroupResult?this.props.searchGroupResult.searchTabsResults:undefined)}
-            groups= {this.props.groups}
-            onChangePinState= {this.props.onChangePinState}
-            visible={this.state.expanded}
-            allowClickSwitch={this.props.allowClickSwitch}
-          />}
-    </li>);
+
+        {tabList}
+
+      </li>);
   }
 
   handleOpenInNewWindowClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.props.onOpenInNewWindowClick(this.props.group.id);
   }
 
   handleGroupRemoveClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.setState({
       editing: false,
       closing: false
@@ -245,7 +360,14 @@ class Group extends React.Component {
   }
 
   handleGroupCloseClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+
+    if (!this.state.opened) {
+      return;
+    }
+
     this.setState({
       editing: false,
       removing: false
@@ -268,7 +390,13 @@ class Group extends React.Component {
   }
 
   handleGroupCloseAbortClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+
+    if (!this.state.removing && !this.state.closing) {
+      return;
+    }
 
     this.props.onGroupCloseClick(TaskManager.CANCEL, this.props.group.id);
     this.props.onGroupRemoveClick(TaskManager.CANCEL, this.props.group.id);
@@ -280,25 +408,55 @@ class Group extends React.Component {
   }
 
   handleGroupClick(event) {
-    event.stopPropagation();
-    if ( this.props.allowClickSwitch ) {
-      if (this.props.currentWindowId !== this.props.group.windowId)
-        this.props.onGroupClick(this.props.group.id);
+    if (event) {
+      event.stopPropagation();
+    }
+    if(this.state.closing || this.state.removing) {
+      return;
+    }
+
+    if (this.props.allowClickSwitch) {
+      if (this.props.currentWindowId !== this.props.group.windowId) {
+        // Close and middle click
+        if (event && event.button === 1 && this.props.group.windowId === browser.windows.WINDOW_ID_NONE) {
+          this.props.onOpenInNewWindowClick(this.props.group.id);
+        } else {
+          this.props.onGroupClick(this.props.group.id);
+        }
+      }
       window.close();
+    } else if ( event && event.button === 1 && this.props.selectionFilter ){
+      this.props.onGroupClick(
+        this.props.group.id,
+        this.props.selectionFilter.selected
+      );
     } else {
       this.handleGroupExpandClick();
     }
   }
 
   handleGroupEditClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+
+    if (this.state.editing) { // Useless
+      return;
+    }
+
     this.setState({
-      editing: !this.state.editing
+      editing: true
     });
   }
 
   handleGroupEditAbortClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!this.state.editing) { // Useless
+      return;
+    }
+
     this.setState({
       editing: false,
       newTitle: Utils.getGroupTitle(this.props.group)
@@ -306,7 +464,12 @@ class Group extends React.Component {
   }
 
   handleGroupEditSaveClick(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
+    if (!this.state.editing) { // Useless
+      return;
+    }
     this.setState({
       editing: false,
       newTitle: Utils.getGroupTitle(this.props.group)
@@ -315,10 +478,11 @@ class Group extends React.Component {
   }
 
   handleGroupExpandClick(event) {
-    if( event !== undefined )
+    if (event) {
       event.stopPropagation();
-    if ( !this.props.stateless ) {
-      this.props.onChangeExpand([this.props.group.id],  !this.state.expanded)
+    }
+    if (!this.props.stateless) {
+      this.props.onChangeExpand([this.props.group.id], !this.state.expanded)
     }
     this.setState({
       expanded: !this.state.expanded
@@ -330,7 +494,7 @@ class Group extends React.Component {
     if (event.keyCode === 13) { // Enter key
       this.setState({
         editing: false,
-        newTitle: Utils.getGroupTitle(this.props.group),
+        newTitle: Utils.getGroupTitle(this.props.group)
       });
       this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
     }
@@ -343,7 +507,7 @@ class Group extends React.Component {
       dragOnTop: false,
       dragOnBottom: false,
       draggingOver: false,
-      draggingOverCounter: 0,
+      draggingOverCounter: 0
     });
     if (this.expandedTimeOut >= 0) {
       clearTimeout(this.expandedTimeOut);
@@ -355,11 +519,7 @@ class Group extends React.Component {
       let tabIndex = parseInt(event.dataTransfer.getData("tab/index"), 10);
 
       // Push at the end of the group
-      this.props.onGroupDrop(
-        sourceGroup,
-        tabIndex,
-        this.props.group.id
-      );
+      this.props.onGroupDrop(sourceGroup, tabIndex, this.props.group.id);
     }
 
     if (event.dataTransfer.getData("type") === "group") {
@@ -371,60 +531,50 @@ class Group extends React.Component {
         position = this.props.group.position + 1;
       }
 
-      this.props.onGroupChangePosition(
-        parseInt(event.dataTransfer.getData("group/id"), 10),
-        position,
-      );
+      this.props.onGroupChangePosition(parseInt(event.dataTransfer.getData("group/id"), 10), position, );
     }
-  }
-
-  getOffset( el ) {
-    var _x = 0;
-    var _y = 0;
-    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
-        _x += el.offsetLeft - el.scrollLeft;
-        _y += el.offsetTop - el.scrollTop;
-        el = el.offsetParent;
-    }
-    return { top: _y, left: _x };
   }
 
   handleGroupDragOver(event) {
     event.stopPropagation();
     event.preventDefault();
-    if (event.dataTransfer.getData("type") === "group") {
+
+    if (DRAG_TYPE === "group") {
       // Position of main group-list
-      let pos = event.pageY - // Event loc Full page
-        (event.currentTarget.offsetTop // Group dist
-          -event.currentTarget.parentElement.scrollTop); // Remove scroll grouplist
+      let pos = event.pageY - /*Event loc Full page*/
+                  Utils.getOffset(event.currentTarget);
+
       let height = event.currentTarget.offsetHeight;
-      // Bottom
-      if (pos > height / 2 && pos <= height) {
-        if (this.state.dragOnTop || !this.state.dragOnBottom) {
-          this.setState({
-            dragOnTop: false,
-            dragOnBottom: true,
-          });
+
+        // Bottom
+        if (pos > height / 2 && pos <= height) {
+          if (this.state.dragOnTop || !this.state.dragOnBottom) {
+            this.setState({
+              dragOnTop: false,
+              dragOnBottom: true
+            });
+          }
         }
-      } else if (pos <= height / 2 && pos > 0) {
+      else
+      if (pos <= height / 2 && pos > 0) {
         if (!this.state.dragOnTop || this.state.dragOnBottom) {
           this.setState({
             dragOnTop: true,
-            dragOnBottom: false,
+            dragOnBottom: false
           });
         }
       } else {
         if (this.state.dragOnTop || this.state.dragOnBottom) {
           this.setState({
             dragOnTop: false,
-            dragOnBottom: false,
+            dragOnBottom: false
           });
         }
       }
     }
-    if (event.dataTransfer.getData("type") === "tab") {
+    if (DRAG_TYPE === "tab") {
       this.setState({
-        draggingOver: true,
+        draggingOver: true
       });
     }
   }
@@ -432,18 +582,18 @@ class Group extends React.Component {
   handleGroupDragEnter(event) {
     event.preventDefault();
 
-    if (event.dataTransfer.getData("type") === "tab" &&
-      event.target.className.includes("group")) {
+    if (DRAG_TYPE === "tab" && event.target.className.includes("group")) {
       event.stopPropagation();
 
       this.setState({
-        draggingOverCounter: (this.state.draggingOverCounter == 1) ? 2 : 1,
+        draggingOverCounter: (this.state.draggingOverCounter == 1) ?
+          2 : 1
       });
 
       if (this.state.draggingOverCounter === 0) {
         this.expandedTimeOut = setTimeout(() => {
           this.setState({
-            expanded: true,
+            expanded: true
           });
         }, 1500);
       }
@@ -458,7 +608,8 @@ class Group extends React.Component {
       dragOnTop: false,
       dragOnBottom: false,
       draggingOver: false,
-      draggingOverCounter: this.state.draggingOverCounter == 2 ? 1 : 0
+      draggingOverCounter: this.state.draggingOverCounter == 2 ?
+        1 : 0
     });
     if (this.state.draggingOverCounter === 1 && this.expandedTimeOut >= 0) {
       clearTimeout(this.expandedTimeOut);
@@ -468,10 +619,14 @@ class Group extends React.Component {
   handleGroupDragStart(event) {
     event.stopPropagation();
 
+    DRAG_TYPE = "group";
+
     event.dataTransfer.setData("type", "group");
     event.dataTransfer.setData("group/id", this.props.group.id);
   }
 };
+
+var DRAG_TYPE = "";
 
 Group.propTypes = {
   group: PropTypes.object.isRequired,
@@ -495,5 +650,5 @@ Group.propTypes = {
   onChangePinState: PropTypes.func,
   onChangeExpand: PropTypes.func,
   allowClickSwitch: PropTypes.bool,
-  stateless: PropTypes.bool,
+  stateless: PropTypes.bool
 }

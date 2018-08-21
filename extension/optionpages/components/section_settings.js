@@ -8,6 +8,7 @@ class SettingsSection extends React.Component {
     this.clickOnIncluded = this.clickOnIncluded.bind(this);
     this.clickOnPrivate = this.clickOnPrivate.bind(this);
     this.clickOnPrivateInvisible = this.clickOnPrivateInvisible.bind(this);
+    this.handleRemoveUnknownHiddenTabsCheckboxChange = this.handleRemoveUnknownHiddenTabsCheckboxChange.bind(this);
   }
   render() {
     return React.createElement(
@@ -17,84 +18,30 @@ class SettingsSection extends React.Component {
       React.createElement(
         "h1",
         { className: "section-title" },
-        "Settings"
+        browser.i18n.getMessage("options_settings")
       ),
-      React.createElement(SubSection, {
-        title: browser.i18n.getMessage("state_new_normal_window"),
-        tooltip: React.createElement(
-          "div",
-          null,
-          React.createElement(
-            "h2",
-            null,
-            "Window Help:"
-          ),
-          React.createElement(
-            "ul",
-            null,
-            React.createElement(
-              "li",
-              null,
-              "Invisible"
-            ),
-            React.createElement(
-              "ul",
-              null,
-              React.createElement(
-                "li",
-                null,
-                "New windows created without the Extension are Invisible."
-              )
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Visible"
-            ),
-            React.createElement(
-              "ul",
-              null,
-              React.createElement(
-                "li",
-                null,
-                "New windows created without the Extension are Visible as a new unnamed group."
-              )
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Any window can be changed to visible/invisible from the Menu."
-            )
-          )
-        ),
-        content: React.createElement(
-          "div",
-          null,
-          React.createElement(OptionButton, {
-            title: "Visible",
-            onClick: this.clickOnVisible,
-            enabled: this.props.options.groups.syncNewWindow
-          }),
-          React.createElement(OptionButton, {
-            title: "Invisible",
-            onClick: this.clickOnInvisible,
-            enabled: !this.props.options.groups.syncNewWindow
-          })
-        )
-      }),
-      React.createElement(SubSection, {
-        title: browser.i18n.getMessage("pinned_tabs_title"),
-        tooltip: [React.createElement(
-          "h2",
-          { key: "help_pinned_title" },
-          "Pinned Tabs Help:"
-        ), React.createElement(
+      this.getWindowsSubsection(),
+      this.getPinnedSubsection(),
+      this.getOpeningSubsection(),
+      this.getPrivateWindowsSubsection(),
+      this.getOthersSubsection(),
+      Utils.hasHideFunction() && this.getClosingSubsection()
+    );
+  }
+
+  getWindowsSubsection() {
+    return React.createElement(SubSection, {
+      title: browser.i18n.getMessage("state_new_normal_window"),
+      tooltip: React.createElement(
+        "div",
+        null,
+        React.createElement(
           "ul",
-          { key: "help_pinned_content" },
+          null,
           React.createElement(
             "li",
             null,
-            "Excluded"
+            browser.i18n.getMessage("options_behaviors_help_title_invisible")
           ),
           React.createElement(
             "ul",
@@ -102,23 +49,13 @@ class SettingsSection extends React.Component {
             React.createElement(
               "li",
               null,
-              "Pinned tabs are not part of any groups."
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Switching/closing actions don't impact the pinned tabs."
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Use case: Global Tabs (Mail tab, Music tab...)"
+              browser.i18n.getMessage("options_behaviors_help_invisible")
             )
           ),
           React.createElement(
             "li",
             null,
-            "Included"
+            browser.i18n.getMessage("options_behaviors_help_title_visible")
           ),
           React.createElement(
             "ul",
@@ -126,190 +63,456 @@ class SettingsSection extends React.Component {
             React.createElement(
               "li",
               null,
-              "Pinned tabs are part of the group in the window."
+              browser.i18n.getMessage("options_behaviors_help_visible_new")
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_help_change_visibility")
+          )
+        )
+      ),
+      content: React.createElement(
+        "div",
+        { className: "double-buttons" },
+        React.createElement(OptionButton, {
+          title: browser.i18n.getMessage("options_behaviors_help_title_visible"),
+          onClick: this.clickOnVisible,
+          highlight: this.props.options.groups.syncNewWindow
+        }),
+        React.createElement(OptionButton, {
+          title: browser.i18n.getMessage("options_behaviors_help_title_invisible"),
+          onClick: this.clickOnInvisible,
+          highlight: !this.props.options.groups.syncNewWindow
+        })
+      )
+    });
+  }
+
+  getPinnedSubsection() {
+    return React.createElement(SubSection, {
+      title: browser.i18n.getMessage("pinned_tabs_title"),
+      tooltip: React.createElement(
+        "div",
+        null,
+        React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_pinned_excluded")
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_pinned_excluded_notpart")
             ),
             React.createElement(
               "li",
               null,
-              "Switching/closing actions close and save the pinned tabs in the group."
+              browser.i18n.getMessage("options_behaviors_pinned_excluded_switching")
             ),
             React.createElement(
               "li",
               null,
-              "Use case: Important tabs for the group."
+              browser.i18n.getMessage("options_behaviors_pinned_excluded_usecase")
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_pinned_included")
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_pinned_included_part")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_pinned_included_switching")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_pinned_included_usecase")
             )
           )
-        )],
-        content: [React.createElement(OptionButton, {
-          title: "Excluded",
+        )
+      ),
+      content: React.createElement(
+        "div",
+        { className: "double-buttons" },
+        React.createElement(OptionButton, {
+          title: browser.i18n.getMessage("options_behaviors_pinned_excluded"),
           onClick: this.clickOnExcluded,
           key: "pinned-excluded",
-          enabled: !this.props.options.pinnedTab.sync
-        }), React.createElement(OptionButton, {
-          title: "Included",
+          highlight: !this.props.options.pinnedTab.sync
+        }),
+        React.createElement(OptionButton, {
+          title: browser.i18n.getMessage("options_behaviors_pinned_included"),
           onClick: this.clickOnIncluded,
           key: "pinned-included",
-          enabled: this.props.options.pinnedTab.sync
-        })]
-      }),
-      React.createElement(SubSection, {
-        title: "Tab Opening Behavior",
-        tooltip: React.createElement(
-          "ul",
-          null,
-          React.createElement(
-            "li",
-            null,
-            "Discarded (Faster and Lighter)"
-          ),
-          React.createElement(
-            "ul",
-            null,
-            React.createElement(
-              "li",
-              null,
-              "Tabs are not fully loaded on opening."
-            ),
-            React.createElement(
-              "li",
-              null,
-              "The tabs are only loaded once you click on it. After, they stay loaded."
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            "Full"
-          ),
-          React.createElement(
-            "ul",
-            null,
-            React.createElement(
-              "li",
-              null,
-              "Tabs are completely loaded on opening."
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Consume more memory and network data."
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            "Limits (In both cases)"
-          ),
-          React.createElement(
-            "ul",
-            null,
-            React.createElement(
-              "li",
-              null,
-              "Tabs History are not restored. (Limited by the browser)"
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Temporary data (forms...) added before tabs were closed are lost. (Limited by the browser)"
-            )
-          )
-        ),
-        content: [React.createElement(OptionButton, {
-          title: "Discarded",
-          onClick: this.clickOnOpenDiscarded.bind(this),
-          enabled: this.props.options.groups.discardedOpen,
-          key: "opening-tab-discarded"
-        }), React.createElement(OptionButton, {
-          title: "Full",
-          onClick: this.clickOnOpenFull.bind(this),
-          enabled: !this.props.options.groups.discardedOpen,
-          key: "opening-tab-full"
-        })]
-      }),
-      React.createElement(SubSection, {
-        title: browser.i18n.getMessage("private_window_title"),
-        tooltip: React.createElement(
-          "ul",
-          null,
-          React.createElement(
-            "li",
-            null,
-            "Private (Respect the private behavior)"
-          ),
-          React.createElement(
-            "ul",
-            null,
-            React.createElement(
-              "li",
-              null,
-              "New private windows are visible as a new private groups"
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Groups opened in private windows are private as well."
-            ),
-            React.createElement(
-              "li",
-              null,
-              "Private groups are not saved on the disk"
-            ),
-            React.createElement(
-              "li",
-              null,
-              "A private group closed is automatically deleted."
-            ),
-            React.createElement(
-              "li",
-              null,
-              "A restart of the browser will closed and deleted all the private groups."
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            "Invisible"
-          ),
-          React.createElement(
-            "ul",
-            null,
-            React.createElement(
-              "li",
-              null,
-              "New private windows are visible as a new private groups"
-            )
-          ),
-          React.createElement(
-            "li",
-            null,
-            "Any private window can be changed from private/invisible from the Menu."
-          )
-        ),
-        content: [React.createElement(OptionButton, {
-          title: "Private",
-          onClick: this.clickOnPrivate,
-          enabled: this.props.options.privateWindow.sync,
-          key: "private-window-private"
-        }), React.createElement(OptionButton, {
-          title: "Invisible",
-          onClick: this.clickOnPrivateInvisible,
-          enabled: !this.props.options.privateWindow.sync,
-          key: "private-window-invisible"
-        })]
-      }),
-      React.createElement(
-        "h2",
+          highlight: this.props.options.pinnedTab.sync
+        })
+      )
+    });
+  }
+
+  getOpeningSubsection() {
+    return React.createElement(SubSection, {
+      title: browser.i18n.getMessage("options_behaviors_tabsopening"),
+      tooltip: React.createElement(
+        "div",
         null,
-        "Others"
+        React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_tabsopening_discarded")
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_discarded_lighter")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_discarded_notfullyloaded")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_discarded_loadedclick")
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_tabsopening_full")
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_full_loadedopening")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_full_heavier")
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_tabsopening_limits")
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_limits_history")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_limits_temporary")
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_tabsopening_recommendation")
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_button", [browser.i18n.getMessage("options_behaviors_tabsopening_reload")])
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_state")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_tabsopening_recommendation_update")
+            )
+          )
+        )
       ),
-      React.createElement(NiceCheckbox, {
-        checked: this.props.options.groups.removeEmptyGroup,
-        label: browser.i18n.getMessage("remove_empty_groups"),
-        onCheckChange: this.props.onOptionChange,
-        id: "groups-removeEmptyGroup"
-      })
-    );
+      content: React.createElement(
+        "div",
+        { className: "subsection-left" },
+        React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_tabsopening_discarded"),
+            onClick: this.clickOnOpenDiscarded.bind(this),
+            highlight: this.props.options.groups.discardedOpen,
+            key: "opening-tab-discarded"
+          }),
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_tabsopening_full"),
+            onClick: this.clickOnOpenFull.bind(this),
+            highlight: !this.props.options.groups.discardedOpen,
+            key: "opening-tab-full"
+          })
+        ),
+        React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("options_behaviors_tabsopening_reload"),
+            onClick: this.handleClickOnCloseAllHiddenTabs.bind(this),
+            highlight: true
+          })
+        )
+      )
+    });
+  }
+
+  getClosingSubsection() {
+    return React.createElement(SubSection, {
+      title: "Closing Behavior",
+      tooltip: React.createElement(
+        "div",
+        null,
+        "Still experimental, read the manual page."
+      ),
+      content: React.createElement(
+        "div",
+        null,
+        React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: "Close",
+            onClick: this.clickOnClosingClose.bind(this),
+            key: "closing-close",
+            highlight: this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL
+          }),
+          React.createElement(OptionButton, {
+            title: "Hidden",
+            onClick: this.clickOnClosingHidden.bind(this),
+            key: "closing-hidden",
+            highlight: this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN
+          })
+        ),
+        React.createElement(NiceCheckbox, {
+          checked: this.props.options.groups.discardedHide,
+          label: browser.i18n.getMessage("setting_discard_hidden_tab"),
+          onCheckChange: this.props.onOptionChange,
+          id: "groups-discardedHide"
+        }),
+        React.createElement(NiceCheckbox, {
+          checked: this.props.options.groups.removeUnknownHiddenTabs,
+          label: browser.i18n.getMessage("setting_remove_unknown_hidden_tabs"),
+          onCheckChange: this.handleRemoveUnknownHiddenTabsCheckboxChange,
+          id: "groups-removeUnknownHiddenTabs"
+        }),
+        React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("setting_close_all_hidden_tabs"),
+            onClick: this.handleClickOnCloseAllHiddenTabs.bind(this),
+            highlight: true
+          })
+        )
+      )
+    });
+  }
+
+  handleRemoveUnknownHiddenTabsCheckboxChange(id, val) {
+    const msg = browser.i18n.getMessage("setting_confirm_unknown_hidden_tabs");
+    if (val && !confirm(msg)) {
+      this.props.onOptionChange(id, !val);
+      return;
+    }
+    this.props.onOptionChange(id, val);
+  }
+
+  getPrivateWindowsSubsection() {
+    return React.createElement(SubSection, {
+      title: browser.i18n.getMessage("private_window_title"),
+      tooltip: React.createElement(
+        "div",
+        null,
+        React.createElement(
+          "ul",
+          null,
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_private")
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_private_visible")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_private_groups")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_private_notsaved")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_private_autoremoved")
+            ),
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_private_restart")
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_private_invisible")
+          ),
+          React.createElement(
+            "ul",
+            null,
+            React.createElement(
+              "li",
+              null,
+              browser.i18n.getMessage("options_behaviors_private_invisible_creation")
+            )
+          ),
+          React.createElement(
+            "li",
+            null,
+            browser.i18n.getMessage("options_behaviors_private_changestate")
+          )
+        )
+      ),
+      content: React.createElement(
+        "div",
+        { className: "double-buttons" },
+        React.createElement(OptionButton, {
+          title: browser.i18n.getMessage("options_behaviors_private"),
+          onClick: this.clickOnPrivate,
+          highlight: this.props.options.privateWindow.sync,
+          key: "private-window-private"
+        }),
+        React.createElement(OptionButton, {
+          title: browser.i18n.getMessage("options_behaviors_private_invisible"),
+          onClick: this.clickOnPrivateInvisible,
+          highlight: !this.props.options.privateWindow.sync,
+          key: "private-window-invisible"
+        })
+      )
+    });
+  }
+
+  getOthersSubsection() {
+    return React.createElement(SubSection, {
+      title: browser.i18n.getMessage("options_settings_others"),
+      tooltip: undefined,
+      content: React.createElement(
+        "div",
+        null,
+        React.createElement(NiceCheckbox, {
+          checked: this.props.options.groups.removeEmptyGroup,
+          label: browser.i18n.getMessage("remove_empty_groups"),
+          onCheckChange: this.props.onOptionChange,
+          id: "groups-removeEmptyGroup"
+        }),
+        React.createElement(NiceCheckbox, {
+          checked: this.props.options.log.enable,
+          label: browser.i18n.getMessage("setting_enable_error_log"),
+          onCheckChange: this.props.onOptionChange,
+          id: "log-enable"
+        }),
+        React.createElement(
+          "div",
+          { className: "double-buttons" },
+          React.createElement(OptionButton, {
+            title: browser.i18n.getMessage("setting_download_error_log"),
+            onClick: event => this.props.downloadErrorLog(),
+            highlight: true,
+            disabled: !this.props.options.log.enable
+          })
+        )
+      )
+    });
+  }
+
+  async handleClickOnUndiscardAllTabs() {
+
+    const tabs = await browser.tabs.query({});
+    let hadDiscarded = false;
+    tabs.forEach(async tab => {
+      if (tab.url.includes(Utils.LAZY_PAGE_URL)) {
+        hadDiscarded = true;
+      }
+    });
+
+    if (hadDiscarded) {
+      if (confirm(browser.i18n.getMessage("options_behaviors_tabsopening_confirm_reload"))) {
+        this.props.onUndiscardLazyTabs();
+      }
+    } else {
+      browser.notifications.create("RELOAD_TABS", {
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+        "title": "Sync Tab Groups",
+        "message": browser.i18n.getMessage("options_behaviors_tabsopening_nothing_reload")
+      });
+    }
+  }
+
+  async handleClickOnCloseAllHiddenTabs() {
+    const hiddenTabs = await browser.tabs.query({ hidden: true });
+
+    if (hiddenTabs.length > 0) {
+      if (confirm(browser.i18n.getMessage("setting_confirm_close_all_hidden_tabs"))) {
+        this.props.onCloseAllHiddenTabs();
+      }
+    } else {
+      browser.notifications.create("CLOSE_HIDDEN_TABS", {
+        "type": "basic",
+        "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+        "title": "Sync Tab Groups",
+        "message": browser.i18n.getMessage("setting_nothin_close_all_hidden_tabs")
+      });
+    }
   }
 
   clickOnVisible() {
@@ -325,7 +528,13 @@ class SettingsSection extends React.Component {
   }
 
   clickOnIncluded() {
-    this.props.onOptionChange("pinnedTab-sync", true);
+    if (this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN) {
+      if (confirm(browser.i18n.getMessage("switch_pinned_included_disable_hidden"))) {
+        this.props.onOptionChange("pinnedTab-sync", true);
+      }
+    } else {
+      this.props.onOptionChange("pinnedTab-sync", true);
+    }
   }
 
   clickOnPrivate() {
@@ -342,6 +551,24 @@ class SettingsSection extends React.Component {
 
   clickOnOpenDiscarded() {
     this.props.onOptionChange("groups-discardedOpen", true);
+  }
+
+  clickOnClosingClose() {
+    this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_NORMAL);
+  }
+
+  clickOnClosingAlive() {
+    this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_ALIVE);
+  }
+
+  clickOnClosingHidden() {
+    if (this.props.options.pinnedTab.sync) {
+      if (confirm(browser.i18n.getMessage("switch_hidden_disable_sync_pinned"))) {
+        this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_HIDDEN);
+      }
+    } else {
+      this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_HIDDEN);
+    }
   }
 };
 

@@ -1,4 +1,4 @@
-class OptionInput extends React.Component {
+class TextInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,33 +23,38 @@ class OptionInput extends React.Component {
 
     return (
       <div className="option-input-text">
-        <span
-          className="option-input-text-label"
-          for={this.props.id}>
-            {this.props.label}
-        </span>
-        <input
-          type="text"
-          value={this.state.name}
-          id={this.props.id}
-          onBlur={((event) => {
-            this.props.onChange(this.props.id, event.target.value);
-            this.setState({
-              name: event.target.value
-            });
-          }).bind(this)}
-          onChange={((event) => {
-            this.setState({
-              name: event.target.value
-            });
-          }).bind(this)}
-        />
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between"
+        }}>
+          <span
+            className="option-input-text-label"
+            htmlFor={this.props.id}>
+              {this.props.label}
+          </span>
+          <input
+            type="text"
+            value={this.state.name}
+            id={this.props.id}
+            onBlur={((event) => {
+              this.props.onChange(this.props.id, event.target.value);
+              this.setState({
+                name: event.target.value
+              });
+            }).bind(this)}
+            onChange={((event) => {
+              this.setState({
+                name: event.target.value
+              });
+            }).bind(this)}
+          />
+        </div>
         {help_section}
       </div>);
   }
 };
 
-OptionInput.propTypes = {
+TextInput.propTypes = {
   label: PropTypes.string,
   name: PropTypes.string,
   help: PropTypes.string,

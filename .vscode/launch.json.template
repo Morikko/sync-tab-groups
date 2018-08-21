@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Sync Tab Groups",
+            "type": "firefox",
+            "request": "attach",
+            "port": <port>,
+            "addonType": "webExtension",
+            "addonPath": "${workspaceFolder}/extension"
+        }
+    ]
+}

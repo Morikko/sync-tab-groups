@@ -2,9 +2,9 @@ class InterfaceSection extends React.Component {
   render() {
     return (
       <div className={"option-section " + (this.props.selected==="interface"?
-        "visible":"invisible")}>
+      "visible":"invisible")}>
         <h1 className="section-title">
-          Interface
+          {browser.i18n.getMessage("options_interface")}
         </h1>
         <SubSection
           title={browser.i18n.getMessage("label_select_sorting_type")}
@@ -41,24 +41,24 @@ class InterfaceSection extends React.Component {
           }
           tooltip={
             <ul>
-              <li>Custom: Drag & Drop to position your groups</li>
-              <li>Alphabetical: Sort by Name</li>
-              <li>Last Accessed: Sort by last utilisation</li>
-              <li>Old Created First</li>
-              <li>Recent Created First</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_custom")}</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_alphabetical")}</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_last")}</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_old")}</li>
+              <li>{browser.i18n.getMessage("options_interface_sortexplanation_recent")}</li>
             </ul>
           }
         />
         <SubSection
-          title="Groups"
+          title={browser.i18n.getMessage("options_interface_groups")}
           content={
             <div>
-                <NiceCheckbox
-                  checked= {this.props.options.popup.showTabsNumber}
-                  label= {browser.i18n.getMessage("show_tabs_number")}
-                  onCheckChange= {this.props.onOptionChange}
-                  id="popup-showTabsNumber"
-                />
+              <NiceCheckbox
+                checked= {this.props.options.popup.showTabsNumber}
+                label= {browser.i18n.getMessage("show_tabs_number")}
+                onCheckChange= {this.props.onOptionChange}
+                id="popup-showTabsNumber"
+              />
             </div>
           }
         />
@@ -81,14 +81,18 @@ class InterfaceSection extends React.Component {
             </div>
           }
         />
-        <h2>
-          Windows
-        </h2>
-        <NiceCheckbox
-          checked={this.props.options.groups.showGroupTitleInWindow}
-          label={browser.i18n.getMessage("show_title_window")}
-          onCheckChange={this.props.onOptionChange}
-          id="groups-showGroupTitleInWindow"/>
+        <SubSection
+          title={browser.i18n.getMessage("options_interface_windows")}
+          tooltip={undefined}
+          content = {
+            <NiceCheckbox
+              checked={this.props.options.groups.showGroupTitleInWindow}
+              label={browser.i18n.getMessage("show_title_window")}
+              onCheckChange={this.props.onOptionChange}
+              id="groups-showGroupTitleInWindow"
+            />
+          }
+        />
       </div>
     );
   }

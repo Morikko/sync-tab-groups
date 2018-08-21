@@ -1,9 +1,3 @@
-/*
-Copyright (c) 2017 Eric Masseran
-
-From: https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
 class GroupList extends React.Component {
   constructor(props) {
     super(props);
@@ -51,13 +45,17 @@ class GroupList extends React.Component {
     // Mark Search
     if ( // Currently Searching, Update: In case of change in groups
     this.props.searchfilter && this.props.searchfilter.length) {
-      let [groupSearchValue, tabSearchValue] = this.extractSearchValue(this.props.searchfilter);
+      let [groupSearchValue, tabSearchValue] = Utils.extractSearchValue(this.props.searchfilter);
       this.markSearch(groupSearchValue, tabSearchValue);
     }
   }
 
-  // Return if an action (close/remove) is pending on groupId
+  // Return true if an action (close/remove) is pending on groupId
   isCurrently(action, groupId) {
+    if (!this.props.delayedTasks) {
+      return false;
+    }
+
     if (this.props.delayedTasks[action] !== undefined) {
       return this.props.delayedTasks[action].delayedTasks[groupId] !== undefined;
     } else {
@@ -83,40 +81,59 @@ class GroupList extends React.Component {
       }
       let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
       for (let index of sortedIndex) {
-        groups.push(React.createElement(Group
-        /*** Functions ***/
-        , { onGroupClick: this.props.onGroupClick,
-          onGroupDrop: this.props.onGroupDrop,
-          onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
-          onGroupCloseClick: this.props.onGroupCloseClick,
-          onGroupRemoveClick: this.props.onGroupRemoveClick,
-          onGroupTitleChange: this.props.onGroupTitleChange,
-          onTabClick: this.props.onTabClick,
-          onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
-          onCloseTab: this.props.onCloseTab,
-          onOpenTab: this.props.onOpenTab,
-          onGroupChangePosition: this.props.onGroupChangePosition,
-          onChangePinState: this.props.onChangePinState,
-          onChangeExpand: this.props.onChangeExpand
-          /*** Data ***/
-          , key: this.props.groups[index].id,
-          groups: this.props.groups,
-          group: this.props.groups[index],
-          currentWindowId: this.props.currentWindowId,
-          currentlyClosing: this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id),
-          currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id)
-          /*** Options ***/
-          , searchGroupResult: this.state.searchGroupsResults ? this.state.searchGroupsResults[index] : undefined,
-          currentlySearching: this.state.searchGroupsResults ? true : false,
-          showTabsNumber: this.props.options.popup.showTabsNumber,
-          groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
-          allowClickSwitch: this.props.allowClickSwitch,
-          stateless: this.props.stateless,
-          width: this.props.width
-          /*** actions ***/
-          , forceExpand: this.props.forceExpand,
-          forceReduce: this.props.forceReduce
-        }));
+        groups.push(React.createElement(
+          ErrorBoundary,
+          {
+            key: index,
+            fallback: React.createElement(
+              "div",
+              null,
+              "Error on Group at index ",
+              index
+            )
+          },
+          React.createElement(Group
+          /*** Functions ***/
+          , { onGroupClick: this.props.onGroupClick,
+            onGroupDrop: this.props.onGroupDrop,
+            onMoveTabToNewGroup: this.props.onMoveTabToNewGroup,
+            onGroupCloseClick: this.props.onGroupCloseClick,
+            onGroupRemoveClick: this.props.onGroupRemoveClick,
+            onGroupTitleChange: this.props.onGroupTitleChange,
+            onTabClick: this.props.onTabClick,
+            onOpenInNewWindowClick: this.props.onOpenInNewWindowClick,
+            onCloseTab: this.props.onCloseTab,
+            onOpenTab: this.props.onOpenTab,
+            onGroupChangePosition: this.props.onGroupChangePosition,
+            onChangePinState: this.props.onChangePinState,
+            onChangeExpand: this.props.onChangeExpand,
+            onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
+            onRemoveHiddenTab: this.props.onRemoveHiddenTab
+            /*** Data ***/
+            , key: index,
+            groups: this.props.groups,
+            group: this.props.groups[index],
+            currentWindowId: this.props.currentWindowId,
+            currentlyClosing: this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id),
+            currentlyRemoving: this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id),
+            selectionFilter: this.props.selectionFilter ? this.props.selectionFilter[this.props.groups[index].id] : undefined
+            /*** Options ***/
+            , searchGroupResult: this.state.searchGroupsResults ? this.state.searchGroupsResults[index] : undefined,
+            currentlySearching: this.state.searchGroupsResults ? true : false,
+            showTabsNumber: this.props.showTabsNumber,
+            allowClickSwitch: this.props.allowClickSwitch,
+            stateless: this.props.stateless,
+            width: this.props.width,
+            hotkeysEnable: this.props.hotkeysEnable,
+            hoverStyle: this.props.hoverStyle,
+            controlsEnable: this.props.controlsEnable,
+            groupDraggable: this.props.groupDraggable,
+            draggable: this.props.draggable
+            /*** actions ***/
+            , forceExpand: this.props.forceExpand,
+            forceReduce: this.props.forceReduce
+          })
+        ));
       }
     } else {
       groups = React.createElement(
@@ -125,6 +142,7 @@ class GroupList extends React.Component {
         "There is no group now... Create your first one!"
       );
     }
+
     return React.createElement(
       "ul",
       { className: groupListClasses,
@@ -138,7 +156,7 @@ class GroupList extends React.Component {
     let searchGroupsResults = [];
     let atLeastOneResult = false;
 
-    let [groupSearchValue, tabSearchValue] = this.extractSearchValue(searchValue);
+    let [groupSearchValue, tabSearchValue] = Utils.extractSearchValue(searchValue);
 
     // Apply search
     for (let i = 0; i < this.props.groups.length; i++) {
@@ -161,7 +179,11 @@ class GroupList extends React.Component {
       if (tabSearchValue.length) {
         for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
           // Search in tab title
-          if (!Utils.search(this.props.groups[i].tabs[j].title, tabSearchValue)) {
+          const currentTab = this.props.groups[i].tabs[j];
+          const tabUrl = new URL(Utils.extractTabUrl(currentTab.url));
+          const tabHost = tabUrl.hostname.slice(0, tabUrl.hostname.lastIndexOf('.'));
+          const tabSearchPart = currentTab.title + " " + tabHost;
+          if (!Utils.search(tabSearchPart, tabSearchValue)) {
             searchGroupsResults[i].searchTabsResults[j] = false;
           } else {
             searchGroupsResults[i].atLeastOneResult = true;
@@ -215,32 +237,10 @@ class GroupList extends React.Component {
       }
     });
   }
-
-  /**
-    * Extract the value of search with this pattern:
-      g/search in group/search in tabs
-    * Search in group is optional
-    * Search value returned are "" if nothing is found
-    * @param {String} Search Value
-    * @return {Array[groupSearch, tabSearch]}
-    */
-  extractSearchValue(searchValue) {
-    let groupSearch = "",
-        tabSearch = "";
-    if (searchValue.startsWith("g/")) {
-      let last_separator = searchValue.lastIndexOf('/');
-      groupSearch = searchValue.substring(2, last_separator > 1 ? last_separator : searchValue.length);
-      tabSearch = searchValue.substring(last_separator > 1 ? last_separator + 1 : searchValue.length, searchValue.length);
-    } else {
-      tabSearch = searchValue;
-    }
-    return [groupSearch, tabSearch];
-  }
 };
 
 GroupList.propTypes = {
   groups: PropTypes.object.isRequired,
-  options: PropTypes.object.isRequired,
   currentWindowId: PropTypes.number,
   delayedTasks: PropTypes.object,
   onGroupAddClick: PropTypes.func,

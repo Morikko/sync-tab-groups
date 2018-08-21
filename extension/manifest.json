@@ -1,10 +1,9 @@
 {
   "manifest_version": 2,
-  "version": "0.5",
-
+  "version": "0.7.0",
   "name": "Sync Tab Groups",
   "description": "__MSG_extension_description__",
-  "homepage_url": "https://github.com/Morikko/sync-tab-groups",
+  "homepage_url": "https://morikko.github.io/synctabgroups/",
   "icons": {
     "64": "/share/icons/tabspace-active-64.png",
     "32": "/share/icons/tabspace-active-32.png"
@@ -13,37 +12,24 @@
   "applications": {
     "gecko": {
       "id": "sync-tab-groups@eric.masseran",
-      "strict_min_version": "57.0"
+      "strict_min_version": "56.0"
     }
   },
+  "minimum_chrome_version": "56",
 
   "permissions": [
-    "bookmarks",
     "tabs",
     "storage",
     "sessions",
     "downloads",
     "notifications",
-    "contextMenus"
+    "contextMenus",
+    "unlimitedStorage",
+    "tabHide"
   ],
 
   "background": {
-    "scripts": [
-      "lib/js/browser-polyfill.development.js",
-      "background/utils/utils.js",
-      "background/utils/delayedtaskmanager.js",
-      "background/utils/repeatedtaskmanager.js",
-      "background/utils/eventlistener.js",
-      "background/storage/bookmarkstorage.js",
-      "background/storage/localstorage.js",
-      "background/storage/filestorage.js",
-      "background/optionmanager.js",
-      "background/groupmanager.js",
-      "background/windowmanager.js",
-      "background/tabmanager.js",
-      "background/contextmenus.js",
-      "background/controller.js"
-    ]
+    "page": "/background/background.html"
   },
 
   "default_locale": "en",
@@ -67,24 +53,10 @@
   },
 
   "commands": {
-
-    "focus_previous_group": {
-      "suggested_key": {
-        "default": "Alt+Shift+Down"
-      },
-      "description": "Focus Previous Group"
-    },
-
-    "remove_group_swtich": {
-      "suggested_key": {
-        "default": "Alt+Shift+Delete"
-      },
-      "description": "Remove current group"
-    },
-
     "_execute_browser_action": {
       "suggested_key": {
-        "default": "Alt+Shift+Space"
+        "default": "Ctrl+Shift+Space",
+        "mac": "MacCtrl+Shift+Space"
       },
       "description": "Open Menu"
     },
@@ -103,18 +75,11 @@
       "description": "Switch Previous Group"
     },
 
-    "create_group_swtich": {
+    "remove_group_swtich": {
       "suggested_key": {
-        "default": "Alt+Shift+Insert"
+        "default": "Alt+Shift+Delete"
       },
-      "description": "Add New Group and Switch"
-    },
-
-    "focus_next_group": {
-      "suggested_key": {
-        "default": "Alt+Shift+Up"
-      },
-      "description": "Focus Next Group"
+      "description": "Remove current group"
     }
   }
 }

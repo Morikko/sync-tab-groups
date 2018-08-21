@@ -23,7 +23,7 @@ TaskManager.DelayedTask = function(timeoutDelay = 10000) {
  * @param {Number} groupId - ref inside the action group
  * @param {Fucntion} delayedFunction- the delayed function to execute (without parameter)
  */
-TaskManager.DelayedTask.prototype.manage = function(taskAction, delayedFunction, refId = 0) {
+TaskManager.DelayedTask.prototype.manage = async function(taskAction, delayedFunction, refId = 0) {
   switch (taskAction) {
     case TaskManager.ASK:
       this.add(delayedFunction,
@@ -34,7 +34,7 @@ TaskManager.DelayedTask.prototype.manage = function(taskAction, delayedFunction,
       break;
     case TaskManager.FORCE:
       this.remove(refId);
-      delayedFunction();
+      await delayedFunction();
       break;
   }
 };

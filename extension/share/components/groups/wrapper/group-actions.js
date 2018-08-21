@@ -63,15 +63,19 @@ const GroupActions = {
     });
   },
 
-  selectTab: function(groupId, tabIndex) {
+  selectTab: function(groupId, tabIndex, newWindow) {
     Utils.sendMessage("Tab:Select", {
       groupId: groupId,
-      tabIndex: tabIndex
+      tabIndex: tabIndex,
+      newWindow: newWindow,
     });
   },
 
   askData: function() {
-    Utils.sendMessage("Data:Ask", {});
+    Utils.sendMessage("Data:Ask", window.location != null
+      ? {all_tabs: window.location.search.includes("all_tabs")}
+      : {}
+    );
   },
 
   openSettings: function() {
@@ -118,20 +122,45 @@ const GroupActions = {
       groupId: groupId,
       tabIndex: tabIndex
     });
-  }
+  },
+
+  onRemoveHiddenTab: function(tabId) {
+    Utils.sendMessage("Tab:RemoveHiddenTab", {
+      tabId
+    });
+  },
+
+  onRemoveHiddenTabsInGroup: function(groupId) {
+    Utils.sendMessage("Group:RemoveHiddenTabsInGroup", {
+      groupId
+    });
+  },
 };
 
+function updateWindow() {
+  browser.windows.getLastFocused({
+    windowTypes: ['normal']
+  }).then((w) => {
+    store.dispatch(ActionCreators.setCurrentWindowId(w.id));
+  });
+}
 
 var popupMessenger = function(message) {
   switch (message.task) {
     case "Groups:Changed":
-      store.dispatch(ActionCreators.setTabgroups(message.params.groups));
-      store.dispatch(ActionCreators.setDelayedTask(message.params.delayedTasks));
-      browser.windows.getLastFocused({
-        windowTypes: ['normal']
-      }).then((w) => {
-        store.dispatch(ActionCreators.setCurrentWindowId(w.id));
-      });
+      if ( window.location 
+            && window.location.search.includes("all_tabs")){
+           break;
+      }
+      store.dispatch(ActionCreators.setGroups(message.params.groups));
+      store.dispatch(
+        ActionCreators.setDelayedTask(message.params.delayedTasks)
+      );
+      updateWindow();
+      break;
+    case "Tabs:All":
+      store.dispatch(ActionCreators.setGroups(message.params.groups));
+      updateWindow();
       break;
     case "Option:Changed":
       store.dispatch(ActionCreators.setOptions(message.params.options));
@@ -140,6 +169,7 @@ var popupMessenger = function(message) {
 }
 
 browser.runtime.onMessage.addListener(popupMessenger);
+
 
 var tabspaceBackground = browser.runtime.getBackgroundPage();
 

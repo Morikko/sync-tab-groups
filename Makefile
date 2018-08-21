@@ -8,12 +8,13 @@ HTML:=$(shell find extension -name *.html)
 BUILD_HTML:=$(HTML:%=$(BUILD_DIR)/%)
 UTIL:=$(shell find extension -name utils.js)
 BUILD_UTIL:=$(UTIL:%=$(BUILD_DIR)/%)
+MANIFEST:=$(shell find extension -name manifest.json)
+BUILD_MANIFEST:=$(MANIFEST:%=$(BUILD_DIR)/%)
 JS_DEV_LIB:=$(shell find extension -name *.development.js)
 BUILD_JS_DEV_LIB:=$(JS_DEV_LIB:%=$(BUILD_DIR)/%)
 JS := $(JSX:%.jsx=%.js)
 
-DEBUG_VAR:=Utils.DEGUG_MODE=
-
+DEBUG_VAR:=Utils.DEBUG_MODE=
 
 all: $(JS) release
 
@@ -36,15 +37,17 @@ stop-watch:
 release: clean
 	-mkdir build
 	cp -r extension/ $(BUILD_DIR)/
+	# Change some code for the release
+	sed -i 's/.development./.production.min./g' $(BUILD_HTML)
+	sed -i 's/.development./.production.min./g' $(BUILD_MANIFEST)
+	sed -i 's/$(DEBUG_VAR)true;/$(DEBUG_VAR)false;/' $(BUILD_UTIL)
 	# Filter undesirable files
 	-rm -rf $(BUILD_DIR)/extension/tests
 	-rm $(BUILD_JSX)
 	-rm $(BUILD_JS_DEV_LIB)
-	# Change some code for the release
-	sed -i 's/.development./.production.min./g' $(BUILD_HTML)
-	sed -i 's/$(DEBUG_VAR)true;/$(DEBUG_VAR)false;/' $(BUILD_UTIL)
 	# Export the result
-	zip -r $(BUILD_DIR)/sync-tab-groups.zip $(BUILD_DIR)/extension/*
+	cd $(BUILD_DIR)/extension;zip -r ../sync-tab-groups.zip *;\
+		cd ../../
 	cp $(BUILD_DIR)/sync-tab-groups.zip $(BUILD_DIR)/sync-tab-groups.xpi
 
 test:

@@ -2,17 +2,28 @@
  * Useful code shared in all the apps UI and background
  * Shared variables definition
  Tools:
- - mergeObject
+ - search
+ - extractSearchValue
+ - sendMessage
  - getCopy
  - wait
+Array:
  - shuffleArray
- - search
- - sendMessage
+ - range
+Objects:
+ - mergeObject
+ - setObjectPropertiesWith
+ - objectHasUndefined
+ - isDeadObject
+ - checkCorruptedObject
 
  Browser type:
+ - isFirefox
  - isChrome
- - isFF57
- - isBeforeFF57
+ - hasDiscardFunction
+ - hasSessionWindowValue
+ - hasWindowTitlePreface
+ - hasHideFunction
 
  URLs
  - extractTabUrl
@@ -30,15 +41,30 @@
  - setBrowserActionIcon
  - StorageManager.File.readJsonFile
  - GroupManager.getIndexSortByPosition
+ - createGroupsJsonFile
+ - windowExists
+ - doActivateHotkeys
+ - getOffset
+
  */
+const WINDOW_ID_NONE = browser.windows.WINDOW_ID_NONE;
 var Utils = Utils || {};
+var TabManager = TabManager || {};
+var Selector = Selector || {};
+
 /**
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
  */
-// If change the line, update makefile
-Utils.DEGUG_MODE = true;
-Utils.UTILS_SHOW_MESSAGES = Utils.DEGUG_MODE;
+Utils.DEBUG_MODE=true;
+Utils.UTILS_SHOW_MESSAGES = Utils.DEBUG_MODE;
+Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
+Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";
+Utils.SELECTOR_PAGE_URL = "tabpages/selector-groups/selector-groups.html";
+
+var StorageManager = StorageManager || {};
+StorageManager.Backup = StorageManager.Backup || {};
+StorageManager.Backup.LOCATION = "synctabgroups-backup/";
 
 var TaskManager = TaskManager || {};
 TaskManager.ASK = "ASK";
@@ -53,15 +79,28 @@ OptionManager.SORT_RECENT_OLD = 1;
 OptionManager.SORT_ALPHABETICAL = 2;
 OptionManager.SORT_LAST_ACCESSED = 3;
 OptionManager.SORT_CUSTOM = 4;
+OptionManager.CLOSE_NORMAL = 0;
+OptionManager.CLOSE_ALIVE = 1;
+OptionManager.CLOSE_HIDDEN = 2;
+OptionManager.TIMERS = function() {
+  return {
+    t_5mins: 5*60*1000,
+    t_1h: 60*60*1000,
+    t_4h: 4*60*60*1000,
+    t_1d: 24*60*60*1000,
+    t_1w: 7*24*60*60*1000
+  }
+}
+
 OptionManager.TEMPLATE = function() {
   return {
     version: 0.1,
     privateWindow: {
-      sync: true,
-      removeOnClose: true,
+      sync: false,
+      removeOnClose: true
     },
     pinnedTab: {
-      sync: true
+      sync: false,
     },
     bookmarks: {
       sync: false,
@@ -71,20 +110,59 @@ OptionManager.TEMPLATE = function() {
       syncNewWindow: true,
       removeEmptyGroup: false,
       showGroupTitleInWindow: false,
-      sortingType: OptionManager.SORT_OLD_RECENT,
+      sortingType: OptionManager.SORT_LAST_ACCESSED,
       discardedOpen: true,
+      closingState: OptionManager.CLOSE_NORMAL,
+      discardedHide: false,
+      removeUnknownHiddenTabs: false,
     },
     popup: {
       maximized: false,
       whiteTheme: false,
       showTabsNumber: true,
-      showSearchBar: true,
+      showSearchBar: true
     },
     shortcuts: {
       allowGlobal: false,
+      navigation: true,
+    },
+    backup: {
+      download: {
+        enable: false,
+        time: Utils.setObjectPropertiesWith(OptionManager.TIMERS(), true)
+      },
+      local: {
+        enable: true,
+        intervalTime: 1,
+        maxSave: 48,
+      }
+    },
+    log: {
+      enable: true,
     }
   };
 };
+
+Selector.TYPE = Object.freeze({
+  EXPORT: "Export",
+  IMPORT: "Import",
+});
+
+Utils.setObjectPropertiesWith = function(obj, val)  {
+  let obj2 = Utils.getCopy(obj);
+  for(let pro in obj2 )
+    obj2[pro] = val;
+  return obj2;
+}
+
+OptionManager.isClosingAlived = function() {
+  //return OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE;
+  return false;
+}
+
+OptionManager.isClosingHidden = function() {
+  return OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN;
+}
 
 var GroupManager = GroupManager || {};
 
@@ -105,8 +183,8 @@ GroupManager.getIndexSortByPosition = function(groups) {
   // Add them in the order of the array at the end
   if (sortedIndex.length < groups.length) { // Wrong position
     for (let i = 0; i < groups.length; i++) {
-      if (!sortedIndex[groups[i].index]) {
-        sortedIndex.push(groups[i].index);
+      if (sortedIndex.indexOf(i) === -1) {
+        sortedIndex.push(i);
       }
     }
   }
@@ -189,13 +267,14 @@ StorageManager.File.readJsonFile = async function(file) {
  * Parse the get parameters from the URL, return the value of name
  * @param {String} name - the value to return
  * @param {String} url - string to analyse, if not given, take the one from the web page
+ * @return {String} the value found or '' if nothing
  */
 Utils.getParameterByName = function(name, url) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, "\\$&");
   var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
     results = regex.exec(url);
-  if (!results) return null;
+  if (!results) return '';
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
@@ -258,25 +337,37 @@ Utils.search = function(title, keywords) {
  */
 Utils.wait = async function(time) {
   return new Promise((resolve, reject) => {
-    setTimeout(resolve, time, 'one');
+    setTimeout(resolve, time, time);
   });
 }
+
+
+Utils.isFirefox = () => browser.runtime.getBrowserInfo != null;
+Utils.isChrome = () => !Utils.isFirefox();
+
+
+Utils.hasDiscardFunction = () => browser.tabs.discard != null;
+Utils.hasSessionWindowValue = () => browser.sessions.getWindowValue != null;
+Utils.hasWindowTitlePreface = () => Utils.isFirefox();
+Utils.hasHideFunction = () =>  browser.tabs.hide != null;
 
 /**
  * Return true if the browser is Chrome
  * @return {Boolean}
+ * @deprecated
  */
 Utils.isChrome = function() {
-  if (browser.sessions.getWindowValue === undefined &&
-    browser.tabs.discard !== undefined) {
+  if (browser.sessions.getWindowValue == null &&
+    browser.tabs.discard != null) {
     return true;
   }
   return false;
 }
 
 /**
- * Return true if the browser is FF57
+ * Return true if the browser is FF57 or above
  * @return {Boolean}
+ * @deprecated
  */
 Utils.isFF57 = function() {
   if (browser.sessions.getWindowValue !== undefined) {
@@ -285,17 +376,6 @@ Utils.isFF57 = function() {
   return false;
 }
 
-/**
- * Return true if the browser is FF56 and -
- * @return {Boolean}
- */
-Utils.isBeforeFF57 = function() {
-  if (browser.sessions.getWindowValue === undefined &&
-    browser.tabs.discard === undefined) {
-    return true;
-  }
-  return false;
-}
 
 /**
  * Return the url in parameter for privileged-tab.html pages
@@ -303,32 +383,41 @@ Utils.isBeforeFF57 = function() {
  * @param {String} url
  * @return {String} new_url
  */
-Utils.extractTabUrl = function(url) {
+Utils.extractTabUrl = function(url="") {
   let new_url = url;
-  if (new_url.includes("lazytab/lazytab.html")) {
+  if (new_url.includes(Utils.LAZY_PAGE_URL)) {
     new_url = Utils.getParameterByName('url', new_url)
   }
-  if (new_url.includes("/privileged-tab/privileged-tab.html")) {
+  if (new_url.includes(Utils.PRIV_PAGE_URL)) {
+    new_url = Utils.getParameterByName('url', new_url)
+  }
+  // If new_url failed return a new tab
+  return new_url===""?TabManager.NEW_TAB:new_url;
+}
+
+Utils.extractLazyUrl = function(url="") {
+  let new_url = url;
+  if (new_url.includes(Utils.LAZY_PAGE_URL)) {
     new_url = Utils.getParameterByName('url', new_url)
   }
   return new_url;
 }
 
 Utils.getPrivilegedURL = function(title, url, favIconUrl) {
-  return browser.extension.getURL("/tabpages/privileged-tab/privileged-tab.html") + "?" +
-    "title=" + encodeURIComponent(title) +
+  return browser.extension.getURL(Utils.PRIV_PAGE_URL) + "?" +
+    "title=" + encodeURIComponent(title|| "") +
     "&url=" + encodeURIComponent(url) +
-    "&favIconUrl=" + encodeURIComponent(favIconUrl);
+    "&favIconUrl=" + encodeURIComponent(favIconUrl|| "");
 }
 
 Utils.getDiscardedURL = function(title, url, favIconUrl) {
-  if (url === "about:newtab" || url === "about:blank" || url.includes("chrome://newtab")) {
+  if (url === TabManager.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab")) {
     return url;
   } else {
-    return browser.extension.getURL("/tabpages/lazytab/lazytab.html") + "?" +
-      "title=" + encodeURIComponent(title) +
+    return browser.extension.getURL(Utils.LAZY_PAGE_URL) + "?" +
+      "title=" + encodeURIComponent(title|| "") +
       "&url=" + encodeURIComponent(url) +
-      "&favIconUrl=" + encodeURIComponent(favIconUrl);
+      "&favIconUrl=" + encodeURIComponent(favIconUrl|| "");
   }
 }
 
@@ -342,7 +431,7 @@ Utils.getDiscardedURL = function(title, url, favIconUrl) {
  * @returns {boolean}
  */
 Utils.isPrivilegedURL = function(url) {
-  if (url === "about:newtab" || url === "about:blank" || url.includes("chrome://newtab"))
+  if (url === TabManager.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab"))
     return false;
   if (url.startsWith("chrome:") ||
     url.startsWith("javascript:") ||
@@ -388,31 +477,65 @@ Utils.shuffleArray = function(a) {
  * Check if an url is already open in the focused window, if so it focuses the tab else it opens it
  * @param {String} url
  */
-Utils.openUrlOncePerWindow = async function(url) {
+Utils.openUrlOncePerWindow = async function(url, active=true) {
   try {
     const currentWindowId = (await browser.windows.getLastFocused({
       windowTypes: ['normal'],
     })).id;
+
+    let urlWithoutHash = url,
+        hasHash = urlWithoutHash.lastIndexOf("#") > -1;
+    if ( hasHash )
+      urlWithoutHash = urlWithoutHash.substring(0,urlWithoutHash.lastIndexOf("#"))
+
     const tabs = await browser.tabs.query({
       windowId: currentWindowId,
-      url: url,
+      url: urlWithoutHash,
     });
 
     if (tabs.length) { // if tab is found
-      browser.tabs.update(tabs[0].id, {
-        active: true,
-      });
+      let params = {
+        active: active,
+      }
+      if ( hasHash ) {
+        params.url = url;
+      }
+      browser.tabs.update(tabs[0].id, params);
     } else {
       browser.tabs.create({
-        active: true,
+        active: active,
         url: url,
       });
     }
   } catch (e) {
-    let msg = "Utils.openUrlOncePerWindow failed; " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
+}
+
+/**
+  * Extract the value of search with this pattern:
+    g/search in group/search in tabs
+  * Search in group is optional
+  * Search value returned are "" if nothing is found
+  * @param {String} Search Value
+  * @return {Array[groupSearch, tabSearch]}
+  */
+Utils.extractSearchValue = function (searchValue) {
+  let groupSearch = "", tabSearch = "";
+  if ( searchValue.startsWith("g/") ) {
+    let last_separator = searchValue.lastIndexOf('/');
+    groupSearch = searchValue.substring(
+      2,
+      last_separator>1?last_separator:searchValue.length
+    );
+    tabSearch = searchValue.substring(
+      last_separator>1?last_separator+1:searchValue.length,
+      searchValue.length
+    );
+  } else {
+    tabSearch = searchValue;
+  }
+  return [groupSearch, tabSearch];
 }
 
 /**
@@ -425,3 +548,210 @@ Utils.getGroupTitle = function(group) {
     browser.i18n.getMessage("unnamed_group") + " " + group.id
   );
 };
+
+/**
+ * Return true if at least the object or one of its properties is 
+ * Go deep in the object
+ * @return {Array[{Boolean} hasUndefined, {String} path to the undefined]}
+ */
+Utils.objectHasUndefined = function(object, name="default") {
+  if ( object === undefined ) {
+    return [true, name];
+  }
+  for (let pro in object) {
+    if ( object[pro] === undefined ) {
+      return [true, `${name}["${pro}"]`];
+    }
+    if ("object" === typeof object[pro]) {
+      const result = Utils.objectHasUndefined(object[pro], `${name}["${pro}"]`)
+      if ( result[0] ) {
+        return result
+      }
+    }
+  }
+  return [false, name];
+}
+
+/**
+ * Check that the main object and the properties are not undefined
+ * @param {Object} object
+ * @param {Object[key] = replaceValue} properties if replaceValue is null, it is critical
+ * @param {String} name
+ * @return {Array[{Boolean} hasUndefined, {String} path to the undefined]}
+ */
+Utils.ojectPropertiesAreUndefined = function(
+  object, properties, name="default"
+) {
+  if ( object == null ) {
+    return [true, [name]];
+  }
+  let isCritical = false;
+  const listMessages = [];
+
+  for (let pro in properties) {
+    if ( object[pro] == null ) {
+      if (properties[pro] == null) {
+        isCritical = true;
+      } else {
+        object[pro] = properties[pro]
+      }
+      listMessages.push(`${name}["${pro}"]`);
+    }
+  }
+  return [isCritical, listMessages];
+}
+
+/**
+ * Return true if obj is a dead object
+ */
+Utils.isDeadObject = function (obj) {
+  try {
+    String(obj);
+    return false;
+  }
+  catch (e) {
+    LogManager.warning("Sync Tab Groups: " + obj + " is probably dead...");
+    return true;
+  }
+}
+
+/**
+ * Check if obj contains at least
+    1. One Dead Object
+    2. One undefined
+  * @param {Object} obj
+  * @return {Boolean} corrupted state
+  */
+Utils.checkCorruptedObject = function( obj, name="default" ) {
+  const corrupted = {
+    is: false,
+    msg: "",
+  };
+  try {
+    const isDeadObject = Utils.isDeadObject(obj);
+    if (isDeadObject) {
+      corrupted.is = isDeadObject;
+      corrupted.msg = "Dead Object";
+      return corrupted;
+    }
+    const [isUndefined, pathObject] = Utils.objectHasUndefined(obj, name);
+    if (isUndefined) {
+      corrupted.is = isUndefined;
+      corrupted.msg = "Undefined: " +  pathObject;
+      return corrupted;
+    }
+  } catch (e) {
+    corrupted.is = true;
+    corrupted.msg = "Catch on error.";
+  }
+
+  return corrupted;
+};
+
+/**
+ * Return an array with integer from 0 to N-1
+ * @param {Number} N - Size of the array
+ */
+Utils.range = function(N) {
+  return [...Array(N).keys()]
+}
+
+Utils.createGroupsJsonFile = function (groups=GroupManager.groups,{
+  prettify=false
+}={}) {
+  return URL.createObjectURL(new Blob([
+    JSON.stringify({
+      version: ["syncTabGroups", 1],
+      groups: groups,
+    }, null, (prettify?2:0))
+  ], {
+    type: 'application/json'
+  }))
+}
+
+/**
+ * Wait download with downloadId to complete or fail within waitingTime seconds
+ */
+Utils.waitDownload = async function(downloadId, waitingTime=6){
+  for(let i=0; i<waitingTime*4; i++) {
+    if ( (await browser.downloads.search({id: downloadId}))[0].state !== "in_progress" ) {
+      break;
+    }
+    await Utils.wait(250);
+  }
+}
+
+/*
+ * Return true if the windowId is in an opened window
+ */
+Utils.windowExists = async function(windowId) {
+  if ( windowId === WINDOW_ID_NONE || windowId < 0) {
+    return false
+  }
+  return (await browser.windows.getAll()).filter((w)=> w.id===TabAlive.WINDOW_ID).length > 0;
+}
+
+Utils.timerDecorator = function(func, {
+  name="Perf",
+  times=1
+}={}) {
+  return async function() {
+
+    let t0 = performance.now();
+    for(let i=0; i<times; i++){
+      await func.apply(this, arguments);
+    }
+    let t1 = performance.now();
+    console.log(name + ": " + (t1 - t0)/times + " milliseconds.")
+  };
+}
+
+Utils.getParentElement = function (el, className) {
+  do {
+    if ( el.classList.contains(className) ) {
+      return el;
+    }
+    el = el.parentElement;
+  } while(el !== undefined );
+
+  throw Error("[Utils.getParentElement] Element nof found: " + className);
+}
+
+
+/**
+ * Compute the offset of the element (el) from the top of the page (remove scroll)
+ */
+Utils.getOffset = function( el, ref=document.body ) {
+  let top = 0;
+
+  // Get offset of the current element
+  let offsetEl = el;
+  do {
+      top += offsetEl.offsetTop;
+      offsetEl = offsetEl.offsetParent;
+
+  } while( offsetEl !== document.body && !isNaN( offsetEl.offsetTop ) );
+
+  // Remove all the scroll offset from the parent
+  let scrollEl = el;
+  while( scrollEl && !isNaN( scrollEl.offsetTop ) ) {
+    top -= scrollEl.scrollTop;
+    scrollEl = scrollEl.parentElement;
+  }
+
+  return top;
+}
+
+/**
+ * Return the lister if bool is true
+ * Else return an useless function
+ */
+Utils.doActivateHotkeys = function (listener, bool) {
+  if (bool) {
+    return listener;
+  } else {
+    return ()=>false;
+  }
+}
+
+TabManager.NEW_TAB = (Utils.isChrome()?"chrome://newtab/":"about:newtab");

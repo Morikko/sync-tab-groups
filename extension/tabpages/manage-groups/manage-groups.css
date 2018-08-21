@@ -3,6 +3,7 @@ body {
   color: #444;
   font-size: 1em;
   font-family: sans-serif;
+  margin: 0;
 }
 
 /*** Manage Bar ***/
@@ -105,8 +106,7 @@ body {
 }
 
 .group-list {
-  height: calc(100vh - 165px) !important;
-
+  height: calc(100vh - 147px) !important;
   box-sizing: border-box;
 }
 

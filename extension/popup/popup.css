@@ -1,0 +1,103 @@
+/*
+Copyright (c) 2017 Eric Masseran
+
+From: https://github.com/denschub/firefox-tabgroups
+Copyright (c) 2015 Dennis Schubert
+*/
+body {
+  overflow: hidden;
+  margin: 0;
+}
+
+.menu-minimized {
+  width: 450px;
+}
+
+.menu-maximized {
+  width: 800px;
+}
+
+/*** Main bar ***/
+
+.mainbar {
+  border-top: #ccc solid 2px;
+  background-color: var(--not-checked);
+  position: relative;
+  height: 34px;
+  display: flex;
+  box-sizing: content-box;
+}
+
+.grouped-button {
+  height: 100%;
+  flex: 40;
+  display: inline-flex;
+  cursor: pointer;
+  background-color: var(--not-checked);
+  color: #444;
+}
+
+.grouped-button.group-visible {
+  background-color: var(--group-open);
+}
+
+.grouped-button.group-visible.incognito {
+  background-color: var(--private-open);
+}
+
+.grouped-button span, .manage-button span {
+  flex: 1;
+  margin: auto 0;
+  text-align: center;
+  line-height: 12px;
+}
+
+.manage-button {
+  height: 100%;
+  flex: 45;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin: auto 0;
+  border-left: #ccc solid 1px;
+  cursor: pointer;
+}
+
+.manage-button i {
+  font-size: 20px !important;
+  padding: 7px 0 !important;
+  margin: auto 0;
+}
+
+.mainbar .right-actions i:hover, .manage-button:hover {
+  background-color: var(--not-checked-hover);
+}
+
+.mainbar .right-actions {
+  display: inline-block;
+  opacity: 0.7;
+  height: 100%;
+  border-left: #ccc solid 1px;
+}
+
+.mainbar i {
+  font-size: 26px;
+  cursor: pointer;
+  width: 32px;
+  padding: 4px 0;
+  text-align: center;
+}
+
+/*** Main End bar ***/
+.group-list {
+  height: 480px;
+}
+
+.addButton {
+  border-top: #ccc solid 2px;
+  height: 30px;
+}
+
+.groupadd-controls i {
+  padding: 5px 0px;
+}

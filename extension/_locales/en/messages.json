@@ -1,6 +1,6 @@
 {
   "extension_description": {
-    "message": "Sync Tab Groups are an easy way to organize your current tabs depending on a topic. Each open group is synchronized with a window so that all tabs change are saved. Hence, you can close a current tabs-flow while opening another one.",
+    "message": "Sync Tab Groups is an easy way to manage all your tabs. You group, organize, search and active them easily.",
     "description": "Description of the extension"
   },
 
@@ -24,9 +24,9 @@
     "description": "Default name for unnamed group"
   },
 
-  "open_preferences": {
-    "message": "Open Preferences",
-    "description": "Open Preferences"
+  "contextmenu_preferences": {
+    "message": "Preferences",
+    "description": "Open Preferences from the shortcuts Menu"
   },
 
   "expand_menu": {
@@ -55,7 +55,7 @@
   },
 
   "rename_group": {
-    "message": "Rename",
+    "message": "Rename the group",
     "description": "Hover help for rename button"
   },
 
@@ -295,17 +295,12 @@
   },
 
   "command_description_remove_group_swtich": {
-    "message": "Close and remove the current group in window and switch to next one.",
+    "message": "Close and remove the current group in window.",
     "description": ""
   },
 
   "command_description__execute_browser_action": {
     "message": "Open Sync Tab Group Menu.",
-    "description": ""
-  },
-
-  "open_shortcut_list": {
-    "message": "Open Shortcuts List",
     "description": ""
   },
 
@@ -406,12 +401,12 @@
 
   "expand_all_groups": {
     "message": "Expand all groups (see tabs)",
-    "description": "Hover help for button for expanding all groups (see tabs)"
+    "description": "Hover help the button expanding all groups (see tabs)"
   },
 
   "reduce_all_groups": {
     "message": "Reduce all groups (hide tabs)",
-    "description": "Hover help for button for reducing all groups (hide tabs)"
+    "description": "Hover help for button reducing all groups (hide tabs)"
   },
 
   "manage_groups": {
@@ -426,7 +421,7 @@
 
   "state_new_normal_window": {
     "message": "New Windows",
-    "description": "Setting title: option if a new window is visible group or invisible"
+    "description": ""
   },
 
   "private_window_title": {
@@ -441,12 +436,798 @@
 
   "synchronized_window": {
     "message": "Group Visible",
-    "description": "Label for group visible in popup"
+    "description": "Label for group visible in the popup"
   },
 
   "unsynchronized_window": {
     "message": "Group Invisible",
-    "description": "Status in Mainbar in popup when group are invisible"
-  }
+    "description": "Status in Mainbar (Menu) when a group is invisible"
+  },
 
+  "contextmenu_backup": {
+    "message": "Back Up (Manual)",
+    "description": "Right click on extension icon, the title for doing a backup."
+  },
+
+  "options_about_start": {
+    "message": "Welcome to Sync Tab Groups! I highly recommend you to start checking the different options. You will make Sync Tab Groups fit your expectation. Also, you will understand how to use the extension well, as each option is explained.",
+    "description": ""
+  },
+
+  "options_about_further": {
+    "message": "For further information, check the guide (link in the navigation bar) on the Sync Tab Groups Website.",
+    "description": "Not used yet!"
+  },
+
+  "options_about_enjoy": {
+    "message": "I hope you are loving your experience with Sync Tab Groups. If so, don't hesitate to add a nice review on the extension download page for sharing it.",
+    "description": "Message in the about section of the Preferences"
+  },
+
+  "options_about_contribute": {
+    "message": "Beyond to use it, you can contribute. Like finding bugs, suggesting great new features to add or simply translating it in your language. For any reasons, don't hesitate to contact me.",
+    "description": "Message in the about section of the Preferences"
+  },
+
+  "options_about_dev": {
+    "message": "Sync Tab Groups is an extension I am developing in my free time. I am doing everything to provide you the best extension. For those who came across bugs, I apologize for the disagreement.",
+    "description": "Message in the about section of the Preferences"
+  },
+
+  "options_help_title": {
+    "message": "Help",
+    "description": ""
+  },
+
+  "options_behaviors_help_title_invisible": {
+    "message": "Invisible",
+    "description": ""
+  },
+
+  "options_behaviors_help_invisible": {
+    "message": "New windows opened without Sync Tab Groups are Invisible.",
+    "description": ""
+  },
+
+  "options_behaviors_help_title_visible": {
+    "message": "Visible",
+    "description": ""
+  },
+
+  "options_behaviors_help_visible_new": {
+    "message": "New windows opened without Sync Tab Groups are Visible as a new unnamed group.",
+    "description": ""
+  },
+
+  "options_behaviors_help_change_visibility": {
+    "message": "Any window can be specifically changed from/to visible/invisible from the Menu. (button at the bottom left)",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_excluded": {
+    "message": "Excluded",
+    "description": "Pinned Tabs are not part of a group."
+  },
+
+  "options_behaviors_pinned_excluded_notpart": {
+    "message": "Pinned tabs are not part of any groups.",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_excluded_switching": {
+    "message": "Switching/closing actions don't impact the pinned tabs.",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_excluded_usecase": {
+    "message": "Use case: Global Tabs (Mail tab, Music tab...)",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_included": {
+    "message": "Included",
+    "description": "Pinned are saved in the group"
+  },
+
+  "options_behaviors_pinned_included_part": {
+    "message": "Pinned tabs are part of the group in the window.",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_included_switching": {
+    "message": "Switching/closing actions close and save the pinned tabs in the group.",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_included_usecase": {
+    "message": "Use case: Important tabs for the group.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening": {
+    "message": "Tabs Opening",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_discarded": {
+    "message": "Discarded",
+    "description": "Tabs are not fully loaded on opening"
+  },
+
+  "options_behaviors_tabsopening_discarded_lighter": {
+    "message": "Faster and Lighter",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_discarded_notfullyloaded": {
+    "message": "Tabs are not fully loaded on opening.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_discarded_loadedclick": {
+    "message": "The tabs are only loaded once you active (click/focus) them. After, they stay loaded.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_full": {
+    "message": "Full",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_full_loadedopening": {
+    "message": "Tabs are completely loaded on opening.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_full_heavier": {
+    "message": "Consume more memory and network data.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_limits": {
+    "message": "Limits (In both cases)",
+    "description": "Limits for tabs opening behavior"
+  },
+
+  "options_behaviors_tabsopening_limits_temporary": {
+    "message": "Temporary data (forms...) added before tabs were closed are lost. (Limited by the browser)",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_limits_history": {
+    "message": "Tabs History are not restored. (Limited by the browser)",
+    "description": ""
+  },
+
+  "options_behaviors_private": {
+    "message": "Private",
+    "description": "Behavior of the Private windows"
+  },
+
+  "options_behaviors_private_visible": {
+    "message": "New private windows opened without Sync Tab Groups are visible as a new private groups.",
+    "description": ""
+  },
+
+  "options_behaviors_private_groups": {
+    "message": "Groups opened in private windows are private as well.",
+    "description": ""
+  },
+
+  "options_behaviors_private_notsaved": {
+    "message": "Private groups are not saved on the disk",
+    "description": ""
+  },
+
+  "options_behaviors_private_autoremoved": {
+    "message": "A private group closed is automatically deleted.",
+    "description": ""
+  },
+
+  "options_behaviors_private_restart": {
+    "message": "A restart of the browser will closed and deleted all the private groups.",
+    "description": ""
+  },
+
+  "options_behaviors_private_invisible": {
+    "message": "Invisible",
+    "description": "Behavior of the Private windows"
+  },
+
+  "options_behaviors_private_invisible_creation": {
+    "message": "New private windows opened without Sync Tab Groups are Invisible.",
+    "description": ""
+  },
+
+  "options_behaviors_private_changestate": {
+    "message": "Any private window can be specifically changed from/to private/invisible from the Menu.",
+    "description": ""
+  },
+
+  "options_settings_others": {
+    "message": "Others",
+    "description": "Subsection in settings"
+  },
+
+  "options_settings": {
+    "message": "Settings",
+    "description": "Option section for the groups settings (behavior)"
+  },
+
+  "options_interface": {
+    "message": "Interface",
+    "description": "Option section for the groups interface"
+  },
+
+  "options_interface_windows": {
+    "message": "Windows",
+    "description": "Option subsection for the groups interface"
+  },
+
+  "options_interface_groups": {
+    "message": "Groups",
+    "description": "Option subsection for the groups interface"
+  },
+
+  "options_interface_sortexplanation_custom": {
+    "message": "Custom: Drag & Drop to position your groups",
+    "description": ""
+  },
+
+  "options_interface_sortexplanation_alphabetical": {
+    "message": "Alphabetical: Sort by Name",
+    "description": ""
+  },
+
+  "options_interface_sortexplanation_last": {
+    "message": "Last Accessed: Sort by last utilisation",
+    "description": ""
+  },
+
+  "options_interface_sortexplanation_old": {
+    "message": "Old Created First",
+    "description": ""
+  },
+
+  "options_interface_sortexplanation_recent": {
+    "message": "Recent Created First",
+    "description": ""
+  },
+
+  "options_groups": {
+    "message": "Groups",
+    "description": "Option section for the groups data"
+  },
+
+  "options_groups_backup_local": {
+    "message": "Local Back Up",
+    "description": ""
+  },
+
+  "options_groups_backup_download": {
+    "message": "Download Back Up",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior": {
+    "message": "Behavior",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior_download": {
+    "message": "Automatic download of a file with all your groups. (except private ones)",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior_invisible": {
+    "message": "The download is invisible in the download history.",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior_distinctfile": {
+    "message": "Each specific timer is saved in a distinct file.",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior_overwritten": {
+    "message": "However, the same timer will overwrite its previous back up.",
+    "description": ""
+  },
+
+  "options_groups_backup_location": {
+    "message": "Location",
+    "description": ""
+  },
+
+  "options_groups_backup_location_subfolder": {
+    "message": "Done in the subfolder '$FOLDER$' in your browser download folder.",
+    "description": "",
+    "placeholders": {
+      "folder" : {
+        "content": "$1",
+        "example": "backup/"
+      }
+    }
+  },
+
+  "options_groups_backup_location_restiction": {
+    "message": "The browser restricts it to be inside the browser download folder, so you can't change the location.",
+    "description": ""
+  },
+
+  "options_groups_backup_timer": {
+    "message": "Timers count explanation",
+    "description": ""
+  },
+
+  "options_groups_backup_timer_start": {
+    "message": "Timers start when the extension is launched or the back up is enabled, and back up when the time indicated is over.",
+    "description": ""
+  },
+
+  "options_groups_backup_timer_done": {
+    "message": "The save is done when the time indicated is over.",
+    "description": ""
+  },
+
+  "options_groups_backup_timer_reset": {
+    "message": "Timers reset to 0, when you restart the browser, disable the back up option or disable the extension.",
+    "description": ""
+  },
+
+  "options_groups_backup_manual": {
+    "message": "Manual Back Up",
+    "description": ""
+  },
+
+  "options_groups_backup_manual_button": {
+    "message": "From the shortcuts menu (Right click on the extension icon",
+    "description": ""
+  },
+
+  "options_groups_backup_manual_file": {
+    "message": "Saved in a distinct file, called manual, overwritten as well.",
+    "description": ""
+  },
+
+  "options_groups_backup_every": {
+    "message": "Done every",
+    "description": "See options_groups_backup_t_..., a space is automatically added after"
+  },
+
+  "options_groups_backup_t_5mins": {
+    "message": "5 minutes",
+    "description": "Follows options_groups_backup_every"
+  },
+
+  "options_groups_backup_t_1h": {
+    "message": "hour",
+    "description": ""
+  },
+
+  "options_groups_backup_t_4h": {
+    "message": "4 hours",
+    "description": ""
+  },
+
+  "options_groups_backup_t_1d": {
+    "message": "day",
+    "description": ""
+  },
+
+  "options_groups_backup_t_1w": {
+    "message": "week",
+    "description": ""
+  },
+
+  "options_groups_cleaning": {
+    "message": "Cleaning",
+    "description": ""
+  },
+
+  "options_groups_cleaning_removeall": {
+    "message": "Remove all groups",
+    "description": ""
+  },
+
+  "options_groups_cleaning_removeall_warning": {
+    "message": "Once done, you can't recover your groups!",
+    "description": ""
+  },
+
+  "options_button_enable": {
+    "message": "Enable",
+    "description": "Button Title"
+  },
+
+  "options_button_disable": {
+    "message": "Disable",
+    "description": "Button Title"
+  },
+
+  "options_about": {
+    "message": "About",
+    "description": "Option Section Title"
+  },
+
+  "options_guide": {
+    "message": "Guide",
+    "description": "Option Section Title"
+  },
+
+  "change_window_invisible": {
+    "message": "Click for making the group invisible (removed)",
+    "description": "Hover help for button in the bottom left of the menu"
+  },
+
+  "change_window_visible": {
+    "message": "Click for making the window visible (added as new group)",
+    "description": "Hover help for button in the bottom left of the menu"
+  },
+
+  "open_manager": {
+    "message": "Open Tab with the Groups Manager",
+    "description": "Hover help for button in the bottom of the menu"
+  },
+
+  "group_manager": {
+    "message": "Groups Manager",
+    "description": "Tab name where you can organize your groups"
+  },
+
+  "group_manager_single_button": {
+    "message": "Single",
+    "description": "Button in Groups Manager for showing only one side"
+  },
+
+  "group_manager_split_button": {
+    "message": "Split",
+    "description": "Button in Groups Manager for showing 2 sides"
+  },
+
+  "options_shortcuts_global": {
+    "message": "Global Shortcuts",
+    "description": "Shortcuts available from anywhere in the browser"
+  },
+
+  "notification_update_title": {
+    "message": "Sync Tab Groups has been updated to version",
+    "description": "Title in the notification displayed when the extension is updated"
+  },
+
+  "notification_update_message": {
+    "message": "Click here to see the changes provided by the new version.",
+    "description": "Message in the notification displayed when the extension is updated"
+  },
+
+  "options_shortcuts_navigation": {
+    "message": "Navigation",
+    "description": "Shortcuts available from the groups interface (Popup & manager)"
+  },
+
+  "options_shortcuts_navigation_allow": {
+    "message": "Allow navigation shortcuts from the groups interface",
+    "description": ""
+  },
+
+  "command_description_general_down": {
+    "message": "Next group/tab (or first)",
+    "description": ""
+  },
+
+  "command_description_general_up": {
+    "message": "Previous group/tab (or last)",
+    "description": ""
+  },
+
+  "command_description_general_insert": {
+    "message": "Create a new group (accept name with enter)",
+    "description": ""
+  },
+
+  "command_description_general_escape": {
+    "message": "Close the popup (default behavior)",
+    "description": ""
+  },
+
+  "command_description_general_home": {
+    "message": "First group",
+    "description": ""
+  },
+
+  "command_description_general_end": {
+    "message": "Last group",
+    "description": ""
+  },
+
+  "command_description_general_pageup": {
+    "message": "Select first tab (if tab selected)",
+    "description": ""
+  },
+
+  "command_description_general_pagedown": {
+    "message": "Select last tab (if tab selected)",
+    "description": ""
+  },
+
+  "command_description_general_shift_pageup": {
+    "message": "Reduce all groups",
+    "description": ""
+  },
+
+  "command_description_general_shift_pagedown": {
+    "message": "Expand all groups",
+    "description": ""
+  },
+
+  "command_description_general_ctrl_f": {
+    "message": "Focus the search bar",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_m": {
+    "message": "Open Manager",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_p": {
+    "message": "Open Preferences",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_o": {
+    "message": "Make the group visible/invisible",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_l": {
+    "message": "Change popup size (small/large)",
+    "description": ""
+  },
+
+  "command_description_group_space": {
+    "message": "Show/hide tabs",
+    "description": ""
+  },
+
+  "command_description_group_enter": {
+    "message": "Open the group (or focus)",
+    "description": ""
+  },
+
+  "command_description_group_shift_enter": {
+    "message": "Open the group in a new window (or focus)",
+    "description": ""
+  },
+
+  "command_description_group_delete": {
+    "message": "Close the group (or force)",
+    "description": ""
+  },
+
+  "command_description_group_shift_delete": {
+    "message": "Remove the group (or force)",
+    "description": ""
+  },
+
+  "command_description_group_backspace": {
+    "message": "Undo the close or remove action",
+    "description": ""
+  },
+
+  "command_description_group_ctrl_e": {
+    "message": "Edit the name of the group (enter to accept) (Shift+Backspace to cancel)",
+    "description": ""
+  },
+
+  "command_description_group_shift_up": {
+    "message": "Move the group to the position before (if custom sort selected)",
+    "description": ""
+  },
+
+  "command_description_group_shift_down": {
+    "message": "Move the group to the position after (if custom sort selected)",
+    "description": ""
+  },
+
+  "command_description_tab_enter": {
+    "message": "Open the tab (or focus)",
+    "description": ""
+  },
+
+  "command_description_tab_shift_enter": {
+    "message": "Open the tab in a new window (or focus)",
+    "description": ""
+  },
+
+  "command_description_tab_space": {
+    "message": "Focus the parent group (then press again to hide the tabs)",
+    "description": ""
+  },
+
+  "command_description_tab_delete": {
+    "message": "Close the tab",
+    "description": ""
+  },
+
+  "command_description_tab_ctrl_enter": {
+    "message": "Open a similar tab in the current window",
+    "description": ""
+  },
+
+  "command_description_tab_shift_p": {
+    "message": "Pin/Unpin the tab",
+    "description": ""
+  },
+
+  "command_description_tab_shift_up": {
+    "message": "Move the tab to the position before",
+    "description": ""
+  },
+
+  "command_description_tab_shift_down": {
+    "message": "Move the tab to the position after",
+    "description": ""
+  },
+
+  "command_description_searchbar_shift_backspace": {
+    "message": "Clear the search value",
+    "description": ""
+  },
+
+  "command_description_addbutton_shift_backspace": {
+    "message": "Cancel the group creation",
+    "description": ""
+  },
+
+  "command_description_addbutton_enter": {
+    "message": "Accept the name and create the group",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_recommendation": {
+    "message": "Chrome Recommendation",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_recommendation_state": {
+    "message": "All tabs unloaded are closed when the extension is disabled, uninstalled or updated. (Chrome only)",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_recommendation_button": {
+    "message": "The button `$BUTTON$` load all the tabs (one by one) not opened yet and discard them with the browser method.",
+    "description": "",
+    "placeholders": {
+      "button" : {
+        "content" : "$1",
+        "example" : "Title of the button in this section (see options_behaviors_tabsopening_reload)"
+      }
+    }
+  },
+
+  "options_behaviors_tabsopening_recommendation_update": {
+    "message": "The loading tabs action is done automatically before an automatic update of the extension. (Chrome only)",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_reload": {
+    "message": "Load discarded opened tabs",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_confirm_reload": {
+    "message": "Are you sure, do you want to load all the tabs in extension discarded mode ?",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_nothing_reload": {
+    "message": "There is no tab in extension discarded mode.",
+    "description": ""
+  },
+
+  "options_remove_groups_confirm": {
+    "message": "Are you sure you want to remove all the groups?",
+    "description": ""
+  },
+
+  "options_about_start_title": {
+    "message": "Welcome",
+    "description": ""
+  },
+
+  "options_about_enjoy_title": {
+    "message": "Share",
+    "description": ""
+  },
+
+  "options_about_contribute_title": {
+    "message": "Contribute",
+    "description": ""
+  },
+
+  "options_about_dev_title": {
+    "message": "Thanks",
+    "description": ""
+  },
+
+  "tab_show_actions_menu": {
+    "message": "Open extra actions menu",
+    "description": ""
+  },
+
+  "selector_select_all": {
+    "message": "Select all the tabs and groups.",
+    "description": "In the selector popup (import/export)"
+  },
+
+  "selector_select_none": {
+    "message": "Unselect all the tabs and groups.",
+    "description": "In the selector popup (import/export)"
+  },
+
+  "remove_all_groups": {
+    "message": "Remove all groups",
+    "description": ""
+  },
+
+  "switch_hidden_disable_sync_pinned": {
+    "message": "Hidden tabs are not compatible with keeping pinned tabs in groups. If you continue pinned tabs are not going to be part of groups any more.\nDo you want to continue ?",
+    "description": ""
+  },
+
+  "switch_pinned_included_disable_hidden": {
+    "message": "Hidden tabs are not compatible with keeping pinned tabs in groups. If you continue pinned tabs are going to be part of your groups but your tabs are not going to be hidden any more.\nDo you want to continue ?",
+    "description": ""
+  },
+
+  "close_hidden_tab": {
+    "message": "Close the hidden tab",
+    "description": "From tab context menu"
+  },
+
+  "close_hidden_tabs_in_group": {
+    "message": "Close the hidden tabs in the group",
+    "description": "From tab context menu"
+  },
+
+  "setting_discard_hidden_tab": {
+    "message": "Discard the tabs on hiding",
+    "description": ""
+  },
+
+  "setting_remove_unknown_hidden_tabs": {
+    "message": "Remove the hidden tabs not part of any groups automatically",
+    "description": ""
+  },
+
+  "setting_confirm_unknown_hidden_tabs": {
+    "message": "Are you sure, do you want to close all the hidden tabs not in any groups ?",
+    "description": ""
+  },
+
+  "setting_close_all_hidden_tabs": {
+    "message": "Close ALL the hidden tabs in Firefox.",
+    "description": ""
+  },
+
+  "setting_confirm_close_all_hidden_tabs": {
+    "message": "Are you sure, do you want to close all the hidden tabs in Firefox ?",
+    "description": ""
+  },
+
+  "setting_nothin_close_all_hidden_tabs": {
+    "message": "There is no open hidden tab in Firefox.",
+    "description": ""
+  },
+
+  "setting_download_error_log": {
+    "message": "Download Error Log",
+    "description": ""
+  },
+
+  "setting_enable_error_log": {
+    "message": "Enable the extension to log errors.",
+    "description": ""
+  }
 }

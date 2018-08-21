@@ -52,39 +52,54 @@
   top: 0;
   left: 0;
   width: 225px;
-  padding: 14px 0;
+  padding: 0;
   opacity: 0;
   cursor: pointer;
 }
 
 .button-file-label, .option-button {
   display: block;
-  padding: 14px 45px;
-  background: var(--checked);
-  color: #fff;
+  padding: 15px;
+  background: var(--not-checked);
+  color: #666;
   font-size: 1em;
   transition: all .4s;
   cursor: pointer;
 }
-
-.option-button.disabled {
-  background: var(--not-checked);
-  color: #666;
-}
-
-.option-button.disabled:focus, .option-button.disabled:hover {
-  background: var(--not-checked-hover);
-}
-
 .option-button {
   border: none
 }
+.option-button[disabled] {
+  cursor: initial;
+}
 
-.button-file-input:hover+.button-file-label, .button-file-input:focus+.button-file-label, .button-file-label:hover, .button-file-label:focus, .option-button:focus, .option-button:hover {
+.option-button.highlight, .button-file-label {
+  background: var(--checked);
+  color: #fff;
+}
+
+.button-file-input:hover+.button-file-label, .button-file-input:focus+.button-file-label, .button-file-label:hover, .button-file-label:focus,
+.option-button:not([disabled]).highlight:focus, .option-button:not([disabled]).highlight:hover {
   background: var(--checked-hover);
 }
 
-.control, .button-file-label {
+
+.option-button:not([disabled]):focus, .option-button:not([disabled]):hover {
+  background: var(--not-checked-hover);
+}
+
+/*** Button in dangerous zone ***/
+
+.option-button.dangerous.highlight {
+  background: var(--dangerous-checked);
+}
+
+.option-button:not([disabled]).dangerous.highlight:focus,
+.option-button:not([disabled]).dangerous.highlight:hover {
+  background: var(--dangerous-checked-hover);
+}
+
+.button-file-label {
   text-align: center;
 }
 
@@ -94,7 +109,8 @@
 
 .control {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
   width: -moz-max-content;
   padding-left: 30px;
   cursor: pointer;
@@ -108,7 +124,6 @@
 
 .control__indicator {
   position: absolute;
-  top: 2px;
   left: 0;
   width: 20px;
   height: 20px;
@@ -127,7 +142,9 @@
 
 /* Checked state */
 
-.control input:checked~.control__indicator {
+.control input:checked~.control__indicator,
+.control input[indeterminate="true"]~.control__indicator
+ {
   background: var(--checked);
 }
 
@@ -145,6 +162,10 @@
   background: var(--not-checked);
 }
 
+.control.disabled span {
+  color: #ccc;
+}
+
 /* Check mark */
 
 .control__indicator:after {
@@ -155,13 +176,15 @@
 
 /* Show check mark */
 
-.control input:checked~.control__indicator:after {
+.control input:checked~.control__indicator:after,
+.control  input[indeterminate="true"]~.control__indicator:after
+ {
   display: block;
 }
 
 /* Checkbox tick */
 
-.control--checkbox .control__indicator:after {
+.control--checkbox input:checked~.control__indicator:after {
   top: 4px;
   left: 8px;
   width: 3px;
@@ -169,6 +192,13 @@
   transform: rotate(45deg);
   border: solid #fff;
   border-width: 0 2px 2px 0;
+}
+
+.control--checkbox input[indeterminate="true"]~.control__indicator:after {
+  top: 8px;
+  left: 4px;
+  width: 12px;
+  border-top: solid #fff 3px;
 }
 
 /* Disabled tick colour */
@@ -211,7 +241,6 @@
   display: inline-block;
   width: 200px;
   padding: 10px 15px;
-  margin-right: 15px
   cursor: pointer;
   color: #2a2a2a;
   border: 0;
@@ -271,9 +300,19 @@
 
 /**** Input text *****/
 
+.option-input-text {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .option-input-text-help {
   margin-left: 10px;
   color: var(--not-checked-hover);
+}
+
+.option-input-text input {
+  text-align: end;
 }
 
 /**** End Input text *****/

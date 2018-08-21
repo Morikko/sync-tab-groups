@@ -18,10 +18,12 @@ class GroupAddButton extends React.Component{
 
     this.onEditAbort = this.onEditAbort.bind(this);
     this.onTitleSet = this.onTitleSet.bind(this);
-    this.handleGroupTitleInputKey = this.handleGroupTitleInputKey.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleGroupDragOver = this.handleGroupDragOver.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
+    this.handleDragEnter = this.handleDragEnter.bind(this);
+    this.handleDragLeave = this.handleDragLeave.bind(this);
+    
   }
 
   render() {
@@ -47,16 +49,15 @@ class GroupAddButton extends React.Component{
               newTitle: event.target.value
             });
           }}
-          onClick= {(event) => {
-            event.stopPropagation();
-          }}
+          onClick={(e)=>e.stopPropagation()}
+          onMouseUp={(e)=>e.stopPropagation()}
           onFocus={(e) => {
             e.target.select();
           }}
-          onKeyUp={this.handleGroupTitleInputKey}
         />
         <span
-          className="groupadd-controls">
+          className="groupadd-controls"
+          onMouseUp={(e)=>e.stopPropagation()}>
           <i
             className="group-edit fa fa-fw fa-check"
             onClick={this.onTitleSet}
@@ -78,11 +79,15 @@ class GroupAddButton extends React.Component{
     return (
       <div
           className={buttonClasses}
-          onClick={this.handleClick}
+          onMouseUp={this.handleClick}
           onDrop={this.handleDrop}
           onDragOver={this.handleGroupDragOver}
           onDragEnter={this.handleDragEnter}
           onDragLeave={this.handleDragLeave}
+          onKeyDown={Utils.doActivateHotkeys(
+            addButtonNavigationListener(this),
+            this.props.hotkeysEnable)}
+          tabIndex="0"
         >
         {button}
       </div>
@@ -90,7 +95,9 @@ class GroupAddButton extends React.Component{
   }
 
   onEditAbort(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     this.setState({
       editing: false,
       newTitle: '',
@@ -107,7 +114,9 @@ class GroupAddButton extends React.Component{
   }
 
   onTitleSet(event) {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     if (this.state.tabIndex >= 0 && this.state.sourceGroup >= 0) {
       this.props.onDrop(
         this.state.newTitle,
@@ -118,13 +127,6 @@ class GroupAddButton extends React.Component{
       this.props.onClick(this.state.newTitle);
     }
     this.resetButton();
-  }
-
-  handleGroupTitleInputKey(event) {
-    event.stopPropagation();
-    if (event.keyCode === 13) { // Enter key
-      this.onTitleSet(event);
-    }
   }
 
   handleClick(event) {

@@ -1,0 +1,527 @@
+{
+  "add_group": {
+    "message": "建立新群組",
+    "description": "Create new group button text"
+  },
+
+  "search": {
+    "message": "搜尋…",
+    "description": "Place holder in search input"
+  },
+
+  "clear_search": {
+    "message": "清除搜尋",
+    "description": "Clear search help button"
+  },
+
+  "unnamed_group": {
+    "message": "未命名群組",
+    "description": "Default name for unnamed group"
+  },
+
+  "contextmenu_preferences": {
+    "message": "偏好設定",
+    "description": "Open Preferences from the shortcuts Menu"
+  },
+
+  "expand_menu": {
+    "message": "展開選單",
+    "description": "Expand Menu hover button"
+  },
+
+  "close_group": {
+    "message": "關閉視窗",
+    "description": "Hover help for close button"
+  },
+
+  "remove_group": {
+    "message": "刪除群組",
+    "description": "Hover help for remove button"
+  },
+
+  "open_window_group": {
+    "message": "在新視窗開啟",
+    "description": "Hover help for open in new window button"
+  },
+
+  "rename_group": {
+    "message": "重新命名",
+    "description": "Hover help for rename button"
+  },
+
+  "show_tabs": {
+    "message": "顯示群組的分頁",
+    "description": "Hover help for show tabs in group button"
+  },
+
+  "hide_tabs": {
+    "message": "隱藏群組的分頁",
+    "description": "Hover help for hide tabs in group button"
+  },
+
+  "open_tab": {
+    "message": "在當前視窗開啟分頁",
+    "description": "Hover help for open tab button"
+  },
+
+  "move_tab_group": {
+    "message": "移到其它群組",
+    "description": "Name of the menu in the context (right click on tab)"
+  },
+
+  "export_groups": {
+    "message": "匯出群組",
+    "description": "Name of the menu"
+  },
+
+  "import_groups": {
+    "message": "匯入群組",
+    "description": "Name of the menu"
+  },
+
+  "save_bookmarks_groups": {
+    "message": "將群組存到書籤",
+    "description": "Name of the menu"
+  },
+
+  "group_title": {
+    "message": "群組",
+    "description": "Option section title"
+  },
+
+  "remove_empty_groups": {
+    "message": "自動刪除沒有分頁的群組。",
+    "description": "Label remove empty groups"
+  },
+
+  "pinned_tabs_title": {
+    "message": "釘選的分頁",
+    "description": "Option section title"
+  },
+
+  "bookmarks_title": {
+    "message": "書籤",
+    "description": "Option section title"
+  },
+
+  "save_bookmarks_automatically": {
+    "message": "自動將群組存成書籤(每30秒)",
+    "description": ""
+  },
+
+  "import_export_title": {
+    "message": "匯入/匯出 群組",
+    "description": "Option section title"
+  },
+
+  "tab_title": {
+    "message": "標題",
+    "description": ""
+  },
+
+  "shortcut_list": {
+    "message": "快捷鍵列表",
+    "description": ""
+  },
+
+  "command_description_create_group_swtich": {
+    "message": "建立並切換到新群組。",
+    "description": ""
+  },
+
+  "command_description__execute_browser_action": {
+    "message": "開啟 Open Sync Tab Group 選單。",
+    "description": ""
+  },
+
+  "command_shortcuts": {
+    "message": "快捷鍵",
+    "description": ""
+  },
+
+  "command_description": {
+    "message": "描述",
+    "description": ""
+  },
+
+  "toolbar_menu": {
+    "message": "工具列選單",
+    "description": ""
+  },
+
+  "show_tabs_number": {
+    "message": "在群組標題後顯示分頁數量。",
+    "description": ""
+  },
+
+  "show_search_bar": {
+    "message": "顯示搜尋列",
+    "description": ""
+  },
+
+  "shortcuts": {
+    "message": "快捷鍵",
+    "description": ""
+  },
+
+  "show_title_window": {
+    "message": "在視窗標題前顯示群組名稱。",
+    "description": ""
+  },
+
+  "group_name": {
+    "message": "名稱",
+    "description": ""
+  },
+
+  "label_sort_old": {
+    "message": "最早建立的優先",
+    "description": ""
+  },
+
+  "label_sort_recent": {
+    "message": "最近建立的優先",
+    "description": ""
+  },
+
+  "label_sort_alphabetical": {
+    "message": "依英文字母顺序",
+    "description": ""
+  },
+
+  "label_sort_accessed": {
+    "message": "最後存取的",
+    "description": "Name of sorting in select in option page"
+  },
+
+  "unpin_tab": {
+    "message": "取消釘選此分頁",
+    "description": "In context menu on tab in menu"
+  },
+
+  "pin_tab": {
+    "message": "釘選此分頁",
+    "description": "In context menu on tab in menu"
+  },
+
+  "expand_all_groups": {
+    "message": "展開所有群組 (see tabs)",
+    "description": "Hover help the button expanding all groups (see tabs)"
+  },
+
+  "manage_groups": {
+    "message": "管理群組",
+    "description": ""
+  },
+
+  "open_url_help_method": {
+    "message": "但你可以手動開啟：",
+    "description": ""
+  },
+
+  "label_select_sorting_type": {
+    "message": "群組名稱排序",
+    "description": ""
+  },
+
+  "contextmenu_backup": {
+    "message": "備分 (手動)",
+    "description": "Right click on extension icon, the title for doing a backup."
+  },
+
+  "options_help_title": {
+    "message": "協助",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_excluded": {
+    "message": "不包括",
+    "description": "Pinned Tabs are not part of a group."
+  },
+
+  "options_behaviors_pinned_excluded_notpart": {
+    "message": "釘選的分頁不隸屬於任何群組。",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_included": {
+    "message": "包括",
+    "description": "Pinned are saved in the group"
+  },
+
+  "options_behaviors_pinned_included_part": {
+    "message": "釘選的分頁歸類在群組裡。",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_discarded_lighter": {
+    "message": "較快速且輕量",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_full": {
+    "message": "完整",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_full_heavier": {
+    "message": "需要較多記憶體與網路傳輸。",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_limits_history": {
+    "message": "分頁紀錄無法復原。(受限於瀏覽器)",
+    "description": ""
+  },
+
+  "options_behaviors_private_notsaved": {
+    "message": "隱私群組不會存到電腦裡",
+    "description": ""
+  },
+
+  "options_behaviors_private_autoremoved": {
+    "message": "一個隱私群組關閉時將自動被刪除。",
+    "description": ""
+  },
+
+  "options_behaviors_private_restart": {
+    "message": "重啟瀏覽器將關閉並刪除所有隱私群組。",
+    "description": ""
+  },
+
+  "options_settings_others": {
+    "message": "其它",
+    "description": "Subsection in settings"
+  },
+
+  "options_settings": {
+    "message": "設定",
+    "description": "Option section for the groups settings (behavior)"
+  },
+
+  "options_interface": {
+    "message": "介面",
+    "description": "Option section for the groups interface"
+  },
+
+  "options_interface_windows": {
+    "message": "視窗",
+    "description": "Option subsection for the groups interface"
+  },
+
+  "options_interface_groups": {
+    "message": "群組",
+    "description": "Option subsection for the groups interface"
+  },
+
+  "options_groups": {
+    "message": "群組",
+    "description": "Option section for the groups data"
+  },
+
+  "options_groups_backup_local": {
+    "message": "本機端備份",
+    "description": ""
+  },
+
+  "options_groups_backup_download": {
+    "message": "下載備份",
+    "description": ""
+  },
+
+  "options_groups_backup_manual": {
+    "message": "手動備份",
+    "description": ""
+  },
+
+  "options_groups_backup_t_5mins": {
+    "message": "5分鐘",
+    "description": "Follows options_groups_backup_every"
+  },
+
+  "options_groups_backup_t_1h": {
+    "message": "小時",
+    "description": ""
+  },
+
+  "options_groups_backup_t_4h": {
+    "message": "4小時",
+    "description": ""
+  },
+
+  "options_groups_backup_t_1d": {
+    "message": "天",
+    "description": ""
+  },
+
+  "options_groups_backup_t_1w": {
+    "message": "週",
+    "description": ""
+  },
+
+  "options_groups_cleaning_removeall": {
+    "message": "刪除所有群組",
+    "description": ""
+  },
+
+  "options_groups_cleaning_removeall_warning": {
+    "message": "一旦完成，你將無法回復你的郡組！",
+    "description": ""
+  },
+
+  "options_button_enable": {
+    "message": "啟用",
+    "description": "Button Title"
+  },
+
+  "options_button_disable": {
+    "message": "停用",
+    "description": "Button Title"
+  },
+
+  "options_about": {
+    "message": "關於",
+    "description": "Option Section Title"
+  },
+
+  "options_guide": {
+    "message": "指南",
+    "description": "Option Section Title"
+  },
+
+  "group_manager": {
+    "message": "群組管理員",
+    "description": "Tab name where you can organize your groups"
+  },
+
+  "group_manager_single_button": {
+    "message": "單一",
+    "description": "Button in Groups Manager for showing only one side"
+  },
+
+  "group_manager_split_button": {
+    "message": "並列",
+    "description": "Button in Groups Manager for showing 2 sides"
+  },
+
+  "options_shortcuts_global": {
+    "message": "全域快捷鍵",
+    "description": "Shortcuts available from anywhere in the browser"
+  },
+
+  "notification_update_title": {
+    "message": "Sync Tab Groups 已更新版本",
+    "description": "Title in the notification displayed when the extension is updated"
+  },
+
+  "notification_update_message": {
+    "message": "點此觀看新版的變動。",
+    "description": "Message in the notification displayed when the extension is updated"
+  },
+
+  "command_description_general_down": {
+    "message": "下一個(或第一個)群組/分頁",
+    "description": ""
+  },
+
+  "command_description_general_up": {
+    "message": "上一個(或最後一個)群組/分頁",
+    "description": ""
+  },
+
+  "command_description_general_home": {
+    "message": "第一個群組",
+    "description": ""
+  },
+
+  "command_description_general_end": {
+    "message": "最後一個群組",
+    "description": ""
+  },
+
+  "command_description_general_shift_pageup": {
+    "message": "收合所有群組",
+    "description": ""
+  },
+
+  "command_description_general_shift_pagedown": {
+    "message": "展開所有群組",
+    "description": ""
+  },
+
+  "command_description_general_ctrl_f": {
+    "message": "定位在搜尋列",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_m": {
+    "message": "打開管理員",
+    "description": ""
+  },
+
+  "command_description_popup_ctrl_p": {
+    "message": "打開偏好設定",
+    "description": ""
+  },
+
+  "command_description_group_space": {
+    "message": "顯示/隱藏分頁",
+    "description": ""
+  },
+
+  "command_description_tab_delete": {
+    "message": "關閉分頁",
+    "description": ""
+  },
+
+  "command_description_tab_shift_p": {
+    "message": "釘選/取消釘選 分頁",
+    "description": ""
+  },
+
+  "options_remove_groups_confirm": {
+    "message": "你確定要刪除所有群組嗎？",
+    "description": ""
+  },
+
+  "options_about_start_title": {
+    "message": "歡迎",
+    "description": ""
+  },
+
+  "options_about_enjoy_title": {
+    "message": "分享",
+    "description": ""
+  },
+
+  "options_about_contribute_title": {
+    "message": "貢獻",
+    "description": ""
+  },
+
+  "options_about_dev_title": {
+    "message": "感謝",
+    "description": ""
+  },
+
+  "tab_show_actions_menu": {
+    "message": "開啟額外動作選單",
+    "description": ""
+  },
+
+  "selector_select_all": {
+    "message": "選取所有分頁和群組。",
+    "description": "In the selector popup (import/export)"
+  },
+
+  "selector_select_none": {
+    "message": "取消選取所有分頁和群組",
+    "description": "In the selector popup (import/export)"
+  },
+
+  "remove_all_groups": {
+    "message": "刪除所有群組",
+    "description": ""
+  }
+
+}

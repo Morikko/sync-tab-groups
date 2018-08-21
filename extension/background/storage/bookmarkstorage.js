@@ -30,9 +30,7 @@ StorageManager.Bookmark.backUp = function(groups, force=false) {
 
         return "StorageManager.Bookmark.backUp done!";
       } catch (e) {
-        let msg = "StorageManager.Bookmark.backUp failed: " + e;
-        console.error(msg);
-        return msg;
+        LogManager.error(e, {arguments});
       }
     },
   force)
@@ -77,9 +75,7 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
 
     return "StorageManager.Bookmark.saveGroups done!";
   } catch (e) {
-    let msg = "StorageManager.Bookmark.saveGroups failed: " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -100,9 +96,7 @@ StorageManager.Bookmark.cleanGroups = async function(title = StorageManager.Book
 
     return "StorageManager.Bookmark.cleanGroups done!";
   } catch (e) {
-    let msg = "StorageManager.Bookmark.cleanGroups failed: " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }
 
@@ -126,8 +120,6 @@ StorageManager.Bookmark.init = async function() {
     }
     return "StorageManager.Bookmark.init done!";
   } catch (e) {
-    let msg = "StorageManager.Bookmark.init failed: " + e;
-    console.error(msg);
-    return msg;
+    LogManager.error(e, {arguments});
   }
 }

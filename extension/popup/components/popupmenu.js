@@ -33,7 +33,8 @@ class PopupMenuStandAlone extends React.Component {
     let searchbar = [];
     if (this.props.options.popup.showSearchBar) {
       searchbar = React.createElement(SearchBar, {
-        onSearchChange: this.onSearchChange.bind(this) });
+        onSearchChange: this.onSearchChange.bind(this),
+        hotkeysEnable: this.props.options.shortcuts.navigation });
     }
 
     for (let i = 0; i < this.props.groups.length; i++) {
@@ -51,7 +52,9 @@ class PopupMenuStandAlone extends React.Component {
     let width = this.state.maximized ? 800 : 450;
     return React.createElement(
       "ul",
-      { className: menuClasses },
+      {
+        id: "popup-menu",
+        className: menuClasses },
       React.createElement(
         "li",
         null,
@@ -71,18 +74,25 @@ class PopupMenuStandAlone extends React.Component {
         onGroupDrop: this.props.onGroupDrop,
         onGroupChangePosition: this.props.onGroupChangePosition,
         onChangePinState: this.props.onChangePinState,
-        onChangeExpand: this.props.onChangeExpand
+        onChangeExpand: this.props.onChangeExpand,
+        onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
+        onRemoveHiddenTab: this.props.onRemoveHiddenTab
         /*** Data ***/
         , groups: this.props.groups,
-        options: this.props.options,
         currentWindowId: this.props.currentWindowId,
         delayedTasks: this.props.delayedTasks
         /*** Options ***/
         , id: "popup",
         searchfilter: this.state.searchfilter,
         allowClickSwitch: true,
+        hotkeysEnable: this.props.options.shortcuts.navigation,
         stateless: false,
-        width: width
+        width: width,
+        showTabsNumber: this.props.options.popup.showTabsNumber,
+        groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
+        draggable: true,
+        hoverStyle: true,
+        controlsEnable: true
         /*** actions ***/
         , forceExpand: false,
         forceReduce: false
@@ -93,7 +103,8 @@ class PopupMenuStandAlone extends React.Component {
         React.createElement(GroupAddButton, {
           onClick: this.props.onGroupAddClick,
           onDrop: this.props.onGroupAddDrop,
-          currentlySearching: this.state.searchfilter.length > 0
+          currentlySearching: this.state.searchfilter.length > 0,
+          hotkeysEnable: this.props.options.shortcuts.navigation
         })
       ),
       React.createElement(MainBar, {
@@ -133,56 +144,21 @@ class PopupMenuStandAlone extends React.Component {
   }
 
   componentDidMount() {
-    /* TODO: window not focus by default
-    var body = document.querySelector('body');
-     // Give the document focus
-    window.focus();
-     // Remove focus from any focused element
-    if (document.activeElement) {
-        document.activeElement.blur();
+    //document.querySelector('#search-input').focus();
+
+    Navigation.setTarget(document.getElementById("popup-menu"));
+
+    if (this.props.options.shortcuts.navigation) {
+      document.body.addEventListener("keydown", generalNavigationListener);
+      document.body.addEventListener("keydown", popupSpecialNavigationListener);
     }
-     document.querySelector('#search-input').focus();
-     body.onkeydown = function(e) {
-      if (!e.metaKey) {
-        e.preventDefault();
-      }
-       console.log("Key from body");
-       // Add new group
-      if (e.keyCode === 45) { // Insert
-        document.querySelector('.addButton').click();
-      }
-      // From Tab: Up tab Or group if first
-      // From Group: Up Group Or last tab
-      if (e.keyCode === 38) { // Up
-        document.querySelector('.addButton');
-      }
-      // From Tab: Down tab Or next group if last
-      // From Group: Down Group or first tab
-      if (e.keyCode === 40) { // Down
-        document.querySelector('body');
-      }
-      // Only up group
-      if (e.keyCode === 33) { // Page up
-        document.querySelector('body');
-      }
-       // Only down group
-      if (e.keyCode === 33) { // Page down
-        document.querySelector('body');
-      }
-       // Go first group
-      if (e.keyCode === 36) { // Home (First)
-        document.querySelector('body');
-      }
-       // Go last group
-      if (e.keyCode === 35) { // End
-        document.querySelector('body');
-      }
-       // Focus the search bar
-      if ( e.ctrlKey && e.keyCode === 70 ) { // Ctrl + F
-        document.querySelector('#search-input').focus();
-      }
-     };
-    */
+  }
+
+  componentWillUnmount() {
+    if (this.props.options.shortcuts.navigation) {
+      document.body.removeEventListener("keydown", generalNavigationListener);
+      document.body.removeEventListener("keydown", popupSpecialNavigationListener);
+    }
   }
 
 };
@@ -210,7 +186,7 @@ PopupMenuStandAlone.propTypes = {
 const PopupMenu = (() => {
   return ReactRedux.connect(state => {
     return {
-      groups: state.get("tabgroups"),
+      groups: state.get("groups"),
       currentWindowId: state.get("currentWindowId"),
       delayedTasks: state.get("delayedTasks"),
       options: state.get("options")

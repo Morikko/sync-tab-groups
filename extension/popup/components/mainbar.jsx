@@ -26,51 +26,58 @@ class MainBar extends React.Component {
 
     let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
 
-    let label = browser.i18n.getMessage(
-      (this.props.isSync?"synchronized_window":"unsynchronized_window")
+    let labelSynchronized = browser.i18n.getMessage("synchronized_window");
+    let titleSynchronized = browser.i18n.getMessage(
+      (this.props.isSync?"change_window_invisible":"change_window_visible")
     );
 
     return (
       <li className="mainbar">
         <div
+          id="change-visibility"
           className={classNames({
-          "grouped-button": true,
-          "group-visible": this.props.isSync,
-          "incognito": this.props.isIncognito,
-            })}
-          onClick={this.handleCheckChange}>
+            "grouped-button": true,
+            "group-visible": this.props.isSync,
+            "incognito": this.props.isIncognito,
+          })}
+          onClick={this.handleCheckChange}
+          title={titleSynchronized}>
           <i className={classNames({
             "app-pref": true,
             "fa fa-fw": true,
             "fa-check-square-o": this.props.isSync,
             "fa-square-o": !this.props.isSync,
           })}/>
-          <span>{label}</span>
+          <span>{labelSynchronized}</span>
         </div>
-        <div className="manage-button"
-              onClick={this.handleClickManageButton}>
+        <div  className="manage-button"
+              id="open-manager"
+              onClick={this.handleClickManageButton}
+              title={browser.i18n.getMessage("open_manager")}>
           <i className="fa fa-fw fa-list"/>
-          <span>Manage groups</span>
+          <span>{browser.i18n.getMessage("group_manager")}</span>
         </div>
         <div className="right-actions">
           <i
-            className="app-pref fa fa-fw fa-angle-double-down"
+            className="app-pref fa fa-fw fa-angle-double-down expand-groups"
             title={browser.i18n.getMessage("expand_all_groups")}
             onClick={this.handleOpenAllExpand}
           />
           <i
-            className="app-pref fa fa-fw fa-angle-double-up"
+            className="app-pref fa fa-fw fa-angle-double-up reduce-groups"
             title={browser.i18n.getMessage("reduce_all_groups")}
             onClick={this.handleCloseAllExpand}
           />
           <i
+            id="maximize-popup"
             className={maximizerClasses}
             title={title_expand}
             onClick={this.props.onClickMaximize}
           />
           <i
+            id="open-preferences"
             className="app-pref fa fa-fw fa-gear"
-            title={browser.i18n.getMessage("open_preferences")}
+            title={browser.i18n.getMessage("contextmenu_preferences")}
             onClick={this.handleClickPref}
           />
         </div>

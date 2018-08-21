@@ -14,16 +14,16 @@ class ManageBar extends React.Component {
         React.createElement(
           "span",
           null,
-          "Manage Groups"
+          browser.i18n.getMessage("group_manager")
         )
       ),
       React.createElement(
         "div",
         { className: "right-buttons" },
         React.createElement(RadioButton, {
-          labelLeft: "Single",
+          labelLeft: browser.i18n.getMessage("group_manager_single_button"),
           iconLeft: "square-o",
-          labelRight: "Splitted",
+          labelRight: browser.i18n.getMessage("group_manager_split_button"),
           iconRight: "columns",
           left: this.props.singleMode,
           getActivatedState: this.props.changeColumnDisplay

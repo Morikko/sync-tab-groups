@@ -1,50 +1,24 @@
 # Sync Tab Groups
 
-Sync Tab Groups are an easy way to organize your current tabs depending on a topic. Each open group is synchronized with a window so that all tabs change are saved. Hence, you can close a current tabs-flow while opening another one. 
+Sync Tab Groups is an easy way to manage all your tabs. You organize them depending on a topic by group. Groups can be closed and reopened without caring about your session. Moreover, you can easily search, active, move, save and remove your groups and tabs.
 
-![Sync Tab Groups example](assets/v0_2_3_in_browser.png)
+Check the [website](https://morikko.github.io/synctabgroups/) for more information (video, explanations, guides...)
 
-# Organize your browsing
+[![Try it now on Firefox](https://user-images.githubusercontent.com/7831572/36659929-7ecb2042-1ad6-11e8-82a4-0628702e354e.png)](https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/)
 
- - Close or open groups of tabs for lightening your desktop or saving memory
- - Work with any windows in your browser
- - Share your groups with other people or devices
- - Private window can have a specific behavior
- - Pinned tabs can be included in groups or not
- - Save your groups as bookmarks for sharing them among all your devices (The tool is deprecated because of the instability. I will work on it soon.)
-
-
-# A simple and powerful interface
-
- - See all your groups and tabs
- - Manage them and switch to them
- - Sort your groups and tabs
- - Many settings to make the extension behaves like you want it
- - Usage guide: [see the screenshots](https://addons.mozilla.org/en-US/firefox/addon/sync-tab-groups/)
- - Many shortcuts
-
-
-# Limitations (Important for not losing data)
-
- - Tabs in closed group are REALLY closed
- - Switching to a group, close all the current tabs in the window
- - Previous sessions (back button) are lost when closing a group
- - Temporary data like forms are lost when closing a group
- - All tabs are loaded when a group is opened (Will be fixed with Firefox 58 on January) ([More info](https://github.com/Morikko/sync-tab-groups/issues/5#issuecomment-344753295))
-
-
-# Notes
-This extension is really young (2 weeks) and often changes. I am developing it actively at the moment. Many features are coming.
-
-# About other Tabs Groups addon
-
-Sync Tab Groups (STG) is not related to [Tab Groups](https://addons.mozilla.org/en-US/firefox/addon/tab-groups-panorama/).
-
-STG is not able to hide tabs, instead tabs are closed. However, if this doesn't stop you, STG accepts importing groups from tab Groups extension.
+[![Try it now on Chrome](https://user-images.githubusercontent.com/7831572/36659935-8402879e-1ad6-11e8-83f7-d645a108696a.png)](https://chrome.google.com/webstore/detail/sync-tab-groups/gbkddinkjahdfhaiifploahejhmaaeoa)
+ 
 
 # Contributing
 
-I would gladly accept other translations. Add it in `_locales/`, while following the en (English) file. Change message and description parts only.
+## Translation
+I would gladly accept other translations. Select the link related to your language and translate the different messages. Download the resulting files and send it me (Email) or with a PR.
+ - [French](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blobôô/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/2351491da6541038be7db42f3917f04831116f47/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/2351491da6541038be7db42f3917f04831116f47/extension/_locales/fr/messages.json) (v0.6.3)
+ - [German](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/v0.6.0/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/v0.6.0/extension/_locales/de/messages.json) (v0.6.0)
+ - [Spanish](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/34c72370b945423baafb5550a23b3ace11e44fa6/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/34c72370b945423baafb5550a23b3ace11e44fa6/extension/_locales/es/messages.json) (v0.4.1)
+ - [Russian](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/e9caca3ed60c9108a2c53f6b9d92ab3ad5a338f4/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/e9caca3ed60c9108a2c53f6b9d92ab3ad5a338f4/extension/_locales/ru/messages.json) (v0.4.1)
+ - [Taiwanese Mandarin](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/b8750968b21f7dc7f9a4461f2790e0a700764e6a/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/b8750968b21f7dc7f9a4461f2790e0a700764e6a/extension/_locales/zh_TW/messages.json) (v0.6.5 Partial)
+ - [New language](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json) 
 
 # Bugs
 If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-groups/issues).
@@ -57,6 +31,7 @@ If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-gr
 - `make watch REBUILD=` Idem as previous but recompile all .jsx files first
 - `make stop-watch` kill previous daemon
 - `make release` Create the extension in release mode, a zip and a xpi in build/
+- `make release CHROME=1` idem but for chrome purpose
 - `make` or `make all` Compile all .jsx and export the release
 - `make clean` Remove files built in build/ only
 
@@ -70,12 +45,14 @@ If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-gr
 4. ZIP and XPI files are mirror of extension in build/
 
 
+# Credits
+Translation:
+ - German (thanks @bitkleberAST)
+ - Russian (thanks @Александр)
+ - Spanish (thanks @lucas-mancini)
+ - Taiwanese Mandarin (thanks @rzfang)
+Bootstraped from this project: [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups)
 
-- Change Utils.DEGUG_MODE to false
-
-# Thanks
- - To [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups) for his UI code I reused as a base.
- - @bitkleberAST for the German translation
- - Александр for the Russian translation
+[Website Repository](https://github.com/Morikko/synctabgroups)
 
 Thank you all of you for helping me improving and fixing the extension :)

@@ -1,7 +1,7 @@
 {
   "extension_description": {
     "message": "Sync Tab Groups sind eine einfache Möglichkeit, Ihre aktuellen Tabs nach Themen zu organisieren. Jede geöffnete Gruppe wird mit einem Fenster synchronisiert, so dass alle Änderungen an den Registerkarten gespeichert werden. Somit können Sie einen aktuellen Tabs-Flow schließen, während Sie einen anderen Tabs-Flow öffnen.",
-    "description": "Description of the extension"
+    "description": "Beschreibung der Erweiterung"
   },
 
   "add_group": {
@@ -22,16 +22,6 @@
   "unnamed_group": {
     "message": "Unbenannte Gruppe",
     "description": "Default name for unnamed group"
-  },
-
-  "synchronized_window": {
-    "message": "Fenster synchronisiert",
-    "description": "Label for synchronizing window in popup"
-  },
-
-  "open_preferences": {
-    "message": "Einstellungen öffnen",
-    "description": "Open Preferences"
   },
 
   "expand_menu": {
@@ -139,11 +129,6 @@
     "description": "Label remove empty groups"
   },
 
-  "private_window_title": {
-    "message": "Privates Fenster",
-    "description": "Option section title"
-  },
-
   "new_private_window": {
     "message": "Ein neues privates Fenster erzeugt automatisch eine neue Gruppe.",
 	"description": "Label new private window"
@@ -170,7 +155,7 @@
   },
 
   "bookmark_help_folder": {
-    "message": "Lesezeichen werden standardmäßig in WeitereLesezeichen/SyncTabGroups gespeichert.",
+    "message": "Lesezeichen werden standardmäßig in \"Weitere Lesezeichen\"/SyncTabGroups gespeichert.",
     "description": ""
   },
 
@@ -220,7 +205,688 @@
   },
 
   "import_export_help_support": {
-    "message": "Import unterstützt Sync Tab Gruppen und Tab Groups json Dateien.",
+    "message": "Import unterstützt Sync Tab Gruppen und Tab Groups JSON Dateien.",
     "description": ""
+  },
+
+  "tab_information": {
+    "message": "Information über aktuellen Tab",
+    "description": ""
+  },
+
+  "tab_title": {
+    "message": "Titel",
+    "description": ""
+  },
+
+  "tab_address": {
+    "message": "URL",
+    "description": ""
+  },
+
+  "copy_url": {
+    "message": "URL in Zwischenablage kopieren",
+    "description": ""
+  },
+
+  "privileged_url": {
+    "message": "Über privilegierte URLs",
+    "description": ""
+  },
+
+  "privileged_url_help_reason": {
+    "message": "Sync Tab Groups kann privilegierte URLs aus Sicherheitsgründen nicht direkt öffnen:",
+    "description": ""
+  },
+
+  "open_url_help_method_part_1": {
+    "message": "Klicke auf die Schaltfläche",
+    "description": ""
+  },
+
+  "open_url_help_method_part_2": {
+    "message": "Füge die URL in die Adressleiste ein",
+    "description": ""
+  },
+
+  "open_url_help_method_part_3": {
+    "message": "Drücke Enter",
+    "description": ""
+  },
+
+  "privileged_url_help_warning": {
+    "message": "Warnung: Diese Adressen werden von Firefox automatisch geschlossen, wenn die Erweiterung aktualisiert oder deaktiviert wird.",
+    "description": ""
+  },
+
+  "shortcut_list": {
+    "message": "Shortcut Liste",
+    "description": ""
+  },
+
+  "command_description_swtich_next_group": {
+    "message": "Zur nächsten Gruppe wechseln.",
+    "description": ""
+  },
+
+  "command_description_swtich_previous_group": {
+    "message": "Zur vorherigen Gruppe wechseln.",
+    "description": ""
+  },
+
+  "command_description_create_group_swtich": {
+    "message": "Eine neue Gruppe erzeugen und dorthin wechseln.",
+    "description": ""
+  },
+
+  "command_description_focus_next_group": {
+    "message": "Fenster bei öffnen der nächsten Gruppe aktivieren.",
+    "description": ""
+  },
+
+  "command_description_focus_previous_group": {
+    "message": "Fenster bei öffnen der vorherigen Gruppe aktivieren.",
+    "description": ""
+  },
+
+  "command_description_remove_group_swtich": {
+    "message": "Aktuelle Gruppe im Fenster schließen, entfernen und zur nächsten Gruppe wechseln.",
+    "description": ""
+  },
+
+  "command_description__execute_browser_action": {
+    "message": "Öffne Sync Tab Groups Menü.",
+    "description": ""
+  },
+
+  "command_shortcuts": {
+    "message": "Shortcut",
+    "description": ""
+  },
+
+  "command_description": {
+    "message": "Beschreibung",
+    "description": ""
+  },
+
+  "toolbar_menu": {
+    "message": "Toolbar Menü",
+    "description": ""
+  },
+
+  "icon_option": {
+    "message": "Verwende weiße statt schwarzer Symbole",
+    "description": ""
+  },
+
+  "show_tabs_number": {
+    "message": "Hinter dem Gruppentitel die Anzahl der Tabs anzeigen",
+    "description": ""
+  },
+
+  "show_search_bar": {
+    "message": "Suchleiste anzeigen",
+    "description": ""
+  },
+
+  "shortcuts": {
+    "message": "Shortcuts",
+    "description": ""
+  },
+
+  "allow_global_shortcuts": {
+    "message": "Erlaube Shortcuts der Erweiterung überall im Browser",
+    "description": ""
+  },
+
+  "show_title_window": {
+    "message": "Name der Gruppe in allen Fenstern als Präfix des Titels anzeigen",
+    "description": ""
+  },
+
+  "group_name": {
+    "message": "Name",
+    "description": ""
+  },
+
+  "bookmarks_weak_help": {
+    "message": "Automatisches Speichern von Lesezeichen kann Probleme verursachen. Bis zur Problembehebung würde ich nicht empfehlen dieses zu verwenden.",
+    "description": ""
+  },
+
+  "label_sort_custom": {
+    "message": "Benutzerdefiniert",
+    "description": ""
+  },
+
+  "label_sort_old": {
+    "message": "Älteste zuerst",
+    "description": ""
+  },
+
+  "label_sort_recent": {
+    "message": "Neueste zuerst",
+    "description": ""
+  },
+
+  "label_sort_alphabetical": {
+    "message": "Alphabetisch",
+    "description": ""
+  },
+
+  "label_sort_accessed": {
+    "message": "Zuletzt verwendet",
+    "description": "Name of sorting in select in option page"
+  },
+
+  "unpin_tab": {
+    "message": "Diesen Tab ablösen",
+    "description": "In context menu on tab in menu"
+  },
+
+  "pin_tab": {
+    "message": "Diesen Tab anheften",
+    "description": "In context menu on tab in menu"
+  },
+
+  "open_group": {
+    "message": "Klicken, um die Gruppe in diesem Fenster anzuzeigen.",
+    "description": "Hover help for open group click"
+  },
+
+  "expand_all_groups": {
+    "message": "Alle Gruppen erweitern (Tabs zeigen)",
+    "description": "Hover help for the button for expanding all groups (see tabs)"
+  },
+
+  "reduce_all_groups": {
+    "message": "Alle Gruppen verkleinern (Tabs verstecken)",
+    "description": "Hover help for the button for reducing all groups (hide tabs)"
+  },
+
+  "manage_groups": {
+    "message": "Gruppen verwalten",
+    "description": ""
+  },
+
+  "open_url_help_method": {
+    "message": "Stattdessen können Sie diese öffnen:",
+    "description": ""
+  },
+
+  "state_new_normal_window": {
+    "message": "Neue Fenster",
+    "description": "Setting title for the option if a new window is a visible or invisible group"
+  },
+
+  "private_window_title": {
+    "message": "Privates Fenster",
+    "description": "Option section title"
+  },
+
+  "label_select_sorting_type": {
+    "message": "Sortierung nach Gruppennamen",
+    "description": ""
+  },
+
+  "synchronized_window": {
+    "message": "Gruppe sichtbar",
+    "description": "Label for group visible in the popup"
+  },
+
+  "unsynchronized_window": {
+    "message": "Gruppe unsichtbar",
+    "description": "Status in Mainbar (Menu) when a group is invisible"
+  },
+
+  "contextmenu_backup": {
+    "message": "Sicherung (Manuell)",
+    "description": "Right click on extension icon, the title for doing a backup."
+  },
+
+  "options_about_start": {
+    "message": "Willkommen bei Sync Tab Groups! Ich empfehle Ihnen dringend, die verschiedenen Optionen anzusehen. Sie werden dafür sorgen, dass Sync Tab Groups Ihren Erwartungen entspricht. Außerdem werden Sie verstehen, wie Sie die Erweiterung gut nutzen können, da jede Option erklärt wird."
+  },
+
+  "options_about_further": {
+    "message": "Weitere Informationen finden Sie in der Anleitung (Link in der Navigationsleiste) auf der Sync Tab Groups Website.",
+    "description": "Not used yet!"
+  },
+
+  "options_about_enjoy": {
+    "message": "Ich hoffe Sie lieben die Erfahrung mit Sync Tab groups. falls das so ist, zögern Sie nicht für andere eine nette Rezension auf der Download Seite der Erweiterungen zu hinterlassen.",
+    "description": "Message in the about section of the Preferences"
+  },
+
+  "options_about_contribute": {
+    "message": "Sie können über die Verwendung hinaus beitragen: Wie zum Beispiel das finden von Fehlern, vorschlagen großartiger neuer Funktionen oder es einfach in Ihre Sprache übersetzen. Aus welchen gRünden auch immer, zögern Sie nicht, mich zu kontaktieren.",
+    "description": "Message in the about section of the Preferences"
+  },
+
+  "options_about_dev": {
+    "message": "Sync Tab Groups ist eine Erweiterung, die ich in meiner Freizeit entwickle. Ich tue alles, um Ihnen die beste Erweiterung zu bieten. Für diejenigen, die auf Bugs gestoßen sind, entschuldige ich mich für die Unannhemlichkeiten.",
+    "description": "Message in the about section of the Preferences"
+  },
+
+  "options_help_title": {
+    "message": "Hife",
+    "description": ""
+  },
+
+  "options_behaviors_help_title_invisible": {
+    "message": "Unsichtbar",
+    "description": ""
+  },
+
+  "options_behaviors_help_invisible": {
+    "message": "Ohne Sync Tab Groups neu geöffnete Fenster sind unsichtbar.",
+    "description": ""
+  },
+
+  "options_behaviors_help_title_visible": {
+    "message": "Sichtbar",
+    "description": ""
+  },
+
+  "options_behaviors_help_visible_new": {
+    "message": "Ohne Sync Tab Groups geöffnete Fenster werden als neue unbenannte Gruppe angezeigt.",
+    "description": ""
+  },
+
+  "options_behaviors_help_change_visibility": {
+    "message": "Jedes Fenster kann im Menü einzeln (un)sichtbar gemacht werden. (Schaltfläche unten links)",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_excluded": {
+    "message": "Ausgeschlossen",
+    "description": "Angeheftete Tabs sind nicht Teil einer Gruppe."
+  },
+
+  "options_behaviors_pinned_excluded_notpart": {
+    "message": "Angeheftete Tabs sind nicht Teil irgendeiner Gruppe.",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_excluded_switching": {
+    "message": "Umschalten/Schließen beeinflusst angeheftete Tabs nicht.",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_excluded_usecase": {
+    "message": "Anwendungsbeispiel: Globale Tabs (E-Mail, Musik, ...)",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_included": {
+    "message": "Eingeschlossen",
+    "description": "Pinned are saved in the group"
+  },
+
+  "options_behaviors_pinned_included_part": {
+    "message": "Angeheftete Tabs sind Teil der Gruppe des Fensters.",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_included_switching": {
+    "message": "Umschalten/Schließen speichert und schließt angeheftete Tabs in der Gruppe.",
+    "description": ""
+  },
+
+  "options_behaviors_pinned_included_usecase": {
+    "message": "Anwendungsbeispiel: Wichtige Tabs für die Gruppe.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening": {
+    "message": "Tabs öffnen",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_discarded": {
+    "message": "Verworfen",
+    "description": "Tabs are not fully loaded on opening"
+  },
+
+  "options_behaviors_tabsopening_discarded_lighter": {
+    "message": "Schneller und leichter",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_discarded_notfullyloaded": {
+    "message": "Tabs werden beim Öffnen nicht vollständig geladen.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_discarded_loadedclick": {
+    "message": "Die Tabs werden nur dann geladen, wenn diese aktiviert (durch Klick oder Fokus) werden. Danach bleiben sie geladen.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_full": {
+    "message": "Vollständig",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_full_loadedopening": {
+    "message": "Tabs werden beim Öffnen vollständig geladen.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_full_heavier": {
+    "message": "Verbraucht mehr Speicher und verursacht mehr Netzwerklast.",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_limits": {
+    "message": "Einschränkungen (In beiden Fällen)",
+    "description": "Limits for tabs opening behavior"
+  },
+
+  "options_behaviors_tabsopening_limits_temporary": {
+    "message": "Temporäre Daten (Formulare...), die vor dem Schließen der Registerkarten hinzugefügt wurden, gehen verloren. (Beschränkt durch den Browser)",
+    "description": ""
+  },
+
+  "options_behaviors_tabsopening_limits_history": {
+    "message": "Tab Historie wird nicht wiederhergestellt. (Beschränkt durch den Browser)",
+    "description": ""
+  },
+
+  "options_behaviors_private": {
+    "message": "Privat",
+    "description": "Behavior of the Private windows"
+  },
+
+  "options_behaviors_private_visible": {
+    "message": "Neue private Fenster, die ohne Sync Tab Groups geöffnet werden, sind als neue private Gruppen sichtbar.",
+    "description": ""
+  },
+
+  "options_behaviors_private_groups": {
+    "message": "In privaten Fenstern geöffnete Gruppen sind ebenfalls privat.",
+    "description": ""
+  },
+
+  "options_behaviors_private_notsaved": {
+    "message": "Private Gruppen werden nicht auf der Festplatte gespeichert",
+    "description": ""
+  },
+
+  "options_behaviors_private_autoremoved": {
+    "message": "Eine geschlossene private Gruppe wird automatisch gelöscht.",
+    "description": ""
+  },
+
+  "options_behaviors_private_restart": {
+    "message": "Ein Neustart des Browsers wird alle privaten Gruppen schließen und löschen.",
+    "description": ""
+  },
+
+  "options_behaviors_private_invisible": {
+    "message": "Unsichtbar",
+    "description": "Behavior of the Private windows"
+  },
+
+  "options_behaviors_private_invisible_creation": {
+    "message": "Ohne Sync Tab Groups geöffnete neue private Fenster sind unsichtbar.",
+    "description": ""
+  },
+
+  "options_behaviors_private_changestate": {
+    "message": "Jedes private Fenster kann im Menü einzeln (un)sichtbar gemacht werden. (Schaltfläche unten links)",
+    "description": ""
+  },
+
+  "options_settings_others": {
+    "message": "Weiteres",
+    "description": "Subsection in settings"
+  },
+
+  "options_settings": {
+    "message": "Einstellungen",
+    "description": "Option section for the groups settings (behavior)"
+  },
+
+  "options_interface": {
+    "message": "Oberfläche",
+    "description": "Option section for the groups interface"
+  },
+
+  "options_interface_windows": {
+    "message": "Fenster",
+    "description": "Option subsection for the groups interface"
+  },
+
+  "options_interface_groups": {
+    "message": "Gruppen",
+    "description": "Option subsection for the groups interface"
+  },
+
+  "options_interface_sortexplanation_custom": {
+    "message": "Benutzerdefiniert: Drag & Drop zur Anordnung der Gruppen",
+    "description": ""
+  },
+
+  "options_interface_sortexplanation_alphabetical": {
+    "message": "Alphabetisch: Sortierung nach Name",
+    "description": ""
+  },
+
+  "options_interface_sortexplanation_last": {
+    "message": "Zuletzt verwendet: Sortieren nach letzter Verwendung",
+    "description": ""
+  },
+
+  "options_interface_sortexplanation_old": {
+    "message": "Älteste zuerst",
+    "description": ""
+  },
+
+  "options_interface_sortexplanation_recent": {
+    "message": "Neueste zuerst",
+    "description": ""
+  },
+
+  "options_groups": {
+    "message": "Gruppen",
+    "description": "Option section for the groups data"
+  },
+
+  "options_groups_backup": {
+    "message": "Sicherung",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior": {
+    "message": "Verhalten",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior_download": {
+    "message": "Automatischer download einer Datei mit allen Gruppen. (Ausgenommen privater Gruppen)",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior_invisible": {
+    "message": "Der download wird nicht im Download-Verlauf angezeigt.",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior_distinctfile": {
+    "message": "Jeder einzelne Timer wird in einer eigenen Datei gespeichert.",
+    "description": ""
+  },
+
+  "options_groups_backup_behavior_overwritten": {
+    "message": "Jedoch wird der selbe Timer seine zuvor angelegte Datei überschreiben.",
+    "description": ""
+  },
+
+  "options_groups_backup_location": {
+    "message": "Speicherort",
+    "description": ""
+  },
+
+  "options_groups_backup_location_subfolder": {
+    "message": "Abgelegt im Unterordner '$FOLDER$' in Ihrem Download Verzeichnis des Browsers.",
+    "description": "",
+    "placeholders": {
+      "folder" : {
+        "content": "$1",
+        "example": "backup/"
+      }
+    }
+  },
+
+  "options_groups_backup_location_restiction": {
+    "message": "Durch den Browser auf ein Verzeichnis innerhalb seines Download Verzeichnisses beschränkt. Der Speicherort kann daher nicht geändert werden.",
+    "description": ""
+  },
+
+  "options_groups_backup_timer": {
+    "message": "Erklärung der Timer",
+    "description": ""
+  },
+
+  "options_groups_backup_timer_start": {
+    "message": "Timer starten sobald die Erweiterung gestartet oder die Sicherung aktiviert wurde, und die Sicherung wird ausgeführt, wenn die angezeigte Zeit vorüber ist.",
+    "description": ""
+  },
+
+  "options_groups_backup_timer_done": {
+    "message": "Die Sicherung wird duchgeführt, wenn die angezeigte Zeit vorüber ist.",
+    "description": ""
+  },
+
+  "options_groups_backup_timer_reset": {
+    "message": "Timer werden auf 0 zurückgesetzt, wenn Sie den Browser neu starten, die Sicherung oder die Erweiterung deaktivieren.",
+    "description": ""
+  },
+
+  "options_groups_backup_manual": {
+    "message": "Manuelle Sicherung",
+    "description": ""
+  },
+
+  "options_groups_backup_manual_button": {
+    "message": "Aus dem Shortcuts Menü (Rechtsklick auf das Erweiterungs Symbol)",
+    "description": ""
+  },
+
+  "options_groups_backup_manual_file": {
+    "message": "Gespeichert in einer eigenen Datei, manuell aufgerufen. Datei wird jeweils überschrieben.",
+    "description": ""
+  },
+
+  "options_groups_backup_every": {
+    "message": "Ausgeführt alle ",
+    "description": "See options_groups_backup_t_..."
+  },
+
+  "options_groups_backup_t_5mins": {
+    "message": "5 Minuten",
+    "description": "Follows options_groups_backup_every"
+  },
+
+  "options_groups_backup_t_1h": {
+    "message": "Stunde",
+    "description": ""
+  },
+
+  "options_groups_backup_t_4h": {
+    "message": "4 Stunden",
+    "description": ""
+  },
+
+  "options_groups_backup_t_1d": {
+    "message": "Tag",
+    "description": ""
+  },
+
+  "options_groups_backup_t_1w": {
+    "message": "Woche",
+    "description": ""
+  },
+
+  "options_groups_cleaning": {
+    "message": "Bereinigung",
+    "description": ""
+  },
+
+  "options_groups_cleaning_removeall": {
+    "message": "Alle Gruppen entfernen",
+    "description": ""
+  },
+
+  "options_groups_cleaning_removeall_warning": {
+    "message": "Gruppen können nach Ausführung nicht wiederhergestellt werden!",
+    "description": ""
+  },
+
+  "options_button_enable": {
+    "message": "Aktiv",
+    "description": "Button Title"
+  },
+
+  "options_button_disable": {
+    "message": "Inaktiv",
+    "description": "Button Title"
+  },
+
+  "options_about": {
+    "message": "Über",
+    "description": "Option Section Title"
+  },
+
+  "options_guide": {
+    "message": "Anleitung",
+    "description": "Option Section Title"
+  },
+
+  "change_window_invisible": {
+    "message": "Klicken, um die Gruppe unsichtbar zu machen (entfernt)",
+    "description": "Hover help for button in the bottom left of the menu"
+  },
+
+  "change_window_visible": {
+    "message": "Klicken, um das Fenster sichtbar zu machen (hinzufügen als neue Gruppe)",
+    "description": "Hover help for button in the bottom left of the menu"
+  },
+
+  "open_manager": {
+    "message": "Tab im Gruppenmanager öffnen",
+    "description": "Hover help for button in the bottom of the menu"
+  },
+
+  "group_manager": {
+    "message": "Gruppen Manager",
+    "description": "Tab name where you can organize your groups"
+  },
+
+  "group_manager_single_button": {
+    "message": "Einfach",
+    "description": "Button in Groups Manager for showing only one side"
+  },
+
+  "group_manager_split_button": {
+    "message": "Geteilt",
+    "description": "Button in Groups Manager for showing 2 sides"
+  },
+
+  "options_shortcuts_global": {
+    "message": "Globale Shortcuts",
+    "description": "Shortcuts available from anywhere in the browser"
+  },
+
+  "notification_update_title": {
+    "message": "Sync Tab Groups wurde aktualisiert zu Version",
+    "description": "Title in the notification displayed when the extension is updated"
+  },
+
+  "notification_update_message": {
+    "message": "Auf diese Beanchrichtigung klicken, um die Änderungen anzuzeigen.",
+    "description": "Message in the notification displayed when the extension is updated"
   }
+
 }

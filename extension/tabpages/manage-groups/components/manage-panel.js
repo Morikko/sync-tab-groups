@@ -2,7 +2,6 @@ class ManagePanelStandAlone extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      maximized: this.props.options.popup.maximized,
       leftsearchfilter: '',
       rightsearchfilter: '',
       leftForceExpand: false,
@@ -19,10 +18,20 @@ class ManagePanelStandAlone extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.update);
+
+    Navigation.setTarget(document.querySelector('.left-list'));
+
+    if (this.props.options.shortcuts.navigation) {
+      document.body.addEventListener("keydown", generalNavigationListener);
+    }
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.update);
+
+    if (this.props.options.shortcuts.navigation) {
+      document.body.removeEventListener("keydown", generalNavigationListener);
+    }
   }
 
   componentDidUpdate() {
@@ -66,17 +75,18 @@ class ManagePanelStandAlone extends React.Component {
             'div',
             { className: 'group-action left' },
             React.createElement('i', {
-              className: 'app-pref fa fa-fw fa-angle-double-down',
+              className: 'app-pref fa fa-fw fa-angle-double-down expand-groups',
               title: browser.i18n.getMessage("expand_all_groups"),
               onClick: this.handleLeftForceExpand.bind(this)
             }),
             React.createElement('i', {
-              className: 'app-pref fa fa-fw fa-angle-double-up',
+              className: 'app-pref fa fa-fw fa-angle-double-up reduce-groups',
               title: browser.i18n.getMessage("reduce_all_groups"),
               onClick: this.handleLeftForceReduce.bind(this)
             }),
             React.createElement(SearchBar, {
-              onSearchChange: this.onSearchLeftChange.bind(this) })
+              onSearchChange: this.onSearchLeftChange.bind(this),
+              hotkeysEnable: this.props.options.shortcuts.navigation })
           ),
           React.createElement(GroupList
           /*** Functions ***/
@@ -92,10 +102,11 @@ class ManagePanelStandAlone extends React.Component {
             onGroupDrop: this.props.onGroupDrop,
             onGroupChangePosition: this.props.onGroupChangePosition,
             onChangePinState: this.props.onChangePinState,
-            onChangeExpand: this.props.onChangeExpand
+            onChangeExpand: this.props.onChangeExpand,
+            onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
+            onRemoveHiddenTab: this.props.onRemoveHiddenTab
             /*** Data ***/
             , groups: this.props.groups,
-            options: this.props.options,
             currentWindowId: this.props.currentWindowId,
             delayedTasks: this.props.delayedTasks
             /*** Options ***/
@@ -103,7 +114,13 @@ class ManagePanelStandAlone extends React.Component {
             searchfilter: this.state.leftsearchfilter,
             allowClickSwitch: false,
             stateless: true,
-            width: width
+            width: width,
+            hotkeysEnable: this.props.options.shortcuts.navigation,
+            showTabsNumber: this.props.options.popup.showTabsNumber,
+            groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
+            draggable: true,
+            hoverStyle: true,
+            controlsEnable: true
             /*** actions ***/
             , forceExpand: this.state.leftForceExpand,
             forceReduce: this.state.leftForceReduce
@@ -119,7 +136,8 @@ class ManagePanelStandAlone extends React.Component {
             'div',
             { className: 'group-action right' },
             React.createElement(SearchBar, {
-              onSearchChange: this.onSearchRightChange.bind(this) }),
+              onSearchChange: this.onSearchRightChange.bind(this),
+              hotkeysEnable: this.props.options.shortcuts.navigation }),
             React.createElement('i', {
               className: 'app-pref fa fa-fw fa-angle-double-down',
               title: browser.i18n.getMessage("expand_all_groups"),
@@ -145,10 +163,11 @@ class ManagePanelStandAlone extends React.Component {
             onGroupDrop: this.props.onGroupDrop,
             onGroupChangePosition: this.props.onGroupChangePosition,
             onChangePinState: this.props.onChangePinState,
-            onChangeExpand: this.props.onChangeExpand
+            onChangeExpand: this.props.onChangeExpand,
+            onRemoveHiddenTabsInGroup: this.props.onRemoveHiddenTabsInGroup,
+            onRemoveHiddenTab: this.props.onRemoveHiddenTab
             /*** Data ***/
             , groups: this.props.groups,
-            options: this.props.options,
             currentWindowId: this.props.currentWindowId,
             delayedTasks: this.props.delayedTasks
             /*** Options ***/
@@ -156,7 +175,13 @@ class ManagePanelStandAlone extends React.Component {
             searchfilter: this.state.rightsearchfilter,
             allowClickSwitch: false,
             stateless: true,
-            width: width
+            width: width,
+            hotkeysEnable: this.props.options.shortcuts.navigation,
+            showTabsNumber: this.props.options.popup.showTabsNumber,
+            groupDraggable: this.props.options.groups.sortingType === OptionManager.SORT_CUSTOM,
+            draggable: true,
+            hoverStyle: true,
+            controlsEnable: true
             /*** actions ***/
             , forceExpand: this.state.rightForceExpand,
             forceReduce: this.state.rightForceReduce
@@ -172,7 +197,8 @@ class ManagePanelStandAlone extends React.Component {
           React.createElement(GroupAddButton, {
             onClick: this.props.onGroupAddClick,
             onDrop: this.props.onGroupAddDrop,
-            currentlySearching: false
+            currentlySearching: false,
+            hotkeysEnable: this.props.options.shortcuts.navigation
           })
         )
       )
@@ -180,15 +206,23 @@ class ManagePanelStandAlone extends React.Component {
   }
 
   onSearchLeftChange(searchValue) {
-    this.setState({
+    let stateToUpdate = {
       leftsearchfilter: searchValue
-    });
+    };
+    if (this.state.leftsearchfilter.length && !searchValue.length) {
+      stateToUpdate.leftForceReduce = true;
+    }
+    this.setState(stateToUpdate);
   }
 
   onSearchRightChange(searchValue) {
-    this.setState({
+    let stateToUpdate = {
       rightsearchfilter: searchValue
-    });
+    };
+    if (this.state.rightsearchfilter.length && !searchValue.length) {
+      stateToUpdate.rightForceReduce = true;
+    }
+    this.setState(stateToUpdate);
   }
 
   handleLeftForceExpand(event) {
@@ -223,7 +257,7 @@ class ManagePanelStandAlone extends React.Component {
 const ManagePanel = (() => {
   return ReactRedux.connect(state => {
     return {
-      groups: state.get("tabgroups"),
+      groups: state.get("groups"),
       currentWindowId: state.get("currentWindowId"),
       delayedTasks: state.get("delayedTasks"),
       options: state.get("options")

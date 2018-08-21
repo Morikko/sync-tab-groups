@@ -4,9 +4,104 @@ ul, li {
   padding: 0;
 }
 
+/** Tab Actions Menu **/
+.tab-actions {
+    position: relative;
+}
+
+.tab-actions .tab-actions-menu {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    width: 300px;
+    background-color: black;
+    border-radius: 6px;
+    margin: 0px 5px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    right: 110%;
+    color: #000;
+    background-color: #f1f1f1;
+    box-shadow: 1px 1px 4px #555;
+    font-size: 14px;
+}
+.tab-actions-menu.top {
+    top: -5px;
+}
+.tab-actions-menu.bottom {
+    bottom: -5px;
+}
+.tab-actions-menu.middle {
+    bottom: -50px;
+}
+
+.tab-actions .tab-actions-menu::after {
+    content: "";
+    position: absolute;
+    left: 100%;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #f1f1f1;
+}
+.tab-actions-menu.top::after {
+    top: 17px;
+}
+.tab-actions-menu.bottom::after {
+    bottom: 17px;
+}
+.tab-actions-menu.middle::after {
+    bottom: 62px;
+}
+
+.tab-actions-menu.show {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.tab-actions-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 30px;
+}
+
+.tab-actions-menu .row {
+  text-align: start;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 34px;
+  padding: 0 5px;
+}
+
+.tab-move-to-group-panel{
+  max-height: 180px; /* 5*34 + 2*5 */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tab-actions-menu .separator {
+  border-bottom: 1px solid #ccc;
+  display: block;
+}
+
+.tab-actions-menu .row img {
+  height: 20px;
+  width: 20px;
+  padding: 3px;
+}
+
+.tab-actions-menu .row:hover {
+  background-color: #ccc;
+}
+/** END Tab Actions Menu **/
+
 li {
   list-style-type: none;
-  cursor: move;
   overflow: hidden;
 }
 
@@ -18,46 +113,32 @@ li {
 .group, .tab, .addButton {
   cursor: pointer;
 }
+
+.group:focus, .tab:focus {
+  outline: 0;
+}
 /* Group in window and active tab */
 
-
 /** Colors **/
-.group.active, .tab.active {
-  background-color: var(--group-open);
+
+.group.hoverStyle:hover, .tab.hoverStyle:hover {
+  background-color: var(--group-open) !important;
 }
 
-.group.active.focusGroup, .focusGroup .tab.active {
-  background-color: var(--group-focus);
-  color: #333;
-}
-
-.group:hover, .tab:hover {
-  background-color: var(--group-hover) !important;
-  color: #fff !important;
-}
-
-.group.incognito {
+.group.incognito:not(.active) {
   background-color: var(--private-debug);
 }
-.group.incognito.active, .incognito .tab.active {
-  background-color: var(--private-open);
+
+.group.incognito.hoverStyle:hover, .incognito .tab.hoverStyle:hover {
+  background-color: var(--private-open)  !important;
 }
 
-.group.incognito.active.focusGroup, .incognito.focusGroup .tab.active {
-  background-color: var(--private-focus);
-}
-
-.group.incognito:hover, .incognito .tab:hover {
-  background-color: var(--private-hover)  !important;
-  color: #fff  !important;
-}
-
-.group-list i:hover {
+.group-control:hover, .tab-edit:hover {
   background-color: var(--action-hover);
 }
 
-.group-list .incognito i:hover {
-  background-color: var(--private-open);
+.incognito .group-control:hover, .incognito .tab-edit:hover {
+  background-color: var(--private-focus);
 }
 
 .groupadd-controls i:hover {
@@ -68,15 +149,13 @@ li {
   background-color: var(--not-checked-hover);
 }
 
-.group:hover .group-title input {
-  color: #fff;
-  border: 1px solid #fff;
-}
-
 .group.closing .group-title, .group.removing .group-title {
   color: #bbb;
-  text-decoration: line-through;
   background-color: var(--not-checked);
+}
+
+.group.closing .group-title-text, .group.removing .group-title-text {
+  text-decoration: line-through;
 }
 
 .group.closing i:hover, .group.removing i:hover {
@@ -118,7 +197,10 @@ li {
   min-width: 350px;
   color: #444;
   box-sizing: border-box;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: visible;
 }
 
 .group:not(.expanded) {
@@ -132,15 +214,19 @@ li {
 .group-title {
   display: flex;
   justify-content: space-between;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
   max-width: 100%;
   height: 100%;
-  padding-right: 10px;
+  padding-right: 15px;
   padding-left: 5px;
   box-sizing: border-box;
+}
+
+.focusGroup .group-title {
+  font-weight: bold;
 }
 
 .group-title-text {
@@ -151,16 +237,22 @@ li {
 }
 
 .group-controls {
-  margin: auto 0;
   align-self: flex-end;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: 100%;
+  min-height: 34px;
 }
 
 .group-controls i {
   font-size: 20px;
-  padding: 7px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
-.group-title input {
+.group-title > input {
   background: transparent;
   box-sizing: border-box;
   border: 1px solid #444;
@@ -170,7 +262,7 @@ li {
   margin: auto 0;
 }
 
-.group .group-title:hover input {
+.group .group-title:hover > input {
   width: 100%;
 }
 
@@ -178,12 +270,12 @@ li {
   display: none;
 }
 
-.group:hover .group-controls .group-close, .group:hover .group-controls .group-edit {
-  display: inline-block;
+.group:hover .group-controls .group-control {
+  display: flex;
 }
 
 .group.removing:hover .group-controls .group-undo, .group.closing:hover .group-controls .group-undo {
-  display: inline-block;
+  display: flex;
 }
 
 /*** End Group ***/
@@ -200,7 +292,7 @@ li {
   background-color: #fff;
 }
 
-.tab-list:hover {
+.tab-list.hoverStyle:hover {
   border: 1px solid transparent;
 }
 
@@ -216,6 +308,7 @@ li {
   display: flex;
   height: 34px;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .tab-title {
@@ -226,11 +319,50 @@ li {
   margin: auto 0;
 }
 
+.tab.active .tab-title {
+  font-weight: bold;
+}
+
 .pinned-icon {
   opacity: 0.7;
   height: 16px;
   width: 16px;
   margin: auto 0;
+}
+
+.arrow-focus {
+  color: #000;
+  height: 16px;
+  width: 16px;
+  font-weight: bold;
+  margin: auto 0;
+}
+
+.window-open {
+  height: 20px;
+  align-self: center;
+  color: #fff;
+  font-weight: bold;
+  background: var(--group-highlight);
+  padding: 0 3px;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+.group.incognito .window-open {
+  background: var(--private-highlight);
+}
+
+.group.closing .window-open, .group.removing .window-open {
+  background: #555;
+}
+
+.hidden-icon {
+  opacity: 0.7;
+  height: 16px;
+  width: 16px;
+  margin: auto 0;
+  margin-right: 3px;
 }
 
 .tab-icon {
@@ -241,13 +373,11 @@ li {
 }
 
 .tab-controls {
-  margin: auto 0;
   align-self: flex-end;
   height: 100%;
-}
-
-.tab-controls i {
-  padding: 9px 0px;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
 }
 
 .tab .tab-controls .tab-edit {
@@ -255,8 +385,11 @@ li {
 }
 
 .tab:hover .tab-controls .tab-edit {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
+
 /*** End Tab ***/
 
 /**** Search Bar ***/
@@ -274,6 +407,10 @@ body {
   font-size: 20px;
   padding: 6px 0px;
 }
+/** Hide default cross on Chrome **/
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
 
 .searchbar {
   margin-top: 5px;
@@ -283,7 +420,9 @@ body {
 }
 
 .searchbar input {
-  width: 100%
+  width: 100%;
+  height: 34px;
+  padding-left: 5px;
 }
 
 .hiddenBySearch {
@@ -323,6 +462,7 @@ body {
 
 .addButton .group-title span {
   margin: auto;
+  font-size: 15px;
 }
 
 .groupadd-controls i {
@@ -330,16 +470,6 @@ body {
   padding: 6px 0px;
 }
 /** End Add Button **/
-
-/*
-.group:nth-child(odd), .group:nth-child(odd) .tab-list {
-  background-color: var(--group-odd);
-}
-
-.group:nth-child(even), .group:nth-child(even) .tab-list {
-  background-color: var(--group-even);
-}
-*/
 
 /** Drag & Drop **/
 .dragTopBorder {
