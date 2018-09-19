@@ -11,6 +11,18 @@ Check the [website](https://morikko.github.io/synctabgroups/) for more informati
 
 # Contributing
 
+I have spent a lot of time on this project, however today I lack time to continue and motivation to work alone on it. Altough, I won't add any new features now, but I might still fix bugs. Else:
+ - **I will gladly help and guide anyone willing to maintain and improve the extension**. 
+ - **Thus, any PR are welcomed.**
+ - **I will mark all the issues I am ready to include in the project**.
+
+The only conditions are:
+ - the tests should pass
+ - the compatiblity should be kept with the previous features
+ - it should work on both Chrome and Firefox (or for new features, not disturbs the incompatible one)
+
+Also, I was thinking of changing the environment before stopping the development: add webpack, switch the shell script to only the npm scripts, use ES Lint... I will accept also those PR.
+
 ## Translation
 I would gladly accept other translations. Select the link related to your language and translate the different messages. Download the resulting files and send it me (Email) or with a PR.
  - [French](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blobôô/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/2351491da6541038be7db42f3917f04831116f47/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/2351491da6541038be7db42f3917f04831116f47/extension/_locales/fr/messages.json) (v0.6.3)
