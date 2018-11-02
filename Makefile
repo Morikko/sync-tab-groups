@@ -57,3 +57,4 @@ clean:
 	-rm $(BUILD_DIR)/sync-tab-groups.zip
 	-rm $(BUILD_DIR)/sync-tab-groups.xpi
 	-rm -rf $(BUILD_DIR)/extension
+	-rm $(JS)
