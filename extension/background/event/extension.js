@@ -1,10 +1,9 @@
 /**
  * Events specific to the extension
  */
-var Event = Event || {};
-Event.Extension = Event.Extension || {};
+const ExtensionEvents = ExtensionEvents || {};
 
-Event.Extension.initSendDataEventListener = function() {
+ExtensionEvents.initSendDataEventListener = function() {
   GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     () => {
       Background.refreshUi();
@@ -21,3 +20,5 @@ Event.Extension.initSendDataEventListener = function() {
     }
   );
 }
+
+export default ExtensionEvents

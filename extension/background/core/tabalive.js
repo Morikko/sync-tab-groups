@@ -1,3 +1,4 @@
+// TODO: legacy ??
 var TabAlive = TabAlive || {};
 
 TabAlive.WINDOW_ID = WINDOW_ID_NONE;

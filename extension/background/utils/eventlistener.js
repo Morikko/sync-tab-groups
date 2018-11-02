@@ -14,3 +14,5 @@ EventListener.prototype.fire = function(event) {
     });
   }
 }
+
+export default EventListener

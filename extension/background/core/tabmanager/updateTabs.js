@@ -3,7 +3,7 @@
  - selectTab (Open/Close group)
  - changePinState
  */
-var TabManager = TabManager || {};
+const TabManager = {};
 
 /**
  * Go to the tab specified with tabId
@@ -94,3 +94,5 @@ TabManager.changePinState = async function(groupId, tabIndex) {
     LogManager.error(e, {arguments});
   }
 }
+
+export default TabManager

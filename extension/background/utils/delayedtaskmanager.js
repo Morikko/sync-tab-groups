@@ -7,7 +7,7 @@
  * Don't use refId if single task (default: 0)
  */
 
-var TaskManager = TaskManager || {};
+const TaskManager = {};
 
 TaskManager.DelayedTask = function(timeoutDelay = 10000) {
   this.delayedTasks = {};
@@ -69,3 +69,5 @@ TaskManager.DelayedTask.prototype.remove = function(refId = 0) {
     this.queuing = false;
   }
 };
+
+export default TaskManager

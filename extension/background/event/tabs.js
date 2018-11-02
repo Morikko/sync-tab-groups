@@ -1,8 +1,6 @@
-var Event = Event || {};
-Event.Tabs = Event.Tabs || {};
+const TabsEvents = TabsEvents || {};
 
-
-Event.Tabs.initTabsEventListener = function() {
+TabsEvents.initTabsEventListener = function() {
   browser.tabs.onActivated.addListener(async (activeInfo) => {
     // Necessary for Chrome, this event is fired before the onRemovedWindow event
     // Else the group is finally updated with empty tabs.
@@ -40,3 +38,5 @@ Event.Tabs.initTabsEventListener = function() {
     await TabManager.updateTabsInGroup(detachInfo.oldWindowId);
   });
 }
+
+export default TabsEvents

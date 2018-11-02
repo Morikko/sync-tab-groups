@@ -1,10 +1,9 @@
 /**
  * Everything related to save file on the disk
  */
-var StorageManager = StorageManager || {};
-StorageManager.File = StorageManager.File || {};
+const FileStorage = FileStorage || {};
 
-StorageManager.File.downloadGroups = async function(groups) {
+FileStorage.downloadGroups = async function(groups) {
   try {
     let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
 
@@ -35,7 +34,7 @@ StorageManager.File.downloadGroups = async function(groups) {
   }
 }
 
-StorageManager.File.importGroupsFromFile = function(content_file) {
+FileStorage.importGroupsFromFile = function(content_file) {
   try {
     if (!content_file.hasOwnProperty('version')) {
       throw Error("ImportGroups: Content file is not in a supported format.");
@@ -44,9 +43,9 @@ StorageManager.File.importGroupsFromFile = function(content_file) {
 
     if (content_file['version'][0] === "tabGroups" ||
       content_file['version'][0] === "sessionrestore") {
-      groups = StorageManager.File.importTabGroups(content_file);
+      groups = FileStorage.importTabGroups(content_file);
     } else if (content_file['version'][0] === "syncTabGroups") {
-      groups = StorageManager.File.importSyncTabGroups(content_file);
+      groups = FileStorage.importSyncTabGroups(content_file);
     } else {
       throw Error("ImportGroups: Content file is not in a supported format.");
     }
@@ -67,7 +66,7 @@ StorageManager.File.importGroupsFromFile = function(content_file) {
 }
 
 
-StorageManager.File.importSyncTabGroups = function(content_file) {
+FileStorage.importSyncTabGroups = function(content_file) {
   if (!content_file.hasOwnProperty('version') ||
     !content_file.hasOwnProperty('groups') ||
     content_file['version'][0] !== "syncTabGroups") {
@@ -89,7 +88,7 @@ StorageManager.File.importSyncTabGroups = function(content_file) {
  *
  * legacy
  */
-StorageManager.File.importTabGroups = function(content_file) {
+FileStorage.importTabGroups = function(content_file) {
   if (!content_file.hasOwnProperty('version') ||
     (content_file['version'][0] !== "tabGroups" &&
       content_file['version'][0] !== "sessionrestore") || !content_file.hasOwnProperty('windows')) {
@@ -172,3 +171,5 @@ StorageManager.File.importTabGroups = function(content_file) {
 
   return groups;
 }
+
+export default FileStorage

@@ -1,7 +1,6 @@
-var Messenger = Messenger || {};
-Messenger.Options = Messenger.Options || {};
+const OptionsMessenger = OptionsMessenger || {};
 
-Messenger.Options.optionMessenger = function(message) {
+OptionsMessenger.optionMessenger = function(message) {
   switch (message.task) {
     case "Option:Ask":
       Background.refreshOptionsUI();
@@ -49,3 +48,5 @@ Messenger.Options.optionMessenger = function(message) {
       break;
   }
 }
+
+export default OptionsMessenger

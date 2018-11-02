@@ -31,6 +31,30 @@
  - init
  */
 
+import LogManager from "./error/logmanager"
+// TabManager & Selector
+import Utils from '../utils/utils'
+// TODO:
+import TaskManager from './utils/delayedtaskmanager'
+import TaskManager from './utils/repeatedtaskmanager'
+
+import EventListener from './utils/eventlistener'
+
+import StorageManager from './storage/storageManager'
+
+import Events from './event/event'
+import Messenger from './messenger/messenger'
+
+import TabManager from './core/tabmanager/tabManager'
+import OptionManager from './core/optionmanager'
+import GroupManager from './core/groupmanager'
+import WindowManager from './core/windowmanager'
+
+import ContextMenu from './core/contextmenus'
+import Selector from './core/selector'
+
+LogManager.LOCATION = LogManager.BACK
+
 TaskManager.fromUI = {
   [TaskManager.CLOSE_REFERENCE]: new TaskManager.DelayedTask(),
   [TaskManager.REMOVE_REFERENCE]: new TaskManager.DelayedTask()
@@ -51,15 +75,15 @@ Background.init = async function() {
 
   await TabHidden.onStartInitialization();
 
-  Event.Install.prepareExtensionForUpdate(
+  Events.Install.prepareExtensionForUpdate(
     Background.lastVersion,
     (browser.runtime.getManifest()).version
   );
 
-  Event.Extension.initSendDataEventListener();
-  Event.Tabs.initTabsEventListener();
-  Event.Windows.initWindowsEventListener();
-  Event.Commands.initCommandsEventListener();
+  Events.Extension.initSendDataEventListener();
+  Events.Tabs.initTabsEventListener();
+  Events.Windows.initWindowsEventListener();
+  Events.Commands.initCommandsEventListener();
   ContextMenu.initContextMenus();
 
   browser.runtime.onMessage.addListener(Messenger.Groups.popupMessenger);
@@ -75,8 +99,6 @@ Background.init = async function() {
 
   Background.refreshUi();
   Background.refreshOptionsUI();
-
-  await TabAlive.init();
 
   await Utils.wait(2000);
   StorageManager.Local.planBackUp();
@@ -414,7 +436,7 @@ Background.sendAllTabs = async function() {
 browser.runtime.onInstalled.addListener((details) => {
   // Only when the extension is installed for the first time
   if ( details.reason === "install" ) {
-    Event.Install.onNewInstall();
+    Events.Install.onNewInstall();
     LogManager.information(LogManager.EXTENSION_INSTALLED);
   }
 
@@ -422,13 +444,13 @@ browser.runtime.onInstalled.addListener((details) => {
   else if( (Utils.isFirefox() && details.temporary)
       || (Utils.isChrome() && details.reason === "update" && (browser.runtime.getManifest()).version === details.previousVersion)) {
 
-    Event.Install.onDevelopmentInstall();
+    Events.Install.onDevelopmentInstall();
   }
 
   // Extension update detection
   else if ( details.reason === "update"
       && (browser.runtime.getManifest()).version !== details.previousVersion ) {
-      Event.Install.onUpdate(details.previousVersion);
+      Events.Install.onUpdate(details.previousVersion);
       LogManager.information(LogManager.EXTENSION_UPDATED);
   }
 });

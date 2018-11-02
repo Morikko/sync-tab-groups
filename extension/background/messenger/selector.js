@@ -1,7 +1,6 @@
-var Messenger = Messenger || {};
-Messenger.Selector = Messenger.Selector || {};
+const SelectorMessenger = {};
 
-Messenger.Selector.selectorMessenger = function(message) {
+SelectorMessenger.selectorMessenger = function(message) {
   switch (message.task) {
     case "Ask:SelectorGroups":
       Utils.sendMessage("Selector:Groups", {
@@ -9,7 +8,7 @@ Messenger.Selector.selectorMessenger = function(message) {
       });
       break;
     case "Selector:Finish":
-      Messenger.Selector.manageFinish(message.params);
+      SelectorMessenger.manageFinish(message.params);
       break;
     case "Ask:Options":
       Background.refreshOptionsUI();
@@ -17,7 +16,7 @@ Messenger.Selector.selectorMessenger = function(message) {
   }
 }
 
-Messenger.Selector.manageFinish = async function({
+SelectorMessenger.manageFinish = async function({
   filter,
   importType,
 }) {
@@ -45,3 +44,5 @@ Messenger.Selector.manageFinish = async function({
     await Selector.closeGroupsSelector();
   }
 }
+
+export default SelectorMessenger

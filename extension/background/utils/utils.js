@@ -48,8 +48,8 @@ Objects:
 
  */
 const WINDOW_ID_NONE = browser.windows.WINDOW_ID_NONE;
-var Utils = Utils || {};
-var TabManager = TabManager || {};
+const Utils = {};
+const TabManager = {};
 var Selector = Selector || {};
 
 /**
@@ -755,3 +755,5 @@ Utils.doActivateHotkeys = function (listener, bool) {
 }
 
 TabManager.NEW_TAB = (Utils.isChrome()?"chrome://newtab/":"about:newtab");
+
+export default Utils

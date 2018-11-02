@@ -2,7 +2,7 @@
  - removeTabsInWindow
  - removeTabs
  */
-var TabManager = TabManager || {};
+const TabManager = {};
 
 /**
  * Remove tabs
@@ -109,3 +109,5 @@ TabManager.removeTabsInWindow = async function(windowId, {
     LogManager.error(e, {arguments});
   }
 }
+
+export default TabManager

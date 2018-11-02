@@ -2,9 +2,7 @@
  - getTabsInWindowId
  - updateTabsInGroup
  */
-var TabManager = TabManager || {};
-
-
+const TabManager = {};
 
 /**
  * Return all the tabs in the window with windowId
@@ -107,3 +105,5 @@ TabManager.updateTabsInGroup = async function(windowId) {
     LogManager.error(e, {arguments});
   }
 }
+
+export default TabManager

@@ -5,7 +5,7 @@
  - moveTabToNewGroup
  - moveUnFollowedTabToNewGroup
  */
-var TabManager = TabManager || {};
+const TabManager = {};
 
 /**
  * Move a tab opened between two open windows
@@ -159,3 +159,5 @@ TabManager.moveUnFollowedTabToNewGroup = async function(tabId) {
     return -1;
   }
 }
+
+export default TabManager

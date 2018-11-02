@@ -1,7 +1,6 @@
-var Event = Event || {};
-Event.Windows = Event.Windows || {};
+const WindowsEvents = WindowsEvents || {};
 
-Event.Windows.initWindowsEventListener = function() {
+WindowsEvents.initWindowsEventListener = function() {
   browser.windows.onCreated.addListener((window) => {
     if (Utils.DEBUG_MODE) console.log("Window Created: " + window.id)
     if ( !OptionManager.options.privateWindow.sync
@@ -52,3 +51,5 @@ Event.Windows.initWindowsEventListener = function() {
     }
   });
 }
+
+export default WindowsEvents

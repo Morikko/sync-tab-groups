@@ -1,4 +1,4 @@
-var TabManager = TabManager || {};
+const TabManager = {};
 
 /**
  * WARNING: this funtion is not working well on firefox
@@ -65,3 +65,5 @@ TabManager.undiscardAll = async function (globalCount = 0, callbackAfterFirstUnd
     });
   });
 }
+
+export default TabManager

@@ -1,5 +1,6 @@
-var LogManager = LogManager || {};
-var Utils = Utils || {};
+import Utils from '../utils/utils'
+
+const LogManager = {};
 
 LogManager.LOG_NUMBER_LIMIT = 10000;
 LogManager.NOTIFICATION_ID = "LOG_ERROR";
@@ -253,3 +254,5 @@ LogManager.init = function() {
     browser.notifications.onClicked.addListener(logManagerNotificationEvent);
     browser.runtime.onMessage.addListener(logManagerMessenger);
 }
+
+export default LogManager

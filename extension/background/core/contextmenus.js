@@ -1,5 +1,4 @@
-var ContextMenu = ContextMenu || {};
-
+const ContextMenu = {};
 
 ContextMenu.MoveTabMenu_ID = "stg-move-tab-group-";
 ContextMenu.SpecialActionMenu_ID = "stg-special-actions-";
@@ -317,3 +316,5 @@ ContextMenu.initContextMenus = function() {
       )
     });
 }
+
+export default ContextMenu

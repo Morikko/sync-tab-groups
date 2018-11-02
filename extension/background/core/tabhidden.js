@@ -1,3 +1,4 @@
+// TODO: Legacy ??
 var TabHidden = TabHidden || {};
 TabHidden.TABHIDDEN_SESSION_KEY = "TABHIDDEN_ID";
 TabHidden.cleaningUnknownHiddenTabsProcess = null;

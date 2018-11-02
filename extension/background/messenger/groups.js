@@ -1,8 +1,7 @@
-var Messenger = Messenger || {};
-Messenger.Groups = Messenger.Groups || {};
+const GroupsMessenger = {};
 
 // Event from: popup
-Messenger.Groups.popupMessenger = function(message) {
+GroupsMessenger.popupMessenger = function(message) {
   switch (message.task) {
     case "Group:Add":
       Background.onGroupAdd(message.params);
@@ -63,3 +62,5 @@ Messenger.Groups.popupMessenger = function(message) {
       break;
   }
 }
+
+export default GroupsMessenger

@@ -4,7 +4,7 @@
  - secureIndex
  - waitTabsToBeClosed
  */
-var TabManager = TabManager || {};
+const TabManager = {};
 
 // Return with all standard tab information
 // Id are Index are set once in a group (see GroupManager.prepareGroups)
@@ -89,3 +89,5 @@ TabManager.waitTabsToBeClosed = async function(tabsIdsToRemove, {
   }
   return false;
 }
+
+export default TabManager

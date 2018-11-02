@@ -2,7 +2,7 @@
  - openListOfTabs
  - openTab
  */
-var TabManager = TabManager || {};
+const TabManager = {};
 
 
 /**
@@ -220,3 +220,4 @@ TabManager.openTab = async function(
   return await browser.tabs.create(tabCreationProperties);
 }
 
+export default TabManager

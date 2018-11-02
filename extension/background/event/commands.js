@@ -1,7 +1,6 @@
-var Event = Event || {};
-Event.Commands = Event.Commands || {};
+CommandsEvent = {};
 
-Event.Commands.initCommandsEventListener = function() {
+CommandsEvent.initCommandsEventListener = function() {
   // Commands
   browser.commands.onCommand.addListener(async function(command) {
     try {
@@ -43,3 +42,5 @@ Event.Commands.initCommandsEventListener = function() {
     }
   });
 };
+
+export default CommandsEvent

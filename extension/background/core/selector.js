@@ -1,4 +1,4 @@
-var Selector = Selector || {};
+const Selector = {};
 
 Selector.WINDOW_ID = WINDOW_ID_NONE;
 
@@ -100,3 +100,5 @@ Selector.closeGroupsSelector = async function() {
     }
   }
 }
+
+export default Selector

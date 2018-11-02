@@ -4,10 +4,9 @@
 - prepareExtensionForUpdate
 - updateFromBelow_0_6_2
  */
-var Event = Event || {};
-Event.Install = Event.Install || {};
+const InstallEvents = {};
 
-Event.Install.DEV_TABS = [
+InstallEvents.DEV_TABS = [
   "/tests/test-page/unit.html",
   "/tests/test-page/integration.html",
   "/optionpages/option-page.html#settings",
@@ -15,10 +14,10 @@ Event.Install.DEV_TABS = [
   //"/optionpages/option-page.html#groups"
 ]
 
-Event.Install.onDevelopmentInstall = function() {
+InstallEvents.onDevelopmentInstall = function() {
   const testUrl = browser.extension.getURL("/tests/test-page/unit.html");
 
-  Event.Install.DEV_TABS.forEach((url)=>{
+  InstallEvents.DEV_TABS.forEach((url)=>{
     browser.tabs.create({
       active: false,
       url: browser.extension.getURL(url),
@@ -30,12 +29,12 @@ Event.Install.onDevelopmentInstall = function() {
 }
 
 
-Event.Install.onNewInstall = function() {
+InstallEvents.onNewInstall = function() {
   Background.install = true;
   Background.onOpenSettings(false);
 }
 
-Event.Install.onUpdate = function(previousVersion) {
+InstallEvents.onUpdate = function(previousVersion) {
   Background.lastVersion = previousVersion;
   // Focus Settings if click on notification
   browser.notifications.onClicked.addListener((notificationId)=>{
@@ -52,7 +51,7 @@ Event.Install.onUpdate = function(previousVersion) {
   });
 }
 
-Event.Install.isVersionBelow = function(version, reference) {
+InstallEvents.isVersionBelow = function(version, reference) {
   let splitVersion = version.split('.').map(n => parseInt(n,10)),
       splitReference = reference.split('.').map(n => parseInt(n,10));
 
@@ -83,18 +82,18 @@ Event.Install.isVersionBelow = function(version, reference) {
 /**
  * Recpect order version increasing
  */
-Event.Install.prepareExtensionForUpdate = function(lastVersion, newVersion) {
+InstallEvents.prepareExtensionForUpdate = function(lastVersion, newVersion) {
   if ( !lastVersion ) {
     return;
   }
 
-  if (Event.Install.isVersionBelow(lastVersion, "0.6.2")
-        && !Event.Install.isVersionBelow(newVersion, "0.6.2") ){
-    Event.Install.updateFromBelow_0_6_2();
+  if (InstallEvents.isVersionBelow(lastVersion, "0.6.2")
+        && !InstallEvents.isVersionBelow(newVersion, "0.6.2") ){
+    InstallEvents.updateFromBelow_0_6_2();
   }
 }
 
-Event.Install.updateFromBelow_0_6_2 = function (options=OptionManager.options) {
+InstallEvents.updateFromBelow_0_6_2 = function (options=OptionManager.options) {
   // Move OptionManager.options.backup -> OptionManager.options.backup.download
   if (options.hasOwnProperty("backup")){
     if ( !options.backup.hasOwnProperty("download") ) {
@@ -110,3 +109,5 @@ Event.Install.updateFromBelow_0_6_2 = function (options=OptionManager.options) {
     }
   }
 }
+
+export default InstallEvents
