@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
     React.createElement(
       ReactRedux.Provider, {
-        store: store
+        store: store,
       },
       React.createElement(PopupMenu, {
         onGroupAddClick: GroupActions.addGroup,
@@ -32,6 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-var RenderCounters = {
-  tab: 0
+let RenderCounters = {
+  tab: 0,
 }

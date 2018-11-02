@@ -29,7 +29,7 @@ TaskManager.RepeatedTask = function(timeoutDelay = 10000) {
  *  - Do the task at most 1 per delay, do it immediately when asked if delay already ended;
  *  - Wwait the end of the previous task before doing the next one
  * @param {Fucntion} delayedFunction- the delayed function to execute (without parameter)
- * @param {Number} refId (default:0) - ref inside the action group
+ * @param {number} refId (default:0) - ref inside the action group
  */
 TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, force = false, refId = 0) {
 
@@ -74,7 +74,7 @@ TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, force =
 
 /**
  * If a task already exists, it is aborted.
- * @param {Number} refId (default:0) - ref inside the action group
+ * @param {number} refId (default:0) - ref inside the action group
  */
 TaskManager.RepeatedTask.prototype.remove = function(refId = 0) {
   if (this.delayedTasks[refId] !== undefined) {

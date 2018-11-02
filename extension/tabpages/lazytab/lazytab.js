@@ -6,25 +6,25 @@
 */
 
 if (window.location.search.length) {
-    var params = new URLSearchParams(window.location.search),
-        url = params.get('url') || 'about:blank',
-        title = params.get('title') || 'New tab',
-        favIconUrl = params.get('favIconUrl');
+  var params = new URLSearchParams(window.location.search),
+    url = params.get('url') || 'about:blank',
+    title = params.get('title') || 'New tab',
+    favIconUrl = params.get('favIconUrl');
 
-    document.getElementById('title').innerText = title || url;
+  document.getElementById('title').innerText = title || url;
 
-    if (favIconUrl) {
-        document.getElementById('favIconUrl').href = favIconUrl;
-    }
+  if (favIconUrl) {
+    document.getElementById('favIconUrl').href = favIconUrl;
+  }
 
-    window.onfocus = window.onmousemove = () => window.location.href = url;
+  window.onfocus = window.onmousemove = () => window.location.href = url;
 
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   let tab_link = document.getElementById('tab_link');
 
-  if ( tab_link ) {
+  if (tab_link) {
     tab_link.innerText = title;
     tab_link.href = url;
   }

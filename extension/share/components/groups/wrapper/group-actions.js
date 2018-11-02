@@ -1,7 +1,7 @@
 const GroupActions = {
   addGroup: function(title="") {
     Utils.sendMessage("Group:Add", {
-      title: title
+      title: title,
     });
   },
 
@@ -10,7 +10,7 @@ const GroupActions = {
     Utils.sendMessage("Group:AddWithTab", {
       title: title,
       sourceGroupId: sourceGroupId,
-      tabIndex: tabIndex
+      tabIndex: tabIndex,
     });
   },
 
@@ -23,27 +23,27 @@ const GroupActions = {
   closeGroup: function(taskRef, groupId) {
     Utils.sendMessage("Group:Close", {
       taskRef: taskRef,
-      groupId: groupId
+      groupId: groupId,
     });
   },
 
   removeGroup: function(taskRef, groupId) {
     Utils.sendMessage("Group:Remove", {
       taskRef: taskRef,
-      groupId: groupId
+      groupId: groupId,
     });
   },
 
   renameGroup: function(groupId, title) {
     Utils.sendMessage("Group:Rename", {
       groupId: groupId,
-      title: title
+      title: title,
     });
   },
 
   selectGroup: function(groupId) {
     Utils.sendMessage("Group:Select", {
-      groupId: groupId
+      groupId: groupId,
     });
   },
 
@@ -93,13 +93,13 @@ const GroupActions = {
     Utils.sendMessage("Tab:Close", {
       tabId: tabId,
       groupId: groupId,
-      tabIndex: tabIndex
+      tabIndex: tabIndex,
     });
   },
 
   onOpenTab: function(tab) {
     Utils.sendMessage("Tab:Open", {
-      tab: tab
+      tab: tab,
     });
   },
 
@@ -113,65 +113,65 @@ const GroupActions = {
   onOptionChange: function(name, value) {
     Utils.sendMessage("Option:Change", {
       optionName: name,
-      optionValue: value
+      optionValue: value,
     });
   },
 
   onChangePinState: function(groupId, tabIndex) {
     Utils.sendMessage("Tab:ChangePin", {
       groupId: groupId,
-      tabIndex: tabIndex
+      tabIndex: tabIndex,
     });
   },
 
   onRemoveHiddenTab: function(tabId) {
     Utils.sendMessage("Tab:RemoveHiddenTab", {
-      tabId
+      tabId,
     });
   },
 
   onRemoveHiddenTabsInGroup: function(groupId) {
     Utils.sendMessage("Group:RemoveHiddenTabsInGroup", {
-      groupId
+      groupId,
     });
   },
 };
 
 function updateWindow() {
   browser.windows.getLastFocused({
-    windowTypes: ['normal']
+    windowTypes: ['normal'],
   }).then((w) => {
     store.dispatch(ActionCreators.setCurrentWindowId(w.id));
   });
 }
 
-var popupMessenger = function(message) {
+let popupMessenger = function(message) {
   switch (message.task) {
-    case "Groups:Changed":
-      if ( window.location 
-            && window.location.search.includes("all_tabs")){
-           break;
-      }
-      store.dispatch(ActionCreators.setGroups(message.params.groups));
-      store.dispatch(
-        ActionCreators.setDelayedTask(message.params.delayedTasks)
-      );
-      updateWindow();
+  case "Groups:Changed":
+    if (window.location
+            && window.location.search.includes("all_tabs")) {
       break;
-    case "Tabs:All":
-      store.dispatch(ActionCreators.setGroups(message.params.groups));
-      updateWindow();
-      break;
-    case "Option:Changed":
-      store.dispatch(ActionCreators.setOptions(message.params.options));
-      break;
+    }
+    store.dispatch(ActionCreators.setGroups(message.params.groups));
+    store.dispatch(
+      ActionCreators.setDelayedTask(message.params.delayedTasks)
+    );
+    updateWindow();
+    break;
+  case "Tabs:All":
+    store.dispatch(ActionCreators.setGroups(message.params.groups));
+    updateWindow();
+    break;
+  case "Option:Changed":
+    store.dispatch(ActionCreators.setOptions(message.params.options));
+    break;
   }
 }
 
 browser.runtime.onMessage.addListener(popupMessenger);
 
 
-var tabspaceBackground = browser.runtime.getBackgroundPage();
+let tabspaceBackground = browser.runtime.getBackgroundPage();
 
 /*
  * Access to the groups and show them
@@ -179,7 +179,7 @@ var tabspaceBackground = browser.runtime.getBackgroundPage();
 function init() {
   GroupActions.askData();
   browser.windows.getLastFocused({
-    windowTypes: ['normal']
+    windowTypes: ['normal'],
   }).then((w) => {
     store.dispatch(ActionCreators.setCurrentWindowId(w.id));
   });

@@ -1,0 +1,245 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "env": {
+    "browser": false,
+    "node": true,
+    "es6": true
+  },
+  "plugins": ["import", "jsdoc"],
+  "globals": {
+    "browser": true,
+    "$": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "jsdoc/check-param-names": 2,
+    "jsdoc/check-tag-names": 2,
+    "jsdoc/require-param-name": 1,
+    "jsdoc/require-param-type": 1,
+    "jsdoc/valid-types": 1,
+    "jsdoc/no-undefined-types": 1,
+    "jsdoc/require-returns-description": 1,
+    "jsdoc/require-returns-type": 1,
+    "jsdoc/check-types": 1,
+
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "import/no-unresolved": [
+      2, {
+        "commonjs": true,
+        "ignore": [
+          "mailparser|nodemailer"
+        ]
+      }
+    ],
+    "no-irregular-whitespace": [
+      "warn"
+    ],
+    "no-cond-assign": [
+      "error"
+    ],
+    "no-trailing-spaces": [
+      "error"
+    ],
+    "eol-last": [
+      "error",
+      "always"
+    ],
+    "eqeqeq": [
+      "error",
+      "smart"
+    ],
+    "no-console": [
+      "off"
+    ],
+    "indent": [
+      "error",
+      2
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "space-before-function-paren": [
+      "error",
+      "never"
+    ],
+    "func-call-spacing": [
+      "error",
+      "never"
+    ],
+    "no-unused-vars": [
+      "error", {
+        "vars": "all",
+        "args": "none"
+      }
+    ],
+    "space-before-blocks": [
+      "error",
+      "always"
+    ],
+    "key-spacing": [
+      "error", {
+        "beforeColon": false,
+        "afterColon": true,
+        "mode": "strict"
+      }
+    ],
+    "no-mixed-spaces-and-tabs": [
+      "error"
+    ],
+    "brace-style": [
+      "error",
+      "1tbs",
+      {
+        "allowSingleLine": true
+      }
+    ],
+    "space-in-parens": [
+      "warn"
+    ],
+    "no-constant-condition": [
+      "off"
+    ],
+    "array-callback-return": [
+      "error"
+    ],
+    "no-eval": [
+      "error"
+    ],
+    "no-iterator": [
+      "error"
+    ],
+    "no-octal-escape": [
+      "error"
+    ],
+    "no-buffer-constructor": [
+      "error"
+    ],
+    "no-throw-literal": [
+      "error"
+    ],
+    "no-new-wrappers": [
+      "error"
+    ],
+    "no-new": [
+      "error"
+    ],
+    "no-implicit-coercion": [
+      "error"
+    ],
+    "no-lone-blocks": [
+      "error"
+    ],
+    "no-new-func": [
+      "error"
+    ],
+    "new-parens": [
+      "error"
+    ],
+    "no-useless-call": [
+      "error"
+    ],
+    "no-sequences": [
+      "error"
+    ],
+    "no-nested-ternary": [
+      "error"
+    ],
+    "no-duplicate-imports": [
+      "error"
+    ],
+    "no-mixed-operators": [
+      "error",
+      {
+        "groups": [
+            ["&", "|", "^", "~", "<<", ">>", ">>>"],
+            ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
+            ["&&", "||"],
+            ["in", "instanceof"]
+        ],
+        "allowSamePrecedence": true
+      }
+    ],
+    "handle-callback-err": [
+      "error",
+      "^(err|error)$"
+    ],
+    "jsx-quotes": [
+      "error",
+      "prefer-double"
+    ],
+    "no-array-constructor": [
+      "error"
+    ],
+    "no-unmodified-loop-condition": [
+      "error"
+    ],
+    "no-useless-concat": [
+      "warn"
+    ],
+    "no-label-var": [
+      "error"
+    ],
+    "brace-style": [
+      "error",
+      "1tbs",
+      { "allowSingleLine": true }
+    ],
+    "implicit-arrow-linebreak":
+    [
+      "error",
+      "beside"
+    ],
+    "keyword-spacing": [
+      "error"
+    ],
+    "space-before-blocks": [
+      "error"
+    ],
+    "space-before-function-paren": [
+      "error", "never"
+    ],
+    "no-whitespace-before-property": [
+      "error"
+    ],
+    "yoda": [
+      "warn"
+    ],
+    "callback-return": [
+      "warn"
+    ],
+    "no-unused-expressions": [
+      "warn"
+    ],
+    "max-nested-callbacks": [
+      "error"
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "no-var": [
+      "error"
+    ],
+    "object-property-newline": [
+      "error"
+    ],
+    "max-depth": [
+      "error",
+      { "max": 5 }
+    ],
+    "no-use-before-define": [
+      "error"
+    ]
+  }
+}

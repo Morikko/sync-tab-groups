@@ -2,28 +2,28 @@ const ActionCreators = {
   setGroups: function(groups) {
     return {
       type: "GROUPS_RECEIVE",
-      groups: groups
+      groups: groups,
     };
   },
 
   setCurrentWindowId: function(currentWindowId) {
     return {
       type: "CURRENT_WINDOWS_ID_RECEIVE",
-      currentWindowId: currentWindowId
+      currentWindowId: currentWindowId,
     };
   },
 
   setDelayedTask: function(delayedTasks) {
     return {
       type: "DELAYED_TASKS_RECEIVE",
-      delayedTasks: delayedTasks
+      delayedTasks: delayedTasks,
     };
   },
 
   setOptions: function(options) {
     return {
       type: "OPTIONS_RECEIVE",
-      options: options
+      options: options,
     };
-  }
+  },
 };

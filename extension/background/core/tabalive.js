@@ -3,8 +3,8 @@ var TabAlive = TabAlive || {};
 
 TabAlive.WINDOW_ID = WINDOW_ID_NONE;
 
-TabAlive.init = async function(){
-  if ( OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE) {
+TabAlive.init = async function() {
+  if (OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE) {
     await TabAlive.start();
   } else {
     await TabAlive.stop();
@@ -13,7 +13,7 @@ TabAlive.init = async function(){
 
 // TODO
 TabAlive.start = async function() {
-  if ( await Utils.windowExists(TabAlive.WINDOW_ID) ) {
+  if (await Utils.windowExists(TabAlive.WINDOW_ID)) {
     return;
   }
   // How to find the window back
@@ -31,13 +31,13 @@ TabAlive.stop = async function() {
   browser.windows.onRemoved.removeListener(TabAlive.keepWindowOpened);
 
   // Close the window
-  if ( await Utils.windowExists(TabAlive.WINDOW_ID) ) {
-      await browser.windows.remove(TabAlive.WINDOW_ID);
+  if (await Utils.windowExists(TabAlive.WINDOW_ID)) {
+    await browser.windows.remove(TabAlive.WINDOW_ID);
   }
 }
 
 // TODO
-TabAlive.createWindow = async function(){
+TabAlive.createWindow = async function() {
   let newWindow = await browser.windows.create({
     state: "minimized",
   });
@@ -46,7 +46,7 @@ TabAlive.createWindow = async function(){
 }
 
 // TODO
-TabAlive.keepWindowOpened = async function(windowId){
+TabAlive.keepWindowOpened = async function(windowId) {
 
 }
 
@@ -60,7 +60,7 @@ TabAlive.sleepTab = async function(tabId) {
     index: -1,
   });
 
-  if ( newTab.length ) {
+  if (newTab.length) {
     newTab = newTab[0];
   }
 
@@ -68,7 +68,7 @@ TabAlive.sleepTab = async function(tabId) {
   let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
   GroupManager.groups[groupIndex].tabs.forEach((tabInGroup)=>{
-    if ( tabInGroup.id === tabId ) {
+    if (tabInGroup.id === tabId) {
       tabInGroup.id = newTab.id;
     }
   });
@@ -78,12 +78,12 @@ TabAlive.containTab = async function(tab) {
   // Search tabId
   try {
     let fetchedTab = await browser.tabs.get(tab.id);
-    if ( fetchedTab.windowId === TabAlive.WINDOW_ID) {
+    if (fetchedTab.windowId === TabAlive.WINDOW_ID) {
       return true;
     } else {
       return false;
     }
-  } catch(e) {
+  } catch (e) {
     return false;
   }
 }
@@ -96,7 +96,7 @@ TabAlive.wakeupTab = async function(tab, targetWindowId, targetIndex) {
     index: targetIndex,
   });
 
-  if ( newTab.length ) {
+  if (newTab.length) {
     newTab = newTab[0];
   }
 
@@ -104,7 +104,7 @@ TabAlive.wakeupTab = async function(tab, targetWindowId, targetIndex) {
   let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
   GroupManager.groups[groupIndex].tabs.forEach((tabInGroup)=>{
-    if ( tabInGroup.id === tab.id ) {
+    if (tabInGroup.id === tab.id) {
       tabInGroup.id = newTab.id;
     }
   });

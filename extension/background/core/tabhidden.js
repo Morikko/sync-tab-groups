@@ -4,18 +4,19 @@ TabHidden.TABHIDDEN_SESSION_KEY = "TABHIDDEN_ID";
 TabHidden.cleaningUnknownHiddenTabsProcess = null;
 
 /**
- * @param {Number} tabId
- * @param {Number} windowId
- * @param {Number} index
- * @return {Boolean} is tab shown
+ * @param {number} tabId
+ * @param {number} windowId
+ * @param {number} index
+ * @return {boolean} is tab shown
  */
 TabHidden.showTab = async function(tabId, windowId, index=-1) {
   // Closed tab Id
-  if(typeof tabId === 'string') {
+  if (typeof tabId === 'string') {
     return false;
   }
   try {
-    await browser.tabs.move(tabId, {windowId, index});
+    await browser.tabs.move(tabId, {windowId,
+      index});
     await browser.tabs.show(tabId);
     browser.sessions.removeTabValue(
       tabId,
@@ -23,7 +24,7 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
     );
     return true;
   } catch (e) {
-    if(Utils.DEBUG_MODE) {
+    if (Utils.DEBUG_MODE) {
       e.message = "Impossible to show tab: " + e.message;
       LogManager.warning(e.message, {arguments});
     }
@@ -32,13 +33,13 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
 }
 
 /**
- * @param {Number} tabId
- * @return {Boolean} is tab hidden
+ * @param {number} tabId
+ * @return {boolean} is tab hidden
  */
 TabHidden.hideTab = async function(tabId) {
   try {
     const result = await browser.tabs.hide(tabId);
-    if ( result.length !== 0 ) {
+    if (result.length !== 0) {
       if (OptionManager.options.groups.discardedHide) {
         setTimeout( // Avoid overloading
           async function discardTabsAfterHiding() {
@@ -51,7 +52,7 @@ TabHidden.hideTab = async function(tabId) {
           2000,
         )
       }
-      
+
       browser.sessions.setTabValue(
         tabId,
         TabHidden.TABHIDDEN_SESSION_KEY,
@@ -59,7 +60,7 @@ TabHidden.hideTab = async function(tabId) {
       );
     }
     return result.length !== 0;
-  } catch(e) {
+  } catch (e) {
     LogManager.warning(e.message, {arguments});
     return false;
   }
@@ -67,7 +68,7 @@ TabHidden.hideTab = async function(tabId) {
 }
 
 
-TabHidden.closeAllHiddenTabsInGroups = async function (groups=GroupManager.groups) {
+TabHidden.closeAllHiddenTabsInGroups = async function(groups=GroupManager.groups) {
 
   const removeHiddenTab = async function(tab) {
     try {
@@ -79,8 +80,8 @@ TabHidden.closeAllHiddenTabsInGroups = async function (groups=GroupManager.group
 
   const removeHiddenTabsInGroup = async function(group) {
     return Promise.all(
-        group.tabs.filter(tab => tab.hidden)
-                  .map(removeHiddenTab)
+      group.tabs.filter(tab => tab.hidden)
+        .map(removeHiddenTab)
     )
   }
 
@@ -92,25 +93,25 @@ TabHidden.closeAllHiddenTabsInGroups = async function (groups=GroupManager.group
 // return true if done else false
 TabHidden.changeHiddenStateForTab = function(tabId, value=false) {
   const groupId = GroupManager.getGroupIdFromTabId(tabId, {error: false});
-  if(groupId===-1) return false;
+  if (groupId===-1) return false;
 
   const groupIndex = GroupManager.getGroupIndexFromGroupId(
     groupId, {error: false}
   );
-  if(groupIndex===-1) return false;
+  if (groupIndex===-1) return false;
 
   const tabIndex = GroupManager.getTabIndexFromTabId(
     tabId, groupIndex, {error: false}
   );
-  if(tabIndex===-1) return false;
+  if (tabIndex===-1) return false;
   GroupManager.groups[groupIndex].tabs[tabIndex].hidden = value;
 
   return true;
-} 
+}
 
 // Close hidden tabs and change hidden property to false if part of a group
-TabHidden.closeHiddenTabs = async function (tabIds) {
-  if ( !Array.isArray(tabIds) ) {
+TabHidden.closeHiddenTabs = async function(tabIds) {
+  if (!Array.isArray(tabIds)) {
     tabIds = [tabIds]
   }
 
@@ -123,17 +124,17 @@ TabHidden.closeHiddenTabs = async function (tabIds) {
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
-TabHidden.removeAllHiddenTabs = async function(){
+TabHidden.removeAllHiddenTabs = async function() {
   const allTabs = await browser.tabs.query({});
   const allHiddenTabsIds = allTabs
     .filter(({hidden}) => hidden)
     .map(({id}) => id);
-  
+
   await TabHidden.closeHiddenTabs(allHiddenTabsIds);
 }
 
 TabHidden.onStartInitialization = async function() {
-  if (OptionManager.options.groups.closingState 
+  if (OptionManager.options.groups.closingState
     !== OptionManager.CLOSE_HIDDEN) {
     return;
   }
@@ -141,34 +142,34 @@ TabHidden.onStartInitialization = async function() {
   try {
     // 1. Get all hidden tab ids
     const hiddenTabIds = (await browser.tabs.query({hidden: true}))
-                            .map(({id}) => id);
+      .map(({id}) => id);
     const updatedHiddenTabIds = {};
 
     // 2. Bind back to the tabs in the groups
     await Promise.all(
-      hiddenTabIds.map(async (tabId) => {
+      hiddenTabIds.map(async(tabId) => {
         const keyValue = await browser.sessions.getTabValue(
           tabId,
           TabHidden.TABHIDDEN_SESSION_KEY
         );
-        if ( keyValue == null ) return;
+        if (keyValue == null) return;
 
         const oldTabId = parseInt(keyValue);
 
         const groupId = GroupManager.getGroupIdFromTabId(
-          oldTabId,  {error:false}
+          oldTabId,  {error: false}
         );
-        if(groupId===-1) return;
+        if (groupId===-1) return;
 
         const groupIndex = GroupManager.getGroupIndexFromGroupId(
-          groupId,  {error:false}
+          groupId,  {error: false}
         );
-        if(groupIndex===-1) return;
+        if (groupIndex===-1) return;
 
         const tabIndex = GroupManager.getTabIndexFromTabId(
-          oldTabId, groupIndex,  {error:false}
+          oldTabId, groupIndex,  {error: false}
         );
-        if(tabIndex===-1) return;
+        if (tabIndex===-1) return;
 
         GroupManager.groups[groupIndex].tabs[tabIndex].id = tabId;
         updatedHiddenTabIds[tabId] = true;
@@ -180,10 +181,10 @@ TabHidden.onStartInitialization = async function() {
     // 3. Update hidden state to missing ones
     GroupManager.groups.forEach(({tabs}) => {
       tabs.forEach(tab =>{
-        if ( !tab.hidden ) {
+        if (!tab.hidden) {
           return
         }
-        if ( updatedHiddenTabIds[tab.id] != null ) {
+        if (updatedHiddenTabIds[tab.id] != null) {
           return
         }
         tab.hidden = false;
@@ -196,18 +197,18 @@ TabHidden.onStartInitialization = async function() {
   }
 }
 
-// Close hidden tabs not in any group 
+// Close hidden tabs not in any group
 TabHidden.closeUnknownHiddenTabs = async function() {
   try {
     const hiddenTabIds = (await browser.tabs.query({hidden: true}))
-                            .map(({id}) => id);
-    
+      .map(({id}) => id);
+
     await Promise.all(
-      hiddenTabIds.map(async (tabId) => {
+      hiddenTabIds.map(async(tabId) => {
         const groupId = GroupManager.getGroupIdFromTabId(
-          tabId,  {error:false}
+          tabId,  {error: false}
         );
-        if(groupId>-1) return;
+        if (groupId>-1) return;
 
         try {
           await browser.tabs.remove(tabId);
@@ -216,20 +217,20 @@ TabHidden.closeUnknownHiddenTabs = async function() {
         return;
       })
     );
-  } catch(e) {
+  } catch (e) {
     LogManager.error(e);
   }
 }
 
 
 TabHidden.startCleaningUnknownHiddenTabsProcess = async function({
-  doItNow=false
+  doItNow=false,
 }={}) {
   if (!OptionManager.options.groups.removeUnknownHiddenTabs) {
     return;
   }
 
-  if(doItNow) {
+  if (doItNow) {
     await TabHidden.closeUnknownHiddenTabs();
   }
 

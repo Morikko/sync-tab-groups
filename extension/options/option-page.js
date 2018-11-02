@@ -10,7 +10,7 @@ const Actions = {
   onOptionChange: function(name, value) {
     Utils.sendMessage("Option:Change", {
       optionName: name,
-      optionValue: value
+      optionValue: value,
     });
   },
 
@@ -32,11 +32,11 @@ const Actions = {
     Utils.sendMessage("Option:Export", {});
   },
 
-  onDeleteAllGroups: function( ) {
+  onDeleteAllGroups: function() {
     Utils.sendMessage("Option:DeleteAllGroups", {});
   },
 
-  onReloadGroups: function( ) {
+  onReloadGroups: function() {
     Utils.sendMessage("Option:ReloadGroups", {});
   },
 
@@ -54,25 +54,25 @@ const Actions = {
 
   onRemoveBackUp: function(id) {
     Utils.sendMessage("Option:RemoveBackUp", {
-      id: id
+      id: id,
     });
   },
 
   onImportBackUp: function(id) {
     Utils.sendMessage("Option:ImportBackUp", {
-      id: id
+      id: id,
     });
   },
 
   onExportBackUp: function(id) {
     Utils.sendMessage("Option:ExportBackUp", {
-      id: id
+      id: id,
     });
   },
 
   onDownloadErrorLog: function() {
     Utils.sendMessage("LogManager:Download", {});
-  }
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
     React.createElement(
       ReactRedux.Provider, {
-        store: store
+        store: store,
       },
       React.createElement(Options, {
         onOptionChange: Actions.onOptionChange,
@@ -102,14 +102,14 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 });
 
-var optionMessenger = function(message) {
+let optionMessenger = function(message) {
   switch (message.task) {
-    case "Option:Changed":
-      store.dispatch(ActionCreators.setOptions(message.params.options));
-      break;
-    case "BackupList:Changed":
-      store.dispatch(ActionCreators.setBackupList(message.params.backupList));
-      break;
+  case "Option:Changed":
+    store.dispatch(ActionCreators.setOptions(message.params.options));
+    break;
+  case "BackupList:Changed":
+    store.dispatch(ActionCreators.setBackupList(message.params.backupList));
+    break;
   }
 }
 
