@@ -7,6 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf build && webpack --mode development --progress --hide-modules",
     "build:prod": "rm -rf release/build && webpack --mode production --progress --hide-modules",
+    "release": "rm -rf release && npm run build:prod && npm run zip",
+    "zip": "cd release/build && zip -r ../sync-tab-groups.zip * && cp ../sync-tab-groups.zip ../sync-tab-groups.xpi && cd ../../",
     "watch": "npm run build -- --watch",
     "clean": "rm -rf build release"
   },
