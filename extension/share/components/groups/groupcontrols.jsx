@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import Utils from '../../../background/utils/utils'
 import TabControls from './tabcontrols'
-import GroupAddButton from './groupaddbutton';
 
 class GroupControls extends React.Component {
   constructor(props) {
@@ -325,4 +324,4 @@ GroupControls.propTypes = {
   onOpenInNewWindow: PropTypes.func,
 }
 
-export default GroupAddButton
+export default GroupControls

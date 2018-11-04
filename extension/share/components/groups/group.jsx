@@ -657,7 +657,7 @@ Group.propTypes = {
   searchGroupResult: PropTypes.object,
   currentlySearching: PropTypes.bool,
   showTabsNumber: PropTypes.bool,
-  groups: PropTypes.object,
+  groups: PropTypes.array,
   onGroupChangePosition: PropTypes.func,
   onChangePinState: PropTypes.func,
   onChangeExpand: PropTypes.func,

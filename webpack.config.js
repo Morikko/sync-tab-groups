@@ -96,7 +96,7 @@ const config = {
     }),
 
     new CopyWebpackPlugin(
-      multipleCopy('_locales', 'manifest.json')
+      multipleCopy('_locales', 'manifest.json', 'lib')
         .concat([
           {from: '**/*.html'},
           {from: '**/*.css'},

@@ -45,7 +45,6 @@ Objects:
  - getOffset
 
  */
-import LogManager from '../error/logmanager'
 import TAB_CONSTANTS from '../core/TAB_CONSTANTS'
 
 //const browser.windows.WINDOW_ID_NONE = browser.windows.WINDOW_ID_NONE;
@@ -289,6 +288,8 @@ Utils.getDiscardedURL = function(title, url, favIconUrl) {
 Utils.isPrivilegedURL = function(url) {
   if (url === TAB_CONSTANTS.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab"))
     return false;
+  if (url.startsWith("data:image")) return false
+
   if (url.startsWith("chrome:") ||
     url.startsWith("javascript:") ||
     url.startsWith("data:") ||
@@ -334,35 +335,31 @@ Utils.shuffleArray = function(a) {
  * @param {string} url
  */
 Utils.openUrlOncePerWindow = async function(url, active=true) {
-  try {
-    const currentWindowId = (await browser.windows.getLastFocused()).id;
+  const currentWindowId = (await browser.windows.getLastFocused()).id;
 
-    let urlWithoutHash = url,
-      hasHash = urlWithoutHash.lastIndexOf("#") > -1;
-    if (hasHash)
-      urlWithoutHash = urlWithoutHash.substring(0,urlWithoutHash.lastIndexOf("#"))
+  let urlWithoutHash = url,
+    hasHash = urlWithoutHash.lastIndexOf("#") > -1;
+  if (hasHash)
+    urlWithoutHash = urlWithoutHash.substring(0,urlWithoutHash.lastIndexOf("#"))
 
-    const tabs = await browser.tabs.query({
-      windowId: currentWindowId,
-      url: urlWithoutHash,
-    });
+  const tabs = await browser.tabs.query({
+    windowId: currentWindowId,
+    url: urlWithoutHash,
+  });
 
-    if (tabs.length) { // if tab is found
-      let params = {
-        active: active,
-      }
-      if (hasHash) {
-        params.url = url;
-      }
-      browser.tabs.update(tabs[0].id, params);
-    } else {
-      browser.tabs.create({
-        active: active,
-        url: url,
-      });
+  if (tabs.length) { // if tab is found
+    let params = {
+      active: active,
     }
-  } catch (e) {
-    LogManager.error(e, {args: arguments});
+    if (hasHash) {
+      params.url = url;
+    }
+    browser.tabs.update(tabs[0].id, params);
+  } else {
+    browser.tabs.create({
+      active: active,
+      url: url,
+    });
   }
 }
 
@@ -463,7 +460,7 @@ Utils.isDeadObject = function(obj) {
     String(obj);
     return false;
   } catch (e) {
-    LogManager.warning("Sync Tab Groups: " + obj + " is probably dead...");
+    // "Sync Tab Groups: " + obj + " is probably dead..."
     return true;
   }
 }

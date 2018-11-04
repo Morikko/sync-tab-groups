@@ -2,33 +2,6 @@
  * Entry Point of the Extension
  * Init the Data -> Events
  * Manage the messages with all the extensive parts of the Extension
-
- Sender:
- - refreshOptionsUI
- - refreshUi
-
- Receiver:
- - onOpenGroupInNewWindow
- - onGroupAdd
- - onGroupAddWithTab
- - onGroupClose
- - onGroupRemove
- - onGroupRename
- - onGroupSelect
- - onTabSelect
- - onMoveTabToGroup
- - onBookmarkSave
- - onOpenSettings
- - changeSynchronizationStateOfWindow
- - onTabClose
- - onTabOpen
- - onImportGroups
- - onExportGroups
- - onGroupChangePosition
- - onTabChangePin
- - onChangeExpand
-
- - init
  */
 
 import LogManager from "./error/logmanager"

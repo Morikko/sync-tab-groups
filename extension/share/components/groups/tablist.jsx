@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 import ErrorBoundary from '../ErrorBoundary'
 import Tab from './tab'
-import TabControls from './tabcontrols';
 
 class TabList extends React.Component {
   render() {
@@ -60,10 +59,10 @@ TabList.propTypes = {
   onOpenTab: PropTypes.func,
   onGroupDrop: PropTypes.func,
   onMoveTabToNewGroup: PropTypes.func,
-  searchTabsResults: PropTypes.object,
-  groups: PropTypes.object,
+  searchTabsResults: PropTypes.array,
+  groups: PropTypes.array,
   onChangePinState: PropTypes.func,
   allowClickSwitch: PropTypes.bool,
 }
 
-export default TabControls
+export default TabList

@@ -24,6 +24,7 @@ BackgroundHelper.refreshBackupListUI = async function() {
 };
 
 BackgroundHelper.refreshUi = function() {
+  console.log(GroupManager.groups)
   Utils.sendMessage("Groups:Changed", {
     groups: GroupManager.groups,
     delayedTasks: TaskManager.fromUI,

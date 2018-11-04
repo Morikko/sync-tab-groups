@@ -251,7 +251,7 @@ class GroupList extends React.Component {
 }
 
 GroupList.propTypes = {
-  groups: PropTypes.object.isRequired,
+  groups: PropTypes.array.isRequired,
   currentWindowId: PropTypes.number,
   delayedTasks: PropTypes.object,
   onGroupAddClick: PropTypes.func,

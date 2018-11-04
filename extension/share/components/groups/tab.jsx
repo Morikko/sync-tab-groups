@@ -411,7 +411,7 @@ Tab.propTypes = {
   onCloseTab: PropTypes.func,
   onOpenTab: PropTypes.func,
   searchTabResult: PropTypes.bool,
-  groups: PropTypes.object,
+  groups: PropTypes.array,
   onChangePinState: PropTypes.func,
   allowClickSwitch: PropTypes.bool,
 }
