@@ -25,9 +25,9 @@ const config = {
   context: setPath('extension'),
   entry: {
     'background': './background/background.js',
-    /*         'popup/popup': './popup/popup.js',
-        'options/option-page': './options/option-page.js',
-        './tabpages/manage-groups/manage-groups-controller': './tabpages/manage-groups/manage-groups-controller.js', */
+    'popup/popup': './popup/popup.js',
+    //'options/option-page': './options/option-page.js',
+    //'./tabpages/manage-groups/manage-groups-controller': './tabpages/manage-groups/manage-groups-controller.js',
   },
   output: {
     path: setPath('build'),

@@ -1,3 +1,7 @@
+import ReactDOM from 'react-dom'
+import React from 'react'
+import ReactRedux from 'react-redux'
+
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
     React.createElement(
