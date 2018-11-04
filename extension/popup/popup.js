@@ -3,8 +3,8 @@ import React from 'react'
 import * as ReactRedux from 'react-redux'
 
 import PopupMenu from './components/popupmenu'
-import GroupActions from '../share/components/groups/wrapper/group-actions'
-import store from '../share/components/groups/wrapper/store'
+import GroupActions from '../share/components/groups/wrapper/groupActions'
+import store from '../share/components/groups/wrapper/groupStore'
 
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(

@@ -1,8 +1,13 @@
+import React from 'react'
+
+import ManagePanel from './manage-panel'
+import ManageBar from './manage-bar'
+
 class ManageWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      single: true
+      single: true,
     }
     this.onColumnChange = this.onColumnChange.bind(this);
   }
@@ -23,7 +28,9 @@ class ManageWrapper extends React.Component {
 
   onColumnChange(value) {
     this.setState({
-      single: value
+      single: value,
     });
   }
 }
+
+export default ManageWrapper

@@ -1,3 +1,18 @@
+import React from 'react'
+import * as ReactRedux from 'react-redux'
+import classNames from 'classnames'
+import {
+  Navigation,
+  generalNavigationListener,
+} from '../../share/components/groups/wrapper/navigation'
+
+import SearchBar from '../../share/components/groups/searchbar'
+import GroupList from '../../share/components/groups/grouplist'
+import GroupAddButton from '../../share/components/groups/groupaddbutton'
+import ActionCreators from '../../share/components/groups/wrapper/actionCreators'
+
+import OPTION_CONSTANTS from '../../background/core/OPTION_CONSTANTS'
+
 class ManagePanelStandAlone extends React.Component {
   constructor(props) {
     super(props);
@@ -21,7 +36,7 @@ class ManagePanelStandAlone extends React.Component {
 
     Navigation.setTarget(document.querySelector('.left-list'));
 
-    if ( this.props.options.shortcuts.navigation ) {
+    if (this.props.options.shortcuts.navigation) {
       document.body.addEventListener("keydown", generalNavigationListener);
     }
   }
@@ -29,30 +44,30 @@ class ManagePanelStandAlone extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.update);
 
-    if ( this.props.options.shortcuts.navigation ) {
+    if (this.props.options.shortcuts.navigation) {
       document.body.removeEventListener("keydown", generalNavigationListener);
     }
   }
 
   componentDidUpdate() {
-    if ( this.state.leftForceExpand ) {
+    if (this.state.leftForceExpand) {
       this.setState({
-        leftForceExpand: false
+        leftForceExpand: false,
       });
     }
-    if ( this.state.leftForceReduce ) {
+    if (this.state.leftForceReduce) {
       this.setState({
-        leftForceReduce: false
+        leftForceReduce: false,
       });
     }
-    if ( this.state.rightForceExpand ) {
+    if (this.state.rightForceExpand) {
       this.setState({
-        rightForceExpand: false
+        rightForceExpand: false,
       });
     }
-    if ( this.state.rightForceReduce ) {
+    if (this.state.rightForceReduce) {
       this.setState({
-        rightForceReduce: false
+        rightForceReduce: false,
       });
     }
   }
@@ -66,7 +81,7 @@ class ManagePanelStandAlone extends React.Component {
         <li className="group-lists">
           <div className={classNames({
             "left-list": true,
-          "half": !this.props.singleMode,})}>
+            "half": !this.props.singleMode})}>
             <div className="group-action left">
               <i
                 className="app-pref fa fa-fw fa-angle-double-down expand-groups"
@@ -125,7 +140,7 @@ class ManagePanelStandAlone extends React.Component {
           <div className={classNames({
             "right-list": true,
             "half": true,
-          "invisible": this.props.singleMode,})} >
+            "invisible": this.props.singleMode})} >
             <div className="group-action right">
               {
                 <SearchBar
@@ -185,10 +200,10 @@ class ManagePanelStandAlone extends React.Component {
         <li>
           <div className="belowActions">
             <GroupAddButton
-                onClick= {this.props.onGroupAddClick}
-                onDrop= {this.props.onGroupAddDrop}
-                currentlySearching= {false}
-                hotkeysEnable={this.props.options.shortcuts.navigation}
+              onClick= {this.props.onGroupAddClick}
+              onDrop= {this.props.onGroupAddDrop}
+              currentlySearching= {false}
+              hotkeysEnable={this.props.options.shortcuts.navigation}
             />
           </div>
         </li>
@@ -200,7 +215,7 @@ class ManagePanelStandAlone extends React.Component {
     let stateToUpdate = {
       leftsearchfilter: searchValue,
     };
-    if ( this.state.leftsearchfilter.length && !searchValue.length) {
+    if (this.state.leftsearchfilter.length && !searchValue.length) {
       stateToUpdate.leftForceReduce = true;
     }
     this.setState(stateToUpdate);
@@ -210,7 +225,7 @@ class ManagePanelStandAlone extends React.Component {
     let stateToUpdate = {
       rightsearchfilter: searchValue,
     };
-    if ( this.state.rightsearchfilter.length && !searchValue.length) {
+    if (this.state.rightsearchfilter.length && !searchValue.length) {
       stateToUpdate.rightForceReduce = true;
     }
     this.setState(stateToUpdate);
@@ -251,7 +266,9 @@ const ManagePanel = (() => {
       groups: state.get("groups"),
       currentWindowId: state.get("currentWindowId"),
       delayedTasks: state.get("delayedTasks"),
-      options: state.get("options")
+      options: state.get("options"),
     };
   }, ActionCreators)(ManagePanelStandAlone)
 })();
+
+export default ManagePanel

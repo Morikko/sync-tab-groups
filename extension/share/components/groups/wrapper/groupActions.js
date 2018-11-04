@@ -1,6 +1,6 @@
 import Utils from '../../../../background/utils/utils'
-import ActionCreators from './action_creators'
-import store from './store'
+import ActionCreators from './actionCreators'
+import store from './groupStore'
 
 const GroupActions = {
   addGroup: function(title="") {

@@ -295,7 +295,7 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
       break;
     case "manage_groups":
       Utils.openUrlOncePerWindow(browser.extension.getURL(
-        "/tabpages/manage-groups/manage-groups.html"
+        "/manage/manage-groups.html"
       ));
       break;
     case "backup":

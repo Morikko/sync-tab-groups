@@ -52,7 +52,7 @@ class OptionsMenu extends React.Component {
 }
 
 OptionsMenu.propTypes = {
-  tabs: PropTypes.object,
+  tabs: PropTypes.array,
   selected: PropTypes.string,
   onClick: PropTypes.func,
   onOpenGuide: PropTypes.func,

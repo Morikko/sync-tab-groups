@@ -13,4 +13,4 @@ const Reducer = function(state = INITIAL_STATE, action) {
   return state;
 };
 
-const store = Redux.createStore(Reducer);
+const groupStore = Redux.createStore(Reducer);

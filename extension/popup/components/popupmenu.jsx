@@ -7,7 +7,7 @@ import SearchBar from '../../share/components/groups/searchbar'
 import GroupList from '../../share/components/groups/grouplist'
 import GroupAddButton  from '../../share/components/groups/groupaddbutton'
 import MainBar from './mainbar'
-import ActionCreators from '../../share/components/groups/wrapper/action_creators'
+import ActionCreators from '../../share/components/groups/wrapper/actionCreators'
 import {
   Navigation,
   generalNavigationListener,

@@ -27,7 +27,7 @@ const config = {
     'background': './background/background.js',
     'popup/popup': './popup/popup.js',
     'options/option-page': './options/option-page.js',
-    //'./tabpages/manage-groups/manage-groups-controller': './tabpages/manage-groups/manage-groups-controller.js',
+    './manage/manage-groups': './manage/manage-groups-controller.jsx',
   },
   output: {
     path: setPath('build'),

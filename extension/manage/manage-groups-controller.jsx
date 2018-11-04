@@ -1,3 +1,11 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+import * as ReactRedux from 'react-redux'
+import groupStore from '../share/components/groups/wrapper/groupStore'
+import Utils from '../background/utils/utils'
+import GroupActions from '../share/components/groups/wrapper/groupActions'
+import ManageWrapper from './components/manage-wrapper'
+
 document.addEventListener("DOMContentLoaded", () => {
   // Set tab title
   document.title = browser.i18n.getMessage("group_manager");
@@ -5,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   Utils.setIcon("/share/icons/tabspace-active-64.png");
 
   ReactDOM.render(
-    <ReactRedux.Provider store={store}>
+    <ReactRedux.Provider store={groupStore}>
       <ManageWrapper
         onGroupAddClick={GroupActions.addGroup}
         onGroupAddDrop={GroupActions.addGroupWithTab}
@@ -29,5 +37,4 @@ document.addEventListener("DOMContentLoaded", () => {
       />
     </ReactRedux.Provider>
     , document.getElementById("content"));
-
 });

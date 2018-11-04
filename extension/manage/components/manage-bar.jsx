@@ -1,3 +1,8 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
+import RadioButton from '../../share/components/forms/radiobutton'
+
 class ManageBar extends React.Component {
   constructor(props) {
     super(props);
@@ -29,3 +34,5 @@ ManageBar.propTypes = {
   singleMode: PropTypes.bool,
   changeColumnDisplay: PropTypes.func,
 }
+
+export default ManageBar

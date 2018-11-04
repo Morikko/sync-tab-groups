@@ -44,10 +44,10 @@ class OptionSelect extends React.Component {
 
 OptionSelect.propTypes = {
   onValueChange: PropTypes.func,
-  selected: PropTypes.bool,
+  selected: PropTypes.number,
   id: PropTypes.string,
   label: PropTypes.string,
-  choices: PropTypes.object, // [{value, label}]
+  choices: PropTypes.array, // [{value, label}]
 };
 
 export default OptionSelect
