@@ -1,10 +1,11 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   },
   "env": {
-    "browser": false,
-    "node": true,
+    "browser": true,
+    "node": false,
     "es6": true
   },
   "plugins": ["import", "jsdoc"],
@@ -19,13 +20,10 @@
     "jsdoc/require-param-name": 1,
     "jsdoc/require-param-type": 1,
     "jsdoc/valid-types": 1,
-    "jsdoc/no-undefined-types": 1,
     "jsdoc/require-returns-description": 1,
     "jsdoc/require-returns-type": 1,
     "jsdoc/check-types": 1,
 
-    "jest/no-disabled-tests": "warn",
-    "jest/no-focused-tests": "error",
     "import/no-unresolved": [
       2, {
         "commonjs": true,
@@ -42,10 +40,6 @@
     ],
     "no-trailing-spaces": [
       "error"
-    ],
-    "eol-last": [
-      "error",
-      "always"
     ],
     "eqeqeq": [
       "error",

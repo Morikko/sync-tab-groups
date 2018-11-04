@@ -27,8 +27,13 @@
  Decorator
  - decoratorCurrentlyChanging
  */
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import GroupManager from '../core/groupmanager'
+import TabManager from '../core/tabmanager/tabManager'
+import OptionManager from '../core/optionmanager'
 
-var WindowManager = WindowManager || {};
+const WindowManager = {};
 
 WindowManager.WINDOW_GROUPID = "groupId";
 
@@ -125,8 +130,9 @@ WindowManager.decoratorCurrentlyChanging = function(func) {
           delete WindowManager.GROUP_CURRENTLY_SWITCHING[previousGroupId];
         }
       }
-      return result;
     }
+    return result;
+
   };
 }
 
@@ -180,7 +186,7 @@ function makeSnapOfGroup(group) {
  * Open newGroupId in current window, close the previous group if has
  * Secure: don't switch a window if it is already switching
  * @param {number} newGroupId
- * @return {Promise:Number} windowId
+ * @returns {Promise<number>} windowId
  */
 WindowManager.switchGroupInCurrentWindow = async function(newGroupId) {
   let snapNewGroup;
@@ -220,7 +226,7 @@ WindowManager.switchGroupInCurrentWindow = WindowManager.decoratorCurrentlyChang
 /**
  * Close an open window and detach the group from it
  * @param {number} groupId
- * @return {Promise}
+ * @returns {Promise}
  */
 WindowManager.closeWindowFromGroupId = async function(groupId) {
   try {
@@ -232,7 +238,6 @@ WindowManager.closeWindowFromGroupId = async function(groupId) {
       await browser.windows.remove(windowId);
     } finally {
       await GroupManager.detachWindow(windowId);
-      return "WindowManager.closeWindowFromGroupId done on groupId " + groupId;
     }
 
   } catch (e) {
@@ -245,7 +250,7 @@ WindowManager.closeWindowFromGroupId = async function(groupId) {
  * Close Window false - Let a new tab and the pinned tabs if not synchronized
  * Close Window true - Move the pinned tabs if not synchronized before closing
  * @param {number} groupId
- * @return {Promise}
+ * @returns {Promise}
  */
 WindowManager.closeGroup = async function(groupId, {close_window = false}={}) {
   try {
@@ -298,7 +303,7 @@ WindowManager.closeGroup = async function(groupId, {close_window = false}={}) {
  * If not open, switch to it
  * If open is another window, switch to that window
  * @param {number} newGroupId - the group id
- * @return {Promise:Number} windowId
+ * @returns {Promise<number>} windowId
  */
 WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
   try {
@@ -315,9 +320,8 @@ WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
         windowId, {
           focused: true,
         });
-    }
     // Case 2: switch group
-    else {
+    } else {
       if (newWindow) {
         windowId = await WindowManager.openGroupInNewWindow(newGroupId);
       } else {
@@ -335,9 +339,10 @@ WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
  * If direction = 1 -> Next
  * If direction = -1 -> Previous
  * If no group available, show a notification
- * @param {number} refGroupId -- group id ref
- * @param {number} direction -- default:1
- * @return {Promise}
+ * @param {Object} parameter
+ * @param {number} parameter.refGroupId -- group id ref
+ * @param {number} parameter.direction -- default:1
+ * @returns {Promise}
  */
 WindowManager.selectNextGroup = async function({
   direction = 1,
@@ -413,7 +418,7 @@ WindowManager.selectNextGroup = async function({
  * If group is opened, close it (WindowManager.closeGroup)
  * If group id is -1, remove the group in the current window
  * @param {number} groupId (deafault=-1)
- * @return {Promise}
+ * @returns {Promise}
  */
 WindowManager.removeGroup = async function(groupId = -1) {
   try {
@@ -454,7 +459,7 @@ WindowManager.removeGroup = async function(groupId = -1) {
 /**
  * Open a group in a new window directly
  * @param {number} groupId
- * @return {Promise} with window_id
+ * @returns {Promise} with window_id
  */
 WindowManager.openGroupInNewWindow = async function(groupId) {
   let w;
@@ -501,7 +506,7 @@ WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
     return;
   }
   try {
-    if (windowId === WINDOW_ID_NONE) {
+    if (windowId === browser.windows.WINDOW_ID_NONE) {
       return;
     }
     await browser.windows.update(
@@ -521,7 +526,7 @@ WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
  * If window is restored, even if windowId change, the value is still associated with the window.
  * @param {number} windowId
  * @param {number} groupId
- * @return {Promise}
+ * @returns {Promise}
  */
 WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
   try {
@@ -562,7 +567,7 @@ WindowManager.isWindowIdOpen = async function(windowId) {
 /**
  * Remove groupId stored with the window
  * @param {number} windowId
- * @return {Promise}
+ * @returns {Promise}
  */
 WindowManager.desassociateGroupIdToWindow = async function(windowId) {
   try {
@@ -593,7 +598,7 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
 /**
  * Take the tabs from a current opened window and create a new group
  * @param {number} windowId
- * @return {number} groupId created
+ * @returns {number} groupId created
  */
 WindowManager.addGroupFromWindow = async function(windowId) {
   const tabs = await TabManager.getTabsInWindowId(windowId);
@@ -611,7 +616,7 @@ WindowManager.addGroupFromWindow = async function(windowId) {
 }
 
 /**
-  * @return {number} groupId matched or -1
+  * @returns {number} groupId matched or -1
   */
 WindowManager.integrateWindowWithTabsComparaison = async function(windowId, {
   even_new_one = OptionManager.options.groups.syncNewWindow,
@@ -631,7 +636,7 @@ WindowManager.integrateWindowWithTabsComparaison = async function(windowId, {
 }
 
 /**
-  * @return {number} groupId matched or -1
+  * @returns {number} groupId matched or -1
   */
 WindowManager.integrateWindowWithSession = async function(windowId, {
   even_new_one = OptionManager.options.groups.syncNewWindow,
@@ -654,7 +659,7 @@ WindowManager.integrateWindowWithSession = async function(windowId, {
  * 2. If new window, add group
  * @param {number} windowId
  * @param {boolean} even_new_one - Normally user preference, if true window will be created for sure, if false won't
- * @return {number} groupId created or -1
+ * @returns {number} groupId created or -1
  */
 WindowManager.integrateWindow = async function(windowId, {
   even_new_one = OptionManager.options.groups.syncNewWindow,

@@ -270,7 +270,7 @@ function shouldAttributeAcceptBooleanValue(name) {
  *
  * @private
  * @param {string} name
- * @return {boolean} If the name is within reserved props
+ * @returns {boolean} If the name is within reserved props
  */
 function isReservedProp(name) {
   return RESERVED_PROPS.hasOwnProperty(name);
@@ -690,7 +690,7 @@ function recomputePluginOrdering() {
  *
  * @param {object} dispatchConfig Dispatch configuration for the event.
  * @param {object} PluginModule Plugin publishing the event.
- * @return {boolean} True if the event was successfully published.
+ * @returns {boolean} True if the event was successfully published.
  * @private
  */
 function publishEventForPlugin(dispatchConfig, pluginModule, eventName) {
@@ -1009,13 +1009,13 @@ function executeDispatchesInOrder(event, simulated) {
  * return values at each dispatch execution, but it does tend to make sense when
  * dealing with "direct" dispatches.
  *
- * @return {*} The return value of executing the single dispatch.
+ * @returns {*} The return value of executing the single dispatch.
  */
 
 
 /**
  * @param {SyntheticEvent} event
- * @return {boolean} True iff number of dispatches accumulated is greater than 0.
+ * @returns {boolean} True iff number of dispatches accumulated is greater than 0.
  */
 
 /**
@@ -1028,7 +1028,7 @@ function executeDispatchesInOrder(event, simulated) {
  *
  * This API should be sparingly used. Try `accumulate` for something cleaner.
  *
- * @return {*|array<*>} An accumulation of items.
+ * @returns {*|array<*>} An accumulation of items.
  */
 
 function accumulateInto(current, next) {
@@ -1167,7 +1167,7 @@ var injection$1 = {
 /**
  * @param {object} inst The instance, which is the source of events.
  * @param {string} registrationName Name of listener (e.g. `onClick`).
- * @return {?function} The stored callback.
+ * @returns {?function} The stored callback.
  */
 function getListener(inst, registrationName) {
   var listener;
@@ -1196,7 +1196,7 @@ function getListener(inst, registrationName) {
  * Allows registered plugins an opportunity to extract events from top-level
  * native browser events.
  *
- * @return {*} An accumulation of synthetic events.
+ * @returns {*} An accumulation of synthetic events.
  * @internal
  */
 function extractEvents(topLevelType, targetInst, nativeEvent, nativeEventTarget) {
@@ -1643,7 +1643,7 @@ var contentKey = null;
 /**
  * Gets the key used to access text content on a DOM node.
  *
- * @return {?string} Key used to access text content.
+ * @returns {?string} Key used to access text content.
  * @internal
  */
 function getTextContentAccessor() {
@@ -1860,7 +1860,7 @@ _assign(SyntheticEvent.prototype, {
   /**
    * Checks if this event should be released back into the pool.
    *
-   * @return {boolean} True if this should not be released, false otherwise.
+   * @returns {boolean} True if this should not be released, false otherwise.
    */
   isPersistent: emptyFunction_1.thatReturnsFalse,
 
@@ -1944,7 +1944,7 @@ addEventPoolingTo(SyntheticEvent);
  *
  * @param {String} propName
  * @param {?object} getVal
- * @return {object} defineProperty object
+ * @returns {object} defineProperty object
  */
 function getPooledWarningPropertyDefinition(propName, getVal) {
   var isFunction = typeof getVal === 'function';
@@ -2123,7 +2123,7 @@ function isKeypressCommand(nativeEvent) {
  * Translate native top level events into event types.
  *
  * @param {string} topLevelType
- * @return {object}
+ * @returns {object}
  */
 function getCompositionEventType(topLevelType) {
   switch (topLevelType) {
@@ -2142,7 +2142,7 @@ function getCompositionEventType(topLevelType) {
  *
  * @param {string} topLevelType
  * @param {object} nativeEvent
- * @return {boolean}
+ * @returns {boolean}
  */
 function isFallbackCompositionStart(topLevelType, nativeEvent) {
   return topLevelType === 'topKeyDown' && nativeEvent.keyCode === START_KEYCODE;
@@ -2153,7 +2153,7 @@ function isFallbackCompositionStart(topLevelType, nativeEvent) {
  *
  * @param {string} topLevelType
  * @param {object} nativeEvent
- * @return {boolean}
+ * @returns {boolean}
  */
 function isFallbackCompositionEnd(topLevelType, nativeEvent) {
   switch (topLevelType) {
@@ -2181,7 +2181,7 @@ function isFallbackCompositionEnd(topLevelType, nativeEvent) {
  * composition event and we have nothing special to extract.
  *
  * @param {object} nativeEvent
- * @return {?string}
+ * @returns {?string}
  */
 function getDataFromCustomEvent(nativeEvent) {
   var detail = nativeEvent.detail;
@@ -2195,7 +2195,7 @@ function getDataFromCustomEvent(nativeEvent) {
 var isComposing = false;
 
 /**
- * @return {?object} A SyntheticCompositionEvent.
+ * @returns {?object} A SyntheticCompositionEvent.
  */
 function extractCompositionEvent(topLevelType, targetInst, nativeEvent, nativeEventTarget) {
   var eventType;
@@ -2247,7 +2247,7 @@ function extractCompositionEvent(topLevelType, targetInst, nativeEvent, nativeEv
 /**
  * @param {TopLevelTypes} topLevelType Record from `BrowserEventConstants`.
  * @param {object} nativeEvent Native browser event.
- * @return {?string} The string corresponding to this `beforeInput` event.
+ * @returns {?string} The string corresponding to this `beforeInput` event.
  */
 function getNativeBeforeInputChars(topLevelType, nativeEvent) {
   switch (topLevelType) {
@@ -2301,7 +2301,7 @@ function getNativeBeforeInputChars(topLevelType, nativeEvent) {
  *
  * @param {string} topLevelType Record from `BrowserEventConstants`.
  * @param {object} nativeEvent Native browser event.
- * @return {?string} The fallback string for this `beforeInput` event.
+ * @returns {?string} The fallback string for this `beforeInput` event.
  */
 function getFallbackBeforeInputChars(topLevelType, nativeEvent) {
   // If we are currently composing (IME) and using a fallback to do so,
@@ -2365,7 +2365,7 @@ function getFallbackBeforeInputChars(topLevelType, nativeEvent) {
  * Extract a SyntheticInputEvent for `beforeInput`, based on either native
  * `textInput` or fallback behavior.
  *
- * @return {?object} A SyntheticInputEvent.
+ * @returns {?object} A SyntheticInputEvent.
  */
 function extractBeforeInputEvent(topLevelType, targetInst, nativeEvent, nativeEventTarget) {
   var chars;
@@ -2570,7 +2570,7 @@ var DOCUMENT_FRAGMENT_NODE = 11;
  * inconsistencies in browser DOM APIs.
  *
  * @param {object} nativeEvent Native browser event.
- * @return {DOMEventTarget} Target node.
+ * @returns {DOMEventTarget} Target node.
  */
 function getEventTarget(nativeEvent) {
   var target = nativeEvent.target || nativeEvent.srcElement || window;
@@ -2603,7 +2603,7 @@ if (ExecutionEnvironment_1.canUseDOM) {
  *
  * @param {string} eventNameSuffix Event name, e.g. "click".
  * @param {?boolean} capture Check if the capture phase is supported.
- * @return {boolean} True if the event is supported.
+ * @returns {boolean} True if the event is supported.
  * @internal
  * @license Modernizr 3.0.0pre (Custom Build) | MIT
  */
@@ -3468,7 +3468,7 @@ var EventListener = {
    * @param {DOMEventTarget} target DOM element to register listener on.
    * @param {string} eventType Event type, e.g. 'click' or 'mouseover'.
    * @param {function} callback Callback function.
-   * @return {object} Object with a `remove` method.
+   * @returns {object} Object with a `remove` method.
    */
   listen: function listen(target, eventType, callback) {
     if (target.addEventListener) {
@@ -3494,7 +3494,7 @@ var EventListener = {
    * @param {DOMEventTarget} target DOM element to register listener on.
    * @param {string} eventType Event type, e.g. 'click' or 'mouseover'.
    * @param {function} callback Callback function.
-   * @return {object} Object with a `remove` method.
+   * @returns {object} Object with a `remove` method.
    */
   capture: function capture(target, eventType, callback) {
     if (target.addEventListener) {
@@ -3617,7 +3617,7 @@ function isEnabled() {
  * @param {string} topLevelType Record from `BrowserEventConstants`.
  * @param {string} handlerBaseName Event name (e.g. "click").
  * @param {object} element Element on which to attach listener.
- * @return {?object} An object with a remove function which will forcefully
+ * @returns {?object} An object with a remove function which will forcefully
  *                  remove the listener.
  * @internal
  */
@@ -3634,7 +3634,7 @@ function trapBubbledEvent(topLevelType, handlerBaseName, element) {
  * @param {string} topLevelType Record from `BrowserEventConstants`.
  * @param {string} handlerBaseName Event name (e.g. "click").
  * @param {object} element Element on which to attach listener.
- * @return {?object} An object with a remove function which will forcefully
+ * @returns {?object} An object with a remove function which will forcefully
  *                  remove the listener.
  * @internal
  */
@@ -4027,7 +4027,7 @@ function isListeningToAllDependencies(registrationName, mountAt) {
  * yet defined.
  *
  * @param {?DOMDocument} doc Defaults to current document.
- * @return {?DOMElement}
+ * @returns {?DOMElement}
  */
 function getActiveElement(doc) /*?DOMElement*/{
   doc = doc || (typeof document !== 'undefined' ? document : undefined);
@@ -4120,7 +4120,7 @@ var shallowEqual_1 = shallowEqual;
 
 /**
  * @param {*} object The object to check.
- * @return {boolean} Whether or not the object is a DOM node.
+ * @returns {boolean} Whether or not the object is a DOM node.
  */
 function isNode(object) {
   var doc = object ? object.ownerDocument || object : document;
@@ -4143,7 +4143,7 @@ var isNode_1 = isNode;
 
 /**
  * @param {*} object The object to check.
- * @return {boolean} Whether or not the object is a DOM text node.
+ * @returns {boolean} Whether or not the object is a DOM text node.
  */
 function isTextNode(object) {
   return isNode_1(object) && object.nodeType == 3;
@@ -4216,7 +4216,7 @@ var focusNode_1 = focusNode;
  * Given any node return the first leaf node without children.
  *
  * @param {DOMElement|DOMTextNode} node
- * @return {DOMElement|DOMTextNode}
+ * @returns {DOMElement|DOMTextNode}
  */
 function getLeafNode(node) {
   while (node && node.firstChild) {
@@ -4230,7 +4230,7 @@ function getLeafNode(node) {
  * DOM if a node's siblings have been exhausted.
  *
  * @param {DOMElement|DOMTextNode} node
- * @return {?DOMElement|DOMTextNode}
+ * @returns {?DOMElement|DOMTextNode}
  */
 function getSiblingNode(node) {
   while (node) {
@@ -4246,7 +4246,7 @@ function getSiblingNode(node) {
  *
  * @param {DOMElement|DOMTextNode} root
  * @param {number} offset
- * @return {?object}
+ * @returns {?object}
  */
 function getNodeForCharacterOffset(root, offset) {
   var node = getLeafNode(root);
@@ -4273,7 +4273,7 @@ function getNodeForCharacterOffset(root, offset) {
 
 /**
  * @param {DOMElement} outerNode
- * @return {?object}
+ * @returns {?object}
  */
 function getOffsets(outerNode) {
   var selection = window.getSelection && window.getSelection();
@@ -4501,7 +4501,7 @@ function restoreSelection(priorSelectionInformation) {
  * @getSelection: Gets the selection bounds of a focused textarea, input or
  * contentEditable node.
  * -@input: Look up selection bounds of this input
- * -@return {start: selectionStart, end: selectionEnd}
+ * -@returns {start: selectionStart, end: selectionEnd}
  */
 function getSelection$1(input) {
   var selection = void 0;
@@ -4566,7 +4566,7 @@ var mouseDown = false;
  * two identical selections on the same node will return identical objects.
  *
  * @param {DOMElement} node
- * @return {object}
+ * @returns {object}
  */
 function getSelection(node) {
   if ('selectionStart' in node && hasSelectionCapabilities(node)) {
@@ -4589,7 +4589,7 @@ function getSelection(node) {
  * Poll selection to see whether it's changed.
  *
  * @param {object} nativeEvent
- * @return {?SyntheticEvent}
+ * @returns {?SyntheticEvent}
  */
 function constructSelectEvent(nativeEvent, nativeEventTarget) {
   // Ensure we have the right element, and that the user is not dragging a
@@ -4764,7 +4764,7 @@ SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
  * presumably because it does not produce a tab-character in browsers.
  *
  * @param {object} nativeEvent Native browser event.
- * @return {number} Normalized `charCode` property.
+ * @returns {number} Normalized `charCode` property.
  */
 function getEventCharCode(nativeEvent) {
   var charCode;
@@ -4856,7 +4856,7 @@ var translateToKey = {
 
 /**
  * @param {object} nativeEvent Native browser event.
- * @return {string} Normalized `key` property.
+ * @returns {string} Normalized `key` property.
  */
 function getEventKey(nativeEvent) {
   if (nativeEvent.key) {
@@ -13076,7 +13076,7 @@ var isUnitlessNumber = {
 /**
  * @param {string} prefix vendor-specific prefix, eg: Webkit
  * @param {string} key style name, eg: transitionDuration
- * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
+ * @returns {string} style name prefixed with `prefix`, properly camelCased, eg:
  * WebkitTransitionDuration
  */
 function prefixKey(prefix, key) {
@@ -13104,7 +13104,7 @@ Object.keys(isUnitlessNumber).forEach(function (prop) {
  *
  * @param {string} name CSS property name such as `topMargin`.
  * @param {*} value CSS property value such as `10px`.
- * @return {string} Normalized style value with dimensions applied.
+ * @returns {string} Normalized style value with dimensions applied.
  */
 function dangerousStyleValue(name, value, isCustomProperty) {
   // Note that we've removed escapeTextForBrowser() calls here since the
@@ -13150,7 +13150,7 @@ var _uppercasePattern = /([A-Z])/g;
  * with all vendor prefixes, including `ms`.
  *
  * @param {string} string
- * @return {string}
+ * @returns {string}
  */
 function hyphenate(string) {
   return string.replace(_uppercasePattern, '-$1').toLowerCase();
@@ -13187,7 +13187,7 @@ var msPattern = /^ms-/;
  * is converted to `-ms-`.
  *
  * @param {string} string
- * @return {string}
+ * @returns {string}
  */
 function hyphenateStyleName(string) {
   return hyphenate_1(string).replace(msPattern, '-ms-');
@@ -13213,7 +13213,7 @@ var _hyphenPattern = /-(.)/g;
  *   < "backgroundColor"
  *
  * @param {string} string
- * @return {string}
+ * @returns {string}
  */
 function camelize(string) {
   return string.replace(_hyphenPattern, function (_, character) {
@@ -13253,7 +13253,7 @@ var msPattern$1 = /^-ms-/;
  * is converted to lowercase `ms`.
  *
  * @param {string} string
- * @return {string}
+ * @returns {string}
  */
 function camelizeStyleName(string) {
   return camelize_1(string.replace(msPattern$1, 'ms-'));
@@ -15549,7 +15549,7 @@ var selectionInformation = null;
  * True if the supplied DOM node is a valid node element.
  *
  * @param {?DOMElement} node The candidate DOM node.
- * @return {boolean} True if the DOM is a valid DOM node.
+ * @returns {boolean} True if the DOM is a valid DOM node.
  * @internal
  */
 function isValidContainer(node) {

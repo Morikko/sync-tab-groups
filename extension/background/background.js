@@ -33,12 +33,9 @@
 
 import LogManager from "./error/logmanager"
 // TabManager & Selector
-import Utils from '../utils/utils'
-// TODO:
-import TaskManager from './utils/delayedtaskmanager'
-import TaskManager from './utils/repeatedtaskmanager'
+import Utils from './utils/utils'
 
-import EventListener from './utils/eventlistener'
+import TaskManager from './utils/taskManager'
 
 import StorageManager from './storage/storageManager'
 
@@ -57,13 +54,13 @@ LogManager.LOCATION = LogManager.BACK
 
 TaskManager.fromUI = {
   [TaskManager.CLOSE_REFERENCE]: new TaskManager.DelayedTask(),
-  [TaskManager.REMOVE_REFERENCE]: new TaskManager.DelayedTask()
+  [TaskManager.REMOVE_REFERENCE]: new TaskManager.DelayedTask(),
 }
 
 /**
  * Only read groups data, never write directly
  */
-var Background = Background || {};
+const Background = {};
 Background.updateNotificationId = "UPDATE_NOTIFICATION";
 
 Background.init = async function() {
@@ -72,8 +69,6 @@ Background.init = async function() {
 
   await OptionManager.init();
   await GroupManager.init();
-
-  await TabHidden.onStartInitialization();
 
   Events.Install.prepareExtensionForUpdate(
     Background.lastVersion,
@@ -103,7 +98,6 @@ Background.init = async function() {
   await Utils.wait(2000);
   StorageManager.Local.planBackUp();
   StorageManager.Backup.init();
-  TabHidden.startCleaningUnknownHiddenTabsProcess();
   Background.install = false;
 
   LogManager.information(LogManager.EXTENSION_INITIALIZED, {
@@ -130,11 +124,11 @@ Background.refreshBackupListUI = async function() {
 Background.refreshUi = function() {
   Utils.sendMessage("Groups:Changed", {
     groups: GroupManager.groups,
-    delayedTasks: TaskManager.fromUI
+    delayedTasks: TaskManager.fromUI,
   });
 };
 
-Background.onRemoveHiddenTab = function({tabId}) {
+/* Background.onRemoveHiddenTab = function({tabId}) {
   TabHidden.closeHiddenTabs(tabId);
 };
 
@@ -142,7 +136,7 @@ Background.onRemoveHiddenTabsInGroup = function({groupId}) {
   const groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
   const tabIds = GroupManager.groups[groupIndex].tabs.map(({id}) => id);
   TabHidden.closeHiddenTabs(tabIds);
-};
+}; */
 
 Background.onOpenGroupInNewWindow = function({groupId}) {
   WindowManager.selectGroup(groupId, {newWindow: true});
@@ -176,9 +170,9 @@ Background.onGroupAddWithTab = function({
 
 Background.onGroupClose = function({
   groupId,
-  taskRef
+  taskRef,
 }) {
-  var delayedFunction = async () => {
+  let delayedFunction = async() => {
     try {
       await WindowManager.closeGroup(
         groupId,
@@ -200,10 +194,10 @@ Background.onGroupClose = function({
 
 Background.onGroupRemove = async function({
   groupId,
-  taskRef
+  taskRef,
 }) {
   return new Promise((resolve, reject)=>{
-    let delayedFunction = async () => {
+    let delayedFunction = async() => {
       await WindowManager.removeGroup(
         groupId
       );
@@ -220,9 +214,8 @@ Background.onGroupRemove = async function({
 
 Background.onGroupRename = function({
   groupId,
-  title
-}) 
-{
+  title,
+}) {
   GroupManager.renameGroup(
     GroupManager.getGroupIndexFromGroupId(groupId),
     title
@@ -282,7 +275,7 @@ Background.onReloadGroups = function() {
 
 Background.changeSynchronizationStateOfWindow = async function({
   isSync,
-  windowId
+  windowId,
 }) {
   try {
     if (isSync) {
@@ -301,7 +294,7 @@ Background.changeSynchronizationStateOfWindow = async function({
       }
     }
   } catch (e) {
-    LogManager.error(e, {args});
+    LogManager.error(e, {arguments});
   }
 };
 
@@ -328,7 +321,7 @@ Background.onTabOpen = async function({
       [tab],
       currentWindow.id, {
         inLastPos: true,
-    })
+      })
   } catch (e) {
     LogManager.error(e);
   }
@@ -341,7 +334,7 @@ Background.onImportGroups = function({
   Selector.onOpenGroupsSelector({
     title: 'From file: ' + filename,
     groups: StorageManager.File.importGroupsFromFile(content_file),
-    type: Selector.TYPE.IMPORT
+    type: Selector.TYPE.IMPORT,
   });
 };
 
@@ -349,7 +342,7 @@ Background.onExportGroups = function() {
   Selector.onOpenGroupsSelector({
     title: 'Current groups at ' + new Date(),
     groups: GroupManager.getCopy(),
-    type: Selector.TYPE.EXPORT
+    type: Selector.TYPE.EXPORT,
   });
 };
 
@@ -357,7 +350,7 @@ Background.onExportBackUp = async function(id) {
   Selector.onOpenGroupsSelector({
     title: 'Back up: ' + StorageManager.Local.getBackUpDate(id),
     groups: (await StorageManager.Local.getBackUp(id)),
-    type: Selector.TYPE.EXPORT
+    type: Selector.TYPE.EXPORT,
   });
 };
 
@@ -365,7 +358,7 @@ Background.onImportBackUp = async function(id) {
   Selector.onOpenGroupsSelector({
     title: 'Back up: ' + StorageManager.Local.getBackUpDate(id),
     groups: (await StorageManager.Local.getBackUp(id)),
-    type: Selector.TYPE.IMPORT
+    type: Selector.TYPE.IMPORT,
   });
 };
 
@@ -404,9 +397,9 @@ Background.onChangeExpand = function({
 };
 
 Background.refreshData = function({
-  all_tabs=false
+  all_tabs=false,
 }={}) {
-  if ( all_tabs ) {
+  if (all_tabs) {
     Background.sendAllTabs();
   } else {
     Background.refreshUi();
@@ -418,15 +411,15 @@ Background.sendAllTabs = async function() {
   const windows = await browser.windows.getAll({populate: true});
   const groups = windows.map((window, index) =>{
     return new GroupManager.Group({
-        id: index,
-        title: "Window " + window.id,
-        tabs: window.tabs,
-        windowId: window.id,
-        incognito: window.incognito
+      id: index,
+      title: "Window " + window.id,
+      tabs: window.tabs,
+      windowId: window.id,
+      incognito: window.incognito,
     })
   })
   Utils.sendMessage("Tabs:All", {
-    groups
+    groups,
   });
 }
 
@@ -435,23 +428,19 @@ Background.sendAllTabs = async function() {
 /*** Init CRITICAL Event ***/
 browser.runtime.onInstalled.addListener((details) => {
   // Only when the extension is installed for the first time
-  if ( details.reason === "install" ) {
+  if (details.reason === "install") {
     Events.Install.onNewInstall();
     LogManager.information(LogManager.EXTENSION_INSTALLED);
-  }
-
   // Development mode detection
-  else if( (Utils.isFirefox() && details.temporary)
+  } else if ((Utils.isFirefox() && details.temporary)
       || (Utils.isChrome() && details.reason === "update" && (browser.runtime.getManifest()).version === details.previousVersion)) {
 
     Events.Install.onDevelopmentInstall();
-  }
-
   // Extension update detection
-  else if ( details.reason === "update"
-      && (browser.runtime.getManifest()).version !== details.previousVersion ) {
-      Events.Install.onUpdate(details.previousVersion);
-      LogManager.information(LogManager.EXTENSION_UPDATED);
+  } else if (details.reason === "update"
+      && (browser.runtime.getManifest()).version !== details.previousVersion) {
+    Events.Install.onUpdate(details.previousVersion);
+    LogManager.information(LogManager.EXTENSION_UPDATED);
   }
 });
 

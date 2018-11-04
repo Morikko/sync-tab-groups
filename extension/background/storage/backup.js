@@ -1,20 +1,25 @@
 /**
  * Everything related to do automatic/manual backup
  */
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import OptionManager from '../core/optionmanager'
+import GroupManager from '../core/groupmanager'
+
 const BackupStorage = {};
 
 BackupStorage.TIMERS = Utils.setObjectPropertiesWith(OptionManager.TIMERS(), undefined);
 
 
-BackupStorage.init = function () {
-  if( !OptionManager.options.backup.download.enable ) {
+BackupStorage.init = function() {
+  if (!OptionManager.options.backup.download.enable) {
     return;
   }
 
   // Start enable timers
   BackupStorage.TIMERS = {};
-  for (let t in OptionManager.options.backup.download.time ) {
-    if ( OptionManager.options.backup.download.time[t] ) {
+  for (let t in OptionManager.options.backup.download.time) {
+    if (OptionManager.options.backup.download.time[t]) {
       BackupStorage.startTimer(t);
     } else {
       BackupStorage.TIMERS[t] = undefined
@@ -23,16 +28,16 @@ BackupStorage.init = function () {
 }
 
 
-BackupStorage.stopAll = function () {
+BackupStorage.stopAll = function() {
   // Stop all timers
-  for (let time in BackupStorage.TIMERS ) {
+  for (let time in BackupStorage.TIMERS) {
     BackupStorage.stopTimer(time);
   }
 }
 
 // Stop a specific timer
-BackupStorage.stopTimer = function (timer) {
-  if ( BackupStorage.TIMERS[timer] ) {
+BackupStorage.stopTimer = function(timer) {
+  if (BackupStorage.TIMERS[timer]) {
     clearInterval(BackupStorage.TIMERS[timer]);
   }
   BackupStorage.TIMERS[timer] = undefined;
@@ -42,9 +47,9 @@ BackupStorage.stopTimer = function (timer) {
   * Start a specific timer
   * Stop previous one if there was
   */
-BackupStorage.startTimer = function (timer) {
+BackupStorage.startTimer = function(timer) {
   BackupStorage.stopTimer(timer);
-  BackupStorage.TIMERS[timer] = setInterval(function(){
+  BackupStorage.TIMERS[timer] = setInterval(function() {
     BackupStorage.backup(timer.substring(2));
   }, OptionManager.TIMERS()[timer]);
 }
@@ -57,10 +62,10 @@ BackupStorage.startTimer = function (timer) {
  * Every new back up overwrites the previous one.
  * A download is immediately removed from the history.
  */
-BackupStorage.backup = async function (time, groups=GroupManager.groups) {
+BackupStorage.backup = async function(time, groups=GroupManager.groups) {
   try {
     // Avoid corrupted backup
-    if ( GroupManager.checkCorruptedGroups(groups) ) {
+    if (GroupManager.checkCorruptedGroups(groups)) {
       return;
     }
 
@@ -79,7 +84,7 @@ BackupStorage.backup = async function (time, groups=GroupManager.groups) {
     await Utils.waitDownload(id);
 
     await browser.downloads.erase({
-      id:id
+      id: id,
     });
     URL.revokeObjectURL(url);
   } catch (e) {

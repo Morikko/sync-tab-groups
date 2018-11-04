@@ -3,13 +3,17 @@
  - selectTab (Open/Close group)
  - changePinState
  */
+import LogManager from '../../error/logmanager'
+import GroupManager from '../../core/groupmanager'
+import WindowManager from '../../core/windowmanager'
 const TabManager = {};
 
 /**
  * Go to the tab specified with tabId
  * The tab needs to be in an open window
- * @param {Number} tabIndex - the tab index
- * @return {Promise}
+ * @param {number} windowId
+ * @param {number} tabIndex - the tab index
+ * @returns {Promise}
  */
 TabManager.activeTabInWindow = async function(windowId, tabIndex) {
   try {
@@ -28,8 +32,8 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
     LogManager.error(e, {
       args: {
         windowId,
-        tabIndex
-      }
+        tabIndex,
+      },
     });
   }
 }
@@ -37,16 +41,16 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
 /**
  * Selects a given tab.
  * Switch to another group if necessary
- * @param {Number} tabIndex - the tabs index
- * @param {Number} groupId - the tabs groupId
- * @return {Promise}
+ * @param {number} tabIndex - the tabs index
+ * @param {number} groupId - the tabs groupId
+ * @returns {Promise}
  */
 TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
     // 1. Change active tab
-    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
+    if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
       let windowId = GroupManager.groups[groupIndex].windowId;
       await TabManager.activeTabInWindow(windowId, tabIndex);
     } else {
@@ -57,7 +61,7 @@ TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
     }
 
     // 2. Open the group
-    if ( newWindow && !GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
+    if (newWindow && !GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
       await WindowManager.openGroupInNewWindow(groupId);
     } else {
       await WindowManager.selectGroup(groupId);
@@ -77,7 +81,7 @@ TabManager.changePinState = async function(groupId, tabIndex) {
 
     if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) { // Open group
       await browser.tabs.update(tab.id, {
-        pinned: !tab.pinned
+        pinned: !tab.pinned,
       });
     } else { // Close group
       tab.pinned = !tab.pinned;
@@ -86,8 +90,8 @@ TabManager.changePinState = async function(groupId, tabIndex) {
       // Last position for pinned or first for normal
       await GroupManager.addTabInGroupId(
         groupId, tab, tab.pinned
-        ? -1
-        : 0);
+          ? -1
+          : 0);
     }
     return "TabManager.changePinState done!";
   } catch (e) {

@@ -1,7 +1,11 @@
 /**
  * Events specific to the extension
  */
-const ExtensionEvents = ExtensionEvents || {};
+import GroupManager from '../core/groupmanager'
+import Background from '../background'
+import OptionManager from '../core/optionmanager'
+
+const ExtensionEvents = {};
 
 ExtensionEvents.initSendDataEventListener = function() {
   GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
@@ -16,7 +20,7 @@ ExtensionEvents.initSendDataEventListener = function() {
   );
   StorageManager.Local.eventlistener.on(StorageManager.Local.BACKUP_CHANGE,
     ()=>{
-        Background.refreshBackupListUI();
+      Background.refreshBackupListUI();
     }
   );
 }

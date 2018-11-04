@@ -1,6 +1,9 @@
+import Utils from '../utils/utils'
+import GroupManager from '../core/groupmanager'
+
 const Selector = {};
 
-Selector.WINDOW_ID = WINDOW_ID_NONE;
+Selector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
 
 // Export or Import
 Selector.type = Selector.TYPE.IMPORT;
@@ -16,7 +19,7 @@ Selector.onOpenGroupsSelector = async function({
   type=Selector.TYPE.IMPORT,
   force=false,
 }={}) {
-  if( groups.length === 0 && !force ) {
+  if (groups.length === 0 && !force) {
     browser.notifications.create({
       "type": "basic",
       "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
@@ -26,7 +29,7 @@ Selector.onOpenGroupsSelector = async function({
     });
     return;
   }
-  if ( GroupManager.checkCorruptedGroups(groups) ) {
+  if (GroupManager.checkCorruptedGroups(groups)) {
     browser.notifications.create({
       "type": "basic",
       "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
@@ -47,19 +50,19 @@ Selector.onOpenGroupsSelector = async function({
   let height = (window.screen.availHeight - 100);
   const windowInfo = {
     height,
-    width: Math.min( window.screen.availWidth, 850 ),
+    width: Math.min(window.screen.availWidth, 850),
     top: 50,
     left: Math.round((window.screen.availWidth
-      - Math.min( window.screen.availWidth, 850 ))/2)
+      - Math.min(window.screen.availWidth, 850))/2),
   };
 
   Selector.groups = GroupManager.getGroupsWithoutPrivate(
-      groups.filter(group => group.tabs.length) // Only non empty groups
+    groups.filter(group => group.tabs.length) // Only non empty groups
   );
   GroupManager.prepareGroups(Selector.groups);
   Selector.type = type;
 
-  if ( Selector.WINDOW_ID === WINDOW_ID_NONE ) {
+  if (Selector.WINDOW_ID === browser.windows.WINDOW_ID_NONE) {
     windowInfo["url"] = url;
     // The window is not visible
     windowInfo["type"] = "popup";
@@ -69,7 +72,7 @@ Selector.onOpenGroupsSelector = async function({
     // Extension pages are not well displayed on opening
     // Resizing, right-click... does show the content
     await browser.windows.update(Selector.WINDOW_ID, {
-      height: height-1
+      height: height-1,
     });
   } else {
     const tab = await browser.tabs.query({
@@ -77,26 +80,25 @@ Selector.onOpenGroupsSelector = async function({
       index: 0,
     });
     await browser.tabs.update(tab[0].id, {
-      url
+      url,
     });
     windowInfo["focused"] = true;
     await browser.windows.update(Selector.WINDOW_ID, windowInfo);
   }
 }
 
-Selector.wasClosedGroupsSelector = function (windowId) {
-  if ( windowId === Selector.WINDOW_ID && windowId !== WINDOW_ID_NONE) {
-    Selector.WINDOW_ID = WINDOW_ID_NONE;
+Selector.wasClosedGroupsSelector = function(windowId) {
+  if (windowId === Selector.WINDOW_ID && windowId !== browser.windows.WINDOW_ID_NONE) {
+    Selector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
   }
 }
 
 Selector.closeGroupsSelector = async function() {
-  if ( Selector.WINDOW_ID !== WINDOW_ID_NONE ) {
+  if (Selector.WINDOW_ID !== browser.windows.WINDOW_ID_NONE) {
     try {
       await browser.windows.remove(Selector.WINDOW_ID);
-    } catch (e) {}
-    finally {
-      Selector.WINDOW_ID = WINDOW_ID_NONE;
+    } catch (e) {return} finally {
+      Selector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
     }
   }
 }

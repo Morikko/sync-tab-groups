@@ -1,7 +1,7 @@
 // TODO: legacy ??
 var TabAlive = TabAlive || {};
 
-TabAlive.WINDOW_ID = WINDOW_ID_NONE;
+TabAlive.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
 
 TabAlive.init = async function() {
   if (OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE) {

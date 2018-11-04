@@ -19,8 +19,14 @@
  * Event: EVENT_CHANGE
  * DelayedTask: store() (Limited mode)
  */
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import GroupManager from '../core/groupmanager'
+import TaskManager from '../utils/taskManager'
+import EventListener from '../utils/eventlistener'
+import WindowManager from '../core/windowmanager'
 
-var OptionManager = OptionManager || {};
+const OptionManager = {};
 
 OptionManager.EVENT_CHANGE = 'options-change';
 
@@ -32,7 +38,7 @@ OptionManager.repeatedtask = new TaskManager.RepeatedTask(5000);
 
 /**
  * Change option value
- * @param {string} state - each part is separated with '-'
+ * @param {string} optionName - each part is separated with '-'
  * @param {Object} optionValue - the value to set
  */
 OptionManager.updateOption = async function(optionName, optionValue) {
@@ -116,7 +122,7 @@ OptionManager.getOptionValue = function(optionName) {
   */
 OptionManager.onClosingStateChange = async function(value) {
   if (value === OptionManager.CLOSE_NORMAL) {
-    await TabHidden.closeAllHiddenTabsInGroups(GroupManager.groups);
+    //await TabHidden.closeAllHiddenTabsInGroups(GroupManager.groups);
   } else if (value === OptionManager.CLOSE_HIDDEN) {
     await OptionManager.updateOption("pinnedTab-sync", false);
   }
@@ -124,9 +130,9 @@ OptionManager.onClosingStateChange = async function(value) {
 
 OptionManager.onRemoveUnknownHiddenTabsChange = async function(value) {
   if (value) {
-    await TabHidden.startCleaningUnknownHiddenTabsProcess({doItNow: true});
+    //await TabHidden.startCleaningUnknownHiddenTabsProcess({doItNow: true});
   } else {
-    TabHidden.stopCleaningUnknownHiddenTabsProcess();
+    //TabHidden.stopCleaningUnknownHiddenTabsProcess();
   }
 }
 
@@ -239,7 +245,7 @@ OptionManager.onRemoveEmptyGroupChange = function() {
 /**
  * Asynchronous function
  * Get the saved options if exist else set template options
- * @return {Promise}
+ * @returns {Promise}
  */
 OptionManager.init = async function() {
   try {
@@ -256,7 +262,7 @@ OptionManager.init = async function() {
 /**
  * Check that options object has all the good properties
  * @param {Object} options
- * @return {Object} options - verified
+ * @returns {Object} options - verified
  */
 OptionManager.check_integrity = function(options) {
   let ref_options = OptionManager.TEMPLATE();
@@ -268,7 +274,7 @@ OptionManager.check_integrity = function(options) {
  * Save options
  * In local storage
  * Asynchronous
- * @return {Promise}
+ * @returns {Promise}
  */
 OptionManager.store = function() {
   if (OptionManager.checkCorruptedOptions(OptionManager.options)) {

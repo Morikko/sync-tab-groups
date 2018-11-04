@@ -133,7 +133,7 @@ TestManager.resetIndexProperties = function (tabs) {
 /**
  * @param {Number} start
  * @param {Number} end
- * @return {Number} - random number btw start and end included
+ * @returns {Number} - random number btw start and end included
  */
 TestManager.getRandom = function (start, end){
   return Math.floor((Math.random() * (end+1-start)) + start);
@@ -219,7 +219,7 @@ TestManager.closeWindows = async function(windowIds) {
 }
 
 /**
- * @return {Integer} windowId
+ * @returns {Integer} windowId
  */
 TestManager.openWindow = async function({
   focused=true,

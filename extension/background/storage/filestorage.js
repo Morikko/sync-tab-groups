@@ -1,7 +1,12 @@
 /**
  * Everything related to save file on the disk
  */
-const FileStorage = FileStorage || {};
+import GroupManager from '../core/groupmanager'
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import TabManager from '../core/tabmanager/tabManager'
+
+const FileStorage = {};
 
 FileStorage.downloadGroups = async function(groups) {
   try {
@@ -14,13 +19,13 @@ FileStorage.downloadGroups = async function(groups) {
     });
 
     let d = new Date();
-    let url = Utils.createGroupsJsonFile(export_groups, {prettify:true});
-    let filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
+    let url = Utils.createGroupsJsonFile(export_groups, {prettify: true});
+    let filename = "syncTabGroups-manual-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
 
     let id = await browser.downloads.download({
       url: url,
       filename: filename,
-      saveAs: true
+      saveAs: true,
     });
 
     await Utils.waitDownload(id);
@@ -50,10 +55,10 @@ FileStorage.importGroupsFromFile = function(content_file) {
       throw Error("ImportGroups: Content file is not in a supported format.");
     }
 
-    GroupManager.prepareGroups(groups, {fireEvent:false});
+    GroupManager.prepareGroups(groups, {fireEvent: false});
 
     return groups;
-  } catch(e) {
+  } catch (e) {
     browser.notifications.create({
       "type": "basic",
       "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),

@@ -13,8 +13,8 @@
     - -1: specific action in process
  * Don't use refId if single task (default: 0)
  */
-
-var TaskManager = TaskManager || {};
+import LogManager from '../error/logmanager'
+const TaskManager = {};
 
 TaskManager.RepeatedTask = function(timeoutDelay = 10000) {
   this.delayedTasks = {};
@@ -28,7 +28,8 @@ TaskManager.RepeatedTask = function(timeoutDelay = 10000) {
  * Add a task
  *  - Do the task at most 1 per delay, do it immediately when asked if delay already ended;
  *  - Wwait the end of the previous task before doing the next one
- * @param {Fucntion} delayedFunction- the delayed function to execute (without parameter)
+ * @param {Function} delayedFunction - the delayed function to execute (without parameter)
+ * @param {boolean} force
  * @param {number} refId (default:0) - ref inside the action group
  */
 TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, force = false, refId = 0) {

@@ -1,7 +1,10 @@
- /*
+/*
  - openListOfTabs
  - openTab
  */
+import Utils from '../../utils/utils'
+import OptionManager from '../../core/optionmanager'
+import LogManager from '../../error/logmanager'
 const TabManager = {};
 
 
@@ -10,12 +13,13 @@ const TabManager = {};
  * By default:
     1. Pinned Tabs are always open in last pinned postion
     2. Normal Tabs are always open in first Position
- * @param {array[Tab]} tabsToOpen
- * @param {Number} windowId
- * @param {Boolean} inLastPos (optional) - if true the tabs are opened in last index
- * @param {Boolean} openAtLeastOne (optional) - if true and tabsToOpen is empty, open at least a new tab
- * @param {Tab} pendingTab (optional) - A tab to close once the fist tab is open; At least one tab has to be open for closing it
- * @return {Proise{Array[Tab]} - created tab
+ * @param {Array<Tab>} tabsToOpen
+ * @param {number} windowId
+ * @param {Object} optional
+ * @param {boolean} optional.inLastPos (optional) - if true the tabs are opened in last index
+ * @param {boolean} optional.openAtLeastOne (optional) - if true and tabsToOpen is empty, open at least a new tab
+ * @param {Tab} optional.pendingTab (optional) - A tab to close once the fist tab is open; At least one tab has to be open for closing it
+ * @returns {Promise<Array<Tab>>} - created tab
  */
 TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
   inLastPos = false,
@@ -26,11 +30,13 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
   forceClosing = false,
 }={}) {
   try {
-    if(windowId == null) throw new Error("Impossible to compute openListOfTabs: windowId is null.")
+    if (windowId == null) throw new Error("Impossible to compute openListOfTabs: windowId is null.")
     // Look if has Tab in tabs
     if (tabsToOpen.length === 0) {
       if (openAtLeastOne) {
-        tabsToOpen.push({url: TabManager.NEW_TAB, active: true, pinned: false});
+        tabsToOpen.push({url: TabManager.NEW_TAB,
+          active: true,
+          pinned: false});
       } else {
         // tabsToOpen was empty, no tab to open
         return [];
@@ -42,17 +48,16 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
       withPinned: true,
     });
 
-    const isNewTab = (url) =>
-      url === TabManager.NEW_TAB || url === "about:blank";
+    const isNewTab = (url) => url === TabManager.NEW_TAB || url === "about:blank";
 
     // Don't Reopen only a new tab
     if (tabsToOpen.length === 1
-      && isNewTab(tabsToOpen[0].url) 
+      && isNewTab(tabsToOpen[0].url)
       && !forceOpenNewTab
     ) {
       // Else open new New Tab
       const notPinnedTabs = tabs.filter(tab => !tab.pinnded);
-      if ( notPinnedTabs.length === 1 && isNewTab(notPinnedTabs[0].url) ) {
+      if (notPinnedTabs.length === 1 && isNewTab(notPinnedTabs[0].url)) {
         // open only a new tab that was already open
         return tabs;
       }
@@ -82,7 +87,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
     // Prepare tabs to remove
     let tabsToRemove = tabs.filter(tab => remove_pinned || !tab.pinned);
 
-    if ( activeIndex >= 0 ) {
+    if (activeIndex >= 0) {
       let activeTab = tabsToOpen[activeIndex];
       // Open active tab first
       createdTabs[activeIndex] = await TabManager.openTab(activeTab, windowId, indexTabOffset);
@@ -102,12 +107,12 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
         tabIdsCrossRef[tab.id] = createdTabs[index].id;
       } else {
         // Special case: move active pinned tab
-        if (tab.pinned){
-          await browser.tabs.move(tabIdsCrossRef[tab.id], {index:indexPinnedOffset});
+        if (tab.pinned) {
+          await browser.tabs.move(tabIdsCrossRef[tab.id], {index: indexPinnedOffset});
         }
       }
 
-      if ( pendingTab ) {
+      if (pendingTab) {
         /* TODO
         if ( OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE
           && GroupManager.getGroupIdFromTabId(pendingTab.id, false) >= 0) {
@@ -130,16 +135,15 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
     }
 
     // Update parentId for active tab
-    if ( activeIndex >= 0 ) {
+    if (activeIndex >= 0) {
       let tab = tabsToOpen[activeIndex];
       if (tab.hasOwnProperty("openerTabId")) {
         // Check tab is still present -> was not removed when group was closed
         // Parent tab has to be opened before children else it will be lost
         if (tabIdsCrossRef.hasOwnProperty(tab.openerTabId)) {
-          let tabParentId = tabIdsCrossRef[tab.openerTabId];
           // Set the new id of the parent Tab to the child
           browser.tabs.update(tabIdsCrossRef[tab.id], {
-            openerTabId: tabIdsCrossRef[tab.openerTabId]
+            openerTabId: tabIdsCrossRef[tab.openerTabId],
           });
         }
       }
@@ -155,8 +159,8 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
 /**
  * Open A Tab
  * @param {Tab} tab
- * @param {Number} windowId
- * @param {Number} index (tab)
+ * @param {number} windowId
+ * @param {number} index (tab)
   */
 TabManager.openTab = async function(
   tab,
@@ -164,15 +168,13 @@ TabManager.openTab = async function(
   index,
   tabIdsCrossRef=undefined
 ) {
-  let tabCreation;
-
-  if ( OptionManager.isClosingHidden() ) {
+/*   if (OptionManager.isClosingHidden()) {
     const wasShown = await TabHidden.showTab(tab.id, windowId, index);
-    if ( wasShown ) {
+    if (wasShown) {
       if (tab.active) await browser.tabs.update(tab.id, {active: true});
       return await browser.tabs.get(tab.id);
     }
-  }
+  } */
 
   let url = tab.url;
 
@@ -181,7 +183,7 @@ TabManager.openTab = async function(
    * TODO: Chrome seems to not be able to open extension pages in Incognito window
    * Is it the facts that the extension is not able to work in incognito ?
    */
-  if ( Utils.isChrome() ) {
+  if (Utils.isChrome()) {
     incognitoAllowed = !(await browser.windows.get(windowId)).incognito;
   }
 
@@ -190,7 +192,7 @@ TabManager.openTab = async function(
   }
 
   if (OptionManager.options.groups.discardedOpen && !tab.active
-        && incognitoAllowed ) {
+        && incognitoAllowed) {
     url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
   }
 
@@ -204,7 +206,7 @@ TabManager.openTab = async function(
     active: tab.active,
     pinned: tab.pinned,
     index: index,
-    windowId: windowId
+    windowId: windowId,
   };
 
 

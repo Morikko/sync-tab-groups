@@ -4,6 +4,7 @@
  - secureIndex
  - waitTabsToBeClosed
  */
+import Utils from '../../utils/utils'
 const TabManager = {};
 
 // Return with all standard tab information
@@ -16,15 +17,15 @@ TabManager.getTabFactory = function(tab) {
     hidden: false,
     lastAccessed: 0,
     pinned: false,
-    windowId: WINDOW_ID_NONE,
-    discarded: false
+    windowId: browser.windows.WINDOW_ID_NONE,
+    discarded: false,
   }, tab);
 }
 
 /**
  * Count the number of pinned tabs in tabs
- * @param {Array[Tab]} - tabs
- * @return {Number} - nbr of pinned tabs
+ * @param {Array<Tab>} tabs - tabs
+ * @returns {number} - nbr of pinned tabs
  */
 TabManager.countPinnedTabs = function(tabs) {
   return tabs.filter(tab => tab.pinned).length;
@@ -35,10 +36,10 @@ TabManager.countPinnedTabs = function(tabs) {
  *   pinned tabs are always before normal tabs
  *   normal tabs are always after pinned tabs
  *   -1 value is replaced with the real last index value
- * @param {Number} index - index where to go
+ * @param {number} index - index where to go
  * @param {Tab} tab - tab related
- * @param {Array[Tab]} tabs - targeted tabs
- * @return {Number} secureIndex
+ * @param {Array<Tab>} tabs - targeted tabs
+ * @returns {number} secureIndex
  */
 TabManager.secureIndex = function(index, tab, tabs) {
   let realIndex = index;
@@ -64,8 +65,8 @@ TabManager.secureIndex = function(index, tab, tabs) {
  */
 TabManager.waitTabsToBeClosed = async function(tabsIdsToRemove, {
   maxLoop=20,
-  waitPerLoop=50 //ms
-}={}){
+  waitPerLoop=50, //ms
+}={}) {
   if (!Array.isArray(tabsIdsToRemove)) {
     tabsIdsToRemove = [tabsIdsToRemove]
   }
@@ -74,16 +75,16 @@ TabManager.waitTabsToBeClosed = async function(tabsIdsToRemove, {
     await Utils.wait(waitPerLoop);
 
     const stillOpen = await Promise.all(
-      tabsIdsToRemove.map(async (id) => {
+      tabsIdsToRemove.map(async(id) => {
         try {
           await browser.tabs.get(id);
           return true;
-        } catch(e) {
+        } catch (e) {
           return false;
         }
-    }));
+      }));
 
-    if ( stillOpen.filter(i => i).length === 0 ) {
+    if (stillOpen.filter(i => i).length === 0) {
       return true;
     }
   }

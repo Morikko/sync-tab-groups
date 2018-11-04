@@ -27,7 +27,7 @@
 var Session = Session || {};
 
 /**
- * @return {Array[Tab]} tabs
+ * @returns {Array<Tab>} tabs
  */
 Session.createTabs = function({
   tabsLength= 0,
@@ -101,8 +101,8 @@ Session.createTabs = function({
 }
 
 /**
- * @return {Array} [Group id, Group Object] if global true
- * @return {Group} [Group Object] if global false
+ * @returns {Array} [Group id, Group Object] if global true
+ * @returns {Group} [Group Object] if global false
  */
 Session.createGroup = function({
     tabsLength= 0,

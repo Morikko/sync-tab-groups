@@ -7,7 +7,7 @@ TabHidden.cleaningUnknownHiddenTabsProcess = null;
  * @param {number} tabId
  * @param {number} windowId
  * @param {number} index
- * @return {boolean} is tab shown
+ * @returns {boolean} is tab shown
  */
 TabHidden.showTab = async function(tabId, windowId, index=-1) {
   // Closed tab Id
@@ -34,7 +34,7 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
 
 /**
  * @param {number} tabId
- * @return {boolean} is tab hidden
+ * @returns {boolean} is tab hidden
  */
 TabHidden.hideTab = async function(tabId) {
   try {

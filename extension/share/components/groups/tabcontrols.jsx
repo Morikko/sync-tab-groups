@@ -142,7 +142,7 @@ class TabControls extends React.Component{
 
     for (let i of sortedIndex) {
       const g = this.props.groups[i];
-      const prefix = g.windowId !== WINDOW_ID_NONE
+      const prefix = g.windowId !== browser.windows.WINDOW_ID_NONE
         ? "[OPEN] "
         : "";
       subMenusMoveTab.push(

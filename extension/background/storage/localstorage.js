@@ -1,5 +1,10 @@
-LocalStorage = LocalStorage || {};
-LocalStorage.BACKUP_TIMEOUT;
+import EventListener from '../event/event'
+import GroupManager from '../core/groupmanager'
+import OptionManager from '../core/optionmanager'
+import LogManager from '../error/logmanager'
+
+const LocalStorage = {};
+LocalStorage.BACKUP_TIMEOUT = null;
 
 LocalStorage.BACKUP_CHANGE = "backup-change";
 LocalStorage.eventlistener = new EventListener();
@@ -8,13 +13,13 @@ LocalStorage.BACKUP_TIMEOUT_PROMISE = Promise.resolve();
 
 /**
  * Save the groups as JSON object in the local storage (this computer, this session)
- * @param {Array[Group]} groups
+ * @param {Array<Group>} groups
  */
 LocalStorage.saveGroups = async function(groups) {
   let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
   try {
     await browser.storage.local.set({groups: export_groups});
-    if(export_groups.length === 0) LogManager.information(`LocalStorage.saveGroups saved empty group.`)
+    if (export_groups.length === 0) LogManager.information(`LocalStorage.saveGroups saved empty group.`)
   } catch (e) {
     LogManager.error(e, {arguments});
   }
@@ -23,12 +28,12 @@ LocalStorage.saveGroups = async function(groups) {
 /**
  * Load the groups from the local storage (this computer, this session) and return it as a javascript object
  * If no groups array was saved, return an empty array
- * @return {Array[Group]} groups
+ * @returns {Array<Group>} groups
  */
 LocalStorage.loadGroups = async function() {
   try {
     const {groups} = await browser.storage.local.get({"groups": []})
-    if(groups.length === 0) LogManager.information(`LocalStorage.loadGroups loaded empty group.`)
+    if (groups.length === 0) LogManager.information(`LocalStorage.loadGroups loaded empty group.`)
     return groups;
   } catch (e) {
     return "LocalStorage.loadGroups failed... " + e;
@@ -53,7 +58,7 @@ LocalStorage.saveOptions = function(options) {
 /**
  * Load the options from the local storage (this computer, this session) and return it as a javascript object
  * If no options were saved, return the template options (see utils.js)
- * @return {Object} options
+ * @returns {Object} options
  */
 LocalStorage.loadOptions = async function() {
   try {
@@ -138,7 +143,7 @@ LocalStorage.setBackUpList = async function(backupList = {}, {
 }={}) {
   await browser.storage.local.set({backupList: backupList});
 
-  if( fireEvent ) {
+  if (fireEvent) {
     LocalStorage.eventlistener.fire(
       LocalStorage.BACKUP_CHANGE
     );
@@ -159,9 +164,9 @@ LocalStorage.addBackup = async function({
   let backupList = await LocalStorage.getBackUpList();
 
   // Add list
-    id = "backup-" + time;
+  const id = "backup-" + time;
   backupList[id] = {
-    date: time
+    date: time,
   };
 
   // Save list
@@ -177,7 +182,7 @@ LocalStorage.addBackup = async function({
     fireEvent: false,
   });
 
-  if( fireEvent ) {
+  if (fireEvent) {
     LocalStorage.eventlistener.fire(
       LocalStorage.BACKUP_CHANGE
     );
@@ -189,8 +194,8 @@ LocalStorage.addBackup = async function({
 LocalStorage.respectMaxBackUp = async function({
   maxSave=OptionManager.options.backup.local.maxSave,
   fireEvent=true,
-}={}){
-  const outnumbering = Object.entries( 
+}={}) {
+  const outnumbering = Object.entries(
     await LocalStorage.getBackUpList()
   )
     // Desc: recent first
@@ -202,14 +207,14 @@ LocalStorage.respectMaxBackUp = async function({
   let queue = Promise.resolve();
   await Promise.all(
     outnumbering.map((el) => queue = queue.then((res)=>{
-        return LocalStorage.removeBackup(el[0], {
-          fireEvent: false,
-        })
+      return LocalStorage.removeBackup(el[0], {
+        fireEvent: false,
       })
+    })
     )
   );
 
-  if( fireEvent ) {
+  if (fireEvent) {
     LocalStorage.eventlistener.fire(
       LocalStorage.BACKUP_CHANGE
     );
@@ -220,7 +225,7 @@ LocalStorage.removeBackup = async function(ids, {
   fireEvent=true,
 }={}) {
 
-  if ( !Array.isArray(ids) ) {
+  if (!Array.isArray(ids)) {
     ids = [ids];
   }
 
@@ -228,7 +233,7 @@ LocalStorage.removeBackup = async function(ids, {
   let backupList = await LocalStorage.getBackUpList();
 
   for (let id of ids) {
-    if ( backupList.hasOwnProperty(id) ) {
+    if (backupList.hasOwnProperty(id)) {
       // Remove list
       delete backupList[id];
 
@@ -242,7 +247,7 @@ LocalStorage.removeBackup = async function(ids, {
     fireEvent: false,
   });
 
-  if( fireEvent ) {
+  if (fireEvent) {
     LocalStorage.eventlistener.fire(
       LocalStorage.BACKUP_CHANGE
     );
@@ -261,7 +266,7 @@ LocalStorage.clearBackups = async function({
     fireEvent: false,
   });
 
-  if( fireEvent ) {
+  if (fireEvent) {
     LocalStorage.eventlistener.fire(
       LocalStorage.BACKUP_CHANGE
     );
@@ -269,11 +274,11 @@ LocalStorage.clearBackups = async function({
 }
 
 LocalStorage.getBackUpDate = function(id) {
-  if ( id  && id.length ) {
+  if (id  && id.length) {
     let dateString = id.split('-')[1];
-    if ( dateString  && dateString.length ) {
+    if (dateString  && dateString.length) {
       let dateInt = parseInt(dateString)
-      if ( !isNaN(dateInt) ) {
+      if (!isNaN(dateInt)) {
         return (new Date(dateInt)).toString();
       }
     }

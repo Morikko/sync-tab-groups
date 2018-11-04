@@ -167,7 +167,7 @@ getJasmineRequireObj().base = function(j$, jasmineGlobal) {
    *
    * @name jasmine.getEnv
    * @function
-   * @return {Env}
+   * @returns {Env}
    */
   j$.getEnv = function(options) {
     var env = j$.currentEnv_ = j$.currentEnv_ || new j$.Env(options);
@@ -317,7 +317,7 @@ getJasmineRequireObj().base = function(j$, jasmineGlobal) {
    * @function
    * @param {String} [name] - Name to give the spy. This will be displayed in failure messages.
    * @param {Function} [originalFn] - Function to act as the real implementation.
-   * @return {Spy}
+   * @returns {Spy}
    */
   j$.createSpy = function(name, originalFn) {
     return j$.Spy(name, originalFn);
@@ -337,7 +337,7 @@ getJasmineRequireObj().base = function(j$, jasmineGlobal) {
    * @function
    * @param {String} [baseName] - Base name for the spies in the object.
    * @param {String[]|Object} methodNames - Array of method names to create spies for, or Object whose keys will be method names and values the {@link Spy#and#returnValue|returnValue}.
-   * @return {Object}
+   * @returns {Object}
    */
   j$.createSpyObj = function(baseName, methodNames) {
     var baseNameIsCollection = j$.isObject_(baseName) || j$.isArray_(baseName);
@@ -1393,7 +1393,7 @@ getJasmineRequireObj().JsApiReporter = function() {
      * Get the current status for the Jasmine environment.
      * @name jsApiReporter#status
      * @function
-     * @return {String} - One of `loaded`, `started`, or `done`
+     * @returns {String} - One of `loaded`, `started`, or `done`
      */
     this.status = function() {
       return status;
@@ -1418,7 +1418,7 @@ getJasmineRequireObj().JsApiReporter = function() {
      * @function
      * @param {Number} index - The position in the suites list to start from.
      * @param {Number} length - Maximum number of suite results to return.
-     * @return {SuiteResult[]}
+     * @returns {SuiteResult[]}
      */
     this.suiteResults = function(index, length) {
       return suites.slice(index, index + length);
@@ -1433,7 +1433,7 @@ getJasmineRequireObj().JsApiReporter = function() {
      * Get all of the suites in a single object, with their `id` as the key.
      * @name jsApiReporter#suites
      * @function
-     * @return {Object} - Map of suite id to {@link SuiteResult}
+     * @returns {Object} - Map of suite id to {@link SuiteResult}
      */
     this.suites = function() {
       return suites_hash;
@@ -1453,7 +1453,7 @@ getJasmineRequireObj().JsApiReporter = function() {
      * @function
      * @param {Number} index - The position in the specs list to start from.
      * @param {Number} length - Maximum number of specs results to return.
-     * @return {SpecResult[]}
+     * @returns {SpecResult[]}
      */
     this.specResults = function(index, length) {
       return specs.slice(index, index + length);
@@ -1463,7 +1463,7 @@ getJasmineRequireObj().JsApiReporter = function() {
      * Get all spec results.
      * @name jsApiReporter#specs
      * @function
-     * @return {SpecResult[]}
+     * @returns {SpecResult[]}
      */
     this.specs = function() {
       return specs;
@@ -1473,7 +1473,7 @@ getJasmineRequireObj().JsApiReporter = function() {
      * Get the number of milliseconds it took for the full Jasmine suite to run.
      * @name jsApiReporter#executionTime
      * @function
-     * @return {Number}
+     * @returns {Number}
      */
     this.executionTime = function() {
       return executionTime;
@@ -1698,7 +1698,7 @@ getJasmineRequireObj().CallTracker = function(j$) {
      * Check whether this spy has been invoked.
      * @name Spy#calls#any
      * @function
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     this.any = function() {
       return !!calls.length;
@@ -1708,7 +1708,7 @@ getJasmineRequireObj().CallTracker = function(j$) {
      * Get the number of invocations of this spy.
      * @name Spy#calls#count
      * @function
-     * @return {Integer}
+     * @returns {Integer}
      */
     this.count = function() {
       return calls.length;
@@ -1719,7 +1719,7 @@ getJasmineRequireObj().CallTracker = function(j$) {
      * @name Spy#calls#argsFor
      * @function
      * @param {Integer} index The 0-based invocation index.
-     * @return {Array}
+     * @returns {Array}
      */
     this.argsFor = function(index) {
       var call = calls[index];
@@ -1730,7 +1730,7 @@ getJasmineRequireObj().CallTracker = function(j$) {
      * Get the raw calls array for this spy.
      * @name Spy#calls#all
      * @function
-     * @return {Spy.callData[]}
+     * @returns {Spy.callData[]}
      */
     this.all = function() {
       return calls;
@@ -1740,7 +1740,7 @@ getJasmineRequireObj().CallTracker = function(j$) {
      * Get all of the arguments for each invocation of this spy in the order they were received.
      * @name Spy#calls#allArgs
      * @function
-     * @return {Array}
+     * @returns {Array}
      */
     this.allArgs = function() {
       var callArgs = [];
@@ -1755,7 +1755,7 @@ getJasmineRequireObj().CallTracker = function(j$) {
      * Get the first invocation of this spy.
      * @name Spy#calls#first
      * @function
-     * @return {ObjecSpy.callData}
+     * @returns {ObjecSpy.callData}
      */
     this.first = function() {
       return calls[0];
@@ -1765,7 +1765,7 @@ getJasmineRequireObj().CallTracker = function(j$) {
      * Get the most recent invocation of this spy.
      * @name Spy#calls#mostRecent
      * @function
-     * @return {ObjecSpy.callData}
+     * @returns {ObjecSpy.callData}
      */
     this.mostRecent = function() {
       return calls[calls.length - 1];
@@ -1897,7 +1897,7 @@ getJasmineRequireObj().Clock = function() {
      * Install the mock clock over the built-in methods.
      * @name Clock#install
      * @function
-     * @return {Clock}
+     * @returns {Clock}
      */
     self.install = function() {
       if(!originalTimingFunctionsIntact()) {
@@ -4686,7 +4686,7 @@ getJasmineRequireObj().interface = function(jasmine, env) {
      * @function
      * @global
      * @param {Object} actual - Actual computed value to test expectations against.
-     * @return {matchers}
+     * @returns {matchers}
      */
     expect: function(actual) {
       return env.expect(actual);

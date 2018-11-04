@@ -3,10 +3,15 @@
  * In : Other bookmarks / Bookmark.ROOT /
  */
 // TODO: TaskManager
-const BookmarkStorage = BookmarkStorage || {};
+import TaskManager from '../utils/taskManager'
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import OptionManager from '../core/optionmanager'
+
+const BookmarkStorage = {};
 
 BookmarkStorage.ROOT = "SyncTabGroups";
-BookmarkStorage.ROOT_ID;
+BookmarkStorage.ROOT_ID = null;
 
 BookmarkStorage.repeatedtask = new TaskManager.RepeatedTask(30000);
 
@@ -16,7 +21,7 @@ BookmarkStorage.repeatedtask = new TaskManager.RepeatedTask(30000);
  * In : Other bookmarks / Bookmark.ROOT /
  * First create new back up and if succeeded, delete the old backup
  * Use a time out, in order to avoid too many writing in paralel that makes the function not working.
- * @param {Array[Group]} groups
+ * @param {Array<Group>} groups
  */
 BookmarkStorage.backUp = function(groups, force=false) {
   // Never do it asynchronously or you can break Firefox
@@ -32,22 +37,22 @@ BookmarkStorage.backUp = function(groups, force=false) {
         LogManager.error(e, {arguments});
       }
     },
-  force)
+    force)
 }
 
 /**
  * Save the groups as back up bookmarks
  * Format: Other bookmarks / Bookmark.ROOT / Bookmark.BACKUP / Group Title / Each tabs
- * @param {Array[Group]} groups
+ * @param {Array<Group>} groups
  */
 BookmarkStorage.saveGroups = async function(groups) {
   try {
-    var rootId;
+    let rootId;
 
     // 1. Create root
     const bmRoot = await browser.bookmarks.create({
       title: OptionManager.options.bookmarks.folder === "" ? "Default" : OptionManager.options.bookmarks.folder,
-      parentId: BookmarkStorage.ROOT_ID
+      parentId: BookmarkStorage.ROOT_ID,
     });
 
     rootId = bmRoot.id;
@@ -57,7 +62,7 @@ BookmarkStorage.saveGroups = async function(groups) {
       // 2. Create Group folder
       const bmGroup = await browser.bookmarks.create({
         title: Utils.getGroupTitle(g),
-        parentId: rootId
+        parentId: rootId,
       });
 
       // 3. Create Tabs bookmarks (for is mandatory for keeping order)
@@ -66,7 +71,7 @@ BookmarkStorage.saveGroups = async function(groups) {
           title: tab.title,
           index: tab.index,
           url: tab.url,
-          parentId: bmGroup.id
+          parentId: bmGroup.id,
         });
       }
 
@@ -106,12 +111,12 @@ BookmarkStorage.cleanGroups = async function(title = BookmarkStorage.BACKUP_OLD)
 BookmarkStorage.init = async function() {
   try {
     const searchResults = await browser.bookmarks.search({
-      title: BookmarkStorage.ROOT
+      title: BookmarkStorage.ROOT,
     });
 
     if (searchResults.length === 0) {
       const folder = await browser.bookmarks.create({
-        title: BookmarkStorage.ROOT
+        title: BookmarkStorage.ROOT,
       });
       BookmarkStorage.ROOT_ID = folder.id;
     } else {

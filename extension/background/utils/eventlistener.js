@@ -1,5 +1,5 @@
-EventListener = function() {
- this.events = []; // Empty list of events/actions
+const EventListener = function() {
+  this.events = []; // Empty list of events/actions
 }
 
 EventListener.prototype.on = function(event, fn) {

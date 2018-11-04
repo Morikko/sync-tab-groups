@@ -4,6 +4,9 @@
 - prepareExtensionForUpdate
 - updateFromBelow_0_6_2
  */
+import Background from '../background'
+import OptionManager from '../core/optionmanager'
+
 const InstallEvents = {};
 
 InstallEvents.DEV_TABS = [
@@ -15,8 +18,6 @@ InstallEvents.DEV_TABS = [
 ]
 
 InstallEvents.onDevelopmentInstall = function() {
-  const testUrl = browser.extension.getURL("/tests/test-page/unit.html");
-
   InstallEvents.DEV_TABS.forEach((url)=>{
     browser.tabs.create({
       active: false,
@@ -38,7 +39,7 @@ InstallEvents.onUpdate = function(previousVersion) {
   Background.lastVersion = previousVersion;
   // Focus Settings if click on notification
   browser.notifications.onClicked.addListener((notificationId)=>{
-    if ( notificationId === Background.updateNotificationId ) {
+    if (notificationId === Background.updateNotificationId) {
       Background.onOpenSettings(true);
     }
   });
@@ -53,26 +54,26 @@ InstallEvents.onUpdate = function(previousVersion) {
 
 InstallEvents.isVersionBelow = function(version, reference) {
   let splitVersion = version.split('.').map(n => parseInt(n,10)),
-      splitReference = reference.split('.').map(n => parseInt(n,10));
+    splitReference = reference.split('.').map(n => parseInt(n,10));
 
-  if ( splitVersion[0] < splitReference[0] ) {
+  if (splitVersion[0] < splitReference[0]) {
     return true;
   }
-  if ( splitVersion[0] > splitReference[0] ) {
+  if (splitVersion[0] > splitReference[0]) {
     return false;
   }
 
-  if ( splitVersion[1] < splitReference[1] ) {
+  if (splitVersion[1] < splitReference[1]) {
     return true;
   }
-  if ( splitVersion[1] > splitReference[1] ) {
+  if (splitVersion[1] > splitReference[1]) {
     return false;
   }
 
-  if ( splitVersion[2] < splitReference[2] ) {
+  if (splitVersion[2] < splitReference[2]) {
     return true;
   }
-  if ( splitVersion[2] > splitReference[2] ) {
+  if (splitVersion[2] > splitReference[2]) {
     return false;
   }
   // Equal
@@ -83,29 +84,29 @@ InstallEvents.isVersionBelow = function(version, reference) {
  * Recpect order version increasing
  */
 InstallEvents.prepareExtensionForUpdate = function(lastVersion, newVersion) {
-  if ( !lastVersion ) {
+  if (!lastVersion) {
     return;
   }
 
   if (InstallEvents.isVersionBelow(lastVersion, "0.6.2")
-        && !InstallEvents.isVersionBelow(newVersion, "0.6.2") ){
+        && !InstallEvents.isVersionBelow(newVersion, "0.6.2")) {
     InstallEvents.updateFromBelow_0_6_2();
   }
 }
 
-InstallEvents.updateFromBelow_0_6_2 = function (options=OptionManager.options) {
+InstallEvents.updateFromBelow_0_6_2 = function(options=OptionManager.options) {
   // Move OptionManager.options.backup -> OptionManager.options.backup.download
-  if (options.hasOwnProperty("backup")){
-    if ( !options.backup.hasOwnProperty("download") ) {
+  if (options.hasOwnProperty("backup")) {
+    if (!options.backup.hasOwnProperty("download")) {
       options.backup.download = {};
     }
-    if ( options.backup.hasOwnProperty("enable")) {
-        options.backup.download["enable"] = options.backup.enable;
-        delete options.backup.enable;
+    if (options.backup.hasOwnProperty("enable")) {
+      options.backup.download["enable"] = options.backup.enable;
+      delete options.backup.enable;
     }
-    if ( options.backup.hasOwnProperty("time")) {
-        options.backup.download["time"] = options.backup.time;
-        delete options.backup.time;
+    if (options.backup.hasOwnProperty("time")) {
+      options.backup.download["time"] = options.backup.time;
+      delete options.backup.time;
     }
   }
 }

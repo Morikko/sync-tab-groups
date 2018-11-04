@@ -1,32 +1,37 @@
- /*
+/*
  - getTabsInWindowId
  - updateTabsInGroup
  */
+import Utils from '../../utils/utils'
+import OptionManager from '../../core/optionmanager'
+import LogManager from '../../error/logmanager'
+import GroupManager from '../../core/groupmanager'
+import WindowManager from '../../core/windowmanager'
 const TabManager = {};
 
 /**
  * Return all the tabs in the window with windowId
  * Pinned tabs are inlcuded/excluded depending options.pinnedTab.sync
- * If the window doesn't exist return an empty array 
- * @param {Number} windowId
- * @return {Array[Tab]} tabs
+ * If the window doesn't exist return an empty array
+ * @param {number} windowId
+ * @returns {Array<Tab>} tabs
  */
 TabManager.getTabsInWindowId = async function(windowId, {
   withoutRealUrl = true,
   withPinned = OptionManager.options.pinnedTab.sync,
-  hidden = (Utils.hasHideFunction() ? false : undefined)
+  hidden = (Utils.hasHideFunction() ? false : undefined),
 }={}) {
   let selector = {
-    windowId
+    windowId,
   };
 
 
-  if ( hidden !== undefined ) {
+  if (hidden !== undefined) {
     selector["hidden"] = hidden;
   }
 
   // Pinned tab
-  if ( !withPinned ) {
+  if (!withPinned) {
     selector["pinned"] = false;
   }
   let tabs = await browser.tabs.query(selector);
@@ -35,7 +40,7 @@ TabManager.getTabsInWindowId = async function(windowId, {
   if (withoutRealUrl) {
     tabs.forEach((tab) => {
       tab.url = Utils.extractTabUrl(tab.url);
-      if ( tab.hasOwnProperty('isArticle') && tab.isArticle === undefined ) {
+      if (tab.hasOwnProperty('isArticle') && tab.isArticle === undefined) {
         tab.isArticle = false;
       }
     });
@@ -43,7 +48,7 @@ TabManager.getTabsInWindowId = async function(windowId, {
 
   // Remove sharingState field that could be undefined
   tabs.forEach((tab) => {
-    if(tab["sharingState"]) delete tab["sharingState"]
+    if (tab["sharingState"]) delete tab["sharingState"]
   })
 
   return tabs;
@@ -52,8 +57,8 @@ TabManager.getTabsInWindowId = async function(windowId, {
 /**
  * Take the current tabs on the desire window and set it as the tabs
  * for the group
- * @param {Number} window id
- * @return {Promise}
+ * @param {number} windowId
+ * @returns {Promise}
  */
 TabManager.updateTabsInGroup = async function(windowId) {
   try {
@@ -90,7 +95,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
     }
 
     let groupId = GroupManager.getGroupIdInWindow(windowId, {error: false});
-    if(groupId === -1) return false;
+    if (groupId === -1) return false;
     const tabs = await TabManager.getTabsInWindowId(windowId);
 
     // In case of delay
