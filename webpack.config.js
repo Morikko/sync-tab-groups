@@ -32,6 +32,7 @@ const config = {
   output: {
     path: setPath('build'),
     filename: '[name].js',
+    sourceMapFilename: '[name].map.js',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -42,7 +43,7 @@ const config = {
   watchOptions: {
     ignored: /node_modules/,
   },
-  devtool: false,
+  devtool: 'source-map',
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
