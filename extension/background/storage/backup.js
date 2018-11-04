@@ -88,7 +88,7 @@ BackupStorage.backup = async function(time, groups=GroupManager.groups) {
     });
     URL.revokeObjectURL(url);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 export default BackupStorage

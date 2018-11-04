@@ -6,10 +6,9 @@
  *
  * Don't use refId if single task (default: 0)
  */
+import TaskManagerConstants from './taskManagerConstants'
 
-const TaskManager = {};
-
-TaskManager.DelayedTask = function(timeoutDelay = 10000) {
+const DelayedTaskManager = function(timeoutDelay = 10000) {
   this.delayedTasks = {};
   this.timeoutDelay = timeoutDelay;
 }
@@ -22,16 +21,16 @@ TaskManager.DelayedTask = function(timeoutDelay = 10000) {
  * @param {Function} delayedFunction - the delayed function to execute (without parameter)
  * @param {number} refId - ref inside the action group
  */
-TaskManager.DelayedTask.prototype.manage = async function(taskAction, delayedFunction, refId = 0) {
+DelayedTaskManager.prototype.manage = async function(taskAction, delayedFunction, refId = 0) {
   switch (taskAction) {
-  case TaskManager.ASK:
+  case TaskManagerConstants.ASK:
     this.add(delayedFunction,
       refId);
     break;
-  case TaskManager.CANCEL:
+  case TaskManagerConstants.CANCEL:
     this.remove(refId);
     break;
-  case TaskManager.FORCE:
+  case TaskManagerConstants.FORCE:
     this.remove(refId);
     await delayedFunction();
     break;
@@ -45,7 +44,7 @@ Task is done after the delay, if a task is asked
  * @param {Function} delayedFunction - the delayed function to execute (without parameter)
  * @param {number} refId (default:0) - ref inside the action group
  */
-TaskManager.DelayedTask.prototype.add = async function(delayedFunction, refId = 0) {
+DelayedTaskManager.prototype.add = async function(delayedFunction, refId = 0) {
 
   // Already a task; remove it
   this.remove(refId);
@@ -61,7 +60,7 @@ TaskManager.DelayedTask.prototype.add = async function(delayedFunction, refId = 
  * If a task already exists, it is aborted.
  * @param {number} refId (default:0) - ref inside the action group
  */
-TaskManager.DelayedTask.prototype.remove = function(refId = 0) {
+DelayedTaskManager.prototype.remove = function(refId = 0) {
   if (this.delayedTasks[refId] !== undefined) {
     clearTimeout(this.delayedTasks[refId]);
     delete(this.delayedTasks[refId]);
@@ -69,4 +68,4 @@ TaskManager.DelayedTask.prototype.remove = function(refId = 0) {
   }
 };
 
-export default TaskManager
+export default DelayedTaskManager

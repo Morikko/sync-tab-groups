@@ -74,7 +74,7 @@ WindowManager.openGroupInWindow = async function(newGroupId, windowId, {
     return "WindowManager.openGroupInWindow done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -115,7 +115,7 @@ WindowManager.decoratorCurrentlyChanging = function(func) {
       result = await func.apply(this, arguments);
 
     } catch (e) {
-      LogManager.error(e, {arguments});
+      LogManager.error(e, {args: arguments});
     } finally { // Clean
       const windowShouldBeClear = WindowManager.WINDOW_CURRENTLY_SWITCHING
         .hasOwnProperty(currentWindow.id);
@@ -215,7 +215,7 @@ WindowManager.switchGroupInCurrentWindow = async function(newGroupId) {
     return currentWindow.id;
   } catch (e) {
     LogManager.error(e, {
-      arguments,
+      args: arguments,
       snapNewGroup,
       snapOldGroup,
     });
@@ -241,7 +241,7 @@ WindowManager.closeWindowFromGroupId = async function(groupId) {
     }
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -293,7 +293,7 @@ WindowManager.closeGroup = async function(groupId, {close_window = false}={}) {
     return "WindowManager.closeGroup done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -330,7 +330,7 @@ WindowManager.selectGroup = async function(newGroupId, {newWindow=false}={}) {
     }
     return windowId;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -408,7 +408,7 @@ WindowManager.selectNextGroup = async function({
 
     return nextGroupId;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
     return -1;
   }
 }
@@ -452,7 +452,7 @@ WindowManager.removeGroup = async function(groupId = -1) {
     return "WindowManager.removeGroup done on groupId " + groupId;
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -489,7 +489,7 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
     return w.id;
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
     delete WindowManager.WINDOW_EXCLUDED[w.id];
   } finally {
     //delete WindowManager.WINDOW_EXCLUDED[w.id];
@@ -517,7 +517,7 @@ WindowManager.setWindowPrefixGroupTitle = async function(windowId, group) {
       }
     );
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 };
 
@@ -550,7 +550,7 @@ WindowManager.associateGroupIdToWindow = async function(windowId, groupId) {
     }
     return "WindowManager.associateGroupIdToWindow done";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -560,7 +560,7 @@ WindowManager.isWindowIdOpen = async function(windowId) {
     return windows.filter(w => w.id === windowId).length>0;
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -591,7 +591,7 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
     }
     return "WindowManager.desassociateGroupIdToWindow done";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -722,3 +722,5 @@ WindowManager.isErrorWindowNotExists = function(err, windowId) {
     return false;
   }
 }
+
+export default WindowManager

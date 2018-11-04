@@ -273,10 +273,11 @@ Background.onReloadGroups = function() {
   GroupManager.reloadGroupsFromDisk();
 };
 
-Background.changeSynchronizationStateOfWindow = async function({
-  isSync,
-  windowId,
-}) {
+Background.changeSynchronizationStateOfWindow = async function(args) {
+  const {
+    isSync,
+    windowId,
+  } = args
   try {
     if (isSync) {
       await WindowManager.integrateWindow(windowId, {even_new_one: true});
@@ -294,7 +295,7 @@ Background.changeSynchronizationStateOfWindow = async function({
       }
     }
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 };
 
@@ -450,3 +451,5 @@ if (Utils.isChrome()) { // Extension tabs are closed on update
 
 // START of the extension
 Background.init();
+
+export default Background

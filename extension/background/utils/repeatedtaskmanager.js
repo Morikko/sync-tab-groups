@@ -14,9 +14,8 @@
  * Don't use refId if single task (default: 0)
  */
 import LogManager from '../error/logmanager'
-const TaskManager = {};
 
-TaskManager.RepeatedTask = function(timeoutDelay = 10000) {
+const RepeatedTaskManager = function(timeoutDelay = 10000) {
   this.delayedTasks = {};
   this.timeoutDelay = timeoutDelay;
   this.queuing = false;
@@ -32,7 +31,7 @@ TaskManager.RepeatedTask = function(timeoutDelay = 10000) {
  * @param {boolean} force
  * @param {number} refId (default:0) - ref inside the action group
  */
-TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, force = false, refId = 0) {
+RepeatedTaskManager.prototype.add = async function(delayedFunction, force = false, refId = 0) {
 
   try {
     // Free: do it OR Force to do it
@@ -69,7 +68,7 @@ TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, force =
     }
   } catch (e) {
     this.remove(refId);
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 };
 
@@ -77,10 +76,12 @@ TaskManager.RepeatedTask.prototype.add = async function(delayedFunction, force =
  * If a task already exists, it is aborted.
  * @param {number} refId (default:0) - ref inside the action group
  */
-TaskManager.RepeatedTask.prototype.remove = function(refId = 0) {
+RepeatedTaskManager.prototype.remove = function(refId = 0) {
   if (this.delayedTasks[refId] !== undefined) {
     clearTimeout(this.delayedTasks[refId]);
     delete(this.delayedTasks[refId]);
     this.queuing = false;
   }
 };
+
+export default RepeatedTaskManager

@@ -117,7 +117,7 @@ TabHidden.closeHiddenTabs = async function(tabIds) {
 
   try {
     await browser.tabs.remove(tabIds);
-  } catch (e) {LogManager.error(e, {arguments})}
+  } catch (e) {LogManager.error(e, {args: arguments})}
 
   tabIds.forEach(TabHidden.changeHiddenStateForTab);
 

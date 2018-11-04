@@ -34,7 +34,7 @@ FileStorage.downloadGroups = async function(groups) {
     return true;
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
     return false;
   }
 }
@@ -66,7 +66,7 @@ FileStorage.importGroupsFromFile = function(content_file) {
       "message": e.message,
       "eventTime": 4000,
     });
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 

@@ -107,7 +107,7 @@ TabManager.updateTabsInGroup = async function(windowId) {
     return "TabManager.updateTabsInGroup done on window id " + windowId;
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 

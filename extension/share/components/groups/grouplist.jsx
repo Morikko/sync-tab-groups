@@ -105,8 +105,8 @@ class GroupList extends React.Component {
                 groups= {this.props.groups}
                 group= {this.props.groups[index]}
                 currentWindowId= {this.props.currentWindowId}
-                currentlyClosing= {this.isCurrently(TaskManager.CLOSE_REFERENCE, this.props.groups[index].id)}
-                currentlyRemoving= {this.isCurrently(TaskManager.REMOVE_REFERENCE, this.props.groups[index].id)}
+                currentlyClosing= {this.isCurrently(TaskManagerConstants.CLOSE_REFERENCE, this.props.groups[index].id)}
+                currentlyRemoving= {this.isCurrently(TaskManagerConstants.REMOVE_REFERENCE, this.props.groups[index].id)}
                 selectionFilter={
                   this.props.selectionFilter
                     ? this.props.selectionFilter[this.props.groups[index].id]

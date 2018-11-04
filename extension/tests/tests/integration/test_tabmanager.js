@@ -897,7 +897,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        LogManager.error(e, {arguments}, {logs: null});
+        LogManager.error(e, {args: arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -948,7 +948,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs[1]).toEqualTabs(expectedTabs[1]);
 
       } catch(e) {
-        LogManager.error(e, {arguments}, {logs: null});
+        LogManager.error(e, {args: arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -990,7 +990,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        LogManager.error(e, {arguments}, {logs: null});
+        LogManager.error(e, {args: arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }
@@ -1031,7 +1031,7 @@ describe("TabManager", ()=>{
         expect(resultingTabs).toEqualTabs(expectedTabs);
 
       } catch(e) {
-        LogManager.error(e, {arguments}, {logs: null});
+        LogManager.error(e, {args: arguments}, {logs: null});
       } finally {
         await TestManager.closeWindows(this.windowIds);
       }

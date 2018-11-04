@@ -3,3 +3,5 @@ extension/lib
 
 extension/background/core/tabalive.js
 extension/background/core/tabhidden.js
+
+build/

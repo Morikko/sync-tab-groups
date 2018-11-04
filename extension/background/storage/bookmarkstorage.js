@@ -34,7 +34,7 @@ BookmarkStorage.backUp = function(groups, force=false) {
 
         return "Bookmark.backUp done!";
       } catch (e) {
-        LogManager.error(e, {arguments});
+        LogManager.error(e, {args: arguments});
       }
     },
     force)
@@ -79,7 +79,7 @@ BookmarkStorage.saveGroups = async function(groups) {
 
     return "Bookmark.saveGroups done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -100,7 +100,7 @@ BookmarkStorage.cleanGroups = async function(title = BookmarkStorage.BACKUP_OLD)
 
     return "Bookmark.cleanGroups done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -124,7 +124,7 @@ BookmarkStorage.init = async function() {
     }
     return "Bookmark.init done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 

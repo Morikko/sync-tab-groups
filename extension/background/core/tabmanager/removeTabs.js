@@ -110,7 +110,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
 
     return survivorTab;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 

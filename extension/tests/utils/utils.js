@@ -45,7 +45,7 @@ TestManager.splitOnHalfScreen = async function(windowId){
         state: "normal",
     });
   } catch (e) {
-    LogManager.error(e, {arguments}, {logs: null});
+    LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 
@@ -58,7 +58,7 @@ TestManager.splitOnHalfTopScreen = async function(windowId){
         height: Math.round(screen.width/2),
     });
   } catch (e) {
-    LogManager.error(e, {arguments}, {logs: null});
+    LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 
@@ -71,7 +71,7 @@ TestManager.splitOnHalfBottomScreen = async function(windowId){
         height: Math.round(screen.width/2),
     });
   } catch (e) {
-    LogManager.error(e, {arguments}, {logs: null});
+    LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 
@@ -280,7 +280,7 @@ TestManager.removeGroups = async function(groupIds) {
       try {
         await GroupManager.removeGroupFromId(groupId);
       } catch(e) {
-        LogManager.error(e, {arguments}, {logs: null});
+        LogManager.error(e, {args: arguments}, {logs: null});
       }
     }
   }
@@ -366,7 +366,7 @@ const ACTIONS = [
     if (!groups.length) return;
     await Background.onGroupRemove({
       groupId: TestManager.getRandomGroupId(groups),
-      taskRef: TaskManager.FORCE,
+      taskRef: TaskManagerConstants.FORCE,
     })
   },
   async (groups) =>{

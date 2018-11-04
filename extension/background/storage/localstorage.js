@@ -21,7 +21,7 @@ LocalStorage.saveGroups = async function(groups) {
     await browser.storage.local.set({groups: export_groups});
     if (export_groups.length === 0) LogManager.information(`LocalStorage.saveGroups saved empty group.`)
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 

@@ -69,7 +69,7 @@ TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
 
     return "TabManager.selectTab done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -95,7 +95,7 @@ TabManager.changePinState = async function(groupId, tabIndex) {
     }
     return "TabManager.changePinState done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 

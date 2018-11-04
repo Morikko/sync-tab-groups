@@ -56,7 +56,7 @@ WindowsEvents.initWindowsEventListener = function() {
         }
       }
     } catch (e) {
-      LogManager.error(e, {arguments});
+      LogManager.error(e, {args: arguments});
     }
   });
 }

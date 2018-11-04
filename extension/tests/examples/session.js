@@ -177,7 +177,7 @@ Session.createArrayGroups = function(params={}) {
     if ( typeof params[pro] !== "string" && params[pro].length !== undefined
       && params[pro].length !== params.groupsLength ) {
         LogManager.error(e, {
-          arguments,
+          args: arguments,
           paramName: pro,
           paramValue: params[pro],
         }, {logs: null});
@@ -446,7 +446,7 @@ Session.keepOneWindowOpen = async function() {
     }
     return "WindowManager.keepOneWindowOpen done";
   } catch (e) {
-    LogManager.error(e, {arguments}, {logs: null});
+    LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 
@@ -470,7 +470,7 @@ Session.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
 
     return w.id;
   } catch (e) {
-    LogManager.error(e, {arguments}, {logs: null});
+    LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 

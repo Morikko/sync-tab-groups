@@ -314,3 +314,5 @@ OptionManager.checkCorruptedOptions = function(options=OptionManager.options) {
   }
   return isCorrupted;
 }
+
+export default OptionManager

@@ -68,13 +68,6 @@ const StorageManager = {};
 StorageManager.Backup = StorageManager.Backup || {};
 StorageManager.Backup.LOCATION = "synctabgroups-backup/";
 
-const TaskManager = {};
-TaskManager.ASK = "ASK";
-TaskManager.CANCEL = "CANCEL";
-TaskManager.FORCE = "FORCE";
-TaskManager.CLOSE_REFERENCE = "close";
-TaskManager.REMOVE_REFERENCE = "remove";
-
 const OptionManager = {};
 OptionManager.SORT_OLD_RECENT = 0;
 OptionManager.SORT_RECENT_OLD = 1;
@@ -508,7 +501,7 @@ Utils.openUrlOncePerWindow = async function(url, active=true) {
       });
     }
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 

@@ -36,7 +36,7 @@ TabManager.moveOpenTabToGroup = async function(tab, windowId, targetIndex = -1) 
     });
     return "TabManager.moveOpenTabToGroup done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -86,7 +86,7 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex, 
     return "TabManager.moveTabBetweenGroups done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -116,7 +116,7 @@ TabManager.moveUnFollowedTabToGroup = async function(tabId, targetGroupId) {
     return "TabManager.moveUnFollowedTabToGroup done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -139,7 +139,7 @@ TabManager.moveTabToNewGroup = async function(sourceGroupId, tabIndex, title = "
 
     return id;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
     return -1;
   }
 }
@@ -158,7 +158,7 @@ TabManager.moveUnFollowedTabToNewGroup = async function(tabId) {
 
     return id;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
     return -1;
   }
 }

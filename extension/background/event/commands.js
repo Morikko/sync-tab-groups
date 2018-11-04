@@ -42,7 +42,7 @@ CommandsEvent.initCommandsEventListener = function() {
       default:
       }
     } catch (e) {
-      LogManager.error(e, {arguments});
+      LogManager.error(e, {args: arguments});
     }
   });
 };

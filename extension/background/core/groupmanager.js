@@ -141,7 +141,7 @@ GroupManager.getGroupIdInWindow = function(windowId, {error = true}={}) {
     throw Error(msg + " " + windowId);
   } else {
     LogManager.warning(msg,
-      {arguments}
+      {args: arguments}
     );
     return -1;
   }
@@ -351,7 +351,7 @@ GroupManager.changeExpandState = function(groupIds, expandState, {groups = Group
     })
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -385,7 +385,7 @@ GroupManager.changeGroupPosition = function(groupId, position, {
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -439,7 +439,7 @@ GroupManager.setLastAccessed = function(groupId, time, {groups = GroupManager.gr
     groups[groupIndex].lastAccessed = time;
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -483,7 +483,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -499,7 +499,7 @@ GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -527,7 +527,7 @@ GroupManager.detachWindowFromGroupId = async function(groupId) {
     await GroupManager.detachWindow(windowId);
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -579,7 +579,7 @@ GroupManager.detachWindow = async function(windowId, {
     }
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -597,7 +597,7 @@ GroupManager.removeGroupsInPrivateWindow = async function(groups=GroupManager.gr
     }
     return "GroupManager.removeGroupsInPrivateWindow done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -617,7 +617,7 @@ GroupManager.removeGroupFromId = async function(groupId) {
     GroupManager.groups.splice(groupIndex, 1);
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -645,7 +645,7 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, {
     return "GroupManager.removeTabFromIndexInGroupId done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 
 }
@@ -689,7 +689,7 @@ GroupManager.addTabInGroupId = async function(groupId, tab, {
     return "GroupManager.addTabInGroupId done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 
 }
@@ -946,7 +946,7 @@ GroupManager.init = async function() {
 
     return "GroupManager.init done";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -1413,3 +1413,5 @@ GroupManager.bestMatchGroup = function(tabs, groups = GroupManager.groups) {
 
   return result.length?result[0].id:-1;
 }
+
+export default GroupManager

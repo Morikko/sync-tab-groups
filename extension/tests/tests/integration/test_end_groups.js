@@ -76,7 +76,7 @@ describe("End of Groups - ", ()=>{
         await WindowManager.closeGroup(this.groups[0].id);
         await Utils.wait(500);
       } catch ( e ) {
-        LogManager.error(e, {arguments}, {logs: null});
+        LogManager.error(e, {args: arguments}, {logs: null});
       }
 
       expect(previousLength).toEqual(GroupManager.groups.length);
@@ -124,7 +124,7 @@ describe("End of Groups - ", ()=>{
         await WindowManager.switchGroupInCurrentWindow(this.groups[0].id);
         await WindowManager.removeGroup(this.groups[0].id);
       } catch ( e ) {
-        LogManager.error(e, {arguments}, {logs: null});
+        LogManager.error(e, {args: arguments}, {logs: null});
       }
 
       await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
@@ -154,7 +154,7 @@ describe("End of Groups - ", ()=>{
 
         await WindowManager.removeGroup(this.groups[1].id);
       } catch ( e ) {
-        LogManager.error(e, {arguments}, {logs: null});
+        LogManager.error(e, {args: arguments}, {logs: null});
       }
       expect(previousLength).toEqual(GroupManager.groups.length+1);
       expect(windowsNumber).toEqual((await browser.windows.getAll()).length+1);
