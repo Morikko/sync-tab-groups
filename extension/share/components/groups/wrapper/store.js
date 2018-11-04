@@ -1,3 +1,7 @@
+import Immutable from 'immutable'
+import * as Redux from 'redux'
+import OPTION_CONSTANTS from '../../../../background/core/OPTION_CONSTANTS'
+
 const INITIAL_STATE = Immutable.Map({
   groups: [],
   delayedTasks: {},
@@ -20,3 +24,5 @@ const Reducer = function(state = INITIAL_STATE, action) {
 };
 
 const store = Redux.createStore(Reducer);
+
+export default store

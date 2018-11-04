@@ -1,3 +1,6 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
 class RadioButton extends React.Component {
   constructor(props) {
     super(props);
@@ -45,3 +48,5 @@ RadioButton.propTypes = {
   left: PropTypes.bool, // State:: Left: true; Right: false
   getActivatedState: PropTypes.func,
 }
+
+export default RadioButton

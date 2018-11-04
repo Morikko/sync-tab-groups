@@ -1,3 +1,6 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
 class OptionSelect extends React.Component {
   constructor(props) {
     super(props);
@@ -7,26 +10,26 @@ class OptionSelect extends React.Component {
   render() {
     return (
       <div
-      className="select"
-      htmlFor={this.props.id}>
-          <select
-            id={this.props.id}
-            onChange={this.handleChange}
-            value={this.props.selected}>
-            {
-              this.props.choices.map((choice) => {
-                return (
-                  <option
-                      key={choice.value}
-                      value={choice.value}
-                      /*selected={choice.value===this.props.selected}*/>
-                      {choice.label}
-                  </option>);
-              })
-            }
-          </select>
-          <div className="select__arrow"></div>
-          <span>{this.props.label}</span>
+        className="select"
+        htmlFor={this.props.id}>
+        <select
+          id={this.props.id}
+          onChange={this.handleChange}
+          value={this.props.selected}>
+          {
+            this.props.choices.map((choice) => {
+              return (
+                <option
+                  key={choice.value}
+                  value={choice.value}
+                  /*selected={choice.value===this.props.selected}*/>
+                  {choice.label}
+                </option>);
+            })
+          }
+        </select>
+        <div className="select__arrow"></div>
+        <span>{this.props.label}</span>
       </div>);
   }
 
@@ -37,7 +40,7 @@ class OptionSelect extends React.Component {
 
     this.props.onValueChange(this.props.id, selectedValue);
   }
-};
+}
 
 OptionSelect.propTypes = {
   onValueChange: PropTypes.func,
@@ -46,3 +49,5 @@ OptionSelect.propTypes = {
   label: PropTypes.string,
   choices: PropTypes.object, // [{value, label}]
 };
+
+export default OptionSelect

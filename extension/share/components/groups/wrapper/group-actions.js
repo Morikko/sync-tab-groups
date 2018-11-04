@@ -1,3 +1,7 @@
+import Utils from '../../../../background/utils/utils'
+import ActionCreators from './action_creators'
+import store from './store'
+
 const GroupActions = {
   addGroup: function(title="") {
     Utils.sendMessage("Group:Add", {
@@ -168,9 +172,6 @@ let popupMessenger = function(message) {
 
 browser.runtime.onMessage.addListener(popupMessenger);
 
-
-let tabspaceBackground = browser.runtime.getBackgroundPage();
-
 /*
  * Access to the groups and show them
  */
@@ -183,3 +184,5 @@ function init() {
 
 // Don't wait the page is loaded
 init();
+
+export default GroupActions

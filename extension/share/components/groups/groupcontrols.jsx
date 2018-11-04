@@ -1,5 +1,12 @@
+import React from 'react'
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
+import Utils from '../../../background/utils/utils'
+import TabControls from './tabcontrols'
+import GroupAddButton from './groupaddbutton';
+
 class GroupControls extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -25,9 +32,9 @@ class GroupControls extends React.Component {
           key="rename_abort"
           className="group-edit group-control fa fa-fw fa-ban"
           onClick={this.props.onEditAbort}
-        ></i>
+        ></i>,
       ];
-    } 
+    }
   }
 
   getUndoControls() {
@@ -41,7 +48,7 @@ class GroupControls extends React.Component {
         key="undo"
         className="group-undo group-control fa fa-fw fa-undo"
         onClick={this.props.onUndoCloseClick}
-      ></i>
+      ></i>,
     ];
   }
 
@@ -52,42 +59,42 @@ class GroupControls extends React.Component {
       "fa": true,
       "fa-fw": true,
       "fa-chevron-down": !this.props.expanded,
-      "fa-chevron-up": this.props.expanded
+      "fa-chevron-up": this.props.expanded,
     });
 
     return (
       <span
         className="group-controls"
         onMouseUp={(e)=>e.stopPropagation()}>
-      {this.getOpenNewWindowButton()}
-      {this.getUndoClosingButton()}
-      {this.getUndoRemovingButton()}
-      {this.getCloseButton()}
-      {this.getRemoveButton()}
-      {this.getEditButtons()}
-      {this.getTooltipOpenerButton()}
-      <i
-        className={expanderClasses}
-        onClick={this.props.onExpand}
-        title={this.getExpandTitle()}
-      ></i>
-    </span>);
+        {this.getOpenNewWindowButton()}
+        {this.getUndoClosingButton()}
+        {this.getUndoRemovingButton()}
+        {this.getCloseButton()}
+        {this.getRemoveButton()}
+        {this.getEditButtons()}
+        {this.getTooltipOpenerButton()}
+        <i
+          className={expanderClasses}
+          onClick={this.props.onExpand}
+          title={this.getExpandTitle()}
+        ></i>
+      </span>);
   }
 
-  getEditButtons(){
-    if (this.props.controlsEnable && !this.props.closing 
-      && !this.props.removing ) {
+  getEditButtons() {
+    if (this.props.controlsEnable && !this.props.closing
+      && !this.props.removing) {
       return this.getEditControls();
     }
   }
 
-  getRemoveButton(){
-    if ( this.props.controlsEnable && !this.props.editing
+  getRemoveButton() {
+    if (this.props.controlsEnable && !this.props.editing
       && !this.props.closing) {
       const overHelp = this.props.removing
         ? browser.i18n.getMessage("force_removing")
         : browser.i18n.getMessage("remove_group");
-    
+
       return (
         <i
           key="remove"
@@ -99,13 +106,13 @@ class GroupControls extends React.Component {
     }
   }
 
-  getCloseButton(){
-    if ( this.props.controlsEnable && !this.props.editing
+  getCloseButton() {
+    if (this.props.controlsEnable && !this.props.editing
       && this.props.opened && !this.props.removing) {
       const overHelp = this.props.closing
         ? browser.i18n.getMessage("force_closing")
         : browser.i18n.getMessage("close_group");
-    
+
       return (
         <i
           key="close"
@@ -117,38 +124,38 @@ class GroupControls extends React.Component {
     }
   }
 
-  getUndoRemovingButton(){
-    if ( this.props.controlsEnable && !this.props.editing
+  getUndoRemovingButton() {
+    if (this.props.controlsEnable && !this.props.editing
       && this.props.removing) {
       return this.getUndoControls();
     }
   }
 
   getUndoClosingButton() {
-    if ( this.props.controlsEnable && !this.props.editing
+    if (this.props.controlsEnable && !this.props.editing
       && this.props.closing) {
       return this.getUndoControls();
     }
   }
 
-  getOpenNewWindowButton(){
-    if ( this.props.controlsEnable && !this.props.closing
-      && !this.props.removing && !this.props.opened 
+  getOpenNewWindowButton() {
+    if (this.props.controlsEnable && !this.props.closing
+      && !this.props.removing && !this.props.opened
       && !this.props.editing) {
       return (
         <i
-            key="open_window"
-            className="group-edit group-control fa fa-fw fa-window-maximize"
-            title={browser.i18n.getMessage("open_window_group")}
-            onClick={this.props.onOpenInNewWindow}
+          key="open_window"
+          className="group-edit group-control fa fa-fw fa-window-maximize"
+          title={browser.i18n.getMessage("open_window_group")}
+          onClick={this.props.onOpenInNewWindow}
         ></i>
       );
     }
   }
 
   getTooltipOpenerButton() {
-    if( !this.props.closing && !this.props.removing 
-      && this.props.controlsEnable && !this.props.editing ){
+    if (!this.props.closing && !this.props.removing
+      && this.props.controlsEnable && !this.props.editing) {
       return (
         <i
           key="tooltip"
@@ -165,13 +172,13 @@ class GroupControls extends React.Component {
   }
 
   getExpandTitle() {
-    return this.props.expanded 
-      ? browser.i18n.getMessage("hide_tabs") 
+    return this.props.expanded
+      ? browser.i18n.getMessage("hide_tabs")
       : browser.i18n.getMessage("show_tabs");
   }
 
   componentDidMount() {
-    if ( !this.state.waitFirstMount ) {
+    if (!this.state.waitFirstMount) {
       this.differedTimeOut = setTimeout(()=>{
         this.setState({
           waitFirstMount: true,
@@ -195,26 +202,26 @@ class GroupControls extends React.Component {
   }
 
   getHiddenRemoveActionTooltip() {
-    if(this.props.hasHiddenTabs) {
+    if (this.props.hasHiddenTabs) {
       return (
         <span
-            className="row"
-            onClick={((event)=>{
-              if (event) {
-                event.stopPropagation();
-              }
-              this.props.onRemoveHiddenTabsInGroup(this.props.groupId);
-              this.closeExtraActions();
-            })}>
-            <i className="fa fa-fw fa-eye-slash" />
-            {browser.i18n.getMessage("close_hidden_tabs_in_group")}
+          className="row"
+          onClick={((event)=>{
+            if (event) {
+              event.stopPropagation();
+            }
+            this.props.onRemoveHiddenTabsInGroup(this.props.groupId);
+            this.closeExtraActions();
+          })}>
+          <i className="fa fa-fw fa-eye-slash" />
+          {browser.i18n.getMessage("close_hidden_tabs_in_group")}
         </span>
-     )
+      )
     }
   }
 
   getEditActionTooltip() {
-    if(!this.props.editing) {
+    if (!this.props.editing) {
       return (
         <span
           className="row"
@@ -228,7 +235,7 @@ class GroupControls extends React.Component {
           <i className="fa fa-fw fa-pencil" />
           {browser.i18n.getMessage("rename_group")}
         </span>
-     )
+      )
     }
   }
 
@@ -256,7 +263,7 @@ class GroupControls extends React.Component {
 
     let menuPosition = TabControls.POSITION.MIDDLE;
 
-    if ( pos < (height/2 + 34) ) {
+    if (pos < (height/2 + 34)) {
       menuPosition = TabControls.POSITION.TOP;
     } else {
       menuPosition = TabControls.POSITION.BOTTOM;
@@ -279,7 +286,7 @@ class GroupControls extends React.Component {
   }
 
   handleMouseEnterExtraActions(event) {
-    if ( this.closeMenuTimeout ) {
+    if (this.closeMenuTimeout) {
       clearTimeout(this.closeMenuTimeout);
     }
   }
@@ -292,15 +299,15 @@ class GroupControls extends React.Component {
   }
 
   componentWillUnmount() {
-    if ( this.differedTimeOut ) {
+    if (this.differedTimeOut) {
       clearTimeout(this.differedTimeOut);
     }
 
-    if ( this.closeMenuTimeout ) {
+    if (this.closeMenuTimeout) {
       clearTimeout(this.closeMenuTimeout);
     }
   }
-};
+}
 
 GroupControls.propTypes = {
   expanded: PropTypes.bool.isRequired,
@@ -315,5 +322,7 @@ GroupControls.propTypes = {
   onEditSave: PropTypes.func,
   onExpand: PropTypes.func,
   onUndoCloseClick: PropTypes.func,
-  onOpenInNewWindow: PropTypes.func
+  onOpenInNewWindow: PropTypes.func,
 }
+
+export default GroupAddButton

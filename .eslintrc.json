@@ -1,19 +1,36 @@
 {
   "parserOptions": {
     "ecmaVersion": 2018,
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "env": {
     "browser": true,
     "node": false,
     "es6": true
   },
-  "plugins": ["import", "jsdoc"],
+  "parser": "babel-eslint",
+  "plugins": ["import", "jsdoc", "react"],
   "globals": {
     "browser": true,
     "$": true
   },
-  "extends": "eslint:recommended",
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "rules": {
     "jsdoc/check-param-names": 2,
     "jsdoc/check-tag-names": 2,
@@ -23,6 +40,8 @@
     "jsdoc/require-returns-description": 1,
     "jsdoc/require-returns-type": 1,
     "jsdoc/check-types": 1,
+
+    "react/prop-types": 0,
 
     "import/no-unresolved": [
       2, {

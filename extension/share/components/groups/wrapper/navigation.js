@@ -33,7 +33,7 @@
 
 **/
 
-var Navigation = Navigation || {};
+const Navigation = {};
 
 /** Targetting **/
 
@@ -163,7 +163,7 @@ Navigation.navigationFactory = function(params) {
   }
 }
 
-let generalNavigationListener = Navigation.navigationFactory({
+const generalNavigationListener = Navigation.navigationFactory({
   "up": (e) => {
     e.preventDefault();
     Navigation.focusPrevious()
@@ -217,7 +217,7 @@ let generalNavigationListener = Navigation.navigationFactory({
   },
 });
 
-let popupSpecialNavigationListener = Navigation.navigationFactory({
+const popupSpecialNavigationListener = Navigation.navigationFactory({
   "ctrl+m": (e) => {
     e.preventDefault();
     document.getElementById('open-manager').click()
@@ -239,7 +239,7 @@ let popupSpecialNavigationListener = Navigation.navigationFactory({
   },
 })
 
-let groupNavigationListener = function(group) {
+const groupNavigationListener = function(group) {
   return Navigation.navigationFactory({
     "spacebar": (e)=>{
       if (!group.state.editing) {
@@ -297,7 +297,7 @@ let groupNavigationListener = function(group) {
   })
 }
 
-let tabNavigationListener = function(tab) {
+const tabNavigationListener = function(tab) {
   return Navigation.navigationFactory({
     "enter": ()=>tab.onTabClick(false),
     "shift+enter": ()=>tab.onTabClick(true),
@@ -337,13 +337,13 @@ let tabNavigationListener = function(tab) {
   })
 }
 
-let searchBarNavigationListener = function(searchbar) {
+const searchBarNavigationListener = function(searchbar) {
   return Navigation.navigationFactory({
     "shift+backspace": searchbar.clearSearchBar,
   })
 }
 
-let addButtonNavigationListener = function(addbutton) {
+const addButtonNavigationListener = function(addbutton) {
   return Navigation.navigationFactory({
     "shift+backspace": ()=>{
       Navigation.focusParent('addButton', document.activeElement);
@@ -529,3 +529,13 @@ Navigation.keyCodes = {
   244: "kanji",
   255: "toggle touchpad",
 };
+
+export {
+  Navigation,
+  searchBarNavigationListener,
+  addButtonNavigationListener,
+  generalNavigationListener,
+  popupSpecialNavigationListener,
+  groupNavigationListener,
+  tabNavigationListener,
+}

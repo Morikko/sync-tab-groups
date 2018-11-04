@@ -1,5 +1,11 @@
-class TabControls extends React.Component{
-  constructor(props){
+import React from 'react'
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
+import Utils from '../../../background/utils/utils'
+import getGroupIndexSortedByPosition from '../../../background/core/getGroupIndexSortedByPosition'
+
+class TabControls extends React.Component {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -16,35 +22,35 @@ class TabControls extends React.Component{
   render() {
     let controls = [];
 
-    if ( this.props.controlsEnable ) {
-     controls = ([
-       <i
-         key="tooltip"
-         title={browser.i18n.getMessage("tab_show_actions_menu")}
-         className="tab-edit fa fa-fw fa-exchange tab-actions"
-         onClick={this.handleOpenExtraActions.bind(this)}
-         onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
-         onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}>
-         {this.state.waitFirstMount && this.createExtraActionsMenu()}
-       </i>,
-       <i
-         key="close"
-         title={browser.i18n.getMessage("close_tab")}
-         className="tab-edit fa fa-fw fa-times"
-         onClick={this.props.onCloseTab}
-       ></i>
-     ]);
+    if (this.props.controlsEnable) {
+      controls = ([
+        <i
+          key="tooltip"
+          title={browser.i18n.getMessage("tab_show_actions_menu")}
+          className="tab-edit fa fa-fw fa-exchange tab-actions"
+          onClick={this.handleOpenExtraActions.bind(this)}
+          onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
+          onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}>
+          {this.state.waitFirstMount && this.createExtraActionsMenu()}
+        </i>,
+        <i
+          key="close"
+          title={browser.i18n.getMessage("close_tab")}
+          className="tab-edit fa fa-fw fa-times"
+          onClick={this.props.onCloseTab}
+        ></i>,
+      ]);
     }
 
 
     return (<span className="tab-controls"
-                  onMouseUp={(e)=>e.stopPropagation()}>
-              {controls}
-            </span>);
+      onMouseUp={(e)=>e.stopPropagation()}>
+      {controls}
+    </span>);
   }
 
   componentDidMount() {
-    if ( !this.state.waitFirstMount ) {
+    if (!this.state.waitFirstMount) {
       this.differedTimeOut = setTimeout(()=>{
         this.setState({
           waitFirstMount: true,
@@ -54,11 +60,11 @@ class TabControls extends React.Component{
   }
 
   componentWillUnmount() {
-    if ( this.differedTimeOut ) {
+    if (this.differedTimeOut) {
       clearTimeout(this.differedTimeOut);
     }
 
-    if ( this.closeMenuTimeout ) {
+    if (this.closeMenuTimeout) {
       clearTimeout(this.closeMenuTimeout);
     }
   }
@@ -79,9 +85,9 @@ class TabControls extends React.Component{
   }
 
   createTabActionsPanel() {
-    const hiddenRemoveAction = this.props.tab.hidden 
-     ? (
-      <span
+    const hiddenRemoveAction = this.props.tab.hidden
+      ? (
+        <span
           className="row"
           onClick={((event)=>{
             if (event) {
@@ -92,10 +98,10 @@ class TabControls extends React.Component{
           }).bind(this)}>
           <i className="fa fa-fw fa-eye-slash" />
           {browser.i18n.getMessage("close_hidden_tab")}
-      </span>
-     )
-     : null;
-    
+        </span>
+      )
+      : null;
+
     return (
       <div className={classNames({
         "tab-actions-panel": true,
@@ -166,7 +172,7 @@ class TabControls extends React.Component{
         "tab-move-to-group-panel": true,
         "hiddenBySearch": this.state.panel !== "move",
       })}
-      style={{maxHeight:this.state.maxHeight}}>
+      style={{maxHeight: this.state.maxHeight}}>
         <span
           className="row"
           onClick={this.handleSwitchToTabActionsPanel.bind(this)}>
@@ -174,7 +180,7 @@ class TabControls extends React.Component{
           {"Back"}
         </span>
         <span className="separator"></span>
-          {subMenusMoveTab}
+        {subMenusMoveTab}
         <span className="separator"></span>
         <span
           className="row"
@@ -198,7 +204,7 @@ class TabControls extends React.Component{
     }
 
     this.setState({
-      panel: "move"
+      panel: "move",
     });
   }
 
@@ -208,7 +214,7 @@ class TabControls extends React.Component{
     }
 
     this.setState({
-      panel: "main"
+      panel: "main",
     });
   }
 
@@ -224,7 +230,7 @@ class TabControls extends React.Component{
 
     let menuPosition = TabControls.POSITION.MIDDLE;
 
-    if ( pos < (height/2 + 34) ) {
+    if (pos < (height/2 + 34)) {
       menuPosition = TabControls.POSITION.TOP;
     } else {
       menuPosition = TabControls.POSITION.BOTTOM;
@@ -247,7 +253,7 @@ class TabControls extends React.Component{
   }
 
   handleMouseEnterExtraActions(event) {
-    if ( this.closeMenuTimeout ) {
+    if (this.closeMenuTimeout) {
       clearTimeout(this.closeMenuTimeout);
     }
   }
@@ -258,7 +264,7 @@ class TabControls extends React.Component{
       panel: "main",
     });
   }
-};
+}
 
 TabControls.propTypes = {
   opened: PropTypes.bool.isRequired,
@@ -271,3 +277,5 @@ TabControls.POSITION = Object.freeze({
   MIDDLE: Symbol("Middle"),
   BOTTOM: Symbol("BOTTOM"),
 })
+
+export default TabControls

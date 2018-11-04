@@ -1,6 +1,10 @@
 import ReactDOM from 'react-dom'
 import React from 'react'
-import ReactRedux from 'react-redux'
+import * as ReactRedux from 'react-redux'
+
+import PopupMenu from './components/popupmenu'
+import GroupActions from '../share/components/groups/wrapper/group-actions'
+import store from '../share/components/groups/wrapper/store'
 
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
@@ -33,9 +37,3 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("content")
   );
 });
-
-
-
-let RenderCounters = {
-  tab: 0,
-}

@@ -1,11 +1,17 @@
-/*
-I might have modified some parts of the code.
-Copyright (c) 2017 Eric Masseran
+import React from 'react'
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
+import Utils from '../../../background/utils/utils'
 
-From={https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
-class Tab extends React.Component{
+import TabControls from './tabcontrols'
+import NiceCheckbox from '../forms/nicecheckbox'
+import sharedVariable from './sharedVariable'
+import {
+  Navigation,
+  tabNavigationListener,
+} from './wrapper/navigation'
+
+class Tab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,7 +34,7 @@ class Tab extends React.Component{
   }
 
   componentDidMount() {
-    if ( !this.state.waitFirstMount ) {
+    if (!this.state.waitFirstMount) {
       this.differedTimeOut = setTimeout((()=>{
         this.setState({
           waitFirstMount: true,
@@ -38,17 +44,17 @@ class Tab extends React.Component{
   }
 
   componentWillUnmount() {
-    if ( this.differedTimeOut ) {
+    if (this.differedTimeOut) {
       clearTimeout(this.differedTimeOut);
     }
   }
 
-  getfavIconUrl(favIconUrl){
-    if ( !favIconUrl ) {
+  getfavIconUrl(favIconUrl) {
+    if (!favIconUrl) {
       return "";
     }
-    if ( favIconUrl !== "chrome://branding/content/icon32.png"
-      && Utils.isPrivilegedURL(favIconUrl) ) {
+    if (favIconUrl !== "chrome://branding/content/icon32.png"
+      && Utils.isPrivilegedURL(favIconUrl)) {
       return "";
     }
     return favIconUrl;
@@ -106,14 +112,14 @@ class Tab extends React.Component{
       ? (
         <i className="arrow-focus fa fa-fw fa-angle-right"></i>
       ) : null;
-    const pinnedIcon = this.props.tab.pinned 
+    const pinnedIcon = this.props.tab.pinned
       ? (<i className="pinned-icon fa fa-fw fa-thumb-tack"></i>)
       : null;
 
-    const hiddenIcon = this.props.tab.hidden 
+    const hiddenIcon = this.props.tab.hidden
       ? (<i className="hidden-icon fa fa-fw fa-eye-slash"
-            title="This tab is hidden."  
-        ></i>)
+        title="This tab is hidden."
+      ></i>)
       : null;
 
     const tabTitleSpan = (
@@ -124,19 +130,19 @@ class Tab extends React.Component{
 
     const tabControls = (
       <TabControls
-          opened={this.props.opened}
-          onCloseTab={this.handleCloseTabClick}
-          onOpenTab={this.handleOpenTabClick}
-          onPinChange={this.handleChangePin}
-          onRemoveHiddenTab={this.props.onRemoveHiddenTab}
-          isPinned={this.props.tab.pinned}
-          groups={this.props.groups}
-          group={this.props.group}
-          tab={this.props.tab}
-          handleOnMoveTabMenuClick={this.handleOnMoveTabMenuClick}
-          handleOnMoveTabNewMenuClick={this.handleOnMoveTabNewMenuClick}
-          controlsEnable={this.props.controlsEnable}
-       />
+        opened={this.props.opened}
+        onCloseTab={this.handleCloseTabClick}
+        onOpenTab={this.handleOpenTabClick}
+        onPinChange={this.handleChangePin}
+        onRemoveHiddenTab={this.props.onRemoveHiddenTab}
+        isPinned={this.props.tab.pinned}
+        groups={this.props.groups}
+        group={this.props.group}
+        tab={this.props.tab}
+        handleOnMoveTabMenuClick={this.handleOnMoveTabMenuClick}
+        handleOnMoveTabNewMenuClick={this.handleOnMoveTabNewMenuClick}
+        controlsEnable={this.props.controlsEnable}
+      />
     );
 
     return (
@@ -155,8 +161,8 @@ class Tab extends React.Component{
         tabIndex="0"
         onFocus={(e)=>{
           e.stopPropagation();
-          if ( (typeof Navigation !== 'undefined')
-          && Navigation.KEY_PRESSED_RECENTLY ) {
+          if ((typeof Navigation !== 'undefined')
+          && Navigation.KEY_PRESSED_RECENTLY) {
             this.setState({
               hasFocus: true,
             })
@@ -171,7 +177,7 @@ class Tab extends React.Component{
         onKeyDown={this.props.hotkeysEnable
           ? Utils.doActivateHotkeys(
             tabNavigationListener(this),
-          this.props.hotkeysEnable)
+            this.props.hotkeysEnable)
           : undefined}
       >
         {checkbox}
@@ -221,16 +227,15 @@ class Tab extends React.Component{
   }
 
   onTabClick(newWindow) {
-    if ( this.props.allowClickSwitch ) {
+    if (this.props.allowClickSwitch) {
       let group = this.props.group;
-      let tab = this.props.tab;
       this.props.onTabClick(
         group.id,
         this.props.tabIndex,
         newWindow,
       );
       window.close();
-    } else if ( this.props.selected !== undefined ) {
+    } else if (this.props.selected !== undefined) {
       this.props.onTabClick(
         this.props.group.id,
         this.props.tabIndex,
@@ -239,7 +244,7 @@ class Tab extends React.Component{
     }
   }
 
-  handleOpenTabClick( event ) {
+  handleOpenTabClick(event) {
     if (event) {
       event.stopPropagation();
     }
@@ -258,7 +263,6 @@ class Tab extends React.Component{
       event.stopPropagation();
     }
 
-    let tab = this.props.tab;
     this.props.onChangePinState(
       this.props.group.id,
       this.props.tabIndex,
@@ -321,7 +325,7 @@ class Tab extends React.Component{
   handleTabDragOver(event) {
     event.preventDefault();
 
-    if (DRAG_TYPE === "tab") {
+    if (sharedVariable.dragType === "tab") {
       event.stopPropagation();
       let pos = event.pageY // Position of the cursor
           - Utils.getOffset(event.currentTarget);
@@ -357,9 +361,8 @@ class Tab extends React.Component{
     event.stopPropagation();
 
     let group = this.props.group;
-    let tab = this.props.tab;
 
-    DRAG_TYPE = "tab";
+    sharedVariable.dragType = "tab";
 
     event.dataTransfer.setData("type", "tab");
     event.dataTransfer.setData("tab/index", this.props.tabIndex);
@@ -395,7 +398,7 @@ class Tab extends React.Component{
     return false;
   }
   */
-};
+}
 
 Tab.propTypes = {
   onTabClick: PropTypes.func,
@@ -412,3 +415,5 @@ Tab.propTypes = {
   onChangePinState: PropTypes.func,
   allowClickSwitch: PropTypes.bool,
 }
+
+export default Tab

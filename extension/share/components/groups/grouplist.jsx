@@ -1,135 +1,146 @@
+import React from 'react'
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
+import Mark from 'mark.js'
+import Utils from '../../../background/utils/utils'
+import TASKMANAGER_CONSTANTS from '../../../background/utils/TASKMANAGER_CONSTANTS'
+import getGroupIndexSortedByPosition from '../../../background/core/getGroupIndexSortedByPosition'
+
+import ErrorBoundary from '../ErrorBoundary'
+import Group from './group'
+
 class GroupList extends React.Component {
-    constructor(props) {
-      super(props);
+  constructor(props) {
+    super(props);
+    let searchResults;
+    if (this.props.searchfilter && this.props.searchfilter.length) {
+      searchResults = this.applySearch(this.props.searchfilter);
+    } else {
+      searchResults = {
+        searchGroupsResults: undefined,
+        atLeastOneResult: true,
+      }
+    }
+    this.state = {
+      searchGroupsResults: searchResults.searchGroupsResults,
+      atLeastOneResult: searchResults.atLeastOneResult,
+    };
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+
+    // Update Search
+    if (this.props.searchfilter !== nextProps.searchfilter // Change search
+      || // Currently Searching, Update: In case of change in groups
+        (nextProps.searchfilter && nextProps.searchfilter.length)) {
       let searchResults;
-      if (this.props.searchfilter && this.props.searchfilter.length) {
-        searchResults = this.applySearch(this.props.searchfilter);
-      } else {
+      if (nextProps.searchfilter && nextProps.searchfilter.length) { // Search In progress
+        searchResults = this.applySearch(nextProps.searchfilter);
+      } else { // End Of Search
+        this.unMarkSearch();
         searchResults = {
           searchGroupsResults: undefined,
           atLeastOneResult: true,
         }
       }
-      this.state = {
+      this.setState({
         searchGroupsResults: searchResults.searchGroupsResults,
         atLeastOneResult: searchResults.atLeastOneResult,
-      };
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-      // Update Search
-      if ( this.props.searchfilter !== nextProps.searchfilter // Change search
-      || // Currently Searching, Update: In case of change in groups
-        (nextProps.searchfilter && nextProps.searchfilter.length)) {
-        let searchResults;
-        if (nextProps.searchfilter && nextProps.searchfilter.length) { // Search In progress
-          searchResults = this.applySearch(nextProps.searchfilter);
-        } else { // End Of Search
-          this.unMarkSearch();
-          searchResults = {
-            searchGroupsResults: undefined,
-            atLeastOneResult: true,
-          }
-        }
-        this.setState({
-          searchGroupsResults: searchResults.searchGroupsResults,
-          atLeastOneResult: searchResults.atLeastOneResult,
-        });
-      }
-    }
-
-    componentDidUpdate() {
-      // Mark Search
-      if ( // Currently Searching, Update: In case of change in groups
-        (this.props.searchfilter && this.props.searchfilter.length)) {
-          let [groupSearchValue, tabSearchValue] = Utils.extractSearchValue(this.props.searchfilter);
-          this.markSearch(groupSearchValue, tabSearchValue);
-      }
-    }
-
-    // Return true if an action (close/remove) is pending on groupId
-    isCurrently(action, groupId) {
-      if ( !this.props.delayedTasks ) {
-        return false;
-      }
-
-      if (this.props.delayedTasks[action] !== undefined) {
-        return this.props.delayedTasks[action].delayedTasks[groupId] !== undefined;
-      } else {
-        return false;
-      }
-    }
-
-    render() {
-      let groupListClasses = classNames({
-        "group-list": true,
       });
+    }
+  }
 
-      let groups;
-      if ( this.props.groups.length > 0 ) {
-        groups = [];
-        if (!this.state.atLeastOneResult) {
-          groups.push(
-            <div className="no-search-result"
-              key={this.props.id+"-search"}>
-              {'No search result for "'+ this.props.searchfilter + '".'}
-            </div>);
-        }
-        let sortedIndex = getGroupIndexSortedByPosition(this.props.groups);
-        for (let index of sortedIndex) {
-          groups.push(
-            <ErrorBoundary 
-              key={index} 
-              fallback={<div>Error on Group at index {index}</div>}
-            >
-              <Group
-                /*** Functions ***/
-                onGroupClick= {this.props.onGroupClick}
-                onGroupDrop= {this.props.onGroupDrop}
-                onMoveTabToNewGroup= {this.props.onMoveTabToNewGroup}
-                onGroupCloseClick= {this.props.onGroupCloseClick}
-                onGroupRemoveClick= {this.props.onGroupRemoveClick}
-                onGroupTitleChange= {this.props.onGroupTitleChange}
-                onTabClick= {this.props.onTabClick}
-                onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
-                onCloseTab= {this.props.onCloseTab}
-                onOpenTab= {this.props.onOpenTab}
-                onGroupChangePosition= {this.props.onGroupChangePosition}
-                onChangePinState= {this.props.onChangePinState}
-                onChangeExpand= {this.props.onChangeExpand}
-                onRemoveHiddenTabsInGroup={this.props.onRemoveHiddenTabsInGroup}
-                onRemoveHiddenTab={this.props.onRemoveHiddenTab}
-                /*** Data ***/
-                key= {index}
-                groups= {this.props.groups}
-                group= {this.props.groups[index]}
-                currentWindowId= {this.props.currentWindowId}
-                currentlyClosing= {this.isCurrently(TASKMANAGER_CONSTANTS.CLOSE_REFERENCE, this.props.groups[index].id)}
-                currentlyRemoving= {this.isCurrently(TASKMANAGER_CONSTANTS.REMOVE_REFERENCE, this.props.groups[index].id)}
-                selectionFilter={
-                  this.props.selectionFilter
-                    ? this.props.selectionFilter[this.props.groups[index].id]
-                    : undefined
-                }
-                /*** Options ***/
-                searchGroupResult= {this.state.searchGroupsResults?this.state.searchGroupsResults[index]:undefined}
-                currentlySearching= {this.state.searchGroupsResults?true:false}
-                showTabsNumber={this.props.showTabsNumber}
-                allowClickSwitch={this.props.allowClickSwitch}
-                stateless={this.props.stateless}
-                width={this.props.width}
-                hotkeysEnable={this.props.hotkeysEnable}
-                hoverStyle={this.props.hoverStyle}
-                controlsEnable={this.props.controlsEnable}
-                groupDraggable={this.props.groupDraggable}
-                draggable={this.props.draggable}
-                /*** actions ***/
-                forceExpand={this.props.forceExpand}
-                forceReduce={this.props.forceReduce}
-              />
-            </ErrorBoundary>);
-        }
+  componentDidUpdate() {
+    // Mark Search
+    if ( // Currently Searching, Update: In case of change in groups
+      (this.props.searchfilter && this.props.searchfilter.length)) {
+      let [groupSearchValue, tabSearchValue] = Utils.extractSearchValue(this.props.searchfilter);
+      this.markSearch(groupSearchValue, tabSearchValue);
+    }
+  }
+
+  // Return true if an action (close/remove) is pending on groupId
+  isCurrently(action, groupId) {
+    if (!this.props.delayedTasks) {
+      return false;
+    }
+
+    if (this.props.delayedTasks[action] !== undefined) {
+      return this.props.delayedTasks[action].delayedTasks[groupId] !== undefined;
+    } else {
+      return false;
+    }
+  }
+
+  render() {
+    let groupListClasses = classNames({
+      "group-list": true,
+    });
+
+    let groups;
+    if (this.props.groups.length > 0) {
+      groups = [];
+      if (!this.state.atLeastOneResult) {
+        groups.push(
+          <div className="no-search-result"
+            key={this.props.id+"-search"}>
+            {'No search result for "'+ this.props.searchfilter + '".'}
+          </div>);
+      }
+      let sortedIndex = getGroupIndexSortedByPosition(this.props.groups);
+      for (let index of sortedIndex) {
+        groups.push(
+          <ErrorBoundary
+            key={index}
+            fallback={<div>Error on Group at index {index}</div>}
+          >
+            <Group
+              /*** Functions ***/
+              onGroupClick= {this.props.onGroupClick}
+              onGroupDrop= {this.props.onGroupDrop}
+              onMoveTabToNewGroup= {this.props.onMoveTabToNewGroup}
+              onGroupCloseClick= {this.props.onGroupCloseClick}
+              onGroupRemoveClick= {this.props.onGroupRemoveClick}
+              onGroupTitleChange= {this.props.onGroupTitleChange}
+              onTabClick= {this.props.onTabClick}
+              onOpenInNewWindowClick= {this.props.onOpenInNewWindowClick}
+              onCloseTab= {this.props.onCloseTab}
+              onOpenTab= {this.props.onOpenTab}
+              onGroupChangePosition= {this.props.onGroupChangePosition}
+              onChangePinState= {this.props.onChangePinState}
+              onChangeExpand= {this.props.onChangeExpand}
+              onRemoveHiddenTabsInGroup={this.props.onRemoveHiddenTabsInGroup}
+              onRemoveHiddenTab={this.props.onRemoveHiddenTab}
+              /*** Data ***/
+              key= {index}
+              groups= {this.props.groups}
+              group= {this.props.groups[index]}
+              currentWindowId= {this.props.currentWindowId}
+              currentlyClosing= {this.isCurrently(TASKMANAGER_CONSTANTS.CLOSE_REFERENCE, this.props.groups[index].id)}
+              currentlyRemoving= {this.isCurrently(TASKMANAGER_CONSTANTS.REMOVE_REFERENCE, this.props.groups[index].id)}
+              selectionFilter={
+                this.props.selectionFilter
+                  ? this.props.selectionFilter[this.props.groups[index].id]
+                  : undefined
+              }
+              /*** Options ***/
+              searchGroupResult= {this.state.searchGroupsResults?this.state.searchGroupsResults[index]:undefined}
+              currentlySearching= {this.state.searchGroupsResults?true:false}
+              showTabsNumber={this.props.showTabsNumber}
+              allowClickSwitch={this.props.allowClickSwitch}
+              stateless={this.props.stateless}
+              width={this.props.width}
+              hotkeysEnable={this.props.hotkeysEnable}
+              hoverStyle={this.props.hoverStyle}
+              controlsEnable={this.props.controlsEnable}
+              groupDraggable={this.props.groupDraggable}
+              draggable={this.props.draggable}
+              /*** actions ***/
+              forceExpand={this.props.forceExpand}
+              forceReduce={this.props.forceReduce}
+            />
+          </ErrorBoundary>);
+      }
     } else {
       groups = (
         <div className="empty-list">
@@ -152,7 +163,7 @@ class GroupList extends React.Component {
     let atLeastOneResult = false;
 
     let [groupSearchValue,
-        tabSearchValue] = Utils.extractSearchValue(searchValue);
+      tabSearchValue] = Utils.extractSearchValue(searchValue);
 
     // Apply search
     for (let i = 0; i < this.props.groups.length; i++) {
@@ -162,7 +173,7 @@ class GroupList extends React.Component {
       };
       // Search in group title
       if (groupSearchValue.length) {
-        if ( !Utils.search(this.props.groups[i].title, groupSearchValue) ) {
+        if (!Utils.search(this.props.groups[i].title, groupSearchValue)) {
           searchGroupsResults[i].atLeastOneResult = false;
           //atLeastOneResult = true;
           continue;
@@ -172,14 +183,14 @@ class GroupList extends React.Component {
         }
       }
 
-      if ( tabSearchValue.length ) {
+      if (tabSearchValue.length) {
         for (let j = 0; j < this.props.groups[i].tabs.length; j++) {
           // Search in tab title
           const currentTab = this.props.groups[i].tabs[j];
           const tabUrl = new URL(Utils.extractTabUrl(currentTab.url))
           const tabHost = tabUrl.hostname.slice(0, tabUrl.hostname.lastIndexOf('.'))
           const tabSearchPart = currentTab.title + " " + tabHost;
-          if ( !Utils.search(tabSearchPart, tabSearchValue)) {
+          if (!Utils.search(tabSearchPart, tabSearchValue)) {
             searchGroupsResults[i].searchTabsResults[j] = false;
           } else {
             searchGroupsResults[i].atLeastOneResult = true;
@@ -222,22 +233,22 @@ class GroupList extends React.Component {
       "element": "span",
       "className": "highlight",
       done() {
-        if ( groupSearchValue.length ) {
+        if (groupSearchValue.length) {
           (new Mark(group)).mark(groupSearchValue.split(' '), {
             "element": "span",
             "className": "highlight",
           });
         }
-        if ( tabSearchValue.length ) {
+        if (tabSearchValue.length) {
           (new Mark(tab)).mark(tabSearchValue.split(' '), {
             "element": "span",
             "className": "highlight",
           });
         }
-      }
+      },
     });
   }
-};
+}
 
 GroupList.propTypes = {
   groups: PropTypes.object.isRequired,
@@ -262,3 +273,5 @@ GroupList.propTypes = {
   stateless: PropTypes.bool,
   searchfilter: PropTypes.string,
 }
+
+export default GroupList

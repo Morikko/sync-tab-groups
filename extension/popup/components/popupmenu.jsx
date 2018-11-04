@@ -1,9 +1,19 @@
-/*
-Copyright (c) 2017 Eric Masseran
+import React from 'react'
+import * as ReactRedux from 'react-redux'
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
 
-From: https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
+import SearchBar from '../../share/components/groups/searchbar'
+import GroupList from '../../share/components/groups/grouplist'
+import GroupAddButton  from '../../share/components/groups/groupaddbutton'
+import MainBar from './mainbar'
+import ActionCreators from '../../share/components/groups/wrapper/action_creators'
+import {
+  Navigation,
+  generalNavigationListener,
+  popupSpecialNavigationListener,
+} from '../../share/components/groups/wrapper/navigation'
+import OPTION_CONSTANTS from '../../background/core/OPTION_CONSTANTS'
 
 class PopupMenuStandAlone extends React.Component {
   constructor(props) {
@@ -18,8 +28,8 @@ class PopupMenuStandAlone extends React.Component {
   }
 
   // When a component got new props, use this to update
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.options.popup.maximized !== this.state.maximized ) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.options.popup.maximized !== this.state.maximized) {
       this.setState({
         maximized: nextProps.options.popup.maximized,
       });
@@ -101,25 +111,25 @@ class PopupMenuStandAlone extends React.Component {
             onDrop= {this.props.onGroupAddDrop}
             currentlySearching= {this.state.searchfilter.length > 0}
             hotkeysEnable={this.props.options.shortcuts.navigation}
-            />
-          </li>
-          <MainBar
-            onChangeWindowSync= {this.props.onChangeWindowSync}
-            onClickPref= {this.props.onClickPref}
-            isSync= {isWindowSync}
-            isIncognito={isIncognito}
-            currentWindowId= {this.props.currentWindowId}
-            maximized= {this.state.maximized}
-            onClickMaximize= {this.onClickMaximize}
-            handleAllChangeExpand= {this.handleAllChangeExpand}
           />
-        </ul>
+        </li>
+        <MainBar
+          onChangeWindowSync= {this.props.onChangeWindowSync}
+          onClickPref= {this.props.onClickPref}
+          isSync= {isWindowSync}
+          isIncognito={isIncognito}
+          currentWindowId= {this.props.currentWindowId}
+          maximized= {this.state.maximized}
+          onClickMaximize= {this.onClickMaximize}
+          handleAllChangeExpand= {this.handleAllChangeExpand}
+        />
+      </ul>
     );
   }
 
   handleAllChangeExpand(value) {
     let groupIds = [];
-    this.props.groups.map((group) => {
+    this.props.groups.forEach((group) => {
       groupIds.push(group.id);
     });
 
@@ -145,22 +155,33 @@ class PopupMenuStandAlone extends React.Component {
 
     Navigation.setTarget(document.getElementById("popup-menu"));
 
-    if ( this.props.options.shortcuts.navigation ) {
+    if (this.props.options.shortcuts.navigation) {
       document.body.addEventListener("keydown", generalNavigationListener);
       document.body.addEventListener("keydown", popupSpecialNavigationListener);
     }
   }
 
   componentWillUnmount() {
-    if ( this.props.options.shortcuts.navigation ) {
+    if (this.props.options.shortcuts.navigation) {
       document.body.removeEventListener("keydown", generalNavigationListener);
       document.body.removeEventListener("keydown", popupSpecialNavigationListener);
     }
   }
 
-};
+}
 
-PopupMenuStandAlone.propTypes = {
+const PopupMenu = (() =>{
+  return ReactRedux.connect((state) => {
+    return {
+      groups: state.get("groups"),
+      currentWindowId: state.get("currentWindowId"),
+      delayedTasks: state.get("delayedTasks"),
+      options: state.get("options"),
+    };
+  }, ActionCreators)(PopupMenuStandAlone)
+})();
+
+GroupList.propTypes = {
   onGroupAddClick: PropTypes.func,
   onGroupAddDrop: PropTypes.func,
   onGroupClick: PropTypes.func,
@@ -178,14 +199,6 @@ PopupMenuStandAlone.propTypes = {
   onGroupChangePosition: PropTypes.func,
   onChangePinState: PropTypes.func,
   onChangeExpand: PropTypes.func,
-};
+}
 
-const PopupMenu = (() =>{
-  return ReactRedux.connect((state) => {
-    return {
-      groups: state.get("groups"),
-      currentWindowId: state.get("currentWindowId"),
-      delayedTasks: state.get("delayedTasks"),
-      options: state.get("options")
-    };
-  }, ActionCreators)(PopupMenuStandAlone)})();
+export default PopupMenu
