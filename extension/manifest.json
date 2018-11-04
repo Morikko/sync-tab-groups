@@ -29,7 +29,7 @@
   ],
 
   "background": {
-    "page": "/background/background.html"
+    "scripts": ["background.js"]
   },
 
   "default_locale": "en",
