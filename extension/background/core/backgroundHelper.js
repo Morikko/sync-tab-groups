@@ -12,6 +12,7 @@ import SELECTOR_TYPE from './SELECTOR_TYPE'
 const BackgroundHelper = {}
 
 BackgroundHelper.refreshOptionsUI = function() {
+  console.log(OptionManager.options)
   Utils.sendMessage("Option:Changed", {
     options: OptionManager.options,
   });

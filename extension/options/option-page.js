@@ -1,3 +1,11 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+import * as ReactRedux from 'react-redux'
+import optionsStore from './optionsStore'
+import Utils from '../background/utils/utils'
+import OptionsActionCreators from './optionsActionCreators'
+import Options from './components/options'
+
 const Actions = {
   askOptions: function() {
     Utils.sendMessage("Option:Ask", {});
@@ -80,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
     React.createElement(
       ReactRedux.Provider, {
-        store: store,
+        store: optionsStore,
       },
       React.createElement(Options, {
         onOptionChange: Actions.onOptionChange,
@@ -105,10 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
 let optionMessenger = function(message) {
   switch (message.task) {
   case "Option:Changed":
-    store.dispatch(ActionCreators.setOptions(message.params.options));
+    optionsStore.dispatch(OptionsActionCreators.setOptions(message.params.options));
     break;
   case "BackupList:Changed":
-    store.dispatch(ActionCreators.setBackupList(message.params.backupList));
+    optionsStore.dispatch(OptionsActionCreators.setBackupList(message.params.backupList));
     break;
   }
 }

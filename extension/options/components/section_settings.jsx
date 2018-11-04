@@ -1,3 +1,12 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
+import Utils from '../../background/utils/utils'
+import SubSection from './subsection'
+import OptionButton from '../../share/components/forms/optionbutton'
+import NiceCheckbox from '../../share/components/forms/nicecheckbox'
+import OPTION_CONSTANTS from '../../background/core/OPTION_CONSTANTS'
+
 class SettingsSection extends React.Component {
   constructor(props) {
     super(props);
@@ -8,14 +17,14 @@ class SettingsSection extends React.Component {
     this.clickOnIncluded = this.clickOnIncluded.bind(this);
     this.clickOnPrivate = this.clickOnPrivate.bind(this);
     this.clickOnPrivateInvisible = this.clickOnPrivateInvisible.bind(this);
-    this.handleRemoveUnknownHiddenTabsCheckboxChange =    
+    this.handleRemoveUnknownHiddenTabsCheckboxChange =
       this.handleRemoveUnknownHiddenTabsCheckboxChange.bind(this);
   }
   render() {
     return (
       <div
         className={"option-section " + (this.props.selected==="settings"?
-        "visible":"invisible")}>
+          "visible":"invisible")}>
         <h1 className="section-title">
           {browser.i18n.getMessage("options_settings")}
         </h1>
@@ -225,7 +234,7 @@ class SettingsSection extends React.Component {
 
   handleRemoveUnknownHiddenTabsCheckboxChange(id, val) {
     const msg = browser.i18n.getMessage("setting_confirm_unknown_hidden_tabs")
-    if( val && !confirm(msg)) {
+    if (val && !confirm(msg)) {
       this.props.onOptionChange(id, !val);
       return;
     }
@@ -277,34 +286,34 @@ class SettingsSection extends React.Component {
 
   getOthersSubsection() {
     return (
-        <SubSection
-          title={browser.i18n.getMessage("options_settings_others")}
-          tooltip={undefined}
-          content = {
-            <div>
-              <NiceCheckbox
-                checked= {this.props.options.groups.removeEmptyGroup}
-                label= {browser.i18n.getMessage("remove_empty_groups")}
-                onCheckChange= {this.props.onOptionChange}
-                id= "groups-removeEmptyGroup"
+      <SubSection
+        title={browser.i18n.getMessage("options_settings_others")}
+        tooltip={undefined}
+        content = {
+          <div>
+            <NiceCheckbox
+              checked= {this.props.options.groups.removeEmptyGroup}
+              label= {browser.i18n.getMessage("remove_empty_groups")}
+              onCheckChange= {this.props.onOptionChange}
+              id= "groups-removeEmptyGroup"
+            />
+            <NiceCheckbox
+              checked={this.props.options.log.enable}
+              label={browser.i18n.getMessage("setting_enable_error_log")}
+              onCheckChange= {this.props.onOptionChange}
+              id="log-enable"
+            />
+            <div className="double-buttons">
+              <OptionButton
+                title= {browser.i18n.getMessage("setting_download_error_log")}
+                onClick= {(event) => this.props.downloadErrorLog()}
+                highlight={true}
+                disabled={!this.props.options.log.enable}
               />
-              <NiceCheckbox
-                checked={this.props.options.log.enable}
-                label={browser.i18n.getMessage("setting_enable_error_log")}
-                onCheckChange= {this.props.onOptionChange}
-                id="log-enable"
-              />
-              <div className="double-buttons">
-                <OptionButton
-                  title= {browser.i18n.getMessage("setting_download_error_log")}
-                  onClick= {(event) => this.props.downloadErrorLog()}
-                  highlight={true}
-                  disabled={!this.props.options.log.enable}
-                />
-              </div>
             </div>
-          }
-        />
+          </div>
+        }
+      />
     );
   }
 
@@ -314,15 +323,15 @@ class SettingsSection extends React.Component {
 
     const tabs = await browser.tabs.query({});
     let hadDiscarded = false;
-    tabs.forEach(async (tab)=>{
-        if( tab.url.includes(Utils.LAZY_PAGE_URL)) {
-          hadDiscarded = true;
-        }
-      });
+    tabs.forEach(async(tab)=>{
+      if (tab.url.includes(Utils.LAZY_PAGE_URL)) {
+        hadDiscarded = true;
+      }
+    });
 
-    if( hadDiscarded ) {
+    if (hadDiscarded) {
       if (confirm(browser.i18n.getMessage("options_behaviors_tabsopening_confirm_reload"))) {
-          this.props.onUndiscardLazyTabs();
+        this.props.onUndiscardLazyTabs();
       }
     } else {
       browser.notifications.create("RELOAD_TABS", {
@@ -338,9 +347,9 @@ class SettingsSection extends React.Component {
   async handleClickOnCloseAllHiddenTabs() {
     const hiddenTabs = await browser.tabs.query({hidden: true});
 
-    if( hiddenTabs.length > 0 ) {
+    if (hiddenTabs.length > 0) {
       if (confirm(browser.i18n.getMessage("setting_confirm_close_all_hidden_tabs"))) {
-          this.props.onCloseAllHiddenTabs();
+        this.props.onCloseAllHiddenTabs();
       }
     } else {
       browser.notifications.create("CLOSE_HIDDEN_TABS", {
@@ -365,10 +374,10 @@ class SettingsSection extends React.Component {
   }
 
   clickOnIncluded() {
-    if ( this.props.options.groups.closingState === OPTION_CONSTANTS.CLOSE_HIDDEN){
+    if (this.props.options.groups.closingState === OPTION_CONSTANTS.CLOSE_HIDDEN) {
       if (confirm(
         browser.i18n.getMessage("switch_pinned_included_disable_hidden"))
-      ){
+      ) {
         this.props.onOptionChange("pinnedTab-sync", true);
       }
     } else {
@@ -392,16 +401,16 @@ class SettingsSection extends React.Component {
     this.props.onOptionChange("groups-discardedOpen", true);
   }
 
-  clickOnClosingClose(){
+  clickOnClosingClose() {
     this.props.onOptionChange("groups-closingState", OPTION_CONSTANTS.CLOSE_NORMAL);
   }
 
-  clickOnClosingAlive(){
+  clickOnClosingAlive() {
     this.props.onOptionChange("groups-closingState", OPTION_CONSTANTS.CLOSE_ALIVE);
   }
 
-  clickOnClosingHidden(){
-    if ( this.props.options.pinnedTab.sync ) {
+  clickOnClosingHidden() {
+    if (this.props.options.pinnedTab.sync) {
       if (confirm(browser.i18n.getMessage("switch_hidden_disable_sync_pinned"))) {
         this.props.onOptionChange("groups-closingState", OPTION_CONSTANTS.CLOSE_HIDDEN);
       }
@@ -409,10 +418,12 @@ class SettingsSection extends React.Component {
       this.props.onOptionChange("groups-closingState", OPTION_CONSTANTS.CLOSE_HIDDEN);
     }
   }
-};
+}
 
 SettingsSection.propTypes = {
   options: PropTypes.object.isRequired,
   onOptionChange: PropTypes.func,
   selected: PropTypes.string,
 };
+
+export default SettingsSection

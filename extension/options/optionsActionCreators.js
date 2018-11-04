@@ -1,4 +1,4 @@
-const ActionCreators = {
+const OptionsActionCreators = {
   setOptions: function(options) {
     return {
       type: "OPTIONS::RECEIVE",
@@ -13,3 +13,5 @@ const ActionCreators = {
     };
   },
 };
+
+export default OptionsActionCreators

@@ -1,3 +1,7 @@
+import Immutable from 'immutable'
+import * as Redux from 'redux'
+import OPTION_CONSTANTS from '../background/core/OPTION_CONSTANTS'
+
 const INITIAL_STATE = Immutable.Map({
   options: OPTION_CONSTANTS.TEMPLATE(),
   backupList: {},
@@ -13,4 +17,6 @@ const Reducer = function(state = INITIAL_STATE, action) {
   return state;
 };
 
-const store = Redux.createStore(Reducer);
+const optionsStore = Redux.createStore(Reducer);
+
+export default optionsStore

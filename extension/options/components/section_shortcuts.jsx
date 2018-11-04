@@ -1,3 +1,8 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
+import NiceCheckbox from '../../share/components/forms/nicecheckbox'
+
 class ShortcutsSection extends React.Component {
   constructor(props) {
     super(props);
@@ -7,14 +12,14 @@ class ShortcutsSection extends React.Component {
     this.state = {};
 
     this.state.panelVisibility = {};
-    for (let p in this.navigationCommands ) {
+    for (let p in this.navigationCommands) {
       this.state.panelVisibility[p] = false;
     }
     this.state.panelVisibility[this.GLOBAL_SHORTCUT_NAME] = false;
 
     browser.commands.getAll().then((commands)=>{
       this.globalCommands = {
-        [this.GLOBAL_SHORTCUT_NAME]: commands
+        [this.GLOBAL_SHORTCUT_NAME]: commands,
       }
       this.forceUpdate();
     });
@@ -25,7 +30,7 @@ class ShortcutsSection extends React.Component {
   render() {
     return (
       <div className={"option-section shortcuts " + (this.props.selected==="shortcuts"?
-      "visible":"invisible")}>
+        "visible":"invisible")}>
         <h1 className="section-title">
           {browser.i18n.getMessage("shortcuts")}
         </h1>
@@ -39,7 +44,7 @@ class ShortcutsSection extends React.Component {
           id= {"shortcuts-allowGlobal"}
         />
         {this.createShorcutDescription(
-        this.globalCommands, this.GLOBAL_SHORTCUT_NAME)}
+          this.globalCommands, this.GLOBAL_SHORTCUT_NAME)}
         <h2>
           {browser.i18n.getMessage("options_shortcuts_navigation")}
         </h2>
@@ -72,7 +77,7 @@ class ShortcutsSection extends React.Component {
     newPanelVisibility[section] = !newPanelVisibility[section];
 
     this.setState({
-      panelVisibility: newPanelVisibility
+      panelVisibility: newPanelVisibility,
     })
   }
 
@@ -92,23 +97,23 @@ class ShortcutsSection extends React.Component {
         {section}
       </h3>
     )
-    if ( this.state.panelVisibility[section] ) {
+    if (this.state.panelVisibility[section]) {
       shortcutDescription.push(
         <table key={section+"-table"} className="list_help">
-        <tbody>
-          {
-            commands[section].map((command)=>{
-              return (
-                    <tr key={command.name}>
-                      <td className="command_shortcuts">{command.shortcut}</td>
-                      <td className="command_description">{
-                        browser.i18n.getMessage("command_description_" + command.name)}
-                      </td>
-                  </tr> )
-            })
-          }
-        </tbody>
-      </table>);
+          <tbody>
+            {
+              commands[section].map((command)=>{
+                return (
+                  <tr key={command.name}>
+                    <td className="command_shortcuts">{command.shortcut}</td>
+                    <td className="command_description">{
+                      browser.i18n.getMessage("command_description_" + command.name)}
+                    </td>
+                  </tr>)
+              })
+            }
+          </tbody>
+        </table>);
     }
     return shortcutDescription;
   }
@@ -177,14 +182,16 @@ class ShortcutsSection extends React.Component {
     };
 
     this.globalCommands = {
-      [this.GLOBAL_SHORTCUT_NAME]: []
+      [this.GLOBAL_SHORTCUT_NAME]: [],
     }
   }
 
-};
+}
 
 ShortcutsSection.propTypes = {
   options: PropTypes.object.isRequired,
   onOptionChange: PropTypes.func,
   selected: PropTypes.string,
 };
+
+export default ShortcutsSection

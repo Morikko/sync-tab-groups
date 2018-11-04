@@ -1,8 +1,16 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
+import SubSection from './subsection'
+import OptionSelect from '../../share/components/forms/optionselect'
+import NiceCheckbox from '../../share/components/forms/nicecheckbox'
+import OPTION_CONSTANTS from '../../background/core/OPTION_CONSTANTS'
+
 class InterfaceSection extends React.Component {
   render() {
     return (
       <div className={"option-section " + (this.props.selected==="interface"?
-      "visible":"invisible")}>
+        "visible":"invisible")}>
         <h1 className="section-title">
           {browser.i18n.getMessage("options_interface")}
         </h1>
@@ -96,10 +104,12 @@ class InterfaceSection extends React.Component {
       </div>
     );
   }
-};
+}
 
 InterfaceSection.propTypes = {
   options: PropTypes.object.isRequired,
   onOptionChange: PropTypes.func,
   selected: PropTypes.string,
 }
+
+export default InterfaceSection

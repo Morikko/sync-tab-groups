@@ -1,8 +1,15 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import * as ReactRedux from 'react-redux'
+import OptionsActionCreators from '../optionsActionCreators'
+import OptionsMenu from './options_menu'
+import OptionsPanel from './options_panel'
+
 class OptionsStandalone extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      href: location.href.split('#')[1] || "about"
+      href: location.href.split('#')[1] || "about",
     };
 
     this.onNavClick = this.onNavClick.bind(this);
@@ -33,26 +40,26 @@ class OptionsStandalone extends React.Component {
     ];
     return (
       <div>
-          <OptionsMenu tabs={tabs} selected={this.state.href}
-                        onClick={this.onNavClick}
-                        onOpenGuide={this.props.onOpenGuide}/>
-          <OptionsPanel {...this.props} selected={this.state.href} />
+        <OptionsMenu tabs={tabs} selected={this.state.href}
+          onClick={this.onNavClick}
+          onOpenGuide={this.props.onOpenGuide}/>
+        <OptionsPanel {...this.props} selected={this.state.href} />
       </div>);
   }
 
   onNavClick(event) {
     event.stopPropagation();
     this.setState({
-      href: event.target.href.split("#")[1]
+      href: event.target.href.split("#")[1],
     });
   }
 
   readHash() {
     this.setState({
-      href: location.href.split('#')[1] || "about"
+      href: location.href.split('#')[1] || "about",
     });
   }
-};
+}
 
 OptionsStandalone.propTypes = {
   onOptionChange: PropTypes.func,
@@ -64,10 +71,12 @@ OptionsStandalone.propTypes = {
   onOpenGuide: PropTypes.func,
 };
 
-Options = (() => {
+const Options = (() => {
   return ReactRedux.connect((state) => {
     return {
-      options: state.get("options")
+      options: state.get("options"),
     };
-  }, ActionCreators)(OptionsStandalone);
+  }, OptionsActionCreators)(OptionsStandalone);
 })();
+
+export default Options

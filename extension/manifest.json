@@ -33,9 +33,15 @@
   },
 
   "browser_action": {
-  "default_icon": "/share/icons/tabspace-32.png",
+    "default_icon": "/share/icons/tabspace-32.png",
     "default_title": "Sync Tab Groups",
     "default_popup": "popup/popup.html",
+    "browser_style": true
+  },
+
+  "options_ui": {
+    "page": "/optionpages/option-page.html",
+    "open_in_tab": true,
     "browser_style": true
   },
 

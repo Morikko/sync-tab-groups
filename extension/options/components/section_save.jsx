@@ -1,3 +1,17 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import * as ReactRedux from 'react-redux'
+
+import SubSection from './subsection'
+import OptionButton from '../../share/components/forms/optionbutton'
+import TextInput from '../../share/components/forms/textinput'
+import NiceCheckbox from '../../share/components/forms/nicecheckbox'
+import OPTION_CONSTANTS from '../../background/core/OPTION_CONSTANTS'
+import ButtonFile from '../../share/components/forms/buttonfile'
+import BACKUP_LOCATION from '../../background/storage/BACKUP_LOCATION'
+import OptionsActionCreators from '../optionsActionCreators'
+
+
 class SaveSectionStandalone extends React.Component {
   constructor(props) {
     super(props);
@@ -13,12 +27,12 @@ class SaveSectionStandalone extends React.Component {
 
   }
 
-  componentWillReceiveProps(nextProps) {
-    if ( this.props.backupList !== nextProps.backupList ) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.backupList !== nextProps.backupList) {
       this.setState({
         backupSelected: this.state.backupSelected.filter(
-                backup => nextProps.backupList.hasOwnProperty(backup)
-              )
+          backup => nextProps.backupList.hasOwnProperty(backup)
+        ),
       })
     }
   }
@@ -40,7 +54,7 @@ class SaveSectionStandalone extends React.Component {
 
   createCheckBoxesForTimers() {
     let checkboxes = [];
-    for(let time in OPTION_CONSTANTS.TIMERS()) {
+    for (let time in OPTION_CONSTANTS.TIMERS()) {
       checkboxes.push(
         <NiceCheckbox
           checked= {this.props.options.backup.download.time[time]}
@@ -74,17 +88,17 @@ class SaveSectionStandalone extends React.Component {
 
   handleClickOnRemoveAllGroups() {
     if (confirm(browser.i18n.getMessage("options_remove_groups_confirm"))) {
-        this.props.onDeleteAllGroups();
+      this.props.onDeleteAllGroups();
     }
   }
 
   handleClickOnReloadGroups() {
     if (confirm("Are you sure you want to reload your groups from the disk?")) {
-        this.props.onReloadGroups();
+      this.props.onReloadGroups();
     }
   }
 
-  getImportExportSection(){
+  getImportExportSection() {
     return (
       <SubSection
         title={browser.i18n.getMessage("import_export_title")}
@@ -112,19 +126,19 @@ class SaveSectionStandalone extends React.Component {
     );
   }
 
-  getBackUpLocalSection(){
+  getBackUpLocalSection() {
     let backups = [];
 
-    let sortedBackupList = Object.entries( this.props.backupList )
-                              // Desc: recent first
-                              .sort((a,b) => b[1].date - a[1].date)
+    let sortedBackupList = Object.entries(this.props.backupList)
+    // Desc: recent first
+      .sort((a,b) => b[1].date - a[1].date)
 
     for (let backup of sortedBackupList) {
       backups.push(
         <option value={backup[0]}
-                key={backup[0]}>
+          key={backup[0]}>
           {(new Date(backup[1].date))
-                  .toString()}
+            .toString()}
         </option>
       );
     }
@@ -200,19 +214,19 @@ class SaveSectionStandalone extends React.Component {
   }
 
   handleRemoveBackup() {
-    if (this.state.backupSelected.length ){
+    if (this.state.backupSelected.length) {
       this.props.onRemoveBackUp(this.state.backupSelected);
     }
   }
 
   handleImportBackup() {
-    if (this.state.backupSelected.length===1 ){
+    if (this.state.backupSelected.length===1) {
       this.props.onImportBackUp(this.state.backupSelected[0]);
     }
   }
 
   handleExportBackup() {
-    if (this.state.backupSelected.length===1 ){
+    if (this.state.backupSelected.length===1) {
       this.props.onExportBackUp(this.state.backupSelected[0]);
     }
   }
@@ -221,7 +235,7 @@ class SaveSectionStandalone extends React.Component {
     event.stopPropagation();
 
     let selected = [], sel=event.target;
-    for (var i = 0; i < sel.options.length; i++) {
+    for (let i = 0; i < sel.options.length; i++) {
       if (sel.options[i].selected) {
         selected.push(sel.options[i].value);
       }
@@ -231,7 +245,7 @@ class SaveSectionStandalone extends React.Component {
     });
   }
 
-  getBackUpDownloadSection(){
+  getBackUpDownloadSection() {
     return (
       <SubSection
         title={browser.i18n.getMessage("options_groups_backup_download")}
@@ -284,7 +298,7 @@ class SaveSectionStandalone extends React.Component {
     );
   }
 
-  getCleaningSection(){
+  getCleaningSection() {
     return (
       <SubSection
         title={browser.i18n.getMessage("options_groups_cleaning")}
@@ -317,14 +331,14 @@ class SaveSectionStandalone extends React.Component {
       />
     );
   }
-};
+}
 
-SaveSection = (() => {
+const SaveSection = (() => {
   return ReactRedux.connect((state) => {
     return {
-      backupList: state.get("backupList")
+      backupList: state.get("backupList"),
     };
-  }, ActionCreators)(SaveSectionStandalone);
+  }, OptionsActionCreators)(SaveSectionStandalone);
 })();
 
 SaveSection.propTypes = {
@@ -336,3 +350,5 @@ SaveSection.propTypes = {
   onReloadGroups: PropTypes.func,
   selected: PropTypes.string,
 };
+
+export default SaveSection

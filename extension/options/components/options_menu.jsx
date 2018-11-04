@@ -1,4 +1,8 @@
-class OptionsMenu extends React.Component{
+import React from 'react'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+
+class OptionsMenu extends React.Component {
 
   render() {
     return (<div id="menu">
@@ -23,8 +27,8 @@ class OptionsMenu extends React.Component{
                   "tab": true,
                   "selected": (tab.href === this.props.selected),
                 })}>
-              {tab.title}
-            </a>);
+                {tab.title}
+              </a>);
           })
         }
       </nav>
@@ -36,16 +40,16 @@ class OptionsMenu extends React.Component{
     event.stopPropagation();
 
     let href = event.target.href;
-    if ( href[href.length-1] === "#" ) { // Open Guide
+    if (href[href.length-1] === "#") { // Open Guide
       this.props.onOpenGuide();
     }
 
     let box = document.getElementById('show-menu');
-    if ( box && box.checked) {
+    if (box && box.checked) {
       box.click();
     }
   }
-};
+}
 
 OptionsMenu.propTypes = {
   tabs: PropTypes.object,
@@ -53,3 +57,5 @@ OptionsMenu.propTypes = {
   onClick: PropTypes.func,
   onOpenGuide: PropTypes.func,
 };
+
+export default OptionsMenu

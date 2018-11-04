@@ -1,5 +1,11 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+
+import Utils from '../../background/utils/utils'
+
 class SubSection extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -50,17 +56,17 @@ class SubSection extends React.Component {
   setPosition(event) {
     let height = event.currentTarget.offsetHeight;
 
-    if ( height > (window.innerHeight/2) ) {
+    if (height > (window.innerHeight/2)) {
       let pos = event.pageY
           - Utils.getOffset(event.currentTarget);
-      if ( pos > (height/2) ) {
+      if (pos > (height/2)) {
         this.setState({isOnTop: false})
       } else {
         this.setState({isOnTop: true})
       }
     } else {
       let pos = event.pageY;
-      if ( pos > (window.innerHeight/2) ) {
+      if (pos > (window.innerHeight/2)) {
         this.setState({isOnTop: false})
       } else {
         this.setState({isOnTop: true})
@@ -80,11 +86,11 @@ class SubSection extends React.Component {
   }
 
   getTooltip() {
-    if ( this.props.tooltip === undefined )
+    if (this.props.tooltip === undefined)
       return null;
 
     let style = {
-      maxHeight: (window.innerHeight-200)+"px"
+      maxHeight: (window.innerHeight-200)+"px",
     };
 
     let tooltipClass = classNames({
@@ -112,7 +118,7 @@ class SubSection extends React.Component {
   }
 
   getTitle() {
-    if ( this.props.title === undefined )
+    if (this.props.title === undefined)
       return null;
     return (
       <h2>
@@ -122,7 +128,7 @@ class SubSection extends React.Component {
   }
 
   getTitleTooltip() {
-    if ( this.props.title === undefined )
+    if (this.props.title === undefined)
       return null;
     return (
       <h2>
@@ -142,3 +148,5 @@ SubSection.propTypes = {
   tooltip: PropTypes.object,
   title: PropTypes.string.isRequired,
 };
+
+export default SubSection

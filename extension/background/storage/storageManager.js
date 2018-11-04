@@ -7,7 +7,7 @@ const ExtensionStorageManager = {
   Bookmark: BookmarkStorage,
   Local: LocalStorage,
   File: FileStorage,
-  Storage: BackupStorage,
+  Backup: BackupStorage,
 }
 
 export default ExtensionStorageManager
