@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode development --progress --hide-modules",
-    "watch": "npm run build -- --watch"
+    "build": "rm -rf build && webpack --mode development --progress --hide-modules",
+    "build:prod": "rm -rf release/build && webpack --mode production --progress --hide-modules",
+    "watch": "npm run build -- --watch",
+    "clean": "rm -rf build release"
   },
   "dependencies": {},
   "devDependencies": {
@@ -32,11 +34,12 @@
     "react-dom": "^16.6.0",
     "react-redux": "^5.1.0",
     "redux": "^3.7.2",
-    "uglifyjs-webpack-plugin": "^2.0.1",
+    "terser-webpack-plugin": "^1.1.0",
     "webextension-polyfill": "^0.3.1",
     "webpack": "^4.24.0",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
+    "webpack-merge": "^4.1.4",
     "webpack-shell-plugin": "^0.5.0"
   },
   "repository": {

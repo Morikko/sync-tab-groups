@@ -1,14 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
+const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackShellPlugin = require('webpack-shell-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-function setPath(folderName) {
-  return path.join(__dirname, folderName);
-}
+const devConfig = require('./webpack.dev.config');
+const prodConfig = require('./webpack.prod.config');
 
 function copy(path) {
   return {
@@ -22,42 +22,40 @@ function multipleCopy(...paths) {
 }
 
 const config = {
-  context: setPath('extension'),
+  context: path.resolve(__dirname, './extension'),
   entry: {
     'background': './background/background.js',
     'popup/popup': './popup/popup.js',
     'options/option-page': './options/option-page.js',
     './manage/manage-groups': './manage/manage-groups-controller.jsx',
+    './tabpages/lazytab/lazytab': './tabpages/lazytab/lazytab.js',
+    './tabpages/privileged-tab/privileged-tab': './tabpages/privileged-tab/privileged-tab.jsx',
+    './tabpages/selector-groups/selector-groups-controller': './tabpages/selector-groups/selector-groups-controller.jsx',
+    './tabpages/shortcut-help/shortcut-help': './tabpages/shortcut-help/shortcut-help.jsx',
   },
   output: {
-    path: setPath('build'),
     filename: '[name].js',
     sourceMapFilename: '[name].map.js',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  node: {
-    setImmediate: false,
-  },
   watchOptions: {
     ignored: /node_modules/,
   },
-  devtool: 'source-map',
   optimization: {
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         cache: true,
         parallel: true,
-        sourceMap: false,
-        uglifyOptions: {
+        sourceMap: true,
+        terserOptions: {
           ecma: 8,
           compress: {
             drop_console: true,
           },
         },
       }),
-      new OptimizeCSSAssetsPlugin({}),
     ],
   },
   module: {
@@ -67,34 +65,9 @@ const config = {
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
-      {
-        test: /\.(scss|css)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              minimize: {
-                safe: true,
-              },
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
     ],
   },
   plugins: [
-
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
-      filename: '[name].css',
-      // chunkFilename: "[id].css"
-    }),
-
     new CopyWebpackPlugin(
       multipleCopy('_locales', 'manifest.json', 'lib')
         .concat([
@@ -110,13 +83,16 @@ const config = {
   ],
 };
 
-// module.exports = config;
-module.exports = function(env, options) {
-  let isProduction = options.mode === 'production';
+module.exports = (env, argv) => {
+  let envConfig;
 
-  config.plugins.push(new webpack.DefinePlugin({
-    IS_PRODUCTION: isProduction,
-  }));
+  if (argv.mode === 'development') {
+    envConfig = devConfig;
+  }
 
-  return config;
+  if (argv.mode === 'production') {
+    envConfig = prodConfig;
+  }
+
+  return merge(config, envConfig);
 };
