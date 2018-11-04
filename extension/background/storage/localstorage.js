@@ -1,7 +1,8 @@
-import EventListener from '../event/event'
+import EventListener from '../utils/eventlistener'
 import GroupManager from '../core/groupmanager'
 import OptionManager from '../core/optionmanager'
 import LogManager from '../error/logmanager'
+import OPTION_CONSTANTS from '../core/OPTION_CONSTANTS'
 
 const LocalStorage = {};
 LocalStorage.BACKUP_TIMEOUT = null;
@@ -62,7 +63,7 @@ LocalStorage.saveOptions = function(options) {
  */
 LocalStorage.loadOptions = async function() {
   try {
-    return (await browser.storage.local.get({"options": OptionManager.TEMPLATE()})).options;
+    return (await browser.storage.local.get({"options": OPTION_CONSTANTS.TEMPLATE()})).options;
   } catch (e) {
     return "LocalStorage.loadOptions failed... " + e;
   }

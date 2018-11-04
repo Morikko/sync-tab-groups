@@ -75,11 +75,15 @@
 import Utils from '../utils/utils'
 import OptionManager from '../core/optionmanager'
 import LogManager from '../error/logmanager'
-import Background from '../background'
+import BackgroundHelper from '../core/backgroundHelper'
 import WindowManager from '../core/windowmanager'
 import TaskManager from '../utils/taskManager'
 import EventListener from '../utils/eventlistener'
 import TabManager from './tabmanager/tabManager'
+import ExtensionStorageManager from '../storage/storageManager'
+
+import OPTION_CONSTANTS from '../core/OPTION_CONSTANTS'
+import TAB_CONSTANTS from '../core/TAB_CONSTANTS'
 
 const GroupManager = {};
 
@@ -357,7 +361,7 @@ GroupManager.changeExpandState = function(groupIds, expandState, {groups = Group
 
 GroupManager.changeGroupPosition = function(groupId, position, {
   groups = GroupManager.groups,
-  allow=OptionManager.options.groups.sortingType=== OptionManager.SORT_CUSTOM,
+  allow=OptionManager.options.groups.sortingType=== OPTION_CONSTANTS.SORT_CUSTOM,
 }={}) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, {
@@ -402,21 +406,21 @@ GroupManager.setAllPositions = function({
   // Set a position to every groups and remove doublon
   GroupManager.coherentPositionInGroups(groups);
 
-  if (sortingType === OptionManager.SORT_CUSTOM) {
+  if (sortingType === OPTION_CONSTANTS.SORT_CUSTOM) {
     return;
   }
 
   let positions = [];
-  if (sortingType === OptionManager.SORT_OLD_RECENT) {
+  if (sortingType === OPTION_CONSTANTS.SORT_OLD_RECENT) {
     positions = [...Array(groups.length).keys()];
   }
-  if (sortingType === OptionManager.SORT_RECENT_OLD) {
+  if (sortingType === OPTION_CONSTANTS.SORT_RECENT_OLD) {
     positions = [...Array(groups.length).keys()].reverse();
   }
-  if (sortingType === OptionManager.SORT_ALPHABETICAL) {
+  if (sortingType === OPTION_CONSTANTS.SORT_ALPHABETICAL) {
     positions = GroupManager.sortGroupsAlphabetically(groups);
   }
-  if (sortingType === OptionManager.SORT_LAST_ACCESSED) {
+  if (sortingType === OPTION_CONSTANTS.SORT_LAST_ACCESSED) {
     positions = GroupManager.sortGroupsLastAccessed(groups);
   }
 
@@ -546,7 +550,7 @@ GroupManager.removeAllGroups = function(groups=GroupManager.groups) {
 }
 
 GroupManager.reloadGroupsFromDisk = async function() {
-  GroupManager.groups = await StorageManager.Local.loadGroups();
+  GroupManager.groups = await ExtensionStorageManager.Local.loadGroups();
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
@@ -736,7 +740,7 @@ GroupManager.addGroup = function({
 
   let tabs = [
     {
-      url: TabManager.NEW_TAB,
+      url: TAB_CONSTANTS.NEW_TAB,
       title: "New Tab",
       active: true,
     },
@@ -934,7 +938,7 @@ GroupManager.createUniqueGroupId = function(groups=GroupManager.groups) {
 GroupManager.init = async function() {
   try {
     // 1. Set the data
-    let groups = await StorageManager.Local.loadGroups();
+    let groups = await ExtensionStorageManager.Local.loadGroups();
     GroupManager.groups = GroupManager.check_integrity(groups);
     GroupManager.resetAssociatedWindows({fireEvent: false});
 
@@ -960,7 +964,7 @@ GroupManager.integrateAllOpenedWindows = async function() {
     try {
       await WindowManager.integrateWindow(
         windowInfo.id,
-        {even_new_one: Background.install?true:false} // When installed add all, else none
+        {even_new_one: BackgroundHelper.install?true:false} // When installed add all, else none
       );
     } catch (e) {
       LogManager.error(e);
@@ -977,10 +981,10 @@ GroupManager.store = function() {
     LogManager.information("Corrupted groups, saved not done.")
     return;
   }
-  StorageManager.Local.saveGroups(GroupManager.getCopy());
+  ExtensionStorageManager.Local.saveGroups(GroupManager.getCopy());
   /* TODO - end of bookmark auto-save
   if (OptionManager.options.bookmarks.sync) {
-    StorageManager.Bookmark.backUp(GroupManager.getCopy());
+    ExtensionStorageManager.Bookmark.backUp(GroupManager.getCopy());
   }
   */
 }

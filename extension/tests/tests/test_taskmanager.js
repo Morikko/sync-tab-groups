@@ -1,14 +1,14 @@
 /** Tests:
 * TODO deprecated: To write for jasmine
-* TaskManagerConstants.DelayedTask - TestManager.delayedtask
-* TaskManagerConstants.RepeatedTask - TestManager.repeatedtask
+* TASKMANAGER_CONSTANTS.DelayedTask - TestManager.delayedtask
+* TASKMANAGER_CONSTANTS.RepeatedTask - TestManager.repeatedtask
 */
 
 var TestManager = TestManager || {};
 
 TestManager.delayedtask = function() {
   this.title = "DelayedTask tester";
-  this.delay = new TaskManagerConstants.DelayedTask(100);
+  this.delay = new TASKMANAGER_CONSTANTS.DelayedTask(100);
   this.counter = 0;
   this.add_count = () =>{
     this.counter++;
@@ -29,7 +29,7 @@ TestManager.delayedtask = function() {
   this.test = async function( ) {
     try {
       // ASK action
-      this.delay.manage(TaskManagerConstants.ASK, this.add_count);
+      this.delay.manage(TASKMANAGER_CONSTANTS.ASK, this.add_count);
 
       await Utils.wait(50);
       if ( this.counter !== 0 ) {
@@ -42,8 +42,8 @@ TestManager.delayedtask = function() {
       }
 
       // CANCEL
-      this.delay.manage(TaskManagerConstants.ASK, this.add_count);
-      this.delay.manage(TaskManagerConstants.CANCEL, this.add_count);
+      this.delay.manage(TASKMANAGER_CONSTANTS.ASK, this.add_count);
+      this.delay.manage(TASKMANAGER_CONSTANTS.CANCEL, this.add_count);
 
       await Utils.wait(110);
       if ( this.counter !== 1 ) {
@@ -51,8 +51,8 @@ TestManager.delayedtask = function() {
       }
 
       // FORCE
-      this.delay.manage(TaskManagerConstants.ASK, this.add_count);
-      this.delay.manage(TaskManagerConstants.FORCE, this.add_count);
+      this.delay.manage(TASKMANAGER_CONSTANTS.ASK, this.add_count);
+      this.delay.manage(TASKMANAGER_CONSTANTS.FORCE, this.add_count);
       if ( this.counter !== 2 ) {
         return this.return_result(TestManager.ERROR, "Didn't force task");
       }
@@ -62,8 +62,8 @@ TestManager.delayedtask = function() {
       }
 
       // ASK -> replace previous
-      this.delay.manage(TaskManagerConstants.ASK, this.add_count);
-      this.delay.manage(TaskManagerConstants.ASK, this.add_count);
+      this.delay.manage(TASKMANAGER_CONSTANTS.ASK, this.add_count);
+      this.delay.manage(TASKMANAGER_CONSTANTS.ASK, this.add_count);
 
       await Utils.wait(110);
       if ( this.counter !== 3 ) {
@@ -79,7 +79,7 @@ TestManager.delayedtask = function() {
 
 TestManager.repeatedtask = function() {
   this.title = "RepeatedTask tester";
-  this.delay = new TaskManagerConstants.RepeatedTask(100);
+  this.delay = new TASKMANAGER_CONSTANTS.RepeatedTask(100);
   this.counter = 0;
   this.add_count = () =>{
     this.counter++;
@@ -103,7 +103,7 @@ TestManager.repeatedtask = function() {
 
   this.test = async function( ) {
     try {
-      this.delay = new TaskManagerConstants.RepeatedTask(100);
+      this.delay = new TASKMANAGER_CONSTANTS.RepeatedTask(100);
       // Done immediately and not done again
       this.delay.add(this.add_count);
       await Utils.wait(10);
@@ -149,7 +149,7 @@ TestManager.repeatedtask = function() {
       }
 
       // Force
-      this.delay = new TaskManagerConstants.RepeatedTask(100);
+      this.delay = new TASKMANAGER_CONSTANTS.RepeatedTask(100);
       this.delay.add(this.add_count);
       await Utils.wait(10);
       this.delay.add(this.add_count, force=true);

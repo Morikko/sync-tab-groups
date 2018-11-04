@@ -6,7 +6,7 @@
  *
  * Don't use refId if single task (default: 0)
  */
-import TaskManagerConstants from './taskManagerConstants'
+import TASKMANAGER_CONSTANTS from './TASKMANAGER_CONSTANTS'
 
 const DelayedTaskManager = function(timeoutDelay = 10000) {
   this.delayedTasks = {};
@@ -23,14 +23,14 @@ const DelayedTaskManager = function(timeoutDelay = 10000) {
  */
 DelayedTaskManager.prototype.manage = async function(taskAction, delayedFunction, refId = 0) {
   switch (taskAction) {
-  case TaskManagerConstants.ASK:
+  case TASKMANAGER_CONSTANTS.ASK:
     this.add(delayedFunction,
       refId);
     break;
-  case TaskManagerConstants.CANCEL:
+  case TASKMANAGER_CONSTANTS.CANCEL:
     this.remove(refId);
     break;
-  case TaskManagerConstants.FORCE:
+  case TASKMANAGER_CONSTANTS.FORCE:
     this.remove(refId);
     await delayedFunction();
     break;

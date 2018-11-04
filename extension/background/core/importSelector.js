@@ -1,22 +1,23 @@
 import Utils from '../utils/utils'
-import GroupManager from '../core/groupmanager'
+import GroupManager from './groupmanager'
+import SELECTOR_TYPE from './SELECTOR_TYPE'
 
-const Selector = {};
+const ImportSelector = {};
 
-Selector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
+ImportSelector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
 
 // Export or Import
-Selector.type = Selector.TYPE.IMPORT;
+ImportSelector.type = SELECTOR_TYPE.IMPORT;
 // The groups currently under selection (never directly the groups in place)
-Selector.groups = [];
+ImportSelector.groups = [];
 // What kind of groups (Example: my-groups.json, back-up-10-1993..)
-Selector.file = "No groups selected";
+ImportSelector.file = "No groups selected";
 
 
-Selector.onOpenGroupsSelector = async function({
-  title=Selector.file,
+ImportSelector.onOpenGroupsSelector = async function({
+  title=ImportSelector.file,
   groups=[],
-  type=Selector.TYPE.IMPORT,
+  type=SELECTOR_TYPE.IMPORT,
   force=false,
 }={}) {
   if (groups.length === 0 && !force) {
@@ -56,51 +57,51 @@ Selector.onOpenGroupsSelector = async function({
       - Math.min(window.screen.availWidth, 850))/2),
   };
 
-  Selector.groups = GroupManager.getGroupsWithoutPrivate(
+  ImportSelector.groups = GroupManager.getGroupsWithoutPrivate(
     groups.filter(group => group.tabs.length) // Only non empty groups
   );
-  GroupManager.prepareGroups(Selector.groups);
-  Selector.type = type;
+  GroupManager.prepareGroups(ImportSelector.groups);
+  ImportSelector.type = type;
 
-  if (Selector.WINDOW_ID === browser.windows.WINDOW_ID_NONE) {
+  if (ImportSelector.WINDOW_ID === browser.windows.WINDOW_ID_NONE) {
     windowInfo["url"] = url;
     // The window is not visible
     windowInfo["type"] = "popup";
-    Selector.WINDOW_ID = (await browser.windows.create(windowInfo)).id;
+    ImportSelector.WINDOW_ID = (await browser.windows.create(windowInfo)).id;
 
     // Linux Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1408446
     // Extension pages are not well displayed on opening
     // Resizing, right-click... does show the content
-    await browser.windows.update(Selector.WINDOW_ID, {
+    await browser.windows.update(ImportSelector.WINDOW_ID, {
       height: height-1,
     });
   } else {
     const tab = await browser.tabs.query({
-      windowId: Selector.WINDOW_ID,
+      windowId: ImportSelector.WINDOW_ID,
       index: 0,
     });
     await browser.tabs.update(tab[0].id, {
       url,
     });
     windowInfo["focused"] = true;
-    await browser.windows.update(Selector.WINDOW_ID, windowInfo);
+    await browser.windows.update(ImportSelector.WINDOW_ID, windowInfo);
   }
 }
 
-Selector.wasClosedGroupsSelector = function(windowId) {
-  if (windowId === Selector.WINDOW_ID && windowId !== browser.windows.WINDOW_ID_NONE) {
-    Selector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
+ImportSelector.wasClosedGroupsSelector = function(windowId) {
+  if (windowId === ImportSelector.WINDOW_ID && windowId !== browser.windows.WINDOW_ID_NONE) {
+    ImportSelector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
   }
 }
 
-Selector.closeGroupsSelector = async function() {
-  if (Selector.WINDOW_ID !== browser.windows.WINDOW_ID_NONE) {
+ImportSelector.closeGroupsSelector = async function() {
+  if (ImportSelector.WINDOW_ID !== browser.windows.WINDOW_ID_NONE) {
     try {
-      await browser.windows.remove(Selector.WINDOW_ID);
+      await browser.windows.remove(ImportSelector.WINDOW_ID);
     } catch (e) {return} finally {
-      Selector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
+      ImportSelector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
     }
   }
 }
 
-export default Selector
+export default ImportSelector

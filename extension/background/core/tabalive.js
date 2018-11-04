@@ -4,7 +4,7 @@ var TabAlive = TabAlive || {};
 TabAlive.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
 
 TabAlive.init = async function() {
-  if (OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE) {
+  if (OptionManager.options.groups.closingState === OPTION_CONSTANTS.CLOSE_ALIVE) {
     await TabAlive.start();
   } else {
     await TabAlive.stop();

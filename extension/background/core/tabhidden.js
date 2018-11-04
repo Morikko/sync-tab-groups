@@ -135,7 +135,7 @@ TabHidden.removeAllHiddenTabs = async function() {
 
 TabHidden.onStartInitialization = async function() {
   if (OptionManager.options.groups.closingState
-    !== OptionManager.CLOSE_HIDDEN) {
+    !== OPTION_CONSTANTS.CLOSE_HIDDEN) {
     return;
   }
 

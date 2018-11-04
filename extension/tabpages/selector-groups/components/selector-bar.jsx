@@ -3,7 +3,7 @@ class ManageBar extends React.Component {
     super(props);
     this.state = {};
 
-    if ( Utils.getParameterByName('type') === Selector.TYPE.IMPORT ) {
+    if ( Utils.getParameterByName('type') === SELECTOR_TYPE.IMPORT ) {
       this.state.type = 'import_groups';
     } else {
       this.state.type = 'export_groups';

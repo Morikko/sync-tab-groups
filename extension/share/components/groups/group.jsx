@@ -348,13 +348,13 @@ class Group extends React.Component {
       this.setState({
         removing: false
       });
-      this.props.onGroupRemoveClick(TaskManagerConstants.FORCE, this.props.group.id);
+      this.props.onGroupRemoveClick(TASKMANAGER_CONSTANTS.FORCE, this.props.group.id);
       // Delayed close
     } else {
       this.setState({
         removing: true
       });
-      this.props.onGroupRemoveClick(TaskManagerConstants.ASK, this.props.group.id);
+      this.props.onGroupRemoveClick(TASKMANAGER_CONSTANTS.ASK, this.props.group.id);
     }
 
   }
@@ -378,13 +378,13 @@ class Group extends React.Component {
       this.setState({
         closing: false
       });
-      this.props.onGroupCloseClick(TaskManagerConstants.FORCE, this.props.group.id);
+      this.props.onGroupCloseClick(TASKMANAGER_CONSTANTS.FORCE, this.props.group.id);
       // Delayed close
     } else {
       this.setState({
         closing: true
       });
-      this.props.onGroupCloseClick(TaskManagerConstants.ASK, this.props.group.id);
+      this.props.onGroupCloseClick(TASKMANAGER_CONSTANTS.ASK, this.props.group.id);
     }
 
   }
@@ -398,8 +398,8 @@ class Group extends React.Component {
       return;
     }
 
-    this.props.onGroupCloseClick(TaskManagerConstants.CANCEL, this.props.group.id);
-    this.props.onGroupRemoveClick(TaskManagerConstants.CANCEL, this.props.group.id);
+    this.props.onGroupCloseClick(TASKMANAGER_CONSTANTS.CANCEL, this.props.group.id);
+    this.props.onGroupRemoveClick(TASKMANAGER_CONSTANTS.CANCEL, this.props.group.id);
 
     this.setState({
       closing: false,

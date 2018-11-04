@@ -29,7 +29,7 @@ Examples.importedGroups = [{
     "favIconUrl": "chrome://branding/content/icon32.png"
   }, {
     "title": "Nouvel onglet",
-    "url": TabManager.NEW_TAB,
+    "url": TAB_CONSTANTS.NEW_TAB,
     "pinned": false,
     "active": false,
     "discarded": false,
@@ -126,7 +126,7 @@ Examples.syncTabGroups_2w_3g = {
       "favIconUrl": "chrome://branding/content/icon32.png"
     }, {
       "title": "Nouvel onglet",
-      "url": TabManager.NEW_TAB,
+      "url": TAB_CONSTANTS.NEW_TAB,
       "pinned": false,
       "active": false,
       "discarded": false,
@@ -256,7 +256,7 @@ Examples.tabGroups_2w_3g = {
       "image": "https://webmaker.org/favicon.ico"
     }, {
       "entries": [{
-        "url": TabManager.NEW_TAB,
+        "url": TAB_CONSTANTS.NEW_TAB,
         "title": "Nouvel onglet",
         "charset": "",
         "ID": 28,
@@ -467,7 +467,7 @@ Examples.tabGroups_2w_3g_session = {
       "iconLoadingPrincipal": "ZT4OTT7kRfqycpfCC8AeuAAAAAAAAAAAwAAAAAAAAEYB3pRy0IA0EdOTmQAQS6D9QJIHOlRteE8wkTq4cYEyCMYAAAAC/////wAAAbsBAAAAS2h0dHBzOi8vd2VibWFrZXIub3JnLz91dG1fc291cmNlPWRpcmVjdG9yeS10aWxlcyZ1dG1fbWVkaXVtPWZpcmVmb3gtYnJvd3NlcgAAAAAAAAAFAAAACAAAAAwAAAAI/////wAAAAj/////AAAACAAAAAwAAAAUAAAANwAAABQAAAABAAAAFAAAAAEAAAAVAAAAAAAAABX/////AAAAAP////8AAAAWAAAANQAAABT/////AQAAAAAAAAAAAAAAAA=="
     }, {
       "entries": [{
-        "url": TabManager.NEW_TAB,
+        "url": TAB_CONSTANTS.NEW_TAB,
         "title": "Nouvel onglet",
         "charset": "",
         "ID": 28,

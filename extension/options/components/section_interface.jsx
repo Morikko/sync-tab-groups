@@ -17,23 +17,23 @@ class InterfaceSection extends React.Component {
                 id="groups-sortingType"
                 choices= { [
                   {
-                    value: OptionManager.SORT_CUSTOM,
+                    value: OPTION_CONSTANTS.SORT_CUSTOM,
                     label: browser.i18n.getMessage("label_sort_custom"),
                   },
                   {
-                    value: OptionManager.SORT_ALPHABETICAL,
+                    value: OPTION_CONSTANTS.SORT_ALPHABETICAL,
                     label: browser.i18n.getMessage("label_sort_alphabetical"),
                   },
                   {
-                    value: OptionManager.SORT_LAST_ACCESSED,
+                    value: OPTION_CONSTANTS.SORT_LAST_ACCESSED,
                     label: browser.i18n.getMessage("label_sort_accessed"),
                   },
                   {
-                    value: OptionManager.SORT_OLD_RECENT,
+                    value: OPTION_CONSTANTS.SORT_OLD_RECENT,
                     label: browser.i18n.getMessage("label_sort_old"),
                   },
                   {
-                    value: OptionManager.SORT_RECENT_OLD,
+                    value: OPTION_CONSTANTS.SORT_RECENT_OLD,
                     label: browser.i18n.getMessage("label_sort_recent"),
                   },
                 ]} />

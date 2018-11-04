@@ -1,6 +1,6 @@
 const INITIAL_STATE = Immutable.Map({
   groups: [],
-  options: OptionManager.TEMPLATE(),
+  options: OPTION_CONSTANTS.TEMPLATE(),
 });
 
 const Reducer = function(state = INITIAL_STATE, action) {

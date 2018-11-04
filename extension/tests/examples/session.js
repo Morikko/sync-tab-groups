@@ -281,7 +281,7 @@ Session.getRandomTab = function(tabs) {
 
 Session.newTab = {
     "title": "New Tab",
-    "url": TabManager.NEW_TAB,
+    "url": TAB_CONSTANTS.NEW_TAB,
     "favIconUrl": "chrome://branding/content/icon32.png"
   };
 
@@ -423,7 +423,7 @@ Session.createTab = function(
   params
 ) {
   return Object.assign({
-    url: TabManager.NEW_TAB,
+    url: TAB_CONSTANTS.NEW_TAB,
     title: "No title",
     pinned: false,
     active: false,

@@ -221,8 +221,8 @@ describe("GroupManager", () => {
         groupsLength: 4,
         tabsLength: 4,
       });
-      let saveGroups = await StorageManager.Local.loadGroups();
-      await StorageManager.Local.saveGroups(groups);
+      let saveGroups = await ExtensionStorageManager.Local.loadGroups();
+      await ExtensionStorageManager.Local.saveGroups(groups);
 
       await GroupManager.reloadGroupsFromDisk();
       GroupManager.groups.forEach((group)=>{
@@ -232,7 +232,7 @@ describe("GroupManager", () => {
 
       expect(GroupManager.groups).toEqualGroups(groups);
       GroupManager.groups = saveGroups;
-      await StorageManager.Local.saveGroups(saveGroups);
+      await ExtensionStorageManager.Local.saveGroups(saveGroups);
     });
 
     it("is well changing GroupManager.groups", async ()=>{
@@ -243,14 +243,14 @@ describe("GroupManager", () => {
       });
       GroupManager.groups = [];
 
-      //spyOn(StorageManager.Local, "loadGroups").and.returnValue(saveGroups);
-      await StorageManager.Local.saveGroups(targetGroups);
+      //spyOn(ExtensionStorageManager.Local, "loadGroups").and.returnValue(saveGroups);
+      await ExtensionStorageManager.Local.saveGroups(targetGroups);
 
       await GroupManager.reloadGroupsFromDisk();
 
       expect(GroupManager.groups.length).toEqual(targetGroups.length);
       GroupManager.groups = saveGroups;
-      await StorageManager.Local.saveGroups(saveGroups);
+      await ExtensionStorageManager.Local.saveGroups(saveGroups);
     });
 
   });
@@ -395,7 +395,7 @@ describe("GroupManager", () => {
         }
       });
 
-      let index = GroupManager.getIndexSortByPosition(groups);
+      let index = getGroupIndexSortedByPosition(groups);
 
       expect(index).toEqual(groups.map(group=>group.index));
     });
@@ -409,7 +409,7 @@ describe("GroupManager", () => {
         }
       });
 
-      let index = GroupManager.getIndexSortByPosition(groups);
+      let index = getGroupIndexSortedByPosition(groups);
 
       expect(index).toEqual(groups.map(group=>group.index).reverse());
     });
@@ -431,7 +431,7 @@ describe("GroupManager", () => {
                                 .map(group=>group.index)
                               );
 
-      let index = GroupManager.getIndexSortByPosition(groups);
+      let index = getGroupIndexSortedByPosition(groups);
 
       expect(index).toEqual(expectIndex);
     });
@@ -473,7 +473,7 @@ describe("GroupManager", () => {
                             .map(group=>group.index);
       expectIndex.push(expectIndex.length);
 
-      let index = GroupManager.getIndexSortByPosition(groups);
+      let index = getGroupIndexSortedByPosition(groups);
 
       expect(index.length).toEqual(groups.length)
       expect(index).toEqual(expectIndex);

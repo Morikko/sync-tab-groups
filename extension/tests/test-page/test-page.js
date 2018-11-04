@@ -29,9 +29,9 @@ var waitInit = (async () => {
   WindowManager = bg.WindowManager;
   TabManager = bg.TabManager;
   OptionManager = bg.OptionManager;
-  StorageManager = bg.StorageManager;
+  ExtensionStorageManager = bg.ExtensionStorageManager;
   Selector = bg.Selector;
-  Background = bg.Background;
+  BackgroundHelper = bg.Background;
   TabHidden = bg.TabHidden;
   LogManager = bg.LogManager;
   Event = bg.Event;

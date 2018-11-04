@@ -1,4 +1,4 @@
-import Background from '../background'
+import BackgroundHelper from '../core/backgroundHelper'
 import OptionManager from '../core/optionmanager'
 import TabManager from '../core/tabmanager/tabManager'
 
@@ -7,33 +7,33 @@ const OptionsMessenger = {};
 OptionsMessenger.optionMessenger = function(message) {
   switch (message.task) {
   case "Option:Ask":
-    Background.refreshOptionsUI();
+    BackgroundHelper.refreshOptionsUI();
     break;
   case "BackupList:Ask":
-    Background.refreshBackupListUI();
+    BackgroundHelper.refreshBackupListUI();
     break;
   case "Option:Change":
     OptionManager.updateOption(message.params.optionName, message.params.optionValue);
-    Background.refreshOptionsUI();
+    BackgroundHelper.refreshOptionsUI();
     break;
   case "Option:BackUp":
-    Background.onBookmarkSave();
+    BackgroundHelper.onBookmarkSave();
     break;
   case "Option:Import":
-    Background.onImportGroups(message.params);
-    Background.refreshUi();
+    BackgroundHelper.onImportGroups(message.params);
+    BackgroundHelper.refreshUi();
     break;
   case "Option:Export":
-    Background.onExportGroups();
+    BackgroundHelper.onExportGroups();
     break;
   case "Option:DeleteAllGroups":
-    Background.onRemoveAllGroups();
+    BackgroundHelper.onRemoveAllGroups();
     break;
   case "Option:ReloadGroups":
-    Background.onReloadGroups();
+    BackgroundHelper.onReloadGroups();
     break;
   case "Option:OpenGuide":
-    Background.onOpenGuide();
+    BackgroundHelper.onOpenGuide();
     break;
   case "Option:UndiscardLazyTabs":
     TabManager.undiscardAll();
@@ -42,13 +42,13 @@ OptionsMessenger.optionMessenger = function(message) {
     TabHidden.removeAllHiddenTabs();
     break; */
   case "Option:RemoveBackUp":
-    Background.onRemoveBackUp(message.params.id);
+    BackgroundHelper.onRemoveBackUp(message.params.id);
     break;
   case "Option:ImportBackUp" :
-    Background.onImportBackUp(message.params.id);
+    BackgroundHelper.onImportBackUp(message.params.id);
     break;
   case "Option:ExportBackUp" :
-    Background.onExportBackUp(message.params.id);
+    BackgroundHelper.onExportBackUp(message.params.id);
     break;
   }
 }

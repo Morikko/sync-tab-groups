@@ -1,7 +1,9 @@
 import Utils from '../utils/utils'
-import Selector from '../core/selector'
-import Background from '../background'
+import ImportSelector from '../core/importSelector'
+import BackgroundHelper from '../core/backgroundHelper'
 import GroupManager from '../core/groupmanager'
+import SELECTOR_TYPE from '../core/SELECTOR_TYPE'
+import ExtensionStorageManager from '../storage/storageManager'
 
 const SelectorMessenger = {};
 
@@ -9,14 +11,14 @@ SelectorMessenger.selectorMessenger = function(message) {
   switch (message.task) {
   case "Ask:SelectorGroups":
     Utils.sendMessage("Selector:Groups", {
-      groups: Selector.groups,
+      groups: ImportSelector.groups,
     });
     break;
   case "Selector:Finish":
     SelectorMessenger.manageFinish(message.params);
     break;
   case "Ask:Options":
-    Background.refreshOptionsUI();
+    BackgroundHelper.refreshOptionsUI();
     break;
   }
 }
@@ -26,17 +28,17 @@ SelectorMessenger.manageFinish = async function({
   importType,
 }) {
   let done = false;
-  if (Selector.type === Selector.TYPE.EXPORT) {
-    done = await StorageManager.File.downloadGroups(
+  if (ImportSelector.type === SELECTOR_TYPE.EXPORT) {
+    done = await ExtensionStorageManager.File.downloadGroups(
       GroupManager.filterGroups(
-        Selector.groups,
+        ImportSelector.groups,
         filter,
       )
     );
   } else {
     let ids = GroupManager.addGroups(
       GroupManager.filterGroups(
-        Selector.groups,
+        ImportSelector.groups,
         filter,
       ), {
         showNotification: true,
@@ -46,7 +48,7 @@ SelectorMessenger.manageFinish = async function({
 
   // In case of success
   if (done) {
-    await Selector.closeGroupsSelector();
+    await ImportSelector.closeGroupsSelector();
   }
 }
 

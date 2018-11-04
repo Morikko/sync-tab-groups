@@ -39,7 +39,6 @@ Objects:
 
  - getGroupTitle
  - setBrowserActionIcon
- - GroupManager.getIndexSortByPosition
  - createGroupsJsonFile
  - windowExists
  - doActivateHotkeys
@@ -47,11 +46,10 @@ Objects:
 
  */
 import LogManager from '../error/logmanager'
+import TAB_CONSTANTS from '../core/TAB_CONSTANTS'
 
 //const browser.windows.WINDOW_ID_NONE = browser.windows.WINDOW_ID_NONE;
 const Utils = {};
-const TabManager = {};
-const Selector = {};
 
 /**
  * Show GroupId, Index, WindowId, Position in as group hover in menu
@@ -63,127 +61,12 @@ Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
 Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";
 Utils.SELECTOR_PAGE_URL = "tabpages/selector-groups/selector-groups.html";
 
-const StorageManager = {};
-StorageManager.Backup = StorageManager.Backup || {};
-StorageManager.Backup.LOCATION = "synctabgroups-backup/";
-
-const OptionManager = {};
-OptionManager.SORT_OLD_RECENT = 0;
-OptionManager.SORT_RECENT_OLD = 1;
-OptionManager.SORT_ALPHABETICAL = 2;
-OptionManager.SORT_LAST_ACCESSED = 3;
-OptionManager.SORT_CUSTOM = 4;
-OptionManager.CLOSE_NORMAL = 0;
-OptionManager.CLOSE_ALIVE = 1;
-OptionManager.CLOSE_HIDDEN = 2;
-OptionManager.TIMERS = function() {
-  return {
-    t_5mins: 5*60*1000,
-    t_1h: 60*60*1000,
-    t_4h: 4*60*60*1000,
-    t_1d: 24*60*60*1000,
-    t_1w: 7*24*60*60*1000,
-  }
-}
-
-OptionManager.TEMPLATE = function() {
-  return {
-    version: 0.1,
-    privateWindow: {
-      sync: false,
-      removeOnClose: true,
-    },
-    pinnedTab: {
-      sync: false,
-    },
-    bookmarks: {
-      sync: false,
-      folder: "Default",
-    },
-    groups: {
-      syncNewWindow: true,
-      removeEmptyGroup: false,
-      showGroupTitleInWindow: false,
-      sortingType: OptionManager.SORT_LAST_ACCESSED,
-      discardedOpen: true,
-      closingState: OptionManager.CLOSE_NORMAL,
-      discardedHide: false,
-      removeUnknownHiddenTabs: false,
-    },
-    popup: {
-      maximized: false,
-      whiteTheme: false,
-      showTabsNumber: true,
-      showSearchBar: true,
-    },
-    shortcuts: {
-      allowGlobal: false,
-      navigation: true,
-    },
-    backup: {
-      download: {
-        enable: false,
-        time: Utils.setObjectPropertiesWith(OptionManager.TIMERS(), true),
-      },
-      local: {
-        enable: true,
-        intervalTime: 1,
-        maxSave: 48,
-      },
-    },
-    log: {
-      enable: true,
-    },
-  };
-};
-
-Selector.TYPE = Object.freeze({
-  EXPORT: "Export",
-  IMPORT: "Import",
-});
-
 Utils.setObjectPropertiesWith = function(obj, val)  {
   let obj2 = Utils.getCopy(obj);
   for (let pro in obj2)
     obj2[pro] = val;
   return obj2;
 }
-
-OptionManager.isClosingAlived = function() {
-  //return OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE;
-  return false;
-}
-
-OptionManager.isClosingHidden = function() {
-  return OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN;
-}
-
-const GroupManager = {};
-
-/**
- * Return the index of the groups sorted by the display position
- * @param {Array<Group>} groups
- * @returns {Array<number>} sortedIndex
- */
-GroupManager.getIndexSortByPosition = function(groups) {
-  let sortedIndex = [];
-  for (let pos = 0; pos < groups.length; pos++) {
-    for (let i = 0; i < groups.length; i++) {
-      if (groups[i].position === pos) {
-        sortedIndex.push(groups[i].index);
-      }
-    }
-  }
-  // Add them in the order of the array at the end
-  if (sortedIndex.length < groups.length) { // Wrong position
-    for (let i = 0; i < groups.length; i++) {
-      if (sortedIndex.indexOf(i) === -1) {
-        sortedIndex.push(i);
-      }
-    }
-  }
-  return sortedIndex;
-};
 
 /**
  * Modify object to have all the fields of ref_object
@@ -365,7 +248,7 @@ Utils.extractTabUrl = function(url="") {
     new_url = Utils.getParameterByName('url', new_url)
   }
   // If new_url failed return a new tab
-  return new_url===""?TabManager.NEW_TAB:new_url;
+  return new_url===""?TAB_CONSTANTS.NEW_TAB:new_url;
 }
 
 Utils.extractLazyUrl = function(url="") {
@@ -384,7 +267,7 @@ Utils.getPrivilegedURL = function(title, url, favIconUrl) {
 }
 
 Utils.getDiscardedURL = function(title, url, favIconUrl) {
-  if (url === TabManager.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab")) {
+  if (url === TAB_CONSTANTS.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab")) {
     return url;
   } else {
     return browser.extension.getURL(Utils.LAZY_PAGE_URL) + "?" +
@@ -404,7 +287,7 @@ Utils.getDiscardedURL = function(title, url, favIconUrl) {
  * @returns {boolean}
  */
 Utils.isPrivilegedURL = function(url) {
-  if (url === TabManager.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab"))
+  if (url === TAB_CONSTANTS.NEW_TAB || url === "about:blank" || url.includes("chrome://newtab"))
     return false;
   if (url.startsWith("chrome:") ||
     url.startsWith("javascript:") ||
@@ -452,9 +335,7 @@ Utils.shuffleArray = function(a) {
  */
 Utils.openUrlOncePerWindow = async function(url, active=true) {
   try {
-    const currentWindowId = (await browser.windows.getLastFocused({
-      windowTypes: ['normal'],
-    })).id;
+    const currentWindowId = (await browser.windows.getLastFocused()).id;
 
     let urlWithoutHash = url,
       hasHash = urlWithoutHash.lastIndexOf("#") > -1;
@@ -628,7 +509,7 @@ Utils.range = function(N) {
   return [...Array(N).keys()]
 }
 
-Utils.createGroupsJsonFile = function(groups=GroupManager.groups,{
+Utils.createGroupsJsonFile = function(groups,{
   prettify=false,
 }={}) {
   return URL.createObjectURL(new Blob([
@@ -725,7 +606,5 @@ Utils.doActivateHotkeys = function(listener, bool) {
     return ()=>false;
   }
 }
-
-TabManager.NEW_TAB = (Utils.isChrome()?"chrome://newtab/":"about:newtab");
 
 export default Utils

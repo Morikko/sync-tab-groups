@@ -32,6 +32,7 @@ import LogManager from '../error/logmanager'
 import GroupManager from '../core/groupmanager'
 import TabManager from '../core/tabmanager/tabManager'
 import OptionManager from '../core/optionmanager'
+import getGroupIndexSortedByPosition from './getGroupIndexSortedByPosition'
 
 const WindowManager = {};
 
@@ -371,7 +372,7 @@ WindowManager.selectNextGroup = async function({
     }
 
     // Search next unopened group
-    let sortedIndex = GroupManager.getIndexSortByPosition(GroupManager.groups);
+    let sortedIndex = getGroupIndexSortedByPosition(GroupManager.groups);
     let roundIndex = sortedIndex.indexOf(sourceGroupIndex);
     for (let i = 0; i < sortedIndex.length - 1; i++) {
       roundIndex = (roundIndex + sortedIndex.length + direction) % sortedIndex.length;

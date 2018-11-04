@@ -5,6 +5,8 @@
  - waitTabsToBeClosed
  */
 import Utils from '../../utils/utils'
+import TAB_CONSTANTS from '../../core/TAB_CONSTANTS'
+
 const TabManager = {};
 
 // Return with all standard tab information
@@ -12,7 +14,7 @@ const TabManager = {};
 TabManager.getTabFactory = function(tab) {
   return Object.assign({
     title: "New Tab",
-    url: TabManager.NEW_TAB,
+    url: TAB_CONSTANTS.NEW_TAB,
     favIconUrl: "chrome://branding/content/icon32.png",
     hidden: false,
     lastAccessed: 0,

@@ -138,9 +138,7 @@ const GroupActions = {
 };
 
 function updateWindow() {
-  browser.windows.getLastFocused({
-    windowTypes: ['normal'],
-  }).then((w) => {
+  browser.windows.getLastFocused().then((w) => {
     store.dispatch(ActionCreators.setCurrentWindowId(w.id));
   });
 }
@@ -178,9 +176,7 @@ let tabspaceBackground = browser.runtime.getBackgroundPage();
  */
 function init() {
   GroupActions.askData();
-  browser.windows.getLastFocused({
-    windowTypes: ['normal'],
-  }).then((w) => {
+  browser.windows.getLastFocused().then((w) => {
     store.dispatch(ActionCreators.setCurrentWindowId(w.id));
   });
 }

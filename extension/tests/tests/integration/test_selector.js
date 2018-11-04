@@ -72,7 +72,7 @@ describe('Selector - ', () => {
 
   // TODO
   describe('.manageFinish', ()=>{
-    it(' should export groups with StorageManager.File.downloadGroups', )
+    it(' should export groups with ExtensionStorageManager.File.downloadGroups', )
 
     it(' should import groups with Group.addGroups')
   })

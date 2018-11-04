@@ -90,7 +90,7 @@ describe("Select a group ", ()=>{
 
     beforeAll(async function (){
       this.lastSorting = OptionManager.options.groups.sortingType;
-      OptionManager.updateOption("groups-sortingType", OptionManager.SORT_OLD_RECENT);
+      OptionManager.updateOption("groups-sortingType", OPTION_CONSTANTS.SORT_OLD_RECENT);
 
       [this.windowId, this.windowId_bis] = await TestManager.openTwoWindows();
     });

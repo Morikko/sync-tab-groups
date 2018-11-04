@@ -137,7 +137,7 @@ class TabControls extends React.Component{
   }
 
   createMoveTabToGroupPanel() {
-    const sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
+    const sortedIndex = getGroupIndexSortedByPosition(this.props.groups);
     const subMenusMoveTab = [];
 
     for (let i of sortedIndex) {

@@ -40,7 +40,7 @@ class SaveSectionStandalone extends React.Component {
 
   createCheckBoxesForTimers() {
     let checkboxes = [];
-    for(let time in OptionManager.TIMERS()) {
+    for(let time in OPTION_CONSTANTS.TIMERS()) {
       checkboxes.push(
         <NiceCheckbox
           checked= {this.props.options.backup.download.time[time]}
@@ -246,7 +246,7 @@ class SaveSectionStandalone extends React.Component {
             </ul>
             <li>{browser.i18n.getMessage("options_groups_backup_location")}</li>
             <ul>
-              <li>{browser.i18n.getMessage("options_groups_backup_location_subfolder", StorageManager.Backup.LOCATION)}</li>
+              <li>{browser.i18n.getMessage("options_groups_backup_location_subfolder", BACKUP_LOCATION)}</li>
               <li>{browser.i18n.getMessage("options_groups_backup_location_restiction")}</li>
             </ul>
             <li>{browser.i18n.getMessage("options_groups_backup_timer")}</li>

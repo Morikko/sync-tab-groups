@@ -24,13 +24,15 @@ import LogManager from '../error/logmanager'
 import GroupManager from '../core/groupmanager'
 import TaskManager from '../utils/taskManager'
 import EventListener from '../utils/eventlistener'
-import WindowManager from '../core/windowmanager'
+import WindowManager from './windowmanager'
+import OPTION_CONSTANTS from './OPTION_CONSTANTS'
+import ExtensionStorageManager from '../storage/storageManager'
 
 const OptionManager = {};
 
 OptionManager.EVENT_CHANGE = 'options-change';
 
-//OptionManager.options = OptionManager.TEMPLATE();
+//OptionManager.options = OPTION_CONSTANTS.TEMPLATE();
 OptionManager.eventlistener = new EventListener();
 OptionManager.checkerInterval = undefined;
 
@@ -89,10 +91,10 @@ OptionManager.updateOption = async function(optionName, optionValue) {
     await OptionManager.onLocalBackUpEnableChange(optionValue);
     break;
   case "backup-local-intervalTime":
-    await StorageManager.Local.planBackUp();
+    await ExtensionStorageManager.Local.planBackUp();
     break;
   case "backup-local-maxSave":
-    await StorageManager.Local.respectMaxBackUp();
+    await ExtensionStorageManager.Local.respectMaxBackUp();
     break;
   case "groups-closingState":
     await OptionManager.onClosingStateChange(optionValue);
@@ -121,9 +123,9 @@ OptionManager.getOptionValue = function(optionName) {
   * Init or stop the automatic back up process
   */
 OptionManager.onClosingStateChange = async function(value) {
-  if (value === OptionManager.CLOSE_NORMAL) {
+  if (value === OPTION_CONSTANTS.CLOSE_NORMAL) {
     //await TabHidden.closeAllHiddenTabsInGroups(GroupManager.groups);
-  } else if (value === OptionManager.CLOSE_HIDDEN) {
+  } else if (value === OPTION_CONSTANTS.CLOSE_HIDDEN) {
     await OptionManager.updateOption("pinnedTab-sync", false);
   }
 }
@@ -142,17 +144,17 @@ OptionManager.onRemoveUnknownHiddenTabsChange = async function(value) {
   */
 OptionManager.onDownloadBackUpEnableChange = function(value) {
   if (value) {
-    StorageManager.Backup.init();
+    ExtensionStorageManager.Backup.init();
   } else {
-    StorageManager.Backup.stopAll();
+    ExtensionStorageManager.Backup.stopAll();
   }
 }
 
 OptionManager.onLocalBackUpEnableChange = async function(value) {
   if (value) {
-    await StorageManager.Local.planBackUp();
+    await ExtensionStorageManager.Local.planBackUp();
   } else {
-    StorageManager.Local.abortBackUp();
+    ExtensionStorageManager.Local.abortBackUp();
   }
 }
 
@@ -161,9 +163,9 @@ OptionManager.onLocalBackUpEnableChange = async function(value) {
   */
 OptionManager.onBackUpTimerChange = function(timer, value) {
   if (value) {
-    StorageManager.Backup.startTimer(timer);
+    ExtensionStorageManager.Backup.startTimer(timer);
   } else {
-    StorageManager.Backup.stopTimer(timer);
+    ExtensionStorageManager.Backup.stopTimer(timer);
   }
 }
 
@@ -223,9 +225,9 @@ OptionManager.onPrivateWindowSyncChange = async function(state) {
  */
 OptionManager.onPinnedTabSyncChange = async function(value) {
   if (value
-    && OptionManager.options.groups.closingState === OptionManager.CLOSE_HIDDEN) {
+    && OptionManager.options.groups.closingState === OPTION_CONSTANTS.CLOSE_HIDDEN) {
     await OptionManager.updateOption(
-      "groups-closingState", OptionManager.CLOSE_NORMAL
+      "groups-closingState", OPTION_CONSTANTS.CLOSE_NORMAL
     );
   }
   try {
@@ -249,7 +251,7 @@ OptionManager.onRemoveEmptyGroupChange = function() {
  */
 OptionManager.init = async function() {
   try {
-    let options = await StorageManager.Local.loadOptions();
+    let options = await ExtensionStorageManager.Local.loadOptions();
     OptionManager.options = OptionManager.check_integrity(options);
     OptionManager.initEventListener();
     OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
@@ -265,7 +267,7 @@ OptionManager.init = async function() {
  * @returns {Object} options - verified
  */
 OptionManager.check_integrity = function(options) {
-  let ref_options = OptionManager.TEMPLATE();
+  let ref_options = OPTION_CONSTANTS.TEMPLATE();
   Utils.mergeObject(options, ref_options);
   return options;
 }
@@ -280,7 +282,7 @@ OptionManager.store = function() {
   if (OptionManager.checkCorruptedOptions(OptionManager.options)) {
     return;
   }
-  return StorageManager.Local.saveOptions(OptionManager.options);
+  return ExtensionStorageManager.Local.saveOptions(OptionManager.options);
 }
 
 OptionManager.initEventListener = function() {
@@ -300,7 +302,7 @@ OptionManager.initEventListener = function() {
 }
 
 OptionManager.reloadOptionsFromDisk = async function() {
-  OptionManager.options = await StorageManager.Local.loadGroups();
+  OptionManager.options = await ExtensionStorageManager.Local.loadGroups();
 }
 
 OptionManager.checkCorruptedOptions = function(options=OptionManager.options) {
@@ -313,6 +315,15 @@ OptionManager.checkCorruptedOptions = function(options=OptionManager.options) {
     }
   }
   return isCorrupted;
+}
+
+OptionManager.isClosingAlived = function() {
+  //return OptionManager.options.groups.closingState === OPTION_CONSTANTS.CLOSE_ALIVE;
+  return false;
+}
+
+OptionManager.isClosingHidden = function() {
+  return OptionManager.options.groups.closingState === OPTION_CONSTANTS.CLOSE_HIDDEN;
 }
 
 export default OptionManager

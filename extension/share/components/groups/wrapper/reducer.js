@@ -2,7 +2,7 @@ const INITIAL_STATE = Immutable.Map({
   groups: [],
   delayedTasks: {},
   currentWindowId: browser.windows.WINDOW_ID_NONE,
-  options: OptionManager.TEMPLATE(),
+  options: OPTION_CONSTANTS.TEMPLATE(),
 });
 
 const Reducer = function(state = INITIAL_STATE, action) {

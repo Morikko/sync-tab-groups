@@ -65,7 +65,7 @@ TestManager.changeSomeOptions = async function (params) {
  * Set new options as @params
  * return the previous ones
  */
-TestManager.swapOptions = function (params=OptionManager.TEMPLATE()) {
+TestManager.swapOptions = function (params=OPTION_CONSTANTS.TEMPLATE()) {
   let options = OptionManager.options;
   OptionManager.options = params;
   return options;

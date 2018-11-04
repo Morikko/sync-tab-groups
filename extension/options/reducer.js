@@ -1,5 +1,5 @@
 const INITIAL_STATE = Immutable.Map({
-  options: OptionManager.TEMPLATE(),
+  options: OPTION_CONSTANTS.TEMPLATE(),
   backupList: {},
 });
 

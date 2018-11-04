@@ -185,13 +185,13 @@ class SettingsSection extends React.Component {
                 title= {"Close"}
                 onClick= {this.clickOnClosingClose.bind(this)}
                 key="closing-close"
-                highlight={this.props.options.groups.closingState === OptionManager.CLOSE_NORMAL}
+                highlight={this.props.options.groups.closingState === OPTION_CONSTANTS.CLOSE_NORMAL}
               />
               <OptionButton
                 title= {"Hidden"}
                 onClick= {this.clickOnClosingHidden.bind(this)}
                 key="closing-hidden"
-                highlight={this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN}
+                highlight={this.props.options.groups.closingState === OPTION_CONSTANTS.CLOSE_HIDDEN}
               />
             </div>
             <NiceCheckbox
@@ -365,7 +365,7 @@ class SettingsSection extends React.Component {
   }
 
   clickOnIncluded() {
-    if ( this.props.options.groups.closingState === OptionManager.CLOSE_HIDDEN){
+    if ( this.props.options.groups.closingState === OPTION_CONSTANTS.CLOSE_HIDDEN){
       if (confirm(
         browser.i18n.getMessage("switch_pinned_included_disable_hidden"))
       ){
@@ -393,20 +393,20 @@ class SettingsSection extends React.Component {
   }
 
   clickOnClosingClose(){
-    this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_NORMAL);
+    this.props.onOptionChange("groups-closingState", OPTION_CONSTANTS.CLOSE_NORMAL);
   }
 
   clickOnClosingAlive(){
-    this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_ALIVE);
+    this.props.onOptionChange("groups-closingState", OPTION_CONSTANTS.CLOSE_ALIVE);
   }
 
   clickOnClosingHidden(){
     if ( this.props.options.pinnedTab.sync ) {
       if (confirm(browser.i18n.getMessage("switch_hidden_disable_sync_pinned"))) {
-        this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_HIDDEN);
+        this.props.onOptionChange("groups-closingState", OPTION_CONSTANTS.CLOSE_HIDDEN);
       }
     } else {
-      this.props.onOptionChange("groups-closingState", OptionManager.CLOSE_HIDDEN);
+      this.props.onOptionChange("groups-closingState", OPTION_CONSTANTS.CLOSE_HIDDEN);
     }
   }
 };

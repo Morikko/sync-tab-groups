@@ -22,7 +22,7 @@ function testErrorArgs(arg1, arg2 = "test", {arg3="bis"}={}){
 
 var initialWindows = 0 || initialWindows;
 (async function() {
-  initialWindows = Object.entries( await StorageManager.Local.getBackUpList())
+  initialWindows = Object.entries( await ExtensionStorageManager.Local.getBackUpList())
                             // Desc: recent first
                             .sort((a,b) => b[1].date - a[1].date)
                             // Too much
@@ -30,7 +30,7 @@ var initialWindows = 0 || initialWindows;
 })();
 
 (async function() {
-  await StorageManager.Local.removeBackup("backup-1521213969970")
+  await ExtensionStorageManager.Local.removeBackup("backup-1521213969970")
 })();
 
 
@@ -93,7 +93,7 @@ queue.then(function(lastResponse) {
 })();
 
 (async function() {
-  await StorageManager.Local.loadGroups()
+  await ExtensionStorageManager.Local.loadGroups()
 })();
 
 
@@ -169,9 +169,7 @@ browser.tabs.create({
 })
 
 showWindowId = async function() {
-  const windows = await browser.windows.getAll({
-    //windowTypes: ['popup']
-  });
+  const windows = await browser.windows.getAll({});
   windows.map((w) => {
     console.log(w);
   });
@@ -180,9 +178,7 @@ showWindowId = async function() {
 // Chrome
 browser = chrome;
 showWindowId = async function() {
-  const windows = await browser.windows.getAll({
-    //windowTypes: ['popup']
-  }, function(windows) {
+  const windows = await browser.windows.getAll({}, function(windows) {
     windows.map((w) => {
       console.log(w.id);
     });
@@ -211,7 +207,7 @@ getBK = async function(id) {
 groups = [];
 getGroups = async function(id) {
   try {
-    groups = await StorageManager.Local.loadGroups();
+    groups = await ExtensionStorageManager.Local.loadGroups();
     console.log(groups);
   } catch (e) {
     console.log(e);

@@ -16,7 +16,7 @@ describe("When Hidden Closing State is enabled, ", ()=>{
   });
   beforeEach(async function() {
     if ( !Utils.hasHideFunction() ) return;
-    OptionManager.updateOption("groups-closingState", OptionManager.CLOSE_HIDDEN);
+    OptionManager.updateOption("groups-closingState", OPTION_CONSTANTS.CLOSE_HIDDEN);
     OptionManager.updateOption("groups-discardedHide", false);
     await TestManager.clearWindow(this.windowId);
   });

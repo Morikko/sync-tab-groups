@@ -319,7 +319,7 @@ const ACTIONS = [
   // MOVE
   async (groups) =>{
     if (!groups.length) return;
-    await Background.onGroupChangePosition({
+    await BackgroundHelper.onGroupChangePosition({
       groupId: TestManager.getRandomGroupId(groups),
       position: TestManager.getRandomGroupPosition(groups),
     })
@@ -328,7 +328,7 @@ const ACTIONS = [
     if (!groups.length) return;
     let sourceGroupId = TestManager.getRandomGroupId(groups);
     let targetGroupId = TestManager.getRandomGroupId(groups);
-    await Background.onMoveTabToGroup({
+    await BackgroundHelper.onMoveTabToGroup({
       sourceGroupId: sourceGroupId,
       sourceTabIndex: TestManager.getRandomTabIndex(groups, sourceGroupId),
       targetGroupId: targetGroupId,
@@ -348,7 +348,7 @@ const ACTIONS = [
   async (groups) =>{
     if (!groups.length) return;
     let groupId = TestManager.getRandomGroupId(groups);
-    await Background.onTabClose({
+    await BackgroundHelper.onTabClose({
       groupId: groupId,
       tabIndex: TestManager.getRandomTabIndex(groups, groupId),
     })
@@ -356,7 +356,7 @@ const ACTIONS = [
   async (groups) =>{
     if (!groups.length) return;
     let groupId = TestManager.getRandomGroupId(groups);
-    await Background.onTabChangePin({
+    await BackgroundHelper.onTabChangePin({
       groupId: groupId,
       tabIndex: TestManager.getRandomTabIndex(groups, groupId),
     })
@@ -364,9 +364,9 @@ const ACTIONS = [
   // GROUP CHANGE
   async (groups) =>{
     if (!groups.length) return;
-    await Background.onGroupRemove({
+    await BackgroundHelper.onGroupRemove({
       groupId: TestManager.getRandomGroupId(groups),
-      taskRef: TaskManagerConstants.FORCE,
+      taskRef: TASKMANAGER_CONSTANTS.FORCE,
     })
   },
   async (groups) =>{
@@ -381,7 +381,7 @@ const ACTIONS = [
   },
   async (groups) =>{
     if (!groups.length) return;
-    await Background.onGroupRename({
+    await BackgroundHelper.onGroupRename({
       groupId: TestManager.getRandomGroupId(groups),
       title: Date.now().toString(),
     });

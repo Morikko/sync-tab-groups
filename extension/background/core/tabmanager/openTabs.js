@@ -5,6 +5,8 @@
 import Utils from '../../utils/utils'
 import OptionManager from '../../core/optionmanager'
 import LogManager from '../../error/logmanager'
+import TAB_CONSTANTS from '../../core/TAB_CONSTANTS'
+
 const TabManager = {};
 
 
@@ -34,7 +36,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
     // Look if has Tab in tabs
     if (tabsToOpen.length === 0) {
       if (openAtLeastOne) {
-        tabsToOpen.push({url: TabManager.NEW_TAB,
+        tabsToOpen.push({url: TAB_CONSTANTS.NEW_TAB,
           active: true,
           pinned: false});
       } else {
@@ -48,7 +50,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
       withPinned: true,
     });
 
-    const isNewTab = (url) => url === TabManager.NEW_TAB || url === "about:blank";
+    const isNewTab = (url) => url === TAB_CONSTANTS.NEW_TAB || url === "about:blank";
 
     // Don't Reopen only a new tab
     if (tabsToOpen.length === 1
@@ -114,7 +116,7 @@ TabManager.openListOfTabs = async function(tabsToOpen, windowId, {
 
       if (pendingTab) {
         /* TODO
-        if ( OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE
+        if ( OptionManager.options.groups.closingState === OPTION_CONSTANTS.CLOSE_ALIVE
           && GroupManager.getGroupIdFromTabId(pendingTab.id, false) >= 0) {
           await TabAlive.sleepTab(pendingTab);
         } else {
@@ -196,7 +198,7 @@ TabManager.openTab = async function(
     url = Utils.getDiscardedURL(tab.title, url, tab.favIconUrl)
   }
 
-  if (url === "about:privatebrowsing" || url === TabManager.NEW_TAB) {
+  if (url === "about:privatebrowsing" || url === TAB_CONSTANTS.NEW_TAB) {
     url = undefined;
   }
 

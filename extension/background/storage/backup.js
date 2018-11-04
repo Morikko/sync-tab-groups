@@ -5,10 +5,11 @@ import Utils from '../utils/utils'
 import LogManager from '../error/logmanager'
 import OptionManager from '../core/optionmanager'
 import GroupManager from '../core/groupmanager'
+import OPTION_CONSTANTS from '../core/OPTION_CONSTANTS'
 
 const BackupStorage = {};
 
-BackupStorage.TIMERS = Utils.setObjectPropertiesWith(OptionManager.TIMERS(), undefined);
+BackupStorage.TIMERS = Utils.setObjectPropertiesWith(OPTION_CONSTANTS.TIMERS(), undefined);
 
 
 BackupStorage.init = function() {
@@ -51,7 +52,7 @@ BackupStorage.startTimer = function(timer) {
   BackupStorage.stopTimer(timer);
   BackupStorage.TIMERS[timer] = setInterval(function() {
     BackupStorage.backup(timer.substring(2));
-  }, OptionManager.TIMERS()[timer]);
+  }, OPTION_CONSTANTS.TIMERS()[timer]);
 }
 
 

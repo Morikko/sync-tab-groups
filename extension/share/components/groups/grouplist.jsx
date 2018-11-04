@@ -76,7 +76,7 @@ class GroupList extends React.Component {
               {'No search result for "'+ this.props.searchfilter + '".'}
             </div>);
         }
-        let sortedIndex = GroupManager.getIndexSortByPosition(this.props.groups);
+        let sortedIndex = getGroupIndexSortedByPosition(this.props.groups);
         for (let index of sortedIndex) {
           groups.push(
             <ErrorBoundary 
@@ -105,8 +105,8 @@ class GroupList extends React.Component {
                 groups= {this.props.groups}
                 group= {this.props.groups[index]}
                 currentWindowId= {this.props.currentWindowId}
-                currentlyClosing= {this.isCurrently(TaskManagerConstants.CLOSE_REFERENCE, this.props.groups[index].id)}
-                currentlyRemoving= {this.isCurrently(TaskManagerConstants.REMOVE_REFERENCE, this.props.groups[index].id)}
+                currentlyClosing= {this.isCurrently(TASKMANAGER_CONSTANTS.CLOSE_REFERENCE, this.props.groups[index].id)}
+                currentlyRemoving= {this.isCurrently(TASKMANAGER_CONSTANTS.REMOVE_REFERENCE, this.props.groups[index].id)}
                 selectionFilter={
                   this.props.selectionFilter
                     ? this.props.selectionFilter[this.props.groups[index].id]

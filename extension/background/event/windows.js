@@ -1,9 +1,9 @@
 import Utils from '../utils/utils'
 import OptionManager from '../core/optionmanager'
-import Selector from '../core/selector'
+import ImportSelector from '../core/importSelector'
 import LogManager from '../error/logmanager'
 import GroupManager from '../core/groupmanager'
-import Background from '../background'
+import BackgroundHelper from '../core/backgroundHelper'
 import WindowManager from '../core/windowmanager'
 import ContextMenu from '../core/contextmenus'
 
@@ -32,7 +32,7 @@ WindowsEvents.initWindowsEventListener = function() {
   browser.windows.onRemoved.addListener(function(windowId) {
     if (Utils.DEBUG_MODE) console.log("Window removed: " + windowId)
     WindowManager.WINDOW_CURRENTLY_CLOSING[windowId] = true;
-    Selector.wasClosedGroupsSelector(windowId);
+    ImportSelector.wasClosedGroupsSelector(windowId);
 
     setTimeout(()=>{
       delete WindowManager.WINDOW_CURRENTLY_CLOSING[windowId];
@@ -43,7 +43,7 @@ WindowsEvents.initWindowsEventListener = function() {
   /* TODO: doenst update context menu well if right click on a tab from another window
    */
   browser.windows.onFocusChanged.addListener(async function(windowId) {
-    Background.refreshUi();
+    BackgroundHelper.refreshUi();
 
     try {
       const w = await browser.windows.getLastFocused();

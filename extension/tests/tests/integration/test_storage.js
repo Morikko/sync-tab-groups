@@ -18,12 +18,12 @@ describe('Storage', () => {
     describe('Low level function -', () => {
       it('Add a backup', async function() {
         const ref_groups = Utils.getCopy(GroupManager.groups);
-        const ref_backupList = await StorageManager.Local.getBackUpList()
+        const ref_backupList = await ExtensionStorageManager.Local.getBackUpList()
 
-        const id = await StorageManager.Local.addBackup({groups: ref_groups});
+        const id = await ExtensionStorageManager.Local.addBackup({groups: ref_groups});
 
-        const backupList = await StorageManager.Local.getBackUpList(),
-          backupGroups = await StorageManager.Local.getBackUp(id);
+        const backupList = await ExtensionStorageManager.Local.getBackUpList(),
+          backupGroups = await ExtensionStorageManager.Local.getBackUp(id);
 
         const hasId = backupList.hasOwnProperty(id);
 
@@ -34,12 +34,12 @@ describe('Storage', () => {
 
       it('Remove a backup', async function() {
         const ref_groups = Utils.getCopy(GroupManager.groups);
-        const id = await StorageManager.Local.addBackup({groups: ref_groups});
+        const id = await ExtensionStorageManager.Local.addBackup({groups: ref_groups});
 
-        await StorageManager.Local.removeBackup(id);
+        await ExtensionStorageManager.Local.removeBackup(id);
 
-        const backupList = await StorageManager.Local.getBackUpList(),
-          backupGroups = await StorageManager.Local.getBackUp(id);
+        const backupList = await ExtensionStorageManager.Local.getBackUpList(),
+          backupGroups = await ExtensionStorageManager.Local.getBackUp(id);
 
         const hasId = backupList.hasOwnProperty(id);
 
@@ -54,16 +54,16 @@ describe('Storage', () => {
 
         const ids = [];
         for (let i = 0; i < length; i++) {
-          ids.push(await StorageManager.Local.addBackup({groups: ref_groups}));
+          ids.push(await ExtensionStorageManager.Local.addBackup({groups: ref_groups}));
           await Utils.wait(50);
         }
 
-        const backupListInter = await StorageManager.Local.getBackUpList();
+        const backupListInter = await ExtensionStorageManager.Local.getBackUpList();
         expect(Object.keys(backupListInter).length).toEqual(length);
 
-        await StorageManager.Local.clearBackups();
+        await ExtensionStorageManager.Local.clearBackups();
 
-        const backupList = await StorageManager.Local.getBackUpList();
+        const backupList = await ExtensionStorageManager.Local.getBackUpList();
 
         expect(Object.keys(backupList).length).toEqual(0);
       });
@@ -75,20 +75,20 @@ describe('Storage', () => {
 
         const ids = [];
         for (let i = 0; i < length; i++) {
-          ids.push(await StorageManager.Local.addBackup({groups: ref_groups}));
+          ids.push(await ExtensionStorageManager.Local.addBackup({groups: ref_groups}));
           await Utils.wait(50);
         }
 
-        expect(Object.keys(await StorageManager.Local.getBackUpList()).length).toEqual(length);
+        expect(Object.keys(await ExtensionStorageManager.Local.getBackUpList()).length).toEqual(length);
 
-        await StorageManager.Local.respectMaxBackUp({maxSave});
+        await ExtensionStorageManager.Local.respectMaxBackUp({maxSave});
 
-        expect(Object.keys((await StorageManager.Local.getBackUpList())).length).toEqual(maxSave);
+        expect(Object.keys((await ExtensionStorageManager.Local.getBackUpList())).length).toEqual(maxSave);
 
         await Promise.all(ids.map(async (id, index) => {
           if (index - maxSave > 0)
             return;
-          expect((await StorageManager.Local.getBackUp(id))).toBe(undefined);
+          expect((await ExtensionStorageManager.Local.getBackUp(id))).toBe(undefined);
         }));
       })
 
@@ -158,15 +158,15 @@ describe('Storage', () => {
       it('Back up (first) and set timeout', async () => {
         const ref_groups = Utils.getCopy(GroupManager.groups);
         OptionManager.options.backup.local.enable = true;
-        spyOn(StorageManager.Local, 'addBackup').and.returnValue(true);
+        spyOn(ExtensionStorageManager.Local, 'addBackup').and.returnValue(true);
 
-        const id = await StorageManager.Local.planBackUp(ref_groups);
+        const id = await ExtensionStorageManager.Local.planBackUp(ref_groups);
 
-        expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+        expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
         expect(id).not.toBe(undefined);
-        expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+        expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
-        StorageManager.Local.abortBackUp();
+        ExtensionStorageManager.Local.abortBackUp();
       });
 
       it('Back up (outdated) and set timeout', async () => {
@@ -181,15 +181,15 @@ describe('Storage', () => {
 
         const ref_groups = Utils.getCopy(GroupManager.groups);
 
-        spyOn(StorageManager.Local, 'addBackup').and.callThrough();
+        spyOn(ExtensionStorageManager.Local, 'addBackup').and.callThrough();
 
-        const id = await StorageManager.Local.planBackUp(ref_groups);
+        const id = await ExtensionStorageManager.Local.planBackUp(ref_groups);
 
-        expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+        expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
         expect(id).not.toBe(undefined);
-        expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+        expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
-        StorageManager.Local.abortBackUp();
+        ExtensionStorageManager.Local.abortBackUp();
       });
 
       it('Check timeout after backup', async () => {
@@ -198,25 +198,25 @@ describe('Storage', () => {
 
           const intervalTime = Math.floor(OptionManager.options.backup.local.intervalTime * 3600 * 1000);
 
-          spyOn(StorageManager.Local, 'addBackup').and.callThrough();
+          spyOn(ExtensionStorageManager.Local, 'addBackup').and.callThrough();
           const ref_groups = Utils.getCopy(GroupManager.groups);
-          await StorageManager.Local.planBackUp(ref_groups, intervalTime);
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          await ExtensionStorageManager.Local.planBackUp(ref_groups, intervalTime);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
 
           jasmine.clock().tick(intervalTime);
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
 
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
 
           jasmine.clock().tick(intervalTime);
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
 
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(3);
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(3);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
 
-          StorageManager.Local.abortBackUp();
+          ExtensionStorageManager.Local.abortBackUp();
         } catch (e) {} finally {
           TestManager.uninstallFakeTime();
         }
@@ -238,29 +238,29 @@ describe('Storage', () => {
 
           const ref_groups = Utils.getCopy(GroupManager.groups);
 
-          spyOn(StorageManager.Local, 'addBackup').and.callThrough();
+          spyOn(ExtensionStorageManager.Local, 'addBackup').and.callThrough();
 
-          const id = await StorageManager.Local.planBackUp(ref_groups);
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(0);
-
-          jasmine.clock().tick(diff);
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
-
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          const id = await ExtensionStorageManager.Local.planBackUp(ref_groups);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(0);
 
           jasmine.clock().tick(diff);
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+
+          jasmine.clock().tick(diff);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
 
           jasmine.clock().tick(intervalTime - diff);
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
 
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
 
-          StorageManager.Local.abortBackUp();
+          ExtensionStorageManager.Local.abortBackUp();
         } catch (e) {} finally {
           TestManager.uninstallFakeTime();
         }
@@ -272,7 +272,7 @@ describe('Storage', () => {
           TestManager.installFakeTime();
           let test = 0;
 
-          StorageManager.Local.BACKUP_TIMEOUT = setTimeout(() => {
+          ExtensionStorageManager.Local.BACKUP_TIMEOUT = setTimeout(() => {
             test = 100;
           }, 10000);
 
@@ -280,7 +280,7 @@ describe('Storage', () => {
 
           jasmine.clock().tick(10000);
 
-          expect(StorageManager.Local.BACKUP_TIMEOUT).toBe(undefined);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).toBe(undefined);
           expect(test).toEqual(0);
         } catch (e) {} finally {
           TestManager.uninstallFakeTime();
@@ -289,23 +289,23 @@ describe('Storage', () => {
 
       it('Change option to start backup', async () => {
         try {
-          StorageManager.Local.abortBackUp();
+          ExtensionStorageManager.Local.abortBackUp();
           TestManager.installFakeTime();
-          expect(StorageManager.Local.BACKUP_TIMEOUT).toBe(undefined);
-          spyOn(StorageManager.Local, 'addBackup').and.callThrough();
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).toBe(undefined);
+          spyOn(ExtensionStorageManager.Local, 'addBackup').and.callThrough();
 
           OptionManager.options.backup.local.intervalTime = 10000;
 
           await TestManager.changeSomeOptions({"backup-local-enable": true});
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
           jasmine.clock().tick(10000 * 3600 * 1000);
 
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
 
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
-          StorageManager.Local.abortBackUp();
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
+          ExtensionStorageManager.Local.abortBackUp();
         } catch (e) {} finally {
           TestManager.uninstallFakeTime();
         }
@@ -315,31 +315,31 @@ describe('Storage', () => {
         try {
           const INTER = 10, // Even
             INTER_MS = INTER * 1000 * 3600;
-          StorageManager.Local.abortBackUp();
+          ExtensionStorageManager.Local.abortBackUp();
           TestManager.installFakeTime();
 
-          spyOn(StorageManager.Local, 'addBackup').and.callThrough();
+          spyOn(ExtensionStorageManager.Local, 'addBackup').and.callThrough();
 
           OptionManager.options.backup.local.enable = false;
           OptionManager.options.backup.local.intervalTime = INTER;
 
           await TestManager.changeSomeOptions({"backup-local-enable": true});
 
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
           await TestManager.changeSomeOptions({
             "backup-local-intervalTime": INTER * 2
           });
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
           jasmine.clock().tick(INTER_MS * 2);
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
 
           jasmine.clock().tick(INTER_MS * 2);
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(3);
-          StorageManager.Local.abortBackUp();
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(3);
+          ExtensionStorageManager.Local.abortBackUp();
         } catch (e) {} finally {
           TestManager.uninstallFakeTime();
         }
@@ -349,33 +349,33 @@ describe('Storage', () => {
         try {
           const INTER = 10, // Even
             INTER_MS = INTER * 1000 * 3600;
-          StorageManager.Local.abortBackUp();
+          ExtensionStorageManager.Local.abortBackUp();
           TestManager.installFakeTime();
 
-          spyOn(StorageManager.Local, 'addBackup').and.callThrough();
+          spyOn(ExtensionStorageManager.Local, 'addBackup').and.callThrough();
 
           OptionManager.options.backup.local.intervalTime = INTER;
 
           await TestManager.changeSomeOptions({"backup-local-enable": true});
 
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
           await TestManager.changeSomeOptions({
             "backup-local-intervalTime": INTER / 2
           });
 
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
           jasmine.clock().tick(INTER_MS / 2);
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
 
-          expect(StorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
+          expect(ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(2);
 
           jasmine.clock().tick(INTER_MS / 2);
-          await StorageManager.Local.BACKUP_TIMEOUT_PROMISE;
+          await ExtensionStorageManager.Local.BACKUP_TIMEOUT_PROMISE;
 
-          expect(StorageManager.Local.addBackup).toHaveBeenCalledTimes(3);
+          expect(ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(3);
         } catch (e) {} finally {
           TestManager.uninstallFakeTime();
         }
@@ -397,12 +397,12 @@ describe('Storage', () => {
           }
         }, false);
 
-        await StorageManager.Local.addBackup({
+        await ExtensionStorageManager.Local.addBackup({
           groups: [],
           time: 30
         });
 
-        const backupList = await StorageManager.Local.getBackUpList();
+        const backupList = await ExtensionStorageManager.Local.getBackUpList();
 
         expect(Object.keys(backupList).length).toEqual(2);
         expect(Object.values(backupList).filter(({date}) => date>10).length).toEqual(2);
@@ -425,7 +425,7 @@ describe('Storage', () => {
           "backup-local-maxSave": maxSave
         });
 
-        const backupList = await StorageManager.Local.getBackUpList();
+        const backupList = await ExtensionStorageManager.Local.getBackUpList();
 
         expect(Object.keys(backupList).length).toEqual(maxSave);
         expect(Object.values(backupList).filter(({date}) => date>10).length).toEqual(maxSave);
@@ -448,7 +448,7 @@ describe('Storage', () => {
           "backup-local-maxSave": maxSave
         });
 
-        const backupList = await StorageManager.Local.getBackUpList();
+        const backupList = await ExtensionStorageManager.Local.getBackUpList();
 
         expect(Object.keys(backupList).length).toEqual(2);
         expect(Object.values(backupList).filter(({date}) => date>10).length).toEqual(1);

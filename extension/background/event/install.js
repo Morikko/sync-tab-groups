@@ -4,15 +4,15 @@
 - prepareExtensionForUpdate
 - updateFromBelow_0_6_2
  */
-import Background from '../background'
+import BackgroundHelper from '../core/backgroundHelper'
 import OptionManager from '../core/optionmanager'
 
 const InstallEvents = {};
 
 InstallEvents.DEV_TABS = [
-  "/tests/test-page/unit.html",
-  "/tests/test-page/integration.html",
-  "/optionpages/option-page.html#settings",
+  //"/tests/test-page/unit.html",
+  //"/tests/test-page/integration.html",
+  //"/optionpages/option-page.html#settings",
   //"/tests/test-page/integration.html?spec=Selector%20-%20",
   //"/optionpages/option-page.html#groups"
 ]
@@ -31,20 +31,20 @@ InstallEvents.onDevelopmentInstall = function() {
 
 
 InstallEvents.onNewInstall = function() {
-  Background.install = true;
-  Background.onOpenSettings(false);
+  BackgroundHelper.install = true;
+  BackgroundHelper.onOpenSettings(false);
 }
 
 InstallEvents.onUpdate = function(previousVersion) {
-  Background.lastVersion = previousVersion;
+  BackgroundHelper.lastVersion = previousVersion;
   // Focus Settings if click on notification
   browser.notifications.onClicked.addListener((notificationId)=>{
-    if (notificationId === Background.updateNotificationId) {
-      Background.onOpenSettings(true);
+    if (notificationId === BackgroundHelper.updateNotificationId) {
+      BackgroundHelper.onOpenSettings(true);
     }
   });
   // Generic message
-  browser.notifications.create(Background.updateNotificationId, {
+  browser.notifications.create(BackgroundHelper.updateNotificationId, {
     "type": "basic",
     "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
     "title": browser.i18n.getMessage("notification_update_title") + " " + browser.runtime.getManifest().version,

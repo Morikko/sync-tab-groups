@@ -138,7 +138,7 @@ describe("Check Corrupted", ()=>{
     });
 
     it("No corruption", async function(){
-      let options = OptionManager.TEMPLATE();
+      let options = OPTION_CONSTANTS.TEMPLATE();
 
       let corrupted = await OptionManager.checkCorruptedOptions(options);
       expect(corrupted).toBe(false);
@@ -153,7 +153,7 @@ describe("Check Corrupted", ()=>{
     });
 
     it("A property of an option is undefined", async function(){
-      let options = OptionManager.TEMPLATE();
+      let options = OPTION_CONSTANTS.TEMPLATE();
       options.groups = undefined;
 
       let corrupted = await OptionManager.checkCorruptedOptions(options);

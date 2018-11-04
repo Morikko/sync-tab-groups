@@ -2,10 +2,12 @@ import Utils from '../utils/utils'
 import LogManager from '../error/logmanager'
 import GroupManager from '../core/groupmanager'
 import TabManager from '../core/tabmanager/tabManager'
-import Background from '../background'
+import BackgroundHelper from '../core/backgroundHelper'
 import TaskManager from '../utils/taskManager'
 
 import readJsonFile from '../utils/readJsonFile'
+import getGroupIndexSortedByPosition from './getGroupIndexSortedByPosition'
+import ExtensionStorageManager from '../storage/storageManager'
 
 const ContextMenu = {};
 
@@ -60,16 +62,14 @@ ContextMenu.createMoveTabMenu = async function() {
 
     let currentWindowId;
     try {
-      currentWindowId = (await browser.windows.getLastFocused({
-        windowTypes: ['normal'],
-      })).id;
+      currentWindowId = (await browser.windows.getLastFocused()).id;
     } catch (e) {
       LogManager.warning(e.message);
     }
 
 
     let groups = GroupManager.getCopy();
-    let sortedIndex = GroupManager.getIndexSortByPosition(groups);
+    let sortedIndex = getGroupIndexSortedByPosition(groups);
     for (let i of sortedIndex) {
       ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
       const openPrefix = groups[i].windowId !== browser.windows.WINDOW_ID_NONE ? "[OPEN]" : "";
@@ -269,7 +269,7 @@ function onImportGroup() {
   fileInput.acceptCharset = 'utf-8';
   fileInput.onchange = () => {
     readJsonFile(fileInput.files[0]).then((jsonContent) => {
-      Background.onImportGroups({
+      BackgroundHelper.onImportGroups({
         content_file: jsonContent,
       });
     });
@@ -282,16 +282,16 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
     let order = info.menuItemId.substring(ContextMenu.SpecialActionMenu_ID.length, info.menuItemId.length);
     switch (order) {
     case "export_groups":
-      Background.onExportGroups();
+      BackgroundHelper.onExportGroups();
       break;
     case "import_groups":
       onImportGroup();
       break;
     case "save_bookmarks_groups":
-      Background.onBookmarkSave();
+      BackgroundHelper.onBookmarkSave();
       break;
     case "open_preferences":
-      Background.onOpenSettings();
+      BackgroundHelper.onOpenSettings();
       break;
     case "manage_groups":
       Utils.openUrlOncePerWindow(browser.extension.getURL(
@@ -299,10 +299,10 @@ ContextMenu.SpecialActionMenuListener = function(info, tab) {
       ));
       break;
     case "backup":
-      StorageManager.Backup.backup("manual");
+      ExtensionStorageManager.Backup.backup("manual");
       break;
     case "guide":
-      Background.onOpenGuide();
+      BackgroundHelper.onOpenGuide();
       break;
     case "open_tests":
       Utils.openUrlOncePerWindow(

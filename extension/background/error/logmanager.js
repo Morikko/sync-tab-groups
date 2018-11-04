@@ -1,5 +1,5 @@
 import Utils from '../utils/utils'
-import Background from '../background'
+import BackgroundHelper from '../core/backgroundHelper'
 import OptionManager from '../core/optionmanager'
 
 const LogManager = {};
@@ -22,11 +22,12 @@ LogManager.logs = [];
 
 const extensionPrefix = browser.extension.getURL('/');
 
+// Before the options and the logmanager are fully started, we always log
 LogManager.isEnable = function() {
-  try {
+  if (OptionManager.options) {
     return OptionManager.options.log.enable;
-  } catch (e) {
-    return false;
+  } else {
+    return true
   }
 }
 
@@ -239,7 +240,7 @@ LogManager.showErrorNotification = function() {
 LogManager.init = function() {
   const logManagerNotificationEvent = (notificationId)=>{
     if (notificationId === LogManager.NOTIFICATION_ID) {
-      Background.onOpenSettings(true);
+      BackgroundHelper.onOpenSettings(true);
       Utils.openUrlOncePerWindow(
         "https://github.com/Morikko/sync-tab-groups/wiki/How-to-help-me-solve-bugs"
       );

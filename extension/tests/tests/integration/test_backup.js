@@ -13,18 +13,18 @@ describe("Download Back Up: ", ()=>{
     OptionManager.options.backup.download = Utils.getCopy(OptionManager.options.backup.download);
 
     OptionManager.options.backup.download.enable = true;
-    OptionManager.options.backup.download.time = Utils.setObjectPropertiesWith(OptionManager.TIMERS(), false);
+    OptionManager.options.backup.download.time = Utils.setObjectPropertiesWith(OPTION_CONSTANTS.TIMERS(), false);
 
     // Spy
-    spyOn(StorageManager.Backup, "backup");
+    spyOn(ExtensionStorageManager.Backup, "backup");
 
-    for (let time in OptionManager.TIMERS()) {
+    for (let time in OPTION_CONSTANTS.TIMERS()) {
       OptionManager.options.backup.download.time[time] = true;
-      StorageManager.Backup.init();
+      ExtensionStorageManager.Backup.init();
       // Trigger timers
-      jasmine.clock().tick(OptionManager.TIMERS()[time]);
+      jasmine.clock().tick(OPTION_CONSTANTS.TIMERS()[time]);
 
-      expect(StorageManager.Backup.backup).toHaveBeenCalledWith(time.substring(2));
+      expect(ExtensionStorageManager.Backup.backup).toHaveBeenCalledWith(time.substring(2));
 
       OptionManager.options.backup.download.time[time] = false;
     }

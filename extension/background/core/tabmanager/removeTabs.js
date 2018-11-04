@@ -4,6 +4,7 @@
  */
 import Utils from '../../utils/utils'
 import OptionManager from '../../core/optionmanager'
+import OPTION_CONSTANTS from '../../core/OPTION_CONSTANTS'
 import LogManager from '../../error/logmanager'
 const TabManager = {};
 
@@ -97,7 +98,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
     // 2. Remove previous tabs in window
     let tabsToRemove = tabs.filter(tab => remove_pinned || !tab.pinned);
 
-    if (OptionManager.options.groups.closingState === OptionManager.CLOSE_ALIVE
+    if (OptionManager.options.groups.closingState === OPTION_CONSTANTS.CLOSE_ALIVE
      && !forceClosing) {
       /* await Promise.all(
         tabsToRemove.map((tab)=>TabAlive.sleepTab(tab))
