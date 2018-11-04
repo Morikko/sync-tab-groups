@@ -100,6 +100,7 @@ const config = {
         .concat([
           {from: '**/*.html'},
           {from: '**/*.css'},
+          {from: '**/*.png'},
         ])
     ),
 
