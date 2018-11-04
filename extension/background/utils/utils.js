@@ -54,7 +54,8 @@ const Utils = {};
  * Show GroupId, Index, WindowId, Position in as group hover in menu
  * Show messages
  */
-Utils.DEBUG_MODE=true;
+Utils.DEBUG_MODE=!process.env.IS_PROD;
+console.log("DEBUG:", Utils.DEBUG_MODE)
 Utils.UTILS_SHOW_MESSAGES = Utils.DEBUG_MODE;
 Utils.PRIV_PAGE_URL = "/tabpages/privileged-tab/privileged-tab.html";
 Utils.LAZY_PAGE_URL = "/tabpages/lazytab/lazytab.html";

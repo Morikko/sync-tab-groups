@@ -15,6 +15,7 @@
   "plugins": ["import", "jsdoc", "react"],
   "globals": {
     "browser": true,
+    "process": true,
     "$": true
   },
   "settings": {
