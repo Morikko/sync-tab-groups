@@ -29,7 +29,7 @@ class ButtonFile extends React.Component {
       if (files.length === 0) {
         return "No file selected..."
       }
-      const jsonContent = await StorageManager.File.readJsonFile(files[0]);
+      const jsonContent = await readJsonFile(files[0]);
       this.props.onFileSelected({
         content: jsonContent,
         filename: files[0].name,

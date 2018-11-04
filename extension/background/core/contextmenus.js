@@ -5,6 +5,8 @@ import TabManager from '../core/tabmanager/tabManager'
 import Background from '../background'
 import TaskManager from '../utils/taskManager'
 
+import readJsonFile from '../utils/readJsonFile'
+
 const ContextMenu = {};
 
 ContextMenu.MoveTabMenu_ID = "stg-move-tab-group-";
@@ -266,7 +268,7 @@ function onImportGroup() {
   fileInput.accept = '.json';
   fileInput.acceptCharset = 'utf-8';
   fileInput.onchange = () => {
-    StorageManager.File.readJsonFile(fileInput.files[0]).then((jsonContent) => {
+    readJsonFile(fileInput.files[0]).then((jsonContent) => {
       Background.onImportGroups({
         content_file: jsonContent,
       });
