@@ -642,7 +642,7 @@ class Group extends React.Component {
 
 Group.propTypes = {
   group: PropTypes.object.isRequired,
-  currentWindowId: PropTypes.number.isRequired,
+  currentWindowId: PropTypes.number,
   currentlyClosing: PropTypes.bool.isRequired,
   currentlyRemoving: PropTypes.bool.isRequired,
   onGroupClick: PropTypes.func,

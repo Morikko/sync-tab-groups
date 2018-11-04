@@ -1,9 +1,16 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
+import OptionButton from '../../../share/components/forms/optionbutton'
+import Utils from '../../../background/utils/utils'
+import SELECTOR_TYPE from '../../../background/core/SELECTOR_TYPE'
+
 class ManageBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
 
-    if ( Utils.getParameterByName('type') === SELECTOR_TYPE.IMPORT ) {
+    if (Utils.getParameterByName('type') === SELECTOR_TYPE.IMPORT) {
       this.state.type = 'import_groups';
     } else {
       this.state.type = 'export_groups';
@@ -42,3 +49,5 @@ ManageBar.propTypes = {
   singleMode: PropTypes.bool,
   changeColumnDisplay: PropTypes.func,
 }
+
+export default ManageBar

@@ -1,3 +1,8 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+import Utils from '../../background/utils/utils'
+
 document.addEventListener("DOMContentLoaded", async() => {
 
   document.title = "Shortcuts List for Sync Tab Groups";
@@ -15,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async() => {
           width="64"
           height="64"
         />
-        "Sync Tab Groups"
+        Sync Tab Groups
       </div>
       <div className="help">
         <h1 className="shortcut-list">

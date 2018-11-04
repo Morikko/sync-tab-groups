@@ -1,3 +1,12 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+import * as ReactRedux from 'react-redux'
+
+import Utils from '../../background/utils/utils'
+import SelectorWrapper from './components/selector-wrapper'
+import selectorStore from './selectorStore'
+import ActionCreators from './action_creators'
+
 class SelectorActions {
   static getGroups() {
     Utils.sendMessage("Ask:SelectorGroups", {});
@@ -18,14 +27,14 @@ class SelectorActions {
   }
 }
 
-var selectorMessenger = function(message) {
+let selectorMessenger = function(message) {
   switch (message.task) {
-    case "Selector:Groups":
-      store.dispatch(ActionCreators.setGroups(message.params.groups));
-      break;
-    case "Option:Changed":
-      store.dispatch(ActionCreators.setOptions(message.params.options));
-      break;
+  case "Selector:Groups":
+    selectorStore.dispatch(ActionCreators.setGroups(message.params.groups));
+    break;
+  case "Option:Changed":
+    selectorStore.dispatch(ActionCreators.setOptions(message.params.options));
+    break;
   }
 }
 
@@ -35,8 +44,8 @@ document.title = Utils.getParameterByName("title");
 Utils.setIcon("/share/icons/tabspace-active-64.png");
 
 ReactDOM.render(
-  <ReactRedux.Provider store={store}>
-    <Wrapper
+  <ReactRedux.Provider store={selectorStore}>
+    <SelectorWrapper
       finish={SelectorActions.finish}
     />
   </ReactRedux.Provider>

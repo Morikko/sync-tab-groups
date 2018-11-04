@@ -412,7 +412,7 @@ Session.ListOfPrivTabURLs = [{
 
 Session.ListOfExtensionTabURLs = [{
   "title": "Preferences",
-  "url": browser.extension.getURL("/optionpages/option-page.html"),
+  "url": browser.extension.getURL("/options/option-page.html"),
   "favIconUrl": "/share/icons/tabspace-active-64.png"
 }];
 

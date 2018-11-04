@@ -40,7 +40,7 @@
   },
 
   "options_ui": {
-    "page": "/optionpages/option-page.html",
+    "page": "/options/option-page.html",
     "open_in_tab": true,
     "browser_style": true
   },

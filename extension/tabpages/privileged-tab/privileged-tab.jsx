@@ -1,10 +1,12 @@
 /** Page Example
   moz-extension://68ddee50-febc-45b5-bd3d-f7c6264e02a5/tabpages/privileged-tab/privileged-tab.html?title=Debugging%20with%20Firefox%20Developer%20Tools&url=about%3Adebugging&favIconUrl=undefined
  */
+import React from 'react'
+import ReactDOM from 'react-dom'
 
 function handleCopyClipBoard() {
   let params = new URLSearchParams(window.location.search),
-      url = params.get('url') || 'about:blank';
+    url = params.get('url') || 'about:blank';
   let input = document.createElement('input');
   input.value = url;
 
@@ -16,19 +18,19 @@ function handleCopyClipBoard() {
 document.addEventListener("DOMContentLoaded", () => {
 
   let params = new URLSearchParams(window.location.search),
-      url = params.get('url') || 'about:blank',
-      title = params.get('title') || 'New tab',
-      favIconUrl = params.get('favIconUrl'),
-      tab_information = "Current Tab Information",
-      tab_title = ("Title")+ ": " + title,
-      tab_url = ("URL")+ ": " + url,
-      copy_url = "Copy URL in the clipboard",
-      privileged_url = "About Privileged URLs",
-      privileged_url_help_reason = "Sync Tab Groups can't open directly privileged URLs for security reason:",
-      open_url_help_method = "But you can open it manually:",
-      open_url_help_method_part_1 = "Click on the button",
-      open_url_help_method_part_2 = "Paste the URL in the address bar",
-      open_url_help_method_part_3 = "Press Enter";
+    url = params.get('url') || 'about:blank',
+    title = params.get('title') || 'New tab',
+    favIconUrl = params.get('favIconUrl'),
+    tab_information = "Current Tab Information",
+    tab_title = ("Title")+ ": " + title,
+    tab_url = ("URL")+ ": " + url,
+    copy_url = "Copy URL in the clipboard",
+    privileged_url = "About Privileged URLs",
+    privileged_url_help_reason = "Sync Tab Groups can't open directly privileged URLs for security reason:",
+    open_url_help_method = "But you can open it manually:",
+    open_url_help_method_part_1 = "Click on the button",
+    open_url_help_method_part_2 = "Paste the URL in the address bar",
+    open_url_help_method_part_3 = "Press Enter";
 
 
   // Set tab title

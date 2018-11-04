@@ -1,3 +1,11 @@
+import React from 'react'
+import * as ReactRedux from 'react-redux'
+
+import Utils from '../../../background/utils/utils'
+import ActionCreators from '../action_creators'
+import Panel from './selector-panel'
+import ManageBar from './selector-bar'
+
 class WrapperStandAlone extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +22,7 @@ class WrapperStandAlone extends React.Component {
     this.onFinish = this.onFinish.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setSelectionFilter(this.getSelectionFilter(nextProps.groups))
   }
 
@@ -24,7 +32,7 @@ class WrapperStandAlone extends React.Component {
       let tabs = group.tabs.map((tab)=>defaultValue);
       selectionFilter[group.id] = {
         selected: tabs.filter(tab => tab).length,
-        tabs
+        tabs,
       };
     });
 
@@ -33,14 +41,14 @@ class WrapperStandAlone extends React.Component {
 
   setSelectionFilter(selectionFilter) {
     let hasSelected = Object.values(selectionFilter).filter((group)=>{
-      if ( group.selected ) return true;
-      if ( group.tabs.filter(tab => tab).length) return true;
+      if (group.selected) return true;
+      if (group.tabs.filter(tab => tab).length) return true;
       return false;
     }).length>0;
 
     this.setState({
       hasSelected: hasSelected,
-      selectionFilter: selectionFilter
+      selectionFilter: selectionFilter,
     });
   }
 
@@ -49,7 +57,7 @@ class WrapperStandAlone extends React.Component {
     const nextSelectionFilter = Utils.getCopy(this.state.selectionFilter);
     nextSelectionFilter[id].tabs[index] = !previousValue;
     nextSelectionFilter[id].selected = nextSelectionFilter[id].tabs
-                                          .filter(tab => tab).length;
+      .filter(tab => tab).length;
 
     this.setSelectionFilter(nextSelectionFilter);
   }
@@ -59,17 +67,17 @@ class WrapperStandAlone extends React.Component {
     const nextSelectionFilter = Utils.getCopy(this.state.selectionFilter);
     let tabs = nextSelectionFilter[id].tabs;
 
-    if ( previousValue < tabs.length ) {
+    if (previousValue < tabs.length) {
       tabs = tabs.map((tab)=>true);
       nextSelectionFilter[id] = {
         selected: tabs.length,
-        tabs
+        tabs,
       };
     } else {
       tabs = tabs.map((tab)=>false);
       nextSelectionFilter[id] = {
         selected: 0,
-        tabs
+        tabs,
       };
     }
 
@@ -103,7 +111,7 @@ class WrapperStandAlone extends React.Component {
 
   onImportTypeChange(value) {
     this.setState({
-      single: value
+      single: value,
     });
   }
 
@@ -123,3 +131,5 @@ const Wrapper = (() => {
     };
   }, ActionCreators)(WrapperStandAlone)
 })();
+
+export default Wrapper
