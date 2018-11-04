@@ -1,7 +1,6 @@
 module.exports = {
   // Global options:
   verbose: false,
-  sourceDir: "extension",
   // Command options:
   build: {
     overwriteDest: true,

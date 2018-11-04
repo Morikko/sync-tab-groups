@@ -6,14 +6,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf build && webpack --mode development --progress --hide-modules",
+    "watch": "npm run build -- --watch",
     "build:prod": "rm -rf release/build && webpack --mode production --progress --hide-modules",
     "release": "rm -rf release && npm run build:prod && npm run zip",
     "zip": "cd release/build && zip -r ../sync-tab-groups.zip * && cp ../sync-tab-groups.zip ../sync-tab-groups.xpi && cd ../../",
-    "watch": "npm run build -- --watch",
     "clean": "rm -rf build release",
-    "lint": "npx eslint extension"
+    "lint": "npx eslint extension",
+    "firefox-prod": "npx web-ext run --sourceDir=release/build",
+    "firefox-dev": "npx web-ext run --sourceDir=build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "web-ext": "^2.9.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
