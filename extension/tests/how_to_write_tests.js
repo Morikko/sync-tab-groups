@@ -6,25 +6,25 @@
   * 3. Success 10 times in a row (not lucky success)
   * 4. Respect the following structure for clarity
 */
-TestManager.installFakeTime();
-TestManager.uninstallFakeTime();
+TestConfig.installFakeTime();
+TestConfig.uninstallFakeTime();
 
 {
   /** Copy to the ROOTEST describe **/
   // Keep previous states
-  beforeAll(TestManager.initIntegrationBeforeAll());
+  beforeAll(TestConfig.initIntegrationBeforeAll());
   // Set back previous states
-  afterAll(TestManager.initIntegrationAfterAll());
+  afterAll(TestConfig.initIntegrationAfterAll());
 
   // OR unit tests
-  beforeAll(TestManager.initUnitBeforeAll());
-  beforeEach(TestManager.initBeforeEach());
+  beforeAll(TestConfig.initUnitBeforeAll());
+  beforeEach(TestConfig.initBeforeEach());
 
   {
     /** Tweaking Before Tests **/
 
     // Set custom options
-    await TestManager.changeSomeOptions({
+    await TestConfig.changeSomeOptions({
       "privateWindow-removeOnClose": true,
       "pinnedTab-sync": false,
     })
@@ -48,11 +48,11 @@ TestManager.uninstallFakeTime();
     this.windowIds = (await browser.windows.create()).id;
     this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[1].id);
 
-    TestManager.splitOnHalfScreen(windowId)
-    TestManager.splitOnHalfTopScreen(windowId)
-    TestManager.splitOnHalfBottomScreen(windowId)
+    TestConfig.splitOnHalfScreen(windowId)
+    TestConfig.splitOnHalfTopScreen(windowId)
+    TestConfig.splitOnHalfBottomScreen(windowId)
 
-    TestManager.installFakeTime();
+    TestConfig.installFakeTime();
     jasmine.clock.tick(10000);
   }
 
@@ -60,14 +60,14 @@ TestManager.uninstallFakeTime();
   {
     // Do you stuff...
 
-    let previousTabs = Utils.getCopy(TestManager.getGroup(
+    let previousTabs = Utils.getCopy(TestConfig.getGroup(
       GroupManager.groups,
       this.groupIds[targetGroupIndex]
     ).tabs)
 
     // If in windowId, there was a focus change on a discarded tab, this tab will load
     // Without wait, the tab can have the state about:blank instead of real value
-    await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
+    await TestConfig.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
     let resultingTabs = await TabManager.getTabsInWindowId(
       this.windowId, {
@@ -76,9 +76,9 @@ TestManager.uninstallFakeTime();
       });
 
     // Don't care about some values
-    TestManager.resetActiveProperties(tabs)
-    TestManager.resetIndexProperties(tabs)
-    TestManager.setActiveProperties(previousTabs, targetTabIndex);
+    TestConfig.resetActiveProperties(tabs)
+    TestConfig.resetIndexProperties(tabs)
+    TestConfig.setActiveProperties(previousTabs, targetTabIndex);
 
     // Control the results...
     expect(resultingTabs).toEqualTabs(expectedTabs);
@@ -90,12 +90,12 @@ TestManager.uninstallFakeTime();
       Might not  be necessary because everything is cleaned when a root describe is overed
   **/
 
-  TestManager.uninstallFakeTime();
+  TestConfig.uninstallFakeTime();
 
   // Close all windows
-  await TestManager.closeWindows(this.windowIds)
+  await TestConfig.closeWindows(this.windowIds)
 
   // Remove groups
-  await TestManager.removeGroups(this.groupIds)
+  await TestConfig.removeGroups(this.groupIds)
 
 }

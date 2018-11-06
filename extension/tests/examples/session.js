@@ -24,7 +24,20 @@
  - keepOneWindowOpen
  - closeAllAndOpenOnlyOneNewWindow
  */
-var Session = Session || {};
+import Utils from '../../background/utils/utils'
+import Background from '../utils/Background'
+const {
+  GroupManager,
+  TabManager,
+  LogManager,
+  OptionManager,
+  WindowManager,
+  TAB_CONSTANTS,
+} = Background
+
+import TestManager from '../utils/TestManager'
+
+const Session = {};
 
 /**
  * @returns {Array<Tab>} tabs
@@ -38,14 +51,14 @@ Session.createTabs = function({
   extensionUrlLength= 0,
   active=-1, // -1: last, -2 or >= tabs.length: nothing, else the tab
   fakeTab=true,
-}={}){
+}={}) {
   let tabs = [];
   let index = 0;
   let normalTabsLength = tabsLength-privilegedLength-extensionUrlLength;
   for (let i = 0; i < normalTabsLength; i++) {
     let tab = fakeTab
-              ?Session.getFakeTab()
-              :Session.getRandomTab(Session.ListOfTabURLs);
+      ?Session.getFakeTab()
+      :Session.getRandomTab(Session.ListOfTabURLs);
     index++;
     tabs.push(
       tab
@@ -53,7 +66,7 @@ Session.createTabs = function({
   }
   for (let i = 0; i < privilegedLength && index<tabsLength; i++) {
     let tab = Session.getRandomTab(Session.ListOfPrivTabURLs)
-    if ( openPrivileged ) {
+    if (openPrivileged) {
       tab.url = Utils.getPrivilegedURL(tab.title, tab.url, tab.favIconUrl);
     }
     index++;
@@ -76,11 +89,11 @@ Session.createTabs = function({
   tabs = tabs.map((tab, index)=>{
     tab.index = index;
     // Create different ids for tests compatibility
-    tab.id = "" + Date.now() + tab.url.length + index;;
+    tab.id = String(Date.now()) + tab.url.length + index;
     if (index===active) {
       tab.active = true;
     } else {
-      if ( lazyMode ) {
+      if (lazyMode) {
         tab.url = Utils.getDiscardedURL(tab.title, tab.url, tab.favIconUrl);
       }
     }
@@ -105,18 +118,18 @@ Session.createTabs = function({
  * @returns {Group} [Group Object] if global false
  */
 Session.createGroup = function({
-    tabsLength= 0,
-    pinnedTabs= 0,
-    lazyMode= false,
-    privilegedLength= 0,
-    openPrivileged= false,
-    extensionUrlLength= 0,
-    global= false,
-    incognito= false,
-    active= -1,
-    fakeTab=true,
-    title="",
-    windowId=browser.windows.WINDOW_ID_NONE,
+  tabsLength= 0,
+  pinnedTabs= 0,
+  lazyMode= false,
+  privilegedLength= 0,
+  openPrivileged= false,
+  extensionUrlLength= 0,
+  global= false,
+  incognito= false,
+  active= -1,
+  fakeTab=true,
+  title="",
+  windowId=browser.windows.WINDOW_ID_NONE,
 }={}) {
   let tabs = Session.createTabs({
     tabsLength,
@@ -136,9 +149,9 @@ Session.createGroup = function({
     windowId,
     incognito,
   });
-  if ( global ) {
+  if (global) {
     return [GroupManager.addGroups([
-      group
+      group,
     ])[0], group];
   } else {
     return group;
@@ -151,7 +164,6 @@ Session.createGroup = function({
  * Other params are either single or an array with a length of groupsLength
  * If params.title is single, it will be used as a prefix and the nbr of the groups is added behind (with a space between)
  * @param {Object} params - Option for the creation
- * @param {Object}
       - groups{Array} if params.global to false
       - [ids{Array}, groups{Array}]  if params.global to true
  */
@@ -168,42 +180,42 @@ Session.createArrayGroups = function(params={}) {
     incognito: false,
     active: -1,
     fakeTab: true,
-    title:"",
+    title: "",
     windowId: browser.windows.WINDOW_ID_NONE,
   }, params);
 
   // Prepare params
-  for(let pro in params) {
-    if ( typeof params[pro] !== "string" && params[pro].length !== undefined
-      && params[pro].length !== params.groupsLength ) {
-        LogManager.error(e, {
-          args: arguments,
-          paramName: pro,
-          paramValue: params[pro],
-        }, {logs: null});
+  for (let pro in params) {
+    if (typeof params[pro] !== "string" && params[pro].length !== undefined
+      && params[pro].length !== params.groupsLength) {
+      LogManager.error(Error(""), {
+        args: arguments,
+        paramName: pro,
+        paramValue: params[pro],
+      }, {logs: null});
       throw Error("");
     }
   }
 
   // Create Groups
   let groups = [], ids = [];
-  for(let i=0; i<params.groupsLength; i++){
+  for (let i=0; i<params.groupsLength; i++) {
     let groupParam = {};
-    for(let pro in params) {
-      if ( params[pro].length === undefined ) {
+    for (let pro in params) {
+      if (params[pro].length === undefined) {
         groupParam[pro] = params[pro];
       } else {
         groupParam[pro] = params[pro][i];
       }
     }
-    if ( typeof params.title === "string" ) {
+    if (typeof params.title === "string") {
       groupParam.title = params.title + " " + i;
     } else {
       groupParam.title = params.title[i];
     }
 
     let group, id;
-    if ( params.global ) {
+    if (params.global) {
       [id, group] = Session.createGroup(
         groupParam
       );
@@ -219,11 +231,11 @@ Session.createArrayGroups = function(params={}) {
   return params.global?[ids, groups]:groups;
 }
 
-Session.addTabToGroup = async function (group, tab_params) {
+Session.addTabToGroup = async function(group, tab_params) {
   let tab = Session.createTab(tab_params)
 
-  if ( group.id ) { // Local Mode
-    let realIndex = TabManager.secureIndex(params.index, tab, group.tabs);
+  if (group.id) { // Local Mode
+    let realIndex = TabManager.secureIndex(tab_params.index, tab, group.tabs);
     group.tabs.splice(realIndex, 0, tab);
   } else { // Global
     let id = group;
@@ -236,7 +248,7 @@ Session.addTabToGroup = async function (group, tab_params) {
  * 5 groups:  2x7 + 2x7(Pinned) + 1x7(Private) + Empty + 1x7(Priv/Ext)
  */
 Session.setLightSession = function() {
-  bg.GroupManager.removeAllGroups();
+  GroupManager.removeAllGroups();
   Session.createArrayGroups({
     groupsLength: 7,
     global: true,
@@ -254,7 +266,7 @@ Session.setLightSession = function() {
       "Private",
       "",
       "Special URLs",
-    ]
+    ],
   })
 }
 
@@ -280,21 +292,21 @@ Session.getRandomTab = function(tabs) {
 }
 
 Session.newTab = {
-    "title": "New Tab",
-    "url": TAB_CONSTANTS.NEW_TAB,
-    "favIconUrl": "chrome://branding/content/icon32.png"
-  };
+  "title": "New Tab",
+  "url": TAB_CONSTANTS.NEW_TAB,
+  "favIconUrl": "chrome://branding/content/icon32.png",
+};
 
 Session.getFakeTab = function() {
-  let random = TestManager.getRandom(0,999999999) + "";
+  let random = String(TestManager.getRandom(0,999999999));
   return Session.createTab({
     url: Session.getFakeUrl(random),
     title: random,
-    favIconUrl: ""
+    favIconUrl: "",
   })
 }
 
-Session.getFakeUrl = function(random=TestManager.getRandom(0,999999999) + "") {
+Session.getFakeUrl = function(random=String(TestManager.getRandom(0,999999999))) {
   return browser.extension.getURL("/tests/test-page/template/template.html")
         + "?test=" + random;
 }
@@ -335,7 +347,7 @@ Session.ListOfTabURLs = [
   {
     "title": "Issues · Morikko/sync-tab-groups",
     "url": "https://github.com/Morikko/sync-tab-groups/issues",
-    "favIconUrl": "https://assets-cdn.github.com/favicon.ico"
+    "favIconUrl": "https://assets-cdn.github.com/favicon.ico",
   },
   { // /!\ Heavy to load
     "title": "Font Awesome Icons",
@@ -345,7 +357,7 @@ Session.ListOfTabURLs = [
   { // /!\ Heavy to load
     "title": "Debugging - Mozilla | MDN",
     "url": "https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Debugging",
-    "favIconUrl": "https://cdn.mdn.mozilla.net/static/img/favicon32.7f3da72dcea1.png"
+    "favIconUrl": "https://cdn.mdn.mozilla.net/static/img/favicon32.7f3da72dcea1.png",
   },
   {
     favIconUrl: "https://jasmine.github.io/favicon.ico",
@@ -355,65 +367,65 @@ Session.ListOfTabURLs = [
   { // /!\ Heavy to load
     favIconUrl: "https://static-cdn.arte.tv/guide/favicons/favicon-16x16.png",
     title: "ARTE : chaîne télé culturelle franco-allemande - TV direct & replay",
-    url: "https://www.arte.tv/fr/"
+    url: "https://www.arte.tv/fr/",
   },
   {
     "title": "Sync Tab Groups",
     "url": "https://morikko.github.io/synctabgroups/",
-    "favIconUrl": "https://morikko.github.io/synctabgroups/img/synctabgroups-64.png"
+    "favIconUrl": "https://morikko.github.io/synctabgroups/img/synctabgroups-64.png",
   },
   {
     "title": "Duolingo: Apprenez l'anglais, l'espagnol et + gratuitement",
     "url": "https://fr.duolingo.com/",
-    "favIconUrl": "https://fr.duolingo.com/images/favicon.ico?v=3"
+    "favIconUrl": "https://fr.duolingo.com/images/favicon.ico?v=3",
   },
   {
     "title": "Medium – Read, write and share stories that matter",
     "url": "https://medium.com/",
-    "favIconUrl": "https://cdn-static-1.medium.com/_/fp/icons/favicon-rebrand-medium.3Y6xpZ-0FSdWDnPM3hSBIA.ico"
+    "favIconUrl": "https://cdn-static-1.medium.com/_/fp/icons/favicon-rebrand-medium.3Y6xpZ-0FSdWDnPM3hSBIA.ico",
   },
   {
     "title": "Cours de guitare et tablatures guitare acoustique",
     "url": "https://www.tabs4acoustic.com/",
-    "favIconUrl": "https://www.tabs4acoustic.com/images/favicon.ico"
+    "favIconUrl": "https://www.tabs4acoustic.com/images/favicon.ico",
   },
   {
     "title": "BetterExplained – Math lessons for lasting insight.",
     "url": "https://betterexplained.com/",
-    "favIconUrl": "https://betterexplained.com/favicon.ico"
+    "favIconUrl": "https://betterexplained.com/favicon.ico",
   },
   {
     "title": "HTML Color Picker",
     "url": "https://www.w3schools.com/colors/colors_picker.asp",
-    "favIconUrl": "https://www.w3schools.com/favicon.ico"
+    "favIconUrl": "https://www.w3schools.com/favicon.ico",
   },
   { // /!\ Heavy to load
     "title": "Challenge your coding skills with these programming puzzles",
     "url": "https://www.codingame.com/training/expert",
-    "favIconUrl": "https://static.codingame.com/common/images/favicon_16_16.1e3eb433.ico"
+    "favIconUrl": "https://static.codingame.com/common/images/favicon_16_16.1e3eb433.ico",
   },
   {
     "title": "Calendrier | Mambo Salsa",
     "url": "http://mambosalsa.fr/calendrier/",
-    "favIconUrl": "http://mambosalsa.fr/wp-content/themes/invictus_3.3/favicon.png"
+    "favIconUrl": "http://mambosalsa.fr/wp-content/themes/invictus_3.3/favicon.png",
   },
   {
     "title": "DEAP/deap: Distributed Evolutionary Algorithms in Python",
     "url": "https://github.com/DEAP/deap",
-    "favIconUrl": "https://assets-cdn.github.com/favicon.ico"
+    "favIconUrl": "https://assets-cdn.github.com/favicon.ico",
   },
 ];
 
 Session.ListOfPrivTabURLs = [{
   "title": "Debugging",
   "url": "about:debugging",
-  "favIconUrl": ""
+  "favIconUrl": "",
 }];
 
 Session.ListOfExtensionTabURLs = [{
   "title": "Preferences",
   "url": browser.extension.getURL("/options/option-page.html"),
-  "favIconUrl": "/share/icons/tabspace-active-64.png"
+  "favIconUrl": "/share/icons/tabspace-active-64.png",
 }];
 
 /**
@@ -490,3 +502,5 @@ Session.getTabInformation = async function(url) {
   console.log(tabLight);
   await browser.tabs.remove(tabId);
 }
+
+export default Session

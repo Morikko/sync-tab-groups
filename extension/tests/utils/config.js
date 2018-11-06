@@ -1,5 +1,8 @@
-var TestManager = TestManager || {};
+import jasmine from 'jasmine'
+const TestConfig = {};
 
-TestManager.DOUBLE_MONITORS = true;
-TestManager.TIMEOUT = 30000;
-jasmine.DEFAULT_TIMEOUT_INTERVAL = TestManager.TIMEOUT;
+TestConfig.DOUBLE_MONITORS = true;
+TestConfig.TIMEOUT = 30000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = TestConfig.TIMEOUT;
+
+export default TestConfig
