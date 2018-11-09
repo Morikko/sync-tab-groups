@@ -9,10 +9,11 @@
   "env": {
     "browser": true,
     "node": false,
-    "es6": true
+    "es6": true,
+    "jasmine": true
   },
   "parser": "babel-eslint",
-  "plugins": ["import", "jsdoc", "react"],
+  "plugins": ["import", "jsdoc", "react", "jasmine"],
   "globals": {
     "browser": true,
     "process": true,

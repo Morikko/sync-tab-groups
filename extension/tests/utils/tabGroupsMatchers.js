@@ -1,4 +1,4 @@
-import TestComparator from './comparator'
+import TestComparator from './TestComparator'
 import Background from '../utils/Background'
 const {
   LogManager,

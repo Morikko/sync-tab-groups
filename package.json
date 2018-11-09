@@ -29,6 +29,7 @@
     "copy-webpack-plugin": "^4.6.0",
     "eslint": "^5.8.0",
     "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-jsdoc": "^3.9.1",
     "eslint-plugin-react": "^7.11.1",
     "immutable": "^3.8.2",

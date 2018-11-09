@@ -1,7 +1,7 @@
-import TestComparator from './comparator'
-import TestConfig from './config'
-import TestHelper from './helper'
-import TestUtils from './utils'
+import TestComparator from './TestComparator'
+import TestConfig from './TestConfig'
+import TestHelper from './TestHelper'
+import TestUtils from './TestUtils'
 
 const TestManager = {
   ...TestComparator,

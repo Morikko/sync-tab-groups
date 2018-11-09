@@ -1,15 +1,25 @@
+import TestManager from '../../utils/TestManager'
+import Examples from '../../examples/tabGroups'
+
+import OPTION_CONSTANTS from '../../../background/core/OPTION_CONSTANTS'
+
+import Background from '../../utils/Background'
+const {
+  ExtensionStorageManager,
+} = Background
+
 describe('FileStorage', ()=>{
   beforeAll(TestManager.initUnitBeforeAll());
   beforeEach(TestManager.initBeforeEach());
 
-  beforeAll(async function () {
+  beforeAll(async function() {
     this.previousOptions = TestManager.swapOptions();
     await TestManager.changeSomeOptions({
       "groups-sortingType": OPTION_CONSTANTS.SORT_OLD_RECENT,
     })
   })
 
-  afterAll(function(){
+  afterAll(function() {
     TestManager.swapOptions(this.previousOptions);
   })
 

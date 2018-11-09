@@ -1,14 +1,20 @@
+import TestManager from '../../utils/TestManager'
+import Session from '../../examples/session'
+import Utils from '../../../background/utils/utils'
+
 describe("Comparator: ", ()=>{
   beforeAll(TestManager.initUnitBeforeAll());
   beforeEach(TestManager.initBeforeEach());
 
   it("toEqualTabs", ()=>{
-    let tabs = Session.createTabs({tabsLength: 7, pinnedTabs: 2});
+    let tabs = Session.createTabs({tabsLength: 7,
+      pinnedTabs: 2});
 
     expect(tabs).toEqualTabs(tabs);
 
     let alter_tabs = Session.createTabs(
-      {tabsLength: 7, pinnedTabs: 2}
+      {tabsLength: 7,
+        pinnedTabs: 2}
     );
 
     expect(tabs).not.toEqualTabs(alter_tabs);
@@ -18,7 +24,9 @@ describe("Comparator: ", ()=>{
   })
 
   it("toEqualGroup", ()=>{
-    let groups = Session.createGroup({tabsLength: 7, pinnedTabs: 2, incognito: false});
+    let groups = Session.createGroup({tabsLength: 7,
+      pinnedTabs: 2,
+      incognito: false});
     expect(groups).toEqualGroup(groups);
 
     let groups_alter = Utils.getCopy(groups);
@@ -26,7 +34,8 @@ describe("Comparator: ", ()=>{
 
     let groups_alter_tabs = Utils.getCopy(groups);
     groups_alter_tabs.tabs = Session.createTabs(
-      {tabsLength: 7, pinnedTabs: 2}
+      {tabsLength: 7,
+        pinnedTabs: 2}
     );
 
     expect(groups).not.toEqualGroup(groups_alter);

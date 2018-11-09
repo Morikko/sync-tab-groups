@@ -1,3 +1,14 @@
+import TestManager from '../../utils/TestManager'
+import Session from '../../examples/session'
+
+import tabGroupsMatchers from '../../utils/tabGroupsMatchers'
+
+import Background from '../../utils/Background'
+const {
+  GroupManager,
+  Utils,
+} = Background
+
 describe("Session: ", () => {
 
   beforeAll(TestManager.initUnitBeforeAll());
@@ -11,7 +22,8 @@ describe("Session: ", () => {
     it("Group with normal tabs, title", () => {
       let title = "coucou",
         length = 5;
-      let group = Session.createGroup({tabsLength: length, title: title});
+      let group = Session.createGroup({tabsLength: length,
+        title: title});
       expect(group.tabs.length).toEqual(length);
       expect(group.title).toEqual(title);
     });
@@ -19,8 +31,9 @@ describe("Session: ", () => {
     it("Group with normal tabs and pinned tabs", () => {
       let pinnedLength = 2,
         length = 5;
-      let group = Session.createGroup({tabsLength: length, pinnedTabs: pinnedLength});
-      actualPinnedLength = group.tabs.reduce((a, b) => {
+      let group = Session.createGroup({tabsLength: length,
+        pinnedTabs: pinnedLength});
+      const actualPinnedLength = group.tabs.reduce((a, b) => {
         return a + b.pinned;
       }, 0);
 
@@ -29,7 +42,8 @@ describe("Session: ", () => {
     });
 
     it("Group incognito", () => {
-      let group = Session.createGroup({tabsLength: 1, incognito: true});
+      let group = Session.createGroup({tabsLength: 1,
+        incognito: true});
       expect(group.incognito).toBe(true);
     });
 
@@ -37,7 +51,9 @@ describe("Session: ", () => {
       let length = 5,
         privLength = 2,
         extLength = 2;
-      let group = Session.createGroup({tabsLength: length, privilegedLength: privLength, extensionUrlLength: extLength});
+      let group = Session.createGroup({tabsLength: length,
+        privilegedLength: privLength,
+        extensionUrlLength: extLength});
       let actualPrivLength = group.tabs.filter((tab)=>{
         return Session.ListOfPrivTabURLs.filter((list)=>{
           return tab.url.includes(list.url);
@@ -57,8 +73,9 @@ describe("Session: ", () => {
     it("Manage pinned tabs overflow", () => {
       let pinnedLength = 7,
         length = 5;
-      let group = Session.createGroup({tabsLength: length, pinnedTabs: pinnedLength});
-      actualPinnedLength = group.tabs.reduce((a, b) => {
+      let group = Session.createGroup({tabsLength: length,
+        pinnedTabs: pinnedLength});
+      const actualPinnedLength = group.tabs.reduce((a, b) => {
         return a + b.pinned;
       }, 0);
 
@@ -70,7 +87,9 @@ describe("Session: ", () => {
       let length = 3,
         privLength = 2,
         extLength = 2;
-      let group = Session.createGroup({tabsLength: length, privilegedLength: privLength, extensionUrlLength: extLength});
+      let group = Session.createGroup({tabsLength: length,
+        privilegedLength: privLength,
+        extensionUrlLength: extLength});
       let actualPrivLength = group.tabs.filter((tab)=>{
         return Session.ListOfPrivTabURLs.filter((list)=>{
           return tab.url.includes(list.url);
@@ -126,10 +145,12 @@ describe("Session: ", () => {
       expect(lazyLength).toEqual(length-1);
     });
 
-    it("Group global", async () => {
+    it("Group global", async() => {
       let title = "coucou",
         length = 5;
-      let [id, group] = Session.createGroup({tabsLength: length, title: title, global: true});
+      let [id, group] = Session.createGroup({tabsLength: length,
+        title: title,
+        global: true});
 
       let groupIndex = GroupManager.getGroupIndexFromGroupId(id);
 
@@ -156,7 +177,7 @@ describe("Session: ", () => {
         global: false,
         incognito: false,
         active: -1,
-        title:titlePrefix,
+        title: titlePrefix,
       });
 
       expect(groups.length).toEqual(groupsLength);
@@ -180,7 +201,7 @@ describe("Session: ", () => {
         global: false,
         incognito: [false, true, false, true],
         active: -1,
-        title:title,
+        title: title,
       });
 
       expect(groups.length).toEqual(groupsLength);
@@ -191,7 +212,7 @@ describe("Session: ", () => {
       });
     });
 
-    it("Create Global Groups", async ()=>{
+    it("Create Global Groups", async()=>{
       await TestManager.changeSomeOptions({
         "groups-removeEmptyGroup": false,
       })
@@ -210,7 +231,7 @@ describe("Session: ", () => {
           global: true,
           incognito: [false, true, false, true],
           active: -1,
-          title:titlePrefix,
+          title: titlePrefix,
         });
 
         expect(groups.length).toEqual(groupsLength);
@@ -225,7 +246,7 @@ describe("Session: ", () => {
         });
       } finally {
         ids.forEach((id, index)=>{
-          if ( GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0) {
+          if (GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0) {
             GroupManager.removeGroupFromId(id);
           }
         });

@@ -1,3 +1,17 @@
+import TestManager from '../../utils/TestManager'
+import Session from '../../examples/session'
+
+import getGroupIndexSortedByPosition from '../../../background/core/getGroupIndexSortedByPosition'
+import tabGroupsMatchers from '../../utils/tabGroupsMatchers'
+
+import Background from '../../utils/Background'
+const {
+  ExtensionStorageManager,
+  GroupManager,
+  Utils,
+} = Background
+
+
 describe("GroupManager", () => {
   beforeAll(TestManager.initUnitBeforeAll());
   beforeEach(TestManager.initBeforeEach());
@@ -8,19 +22,19 @@ describe("GroupManager", () => {
     beforeEach(function() {
       jasmine.addMatchers(tabGroupsMatchers);
       this.groups = Session.createArrayGroups({
-          groupsLength: 3,
-          tabsLength: 5,
-          global: false,
-          pinnedTabs: 1,
-          privilegedLength: 0,
-          extensionUrlLength: 0,
-          incognito: false,
-          active: [-1, 3, 2],
-          title: "Debug coherentActiveTabInGroups"
-        });
+        groupsLength: 3,
+        tabsLength: 5,
+        global: false,
+        pinnedTabs: 1,
+        privilegedLength: 0,
+        extensionUrlLength: 0,
+        incognito: false,
+        active: [-1, 3, 2],
+        title: "Debug coherentActiveTabInGroups",
+      });
     });
 
-    it("No active in group", function () {
+    it("No active in group", function() {
       let good_groups = Utils.getCopy(this.groups[0]);
       TestManager.resetActiveProperties(this.groups[0].tabs);
 
@@ -50,10 +64,10 @@ describe("GroupManager", () => {
 
     it("Empty Group", function() {
       this.groups = [Session.createGroup({
-          tabsLength: 0,
-          global: false,
-          title: "Debug coherentActiveTabInGroups"
-        })]
+        tabsLength: 0,
+        global: false,
+        title: "Debug coherentActiveTabInGroups",
+      })]
       let good_groups = Utils.getCopy(this.groups);
 
       GroupManager.coherentActiveTabInGroups({groups: this.groups});
@@ -70,7 +84,8 @@ describe("GroupManager", () => {
 
     it("Match normal", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2});
       group.id = id;
 
       let bestId = GroupManager.bestMatchGroup(group.tabs, [group]);
@@ -80,7 +95,8 @@ describe("GroupManager", () => {
 
     it("Match fancy", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2});
       group.id = id;
       let tabs = Utils.getCopy(group.tabs);
 
@@ -95,8 +111,12 @@ describe("GroupManager", () => {
 
     it("Match reject length", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2, fakeTab:false});
-      let group2 = Session.createGroup({tabsLength: 6, pinnedTabs: 2, fakeTab:false});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2,
+        fakeTab: false});
+      let group2 = Session.createGroup({tabsLength: 6,
+        pinnedTabs: 2,
+        fakeTab: false});
       group2.id = id;
 
       let bestId = GroupManager.bestMatchGroup(group.tabs, [group2]);
@@ -105,7 +125,9 @@ describe("GroupManager", () => {
     });
 
     it("Match reject diverge on incognito", ()=>{
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2, incognito: true});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2,
+        incognito: true});
       let tabs = Utils.getCopy(group.tabs);
 
 
@@ -116,8 +138,12 @@ describe("GroupManager", () => {
 
     it("Match reject URL", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2, fakeTab:false});
-      let group2 = Session.createGroup({tabsLength: 7, pinnedTabs: 2, fakeTab:false});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2,
+        fakeTab: false});
+      let group2 = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2,
+        fakeTab: false});
       group2.id = id;
 
       let bestId = GroupManager.bestMatchGroup(group.tabs, [group2]);
@@ -127,12 +153,14 @@ describe("GroupManager", () => {
 
     it("Match 1 in 5 groups", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2});
       group.id = id;
       let groups = new Array(4);
 
       groups = groups.map((a, index)=>{
-        let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+        let group = Session.createGroup({tabsLength: 7,
+          pinnedTabs: 2});
         group.id = index;
         return group;
       })
@@ -144,7 +172,8 @@ describe("GroupManager", () => {
 
     it("Match prefer lastAccessed", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2});
       group.id = id;
       group.lastAccessed = 11;
 
@@ -159,8 +188,9 @@ describe("GroupManager", () => {
 
     it("Match retrieve even with closed extension tabs", ()=>{
       let id = 122;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2,
-      extensionUrlLength: 2});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2,
+        extensionUrlLength: 2});
       group.id = id;
 
       // Without ext tabs
@@ -177,8 +207,9 @@ describe("GroupManager", () => {
 
     it("Match prefer with extension tabs", ()=>{
       let id = 122, id2 = 127;
-      let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2,
-      extensionUrlLength: 2});
+      let group = Session.createGroup({tabsLength: 7,
+        pinnedTabs: 2,
+        extensionUrlLength: 2});
       group.id = id;
 
       let group2 = Utils.getCopy(group);
@@ -216,7 +247,7 @@ describe("GroupManager", () => {
 
   describe(".reloadGroupsFromDisk: ", ()=>{
 
-    it("is Reloading well", async ()=>{
+    it("is Reloading well", async()=>{
       let groups = Session.createArrayGroups({
         groupsLength: 4,
         tabsLength: 4,
@@ -235,7 +266,7 @@ describe("GroupManager", () => {
       await ExtensionStorageManager.Local.saveGroups(saveGroups);
     });
 
-    it("is well changing GroupManager.groups", async ()=>{
+    it("is well changing GroupManager.groups", async()=>{
       let saveGroups = GroupManager.groups;
       let targetGroups = Session.createArrayGroups({
         groupsLength: 4,
@@ -256,7 +287,7 @@ describe("GroupManager", () => {
   });
 
   describe(".setUniqueTabIds ", ()=>{
-    it("should replace ids for tabs in close groups", function(){
+    it("should replace ids for tabs in close groups", function() {
       let groups = Session.createArrayGroups({
         groupsLength: 2,
         tabsLength: 2,
@@ -274,13 +305,13 @@ describe("GroupManager", () => {
         group.tabs.forEach((tab, index)=>{
           let parts = tab.id.split("-");
           expect(parts[0].length>0).toBe(true);
-          expect(parts[1]).toEqual(""+group.id);
-          expect(parts[2]).toEqual(""+index);
+          expect(parts[1]).toEqual(String(group.id));
+          expect(parts[2]).toEqual(String(index));
         });
       });
     });
 
-    it("should not replace ids for tabs in open groups", function(){
+    it("should not replace ids for tabs in open groups", function() {
       let groups = Session.createArrayGroups({
         groupsLength: 2,
         tabsLength: 2,
@@ -302,7 +333,7 @@ describe("GroupManager", () => {
       });
     });
 
-    it("should also update openerTabIds for tabs in close groups", function(){
+    it("should also update openerTabIds for tabs in close groups", function() {
       let group = Session.createGroup({
         tabsLength: 4,
       });
@@ -324,20 +355,20 @@ describe("GroupManager", () => {
   });
 
   describe(".filterGroups", ()=>{
-    it(" sould return filtered groups", function(){
+    it(" sould return filtered groups", function() {
       let groups = Session.createArrayGroups({
         groupsLength: 4,
         tabsLength: 7,
         pinnedTabs: 3,
         lazyMode: false,
-        title:"Filter groups",
+        title: "Filter groups",
       });
 
       // Only odd groups and tabs (cf index)
       let filter = {};
 
       groups.forEach((group, ind)=>{
-        if ( (ind %2===1) ) {
+        if ((ind %2===1)) {
           let tabs = group.tabs.map((_,index)=>index%2===1);
           filter[group.id] = {
             tabs: tabs,
@@ -358,7 +389,7 @@ describe("GroupManager", () => {
       );
 
       // Keep odd groups
-      expectedFilteredGroups = groups.filter((group, ind)=>{
+      const expectedFilteredGroups = groups.filter((group, ind)=>{
         return (ind %2===1);
       });
       // Keep odd tabs
@@ -369,13 +400,13 @@ describe("GroupManager", () => {
       expect(filteredGroups).toEqualGroups(expectedFilteredGroups);
     });
 
-    it(" should return all groups if no filter provided", function(){
+    it(" should return all groups if no filter provided", function() {
       let groups = Session.createArrayGroups({
         groupsLength: 4,
         tabsLength: 7,
         pinnedTabs: 3,
         lazyMode: false,
-        title:"Filter groups",
+        title: "Filter groups",
       });
 
       let filteredGroups = GroupManager.filterGroups(
@@ -422,14 +453,14 @@ describe("GroupManager", () => {
           position: (i>SIZE/2)?SIZE-1-i:undefined,
         }
       });
-                          // Adding first defined in reverse
+      // Adding first defined in reverse
       const expectIndex = groups.filter(group => group.position !== undefined)
-                            .map(group=>group.index).reverse()
-                            .concat(
-                              // Adding in order undefined
-                              groups.filter(group => group.position === undefined)
-                                .map(group=>group.index)
-                              );
+        .map(group=>group.index).reverse()
+        .concat(
+          // Adding in order undefined
+          groups.filter(group => group.position === undefined)
+            .map(group=>group.index)
+        );
 
       let index = getGroupIndexSortedByPosition(groups);
 
@@ -440,37 +471,37 @@ describe("GroupManager", () => {
       let groups =  [
         {
           "index": 0,
-          "position": 1
+          "position": 1,
         },
         {
           "index": 1,
-          "position": 5
+          "position": 5,
         },
         {
           "index": 2,
-          "position": 0
+          "position": 0,
         },
         {
           "index": 3,
-          "position": 4
+          "position": 4,
         },
         {
           "index": 4,
-          "position": 2
+          "position": 2,
         },
         {
           "index": 5,
-          "position": 3
+          "position": 3,
         },
         {
           "index": -1,
-          "position": -1
-        }
+          "position": -1,
+        },
       ];
-                          // Adding first defined in reverse
+      // Adding first defined in reverse
       const expectIndex = groups.filter(group => group.position >= 0)
-                            .sort((a,b) => a.position > b.position)
-                            .map(group=>group.index);
+        .sort((a,b) => a.position > b.position)
+        .map(group=>group.index);
       expectIndex.push(expectIndex.length);
 
       let index = getGroupIndexSortedByPosition(groups);

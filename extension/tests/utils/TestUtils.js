@@ -1,40 +1,9 @@
 /**
-
- - splitOnHalfScreen
- - splitOnHalfTopScreen
- - splitOnHalfBottomScreen
-
- - getGroup
-
- - countDiscardedTabs
-
- - resetActiveProperties
- - resetIndexProperties
-
-
- - swapOptions
-
- - getRandom
-
- - removeGroups
- - closeWindows
- - clearWindow
- - openWindow
- - openTwoWindows
- - focusedWindow
- - replaceTabs
-
- - waitWindowToBeClosed
- - waitWindowToBeFocused
- - waitAllTabsToBeLoadedInWindowId
-*/
-
-/**
  Put the window on the left of the screen
  If TestManager.DOUBLE_MONITORS is true, the screen is not the first one but the second one (the one the more on the right)
 **/
 import Utils from '../../background/utils/utils'
-import Background from '../utils/Background'
+import Background from './Background'
 const {
   GroupManager,
   TabManager,
@@ -42,6 +11,7 @@ const {
   BackgroundHelper,
 } = Background
 import Session from '../examples/session'
+import TASKMANAGER_CONSTANTS from '../../background/utils/TASKMANAGER_CONSTANTS'
 
 const TestUtils = {};
 
@@ -158,8 +128,16 @@ TestUtils.getRandomIndex = function(
   );
 };
 
+async function hasLoadingTabs(windowId) {
+  // Get all tabs
+  let tabs = await TabManager.getTabsInWindowId(windowId, {
+    withPinned: true,
+  });
+  return tabs.filter(tab => tab.status === "loading").length > 0;
+}
 
 TestUtils.waitAllTabsToBeLoadedInWindowId = async function(windowId) {
+
   let WAIT_SECOND=10, LIMIT =WAIT_SECOND*2;
   let i;
   while (await hasLoadingTabs(windowId)) {
@@ -172,14 +150,6 @@ TestUtils.waitAllTabsToBeLoadedInWindowId = async function(windowId) {
       LogManager.warning("TestManager.waitAllTabsToBeLoadedInWindowId: Waited too much...");
       break;
     }
-  }
-
-  async function hasLoadingTabs(windowId) {
-    // Get all tabs
-    let tabs = await TabManager.getTabsInWindowId(windowId, {
-      withPinned: true,
-    });
-    return tabs.filter(tab => tab.status === "loading").length > 0;
   }
 }
 
@@ -318,10 +288,6 @@ TestUtils.getRandomGroupPosition = function(groups) {
   return groups[
     TestUtils.getRandom(0, groups.length-1)
   ].position;
-}
-
-TestUtils.getRandomAction = function() {
-  return TestUtils.getRandom(0, ACTIONS.length-1);
 }
 
 const ACTIONS = [
@@ -465,3 +431,5 @@ TestUtils.countHiddenTabsInGroups = (groups) => {
     return acc;
   }, 0);
 }
+
+export default TestUtils

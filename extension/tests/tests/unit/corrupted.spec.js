@@ -1,29 +1,41 @@
+import TestManager from '../../utils/TestManager'
+import Session from '../../examples/session'
+
+import Background from '../../utils/Background'
+import OPTION_CONSTANTS from '../../../background/core/OPTION_CONSTANTS'
+
+const {
+  GroupManager,
+  Utils,
+  OptionManager,
+} = Background
+
 describe("Check Corrupted", ()=>{
   beforeAll(TestManager.initUnitBeforeAll());
   beforeEach(TestManager.initBeforeEach());
 
   describe("in Groups", ()=>{
     beforeAll(()=>{
-      bg.Utils.DEBUG_MODE = false;
+      Utils.DEBUG_MODE = false;
     });
     afterAll(()=>{
-      bg.Utils.DEBUG_MODE = true;
+      Utils.DEBUG_MODE = true;
     });
 
-    beforeEach(function(){
+    beforeEach(function() {
       spyOn(GroupManager, "reloadGroupsFromDisk");
     });
 
     describe("should find critical undefined", ()=> {
-      it("and reload the groups from the disk.", async function(){
-        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
+      it("and reload the groups from the disk.", async function() {
+        const [corrupted] = await GroupManager.checkCorruptedGroups(
           [undefined], {withMessage: true}
         );
         expect(corrupted).toBe(true);
         expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(1);
       });
-      
-      it("when the groups array is undefined", async function(){
+
+      it("when the groups array is undefined", async function() {
         const [corrupted, message] = await GroupManager.checkCorruptedGroups(
           null, {withMessage: true}
         );
@@ -31,7 +43,7 @@ describe("Check Corrupted", ()=>{
         expect(message).toBe("GroupManager.groups")
       });
 
-      it("when a group is undefined", async function(){
+      it("when a group is undefined", async function() {
         const [corrupted, message] = await GroupManager.checkCorruptedGroups(
           [undefined], {withMessage: true}
         );
@@ -39,33 +51,36 @@ describe("Check Corrupted", ()=>{
         expect(message).toBe("GroupManager.groups[0]")
       });
 
-      it("when a tabs group array is undefined", async function(){
-        let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      it("when a tabs group array is undefined", async function() {
+        let group = Session.createGroup({tabsLength: 7,
+          pinnedTabs: 2});
 
         group.tabs = undefined;
-        [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(true);
         expect(message).toBe('GroupManager.groups[0]["tabs"]');
       });
 
-      it("when a tab in a tabs group array is undefined", async function(){
-        let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      it("when a tab in a tabs group array is undefined", async function() {
+        let group = Session.createGroup({tabsLength: 7,
+          pinnedTabs: 2});
 
         group.tabs[1] = undefined;
-        [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(true);
         expect(message).toBe('GroupManager.groups[0].tabs[1]');
       });
 
-      it("when a tab url is undefined", async function(){
-        let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      it("when a tab url is undefined", async function() {
+        let group = Session.createGroup({tabsLength: 7,
+          pinnedTabs: 2});
 
         group.tabs[1].url = undefined;
-        [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(true);
@@ -74,8 +89,9 @@ describe("Check Corrupted", ()=>{
     })
 
     describe("should repair light undefined when", ()=> {
-      it("a group property (incognito) is undefined", async function(){
-        const group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      it("a group property (incognito) is undefined", async function() {
+        const group = Session.createGroup({tabsLength: 7,
+          pinnedTabs: 2});
         group.incognito = undefined;
 
         const [corrupted, message] = await GroupManager.checkCorruptedGroups(
@@ -86,8 +102,9 @@ describe("Check Corrupted", ()=>{
         expect(group.incognito).toBe(false);
       });
 
-      it("2 tab properties (pinned and active) are undefined", async function(){
-        let group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      it("2 tab properties (pinned and active) are undefined", async function() {
+        let group = Session.createGroup({tabsLength: 7,
+          pinnedTabs: 2});
 
         group.tabs[0].pinned = undefined;
         group.tabs[3].active = undefined;
@@ -100,8 +117,9 @@ describe("Check Corrupted", ()=>{
         expect(group.tabs[3].active).toBe(false);
       });
 
-      it("a group property (incognito) and a tab property are undefined", async function(){
-        const group = Session.createGroup({tabsLength: 7, pinnedTabs: 2});
+      it("a group property (incognito) and a tab property are undefined", async function() {
+        const group = Session.createGroup({tabsLength: 7,
+          pinnedTabs: 2});
         group.incognito = undefined;
         group.tabs[2].pinned = undefined;
 
@@ -116,8 +134,10 @@ describe("Check Corrupted", ()=>{
     });
 
 
-    it("should find no corruption and do nothing", async function(){
-      let groups = Session.createArrayGroups({groupsLength:1, tabsLength: 7, pinnedTabs: 2});
+    it("should find no corruption and do nothing", async function() {
+      let groups = Session.createArrayGroups({groupsLength: 1,
+        tabsLength: 7,
+        pinnedTabs: 2});
 
       const isCorrupted = await GroupManager.checkCorruptedGroups(groups);
       expect(isCorrupted).toBe(false);
@@ -127,17 +147,17 @@ describe("Check Corrupted", ()=>{
 
   describe("Options: ", ()=>{
     beforeAll(()=>{
-      bg.Utils.DEBUG_MODE = false;
+      Utils.DEBUG_MODE = false;
     });
     afterAll(()=>{
-      bg.Utils.DEBUG_MODE = true;
+      Utils.DEBUG_MODE = true;
     });
 
-    beforeEach(function(){
+    beforeEach(function() {
       spyOn(OptionManager, "reloadOptionsFromDisk");
     });
 
-    it("No corruption", async function(){
+    it("No corruption", async function() {
       let options = OPTION_CONSTANTS.TEMPLATE();
 
       let corrupted = await OptionManager.checkCorruptedOptions(options);
@@ -145,14 +165,14 @@ describe("Check Corrupted", ()=>{
       expect(OptionManager.reloadOptionsFromDisk).toHaveBeenCalledTimes(0);
     });
 
-    it("Options is undefined", async function(){
+    it("Options is undefined", async function() {
       let corrupted = await OptionManager.checkCorruptedOptions({undefined});
 
       expect(corrupted).toBe(true);
       expect(OptionManager.reloadOptionsFromDisk).toHaveBeenCalledTimes(1);
     });
 
-    it("A property of an option is undefined", async function(){
+    it("A property of an option is undefined", async function() {
       let options = OPTION_CONSTANTS.TEMPLATE();
       options.groups = undefined;
 

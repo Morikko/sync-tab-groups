@@ -142,3 +142,5 @@ TestHelper.uninstallFakeTime = function() {
     savedTime = {};
   }
 }
+
+export default TestHelper

@@ -1,3 +1,9 @@
+import TestManager from '../../utils/TestManager'
+import Background from '../../utils/Background'
+const {
+  Utils,
+} = Background
+
 describe("Search: ", () => {
   beforeAll(TestManager.initUnitBeforeAll());
   beforeEach(TestManager.initBeforeEach());
@@ -37,25 +43,25 @@ describe("Search: ", () => {
     // Extract search value
 
     it("Group and tab", () => {
-      [groupSearch, tabSearch] = Utils.extractSearchValue("g/text coucou/grow throw");
+      const [groupSearch, tabSearch] = Utils.extractSearchValue("g/text coucou/grow throw");
       expect(groupSearch).toBe("text coucou");
       expect(tabSearch).toBe("grow throw");
     });
 
     it("Group only", () => {
-      [groupSearch, tabSearch] = Utils.extractSearchValue("g/text coucou/");
+      const [groupSearch, tabSearch] = Utils.extractSearchValue("g/text coucou/");
       expect(groupSearch).toBe("text coucou");
       expect(tabSearch).toBe("");
     });
 
     it("Group only without last separator", () => {
-      [groupSearch, tabSearch] = Utils.extractSearchValue("g/text coucou");
+      const [groupSearch, tabSearch] = Utils.extractSearchValue("g/text coucou");
       expect(groupSearch).toBe("text coucou");
       expect(tabSearch).toBe("");
     });
 
     it("Tab only", () => {
-      [groupSearch, tabSearch] = Utils.extractSearchValue("grow throw");
+      const [groupSearch, tabSearch] = Utils.extractSearchValue("grow throw");
       expect(groupSearch).toBe("");
       expect(tabSearch).toBe("grow throw");
     });
