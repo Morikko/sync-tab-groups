@@ -1,7 +1,8 @@
 import Utils from '../../utils/utils'
 import OptionManager from '../../core/optionmanager'
 import LogManager from '../../error/logmanager'
-import TAB_CONSTANTS from '../../core/TAB_CONSTANTS'
+import TAB_CONSTANTS from '../TAB_CONSTANTS'
+import TabHidden from '../tabhidden'
 import {countPinnedTabs} from './utilsTabs'
 import {getTabsInWindowId} from './getTabs'
 import {removeTabs} from './removeTabs'
@@ -18,13 +19,13 @@ async function openTab(
   index,
   tabIdsCrossRef=undefined
 ) {
-/*   if (OptionManager.isClosingHidden()) {
+  if (OptionManager.isClosingHidden()) {
     const wasShown = await TabHidden.showTab(tab.id, windowId, index);
     if (wasShown) {
       if (tab.active) await browser.tabs.update(tab.id, {active: true});
       return await browser.tabs.get(tab.id);
     }
-  } */
+  }
 
   let url = tab.url;
 

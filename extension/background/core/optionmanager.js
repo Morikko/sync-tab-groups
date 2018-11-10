@@ -5,6 +5,7 @@ import TaskManager from '../utils/taskManager'
 import EventListener from '../utils/eventlistener'
 import WindowManager from './windowmanager'
 import OPTION_CONSTANTS from './OPTION_CONSTANTS'
+import TabHidden from '../core/tabhidden'
 import ExtensionStorageManager from '../storage/storageManager'
 
 const OptionManager = {};
@@ -104,7 +105,7 @@ OptionManager.getOptionValue = function(optionName) {
   */
 OptionManager.onClosingStateChange = async function(value) {
   if (value === OPTION_CONSTANTS.CLOSE_NORMAL) {
-    //await TabHidden.closeAllHiddenTabsInGroups(GroupManager.groups);
+    await TabHidden.closeAllHiddenTabsInGroups(GroupManager.groups);
   } else if (value === OPTION_CONSTANTS.CLOSE_HIDDEN) {
     await OptionManager.updateOption("pinnedTab-sync", false);
   }
@@ -112,9 +113,9 @@ OptionManager.onClosingStateChange = async function(value) {
 
 OptionManager.onRemoveUnknownHiddenTabsChange = async function(value) {
   if (value) {
-    //await TabHidden.startCleaningUnknownHiddenTabsProcess({doItNow: true});
+    await TabHidden.startCleaningUnknownHiddenTabsProcess({doItNow: true});
   } else {
-    //TabHidden.stopCleaningUnknownHiddenTabsProcess();
+    TabHidden.stopCleaningUnknownHiddenTabsProcess();
   }
 }
 

@@ -2,6 +2,7 @@ import '../../test-page/test-page'
 
 import './backup.spec'
 import './end_groups.spec'
+import './hidden.spec'
 import './select_group.spec'
 import './selector.spec'
 import './session.spec'

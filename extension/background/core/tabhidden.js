@@ -1,5 +1,12 @@
-// TODO: Legacy ??
-var TabHidden = TabHidden || {};
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import OptionManager from '../core/optionmanager'
+import GroupManager from '../core/groupmanager'
+import OPTION_CONSTANTS from '../core/OPTION_CONSTANTS'
+
+const TabHidden = {};
+window.TabHidden = TabHidden
+
 TabHidden.TABHIDDEN_SESSION_KEY = "TABHIDDEN_ID";
 TabHidden.cleaningUnknownHiddenTabsProcess = null;
 
@@ -26,7 +33,7 @@ TabHidden.showTab = async function(tabId, windowId, index=-1) {
   } catch (e) {
     if (Utils.DEBUG_MODE) {
       e.message = "Impossible to show tab: " + e.message;
-      LogManager.warning(e.message, {arguments});
+      LogManager.warning(e.message, {args: arguments});
     }
     return false;
   }
@@ -46,7 +53,7 @@ TabHidden.hideTab = async function(tabId) {
             try {
               await browser.tabs.discard(tabId)
             } catch (e) {
-              LogManager.warning(e.message, {arguments});
+              LogManager.warning(e.message, {args: arguments});
             }
           },
           2000,
@@ -61,7 +68,7 @@ TabHidden.hideTab = async function(tabId) {
     }
     return result.length !== 0;
   } catch (e) {
-    LogManager.warning(e.message, {arguments});
+    LogManager.warning(e.message, {args: arguments});
     return false;
   }
 
@@ -247,3 +254,4 @@ TabHidden.stopCleaningUnknownHiddenTabsProcess = function() {
   }
 }
 
+export default TabHidden

@@ -1,6 +1,7 @@
 import Utils from '../../utils/utils'
-import OptionManager from '../../core/optionmanager'
-import OPTION_CONSTANTS from '../../core/OPTION_CONSTANTS'
+import OptionManager from '../optionmanager'
+import GroupManager from '../groupmanager'
+import TabHidden from '../tabhidden'
 import LogManager from '../../error/logmanager'
 import {getTabsInWindowId} from './getTabs'
 import {openListOfTabs} from './openTabs'
@@ -17,7 +18,7 @@ async function removeTabs(tabIdsToRemove, {
   try {
     let ids = Utils.getCopy(tabIdsToRemove);
 
-    /* if (OptionManager.isClosingHidden() && !forceClosing) {
+    if (OptionManager.isClosingHidden() && !forceClosing) {
       const results = await Promise.all(
         ids.map(id => TabHidden.hideTab(id))
       );
@@ -27,7 +28,7 @@ async function removeTabs(tabIdsToRemove, {
       if (ids.length === 0) {
         return;
       }
-    } */
+    }
 
     await browser.tabs.remove(ids);
     await waitTabsToBeClosed(ids);

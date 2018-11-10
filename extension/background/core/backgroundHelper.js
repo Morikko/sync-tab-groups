@@ -7,6 +7,7 @@ import OptionManager from './optionmanager'
 import GroupManager from './groupmanager'
 import WindowManager from './windowmanager'
 import ImportSelector from './importSelector'
+import TabHidden from '../core/tabhidden'
 import SELECTOR_TYPE from './SELECTOR_TYPE'
 
 const BackgroundHelper = {}
@@ -33,15 +34,15 @@ BackgroundHelper.refreshUi = function() {
   });
 };
 
-/* Background.onRemoveHiddenTab = function({tabId}) {
+BackgroundHelper.onRemoveHiddenTab = function({tabId}) {
   TabHidden.closeHiddenTabs(tabId);
 };
 
-Background.onRemoveHiddenTabsInGroup = function({groupId}) {
+BackgroundHelper.onRemoveHiddenTabsInGroup = function({groupId}) {
   const groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
   const tabIds = GroupManager.groups[groupIndex].tabs.map(({id}) => id);
   TabHidden.closeHiddenTabs(tabIds);
-}; */
+};
 
 BackgroundHelper.onOpenGroupInNewWindow = function({groupId}) {
   WindowManager.selectGroup(groupId, {newWindow: true});

@@ -1,4 +1,7 @@
 import TabManager from '../core/tabmanager/tabManager'
+import OptionManager from '../core/optionmanager'
+import TabHidden from '../core/tabhidden'
+import Utils from '../utils/utils'
 
 const TabsEvents = {};
 
@@ -23,9 +26,9 @@ TabsEvents.initTabsEventListener = function() {
         await TabManager.updateTabsInGroup(removeInfo.windowId);
       }
     }, 300);
-    /*     if (Utils.hasHideFunction() && OptionManager.isClosingHidden()) {
+    if (Utils.hasHideFunction() && OptionManager.isClosingHidden()) {
       TabHidden.changeHiddenStateForTab(tabId);
-    } */
+    }
   });
   browser.tabs.onMoved.addListener(async(tabId, moveInfo) => {
     await TabManager.updateTabsInGroup(moveInfo.windowId);
