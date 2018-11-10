@@ -1,19 +1,17 @@
-/*
- - removeTabsInWindow
- - removeTabs
- */
 import Utils from '../../utils/utils'
 import OptionManager from '../../core/optionmanager'
 import OPTION_CONSTANTS from '../../core/OPTION_CONSTANTS'
 import LogManager from '../../error/logmanager'
-const TabManager = {};
+import {getTabsInWindowId} from './getTabs'
+import {openListOfTabs} from './openTabs'
+import {waitTabsToBeClosed} from './utilsTabs'
 
 /**
  * Remove tabs
  * If can hide: hide
  * Else: close
  */
-TabManager.removeTabs = async function(tabIdsToRemove, {
+async function removeTabs(tabIdsToRemove, {
   forceClosing=false,
 }={}) {
   try {
@@ -38,9 +36,9 @@ TabManager.removeTabs = async function(tabIdsToRemove, {
     } */
 
     await browser.tabs.remove(ids);
-    await TabManager.waitTabsToBeClosed(ids);
+    await waitTabsToBeClosed(ids);
   } catch (e) {
-    console.error("TabManager.removeTabs failed.");
+    console.error("removeTabs failed.");
     console.error(e);
   }
 }
@@ -55,13 +53,13 @@ TabManager.removeTabs = async function(tabIdsToRemove, {
  * @returns {Promise} - The only tab saved (first one or blank), or nothing if pinned tabs are staying
  * @deprecated
  */
-TabManager.removeTabsInWindow = async function(windowId, {
+async function removeTabsInWindow(windowId, {
   openBlankTab = false,
   remove_pinned = OptionManager.options.pinnedTab.sync,
   forceClosing=false,
 }={}) {
   try {
-    let tabs = await TabManager.getTabsInWindowId(windowId, {
+    let tabs = await getTabsInWindowId(windowId, {
       withoutRealUrl: false,
       withPinned: true,
     });
@@ -73,7 +71,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
                 && tabs[0].pinned)
     ) {
       // Opened or single blank...
-      survivorTab = (await TabManager.openListOfTabs([], windowId, {
+      survivorTab = (await openListOfTabs([], windowId, {
         inLastPos: true,
         openAtLeastOne: true,
       }))[0];
@@ -106,7 +104,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
     } else {
       tabsToRemove = tabsToRemove.map(tab => tab.id)
       await browser.tabs.remove(tabsToRemove);
-      await TabManager.waitTabsToBeClosed(tabsToRemove);
+      await waitTabsToBeClosed(tabsToRemove);
     }
 
     return survivorTab;
@@ -115,4 +113,7 @@ TabManager.removeTabsInWindow = async function(windowId, {
   }
 }
 
-export default TabManager
+export {
+  removeTabs,
+  removeTabsInWindow,
+}

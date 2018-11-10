@@ -1,17 +1,9 @@
-/**
- Tools:
- - countPinnedTabs
- - secureIndex
- - waitTabsToBeClosed
- */
 import Utils from '../../utils/utils'
 import TAB_CONSTANTS from '../../core/TAB_CONSTANTS'
 
-const TabManager = {};
-
 // Return with all standard tab information
 // Id are Index are set once in a group (see GroupManager.prepareGroups)
-TabManager.getTabFactory = function(tab) {
+function getTabFactory(tab) {
   return Object.assign({
     title: "New Tab",
     url: TAB_CONSTANTS.NEW_TAB,
@@ -29,7 +21,7 @@ TabManager.getTabFactory = function(tab) {
  * @param {Array<Tab>} tabs - tabs
  * @returns {number} - nbr of pinned tabs
  */
-TabManager.countPinnedTabs = function(tabs) {
+function countPinnedTabs(tabs) {
   return tabs.filter(tab => tab.pinned).length;
 }
 
@@ -43,9 +35,9 @@ TabManager.countPinnedTabs = function(tabs) {
  * @param {Array<Tab>} tabs - targeted tabs
  * @returns {number} secureIndex
  */
-TabManager.secureIndex = function(index, tab, tabs) {
+function secureIndex(index, tab, tabs) {
   let realIndex = index;
-  let pinnedTabsCount = TabManager.countPinnedTabs(tabs);
+  let pinnedTabsCount = countPinnedTabs(tabs);
   if (tab.pinned) { // Pinned tabs are in targeted position and at least just behind last pinned tab
     realIndex = (realIndex > pinnedTabsCount || realIndex === -1)
       ? pinnedTabsCount
@@ -65,7 +57,7 @@ TabManager.secureIndex = function(index, tab, tabs) {
 /**
  * Return true if tabs were closed in the waiting time.
  */
-TabManager.waitTabsToBeClosed = async function(tabsIdsToRemove, {
+async function waitTabsToBeClosed(tabsIdsToRemove, {
   maxLoop=20,
   waitPerLoop=50, //ms
 }={}) {
@@ -93,4 +85,9 @@ TabManager.waitTabsToBeClosed = async function(tabsIdsToRemove, {
   return false;
 }
 
-export default TabManager
+export {
+  getTabFactory,
+  secureIndex,
+  waitTabsToBeClosed,
+  countPinnedTabs,
+}

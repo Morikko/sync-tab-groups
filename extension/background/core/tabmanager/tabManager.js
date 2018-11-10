@@ -1,10 +1,10 @@
-import getTabs from './getTabs'
-import moveTabs from './moveTabs'
-import openTabs from './openTabs'
-import removeTabs from './removeTabs'
-import undiscardTabs from './undiscardTabs'
-import updateTabs from './updateTabs'
-import utilsTabs from './utilsTabs'
+import * as getTabs from './getTabs'
+import * as moveTabs from './moveTabs'
+import * as openTabs from './openTabs'
+import * as removeTabs from './removeTabs'
+import * as undiscardTabs from './undiscardTabs'
+import * as updateTabs from './updateTabs'
+import * as utilsTabs from './utilsTabs'
 
 const TabManager = {
   ...getTabs,

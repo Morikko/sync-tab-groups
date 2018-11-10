@@ -1,12 +1,11 @@
 import Utils from '../../utils/utils'
-const TabManager = {};
 
 /**
  * WARNING: this funtion is not working well on firefox
  * https://bugzilla.mozilla.org/show_bug.cgi?id=1420681
  * Any tab with a beforeunload event set will not be discardable...
  */
-TabManager.undiscardAll = async function(globalCount = 0, callbackAfterFirstUndiscard=undefined) {
+async function undiscardAll(globalCount = 0, callbackAfterFirstUndiscard=undefined) {
   return new Promise(async function(resolve, reject) {
     let queue = Promise.resolve();
 
@@ -46,7 +45,7 @@ TabManager.undiscardAll = async function(globalCount = 0, callbackAfterFirstUndi
 
           } catch (e) { // Tab has changed (closed, moved, actived...)
             // Do nothing but avoid a crash
-            //console.log("Error in TabManager.undiscardAll: " + e)
+            //console.log("Error in undiscardAll: " + e)
           }
 
         }
@@ -57,7 +56,7 @@ TabManager.undiscardAll = async function(globalCount = 0, callbackAfterFirstUndi
     queue.then(function(lastResponse) {
       if (hadDiscarded
         && globalCount < 10) {
-        resolve(TabManager.undiscardAll(++globalCount));
+        resolve(undiscardAll(++globalCount));
       } else {
         //browser.runtime.reload();
         resolve();
@@ -67,4 +66,4 @@ TabManager.undiscardAll = async function(globalCount = 0, callbackAfterFirstUndi
   });
 }
 
-export default TabManager
+export {undiscardAll}

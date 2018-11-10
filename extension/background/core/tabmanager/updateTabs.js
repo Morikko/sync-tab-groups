@@ -1,12 +1,7 @@
-/*
- - activeTabInWindow
- - selectTab (Open/Close group)
- - changePinState
- */
 import LogManager from '../../error/logmanager'
 import GroupManager from '../../core/groupmanager'
 import WindowManager from '../../core/windowmanager'
-const TabManager = {};
+import {getTabsInWindowId} from './getTabs'
 
 /**
  * Go to the tab specified with tabId
@@ -15,10 +10,10 @@ const TabManager = {};
  * @param {number} tabIndex - the tab index
  * @returns {Promise}
  */
-TabManager.activeTabInWindow = async function(windowId, tabIndex) {
+async function activeTabInWindow(windowId, tabIndex) {
   try {
     // Filter pinned if necessary
-    const tabs = await TabManager.getTabsInWindowId(windowId, {
+    const tabs = await getTabsInWindowId(windowId, {
       withoutRealUrl: false,
     });
     let tabId = tabs.filter((tab, index) => index === tabIndex).map((tab) => tab.id);
@@ -27,7 +22,7 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
       await browser.tabs.update(tabId[0], {active: true});
     }
 
-    return "TabManager.activeTabInWindow done!";
+    return "activeTabInWindow done!";
   } catch (e) {
     LogManager.error(e, {
       args: {
@@ -45,14 +40,14 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
  * @param {number} groupId - the tabs groupId
  * @returns {Promise}
  */
-TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
+async function selectTab(tabIndex, groupId, newWindow=false) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
     // 1. Change active tab
     if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
       let windowId = GroupManager.groups[groupIndex].windowId;
-      await TabManager.activeTabInWindow(windowId, tabIndex);
+      await activeTabInWindow(windowId, tabIndex);
     } else {
       GroupManager.groups[groupIndex].tabs.forEach((tab)=>{
         tab.active = false;
@@ -67,13 +62,13 @@ TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
       await WindowManager.selectGroup(groupId);
     }
 
-    return "TabManager.selectTab done!";
+    return "selectTab done!";
   } catch (e) {
     LogManager.error(e, {args: arguments});
   }
 }
 
-TabManager.changePinState = async function(groupId, tabIndex) {
+async function changePinState(groupId, tabIndex) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
@@ -93,10 +88,14 @@ TabManager.changePinState = async function(groupId, tabIndex) {
           ? -1
           : 0);
     }
-    return "TabManager.changePinState done!";
+    return "changePinState done!";
   } catch (e) {
     LogManager.error(e, {args: arguments});
   }
 }
 
-export default TabManager
+export {
+  activeTabInWindow,
+  changePinState,
+  selectTab,
+}

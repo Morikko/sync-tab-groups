@@ -95,7 +95,7 @@ LogManager.warning = function(message, data=null, {
 LogManager.error = function(error, data = null, {
   print=Utils.DEBUG_MODE,
   logs=LogManager.logs,
-  showNotification=true,
+  showNotification=true&&!Utils.DEBUG_MODE,
   enable=LogManager.isEnable(),
 }={}) {
   if (!enable) return;

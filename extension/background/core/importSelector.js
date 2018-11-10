@@ -3,6 +3,7 @@ import GroupManager from './groupmanager'
 import SELECTOR_TYPE from './SELECTOR_TYPE'
 
 const ImportSelector = {};
+window.ImportSelector = ImportSelector
 
 ImportSelector.WINDOW_ID = browser.windows.WINDOW_ID_NONE;
 

@@ -1,13 +1,8 @@
-/*
- - getTabsInWindowId
- - updateTabsInGroup
- */
 import Utils from '../../utils/utils'
 import OptionManager from '../../core/optionmanager'
 import LogManager from '../../error/logmanager'
 import GroupManager from '../../core/groupmanager'
 import WindowManager from '../../core/windowmanager'
-const TabManager = {};
 
 /**
  * Return all the tabs in the window with windowId
@@ -16,7 +11,7 @@ const TabManager = {};
  * @param {number} windowId
  * @returns {Array<Tab>} tabs
  */
-TabManager.getTabsInWindowId = async function(windowId, {
+async function getTabsInWindowId(windowId, {
   withoutRealUrl = true,
   withPinned = OptionManager.options.pinnedTab.sync,
   hidden = (Utils.hasHideFunction() ? false : undefined),
@@ -60,7 +55,7 @@ TabManager.getTabsInWindowId = async function(windowId, {
  * @param {number} windowId
  * @returns {Promise}
  */
-TabManager.updateTabsInGroup = async function(windowId) {
+async function updateTabsInGroup(windowId) {
   try {
 
     if (WindowManager.WINDOW_CURRENTLY_SWITCHING[windowId]) {
@@ -82,21 +77,21 @@ TabManager.updateTabsInGroup = async function(windowId) {
     }
 
     if (window === undefined) {
-      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window has been closed";
+      return ".updateTabsInGroup not done for windowId " + windowId + " because window has been closed";
     }
 
     // Private Window sync
     if (!OptionManager.options.privateWindow.sync && window.incognito) {
-      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because private windows are not synchronized";
+      return ".updateTabsInGroup not done for windowId " + windowId + " because private windows are not synchronized";
     }
 
     if (!GroupManager.isWindowAlreadyRegistered(window.id)) {
-      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window is not synchronized";
+      return ".updateTabsInGroup not done for windowId " + windowId + " because window is not synchronized";
     }
 
     let groupId = GroupManager.getGroupIdInWindow(windowId, {error: false});
     if (groupId === -1) return false;
-    const tabs = await TabManager.getTabsInWindowId(windowId);
+    const tabs = await getTabsInWindowId(windowId);
 
     // In case of delay
     if (WindowManager.WINDOW_CURRENTLY_CLOSING[windowId]) {
@@ -104,11 +99,14 @@ TabManager.updateTabsInGroup = async function(windowId) {
     }
 
     GroupManager.setTabsInGroupId(groupId, tabs);
-    return "TabManager.updateTabsInGroup done on window id " + windowId;
+    return ".updateTabsInGroup done on window id " + windowId;
 
   } catch (e) {
     LogManager.error(e, {args: arguments});
   }
 }
 
-export default TabManager
+export {
+  updateTabsInGroup,
+  getTabsInWindowId,
+}
