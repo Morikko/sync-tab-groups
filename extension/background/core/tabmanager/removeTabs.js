@@ -17,12 +17,6 @@ async function removeTabs(tabIdsToRemove, {
   try {
     let ids = Utils.getCopy(tabIdsToRemove);
 
-    /* if (OptionManager.isClosingAlived() && !forceClosing) {
-      await Promise.all(
-        tabIdsToRemove.map((tab)=>TabAlive.sleepTab(tab))
-      );
-    } */
-
     /* if (OptionManager.isClosingHidden() && !forceClosing) {
       const results = await Promise.all(
         ids.map(id => TabHidden.hideTab(id))
@@ -96,16 +90,9 @@ async function removeTabsInWindow(windowId, {
     // 2. Remove previous tabs in window
     let tabsToRemove = tabs.filter(tab => remove_pinned || !tab.pinned);
 
-    if (OptionManager.options.groups.closingState === OPTION_CONSTANTS.CLOSE_ALIVE
-     && !forceClosing) {
-      /* await Promise.all(
-        tabsToRemove.map((tab)=>TabAlive.sleepTab(tab))
-      ); */
-    } else {
-      tabsToRemove = tabsToRemove.map(tab => tab.id)
-      await browser.tabs.remove(tabsToRemove);
-      await waitTabsToBeClosed(tabsToRemove);
-    }
+    tabsToRemove = tabsToRemove.map(tab => tab.id)
+    await browser.tabs.remove(tabsToRemove);
+    await waitTabsToBeClosed(tabsToRemove);
 
     return survivorTab;
   } catch (e) {

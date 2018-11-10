@@ -488,12 +488,12 @@ Utils.waitDownload = async function(downloadId, waitingTime=6) {
 /*
  * Return true if the windowId is in an opened window
  */
-/* Utils.windowExists = async function(windowId) {
+Utils.windowExists = async function(windowId) {
   if (windowId === browser.windows.WINDOW_ID_NONE || windowId < 0) {
     return false
   }
-  return (await browser.windows.getAll()).filter((w)=> w.id===TabAlive.WINDOW_ID).length > 0;
-} */
+  return (await browser.windows.getAll()).length > 0;
+}
 
 Utils.timerDecorator = function(func, {
   name="Perf",

@@ -177,14 +177,6 @@ async function openListOfTabs(tabsToOpen, windowId, {
       }
 
       if (pendingTab) {
-        /* TODO
-        if ( OptionManager.options.groups.closingState === OPTION_CONSTANTS.CLOSE_ALIVE
-          && GroupManager.getGroupIdFromTabId(pendingTab.id, false) >= 0) {
-          await TabAlive.sleepTab(pendingTab);
-        } else {
-          await browser.tabs.remove(pendingTab.id);
-        }
-        */
         pendingTab = undefined;
 
         await removeTabs(tabsToRemove.map(tab => tab.id), {forceClosing});
