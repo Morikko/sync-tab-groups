@@ -1,8 +1,12 @@
 import TestComparator from './TestComparator'
-import Background from '../utils/Background'
-const {
-  LogManager,
-} = Background
+import {Background, waitInit} from '../utils/Background'
+let LogManager
+waitInit.then(()=>{
+  ({
+    LogManager,
+  } = Background)
+  console.log(LogManager);
+})
 
 const tabGroupsMatchers = {
   /**

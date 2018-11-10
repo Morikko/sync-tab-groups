@@ -3,13 +3,21 @@
  If TestManager.DOUBLE_MONITORS is true, the screen is not the first one but the second one (the one the more on the right)
 **/
 import Utils from '../../background/utils/utils'
-import Background from './Background'
-const {
+import {Background, waitInit} from '../utils/Background'
+let
   GroupManager,
   TabManager,
   LogManager,
-  BackgroundHelper,
-} = Background
+  BackgroundHelper
+waitInit.then(()=>{
+  ({
+    GroupManager,
+    TabManager,
+    LogManager,
+    BackgroundHelper,
+  } = Background)
+})
+
 import Session from '../examples/session'
 import TASKMANAGER_CONSTANTS from '../../background/utils/TASKMANAGER_CONSTANTS'
 
@@ -112,8 +120,8 @@ TestUtils.resetIndexProperties = function(tabs) {
 
 /**
  * @param {number} start
- * @param {Number} end
- * @returns {Number} - random number btw start and end included
+ * @param {number} end
+ * @returns {number} - random number btw start and end included
  */
 TestUtils.getRandom = function(start, end) {
   return Math.floor((Math.random() * (end+1-start)) + start);

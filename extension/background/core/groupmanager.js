@@ -86,6 +86,7 @@ import OPTION_CONSTANTS from '../core/OPTION_CONSTANTS'
 import TAB_CONSTANTS from '../core/TAB_CONSTANTS'
 
 const GroupManager = {};
+window.GroupManager = GroupManager
 
 GroupManager.setTabIsHidden = function(tabId, hiddenValue, groups=GroupManager.groups) {
   const tab = groups.map(group => group.tabs)

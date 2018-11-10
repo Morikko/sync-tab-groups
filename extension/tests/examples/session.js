@@ -1,39 +1,21 @@
-/** Session
- * Create groups and tab easily
- Groups:
- - createGroup
- - addTabToGroup
-
- Complete Session:
- - setLightSession
- - setHeavySession TODO: Not implemented
-
- Tabs:
- - createTabs
- - createTab
- - getRandomNormalTab
- - getRandomTab
- - getFakeTab
-
- Ressources:
- - ListOfTabURLs
- - ListOfPrivTabURLs
- - ListOfExtensionTabURLs
-
- Windows:
- - keepOneWindowOpen
- - closeAllAndOpenOnlyOneNewWindow
- */
 import Utils from '../../background/utils/utils'
-import Background from '../utils/Background'
-const {
+import {Background, waitInit} from '../utils/Background'
+import TAB_CONSTANTS from '../../background/core/TAB_CONSTANTS'
+let
   GroupManager,
   TabManager,
   LogManager,
   OptionManager,
-  WindowManager,
-  TAB_CONSTANTS,
-} = Background
+  WindowManager
+waitInit.then(()=>{
+  ({
+    GroupManager,
+    TabManager,
+    LogManager,
+    OptionManager,
+    WindowManager,
+  } = Background)
+})
 
 import TestManager from '../utils/TestManager'
 

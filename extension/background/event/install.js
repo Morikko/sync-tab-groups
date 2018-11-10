@@ -10,7 +10,7 @@ import OptionManager from '../core/optionmanager'
 const InstallEvents = {};
 
 InstallEvents.DEV_TABS = [
-  //"/tests/test-page/unit.html",
+  "/tests/test-page/unit.html",
   //"/tests/test-page/integration.html",
   "/options/option-page.html#settings",
   //"/tests/test-page/integration.html?spec=Selector%20-%20",

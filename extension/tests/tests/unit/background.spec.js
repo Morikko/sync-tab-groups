@@ -1,4 +1,11 @@
 import TestManager from '../../utils/TestManager'
+import {Background, waitInit} from '../../utils/Background'
+let Events
+waitInit.then(()=>{
+  ({
+    Events,
+  } = Background)
+})
 
 describe("Controller ", ()=>{
 
@@ -9,31 +16,31 @@ describe("Controller ", ()=>{
     describe("Utils ", ()=>{
       it("isVersionBelow", ()=>{
         expect(
-          Event.Install.isVersionBelow("0.1.2", "1.2.3")
+          Events.Install.isVersionBelow("0.1.2", "1.2.3")
         ).toBe(true);
 
         expect(
-          Event.Install.isVersionBelow("1.1.2", "1.2.3")
+          Events.Install.isVersionBelow("1.1.2", "1.2.3")
         ).toBe(true);
 
         expect(
-          Event.Install.isVersionBelow("1.2.2", "1.2.3")
+          Events.Install.isVersionBelow("1.2.2", "1.2.3")
         ).toBe(true);
 
         expect(
-          Event.Install.isVersionBelow("1.2.3", "1.2.3")
+          Events.Install.isVersionBelow("1.2.3", "1.2.3")
         ).toBe(true);
 
         expect(
-          Event.Install.isVersionBelow("2.2.3", "1.2.3")
+          Events.Install.isVersionBelow("2.2.3", "1.2.3")
         ).toBe(false);
 
         expect(
-          Event.Install.isVersionBelow("1.3.3", "1.2.3")
+          Events.Install.isVersionBelow("1.3.3", "1.2.3")
         ).toBe(false);
 
         expect(
-          Event.Install.isVersionBelow("1.2.4", "1.2.3")
+          Events.Install.isVersionBelow("1.2.4", "1.2.3")
         ).toBe(false);
       });
     });
@@ -54,7 +61,7 @@ describe("Controller ", ()=>{
             },
           };
 
-        Event.Install.updateFromBelow_0_6_2(
+        Events.Install.updateFromBelow_0_6_2(
           options
         );
 

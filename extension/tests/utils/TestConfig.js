@@ -1,4 +1,3 @@
-import jasmine from 'jasmine'
 const TestConfig = {};
 
 TestConfig.DOUBLE_MONITORS = true;

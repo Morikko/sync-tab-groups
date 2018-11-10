@@ -1,5 +1,5 @@
-import jasmine from 'jasmine'
 import Utils from '../../background/utils/utils'
+import {waitInit} from '../utils/Background'
 
 let queryString = new jasmine.QueryString({
   getWindowLocation: function() {
@@ -24,7 +24,15 @@ env.specFilter = function(spec) {
   return specFilter.matches(spec.getFullName());
 };
 
+let currentWindowOnload = window.onload;
 
+window.onload = async function() {
+  await waitInit;
+
+  if (currentWindowOnload) {
+    currentWindowOnload();
+  }
+};
 
 function insertParam(key, value) {
   key = encodeURI(key);

@@ -12,4 +12,6 @@ const Events = {
   Windows: WindowsEvents,
 }
 
+window.Events = Events
+
 export default Events

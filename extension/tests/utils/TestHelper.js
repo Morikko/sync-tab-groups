@@ -3,14 +3,15 @@
  * Save, Change, Restore :: groups, options, storage...
  */
 import Utils from '../../background/utils/utils'
-import jasmine from 'jasmine'
+
 import tabGroupsMatchers from './tabGroupsMatchers'
-import Background from '../utils/Background'
-const {
-  GroupManager,
-  OptionManager,
-  OPTION_CONSTANTS,
-} = Background
+import {Background, waitInit} from '../utils/Background'
+let GroupManager, OptionManager, OPTION_CONSTANTS
+waitInit.then(()=>{
+  ({
+    GroupManager, OptionManager, OPTION_CONSTANTS,
+  } = Background)
+})
 
 const TestHelper = {};
 
