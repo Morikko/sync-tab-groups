@@ -31,7 +31,8 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:jasmine/recommended"
   ],
   "rules": {
     "jsdoc/check-param-names": 2,

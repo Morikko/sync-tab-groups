@@ -123,8 +123,8 @@ TestHelper.installFakeTime = function() {
     // Change setInterval and set this reference to the backgroung
     savedTime = {};
     TIME_OBJECTS.forEach((time)=>{
-      savedTime[time] = window.Background.Background[time];
-      window.Background.Background[time] = window[time];
+      savedTime[time] = window.Background[time];
+      window.Background[time] = window[time];
     });
   }
 }
@@ -133,7 +133,7 @@ TestHelper.installFakeTime = function() {
 TestHelper.uninstallFakeTime = function() {
   if (Object.keys(savedTime).length) {
     jasmine.clock().uninstall();
-    Object.assign(window.Background.Background, savedTime);
+    Object.assign(window.Background, savedTime);
     savedTime = {};
   }
 }

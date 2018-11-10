@@ -14,7 +14,7 @@ function Tasks() {
   };
 }
 
-fdescribe('TaskManager', ()=>{
+describe('TaskManager', ()=>{
   it('in delayed mode should work', async()=>{
     const refTask = new Tasks()
     const delayedTaskManager = new window.Background.TaskManager.DelayedTask(100);

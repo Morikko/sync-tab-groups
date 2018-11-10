@@ -14,6 +14,7 @@ const plugins = [
 module.exports = {
   entry: {
     'tests/tests/unit/all.spec': './tests/tests/unit/all.spec.js',
+    'tests/tests/integration/all.spec': './tests/tests/integration/all.spec.js',
   },
   output: {
     path: path.resolve(__dirname, './build'),
