@@ -19,7 +19,8 @@ WindowsEvents.initWindowsEventListener = function() {
 
     // Let time for opening well and be sure it is a new one
     setTimeout(async function integrationWindowWhenCreated() {
-      if (!WindowManager.WINDOW_EXCLUDED[window.id]) {
+      console.log('INTEGRTE', WindowManager.WINDOW_EXCLUDED);
+      if (!WindowManager.WINDOW_EXCLUDED['opening']) {
         try {
           await WindowManager.integrateWindow(window.id);
         } catch (e) {

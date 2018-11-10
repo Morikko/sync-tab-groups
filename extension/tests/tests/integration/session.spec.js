@@ -1,7 +1,7 @@
 import TestManager from '../../utils/TestManager'
 import Session from '../../examples/session'
 
-fdescribe("Session: ", ()=>{
+describe("Session: ", ()=>{
   // Keep previous states
   beforeAll(TestManager.initIntegrationBeforeAll());
   // Set back previous states

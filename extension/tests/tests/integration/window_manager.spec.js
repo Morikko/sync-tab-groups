@@ -4,7 +4,7 @@ import tabGroupsMatchers from '../../utils/tabGroupsMatchers'
 import Session from '../../examples/session'
 import TestUtils from '../../utils/TestUtils';
 
-fdescribe("window.Background.WindowManager: ", ()=>{
+describe("window.Background.WindowManager: ", ()=>{
 
   // Keep previous states
   beforeAll(TestHelper.initIntegrationBeforeAll());

@@ -437,15 +437,16 @@ WindowManager.removeGroup = async function(groupId = -1) {
 WindowManager.openGroupInNewWindow = async function(groupId) {
   let w;
   try {
+    console.log("Start open group");
     let groupIndex = GroupManager.getGroupIndexFromGroupId(
       groupId
     );
+    WindowManager.WINDOW_EXCLUDED['opening'] = true;
     w = await browser.windows.create({
       state: "maximized",
       incognito: GroupManager.groups[groupIndex].incognito,
     });
-    WindowManager.WINDOW_EXCLUDED[w.id] = true;
-
+    console.log('INSIDE',WindowManager.WINDOW_EXCLUDED);
     // TODO: security: might not be necessary
 
     let count = 0;
@@ -458,14 +459,14 @@ WindowManager.openGroupInNewWindow = async function(groupId) {
     }
 
     await WindowManager.switchGroupInCurrentWindow(groupId);
-    delete WindowManager.WINDOW_EXCLUDED[w.id];
+    delete WindowManager.WINDOW_EXCLUDED['opening'];
+    console.log("End open group");
+
     return w.id;
 
   } catch (e) {
     LogManager.error(e, {args: arguments});
-    delete WindowManager.WINDOW_EXCLUDED[w.id];
-  } finally {
-    //delete WindowManager.WINDOW_EXCLUDED[w.id];
+    delete WindowManager.WINDOW_EXCLUDED['opening'];
   }
 }
 
