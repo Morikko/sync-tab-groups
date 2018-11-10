@@ -1,24 +1,3 @@
-/**
- * Settings of the extension
- Change:
- - updateOption
-
- Reactions:
- - onShowGroupTitleInWindowChange
- - onPopupThemeChange
- - onPrivateWindowSyncChange
- - onPinnedTabSyncChange
- - onRemoveEmptyGroupChange
-
- Initialization:
- - init
- - initEventListener
- - store
- - check_integrity
-
- * Event: EVENT_CHANGE
- * DelayedTask: store() (Limited mode)
- */
 import Utils from '../utils/utils'
 import LogManager from '../error/logmanager'
 import GroupManager from '../core/groupmanager'
@@ -29,6 +8,7 @@ import OPTION_CONSTANTS from './OPTION_CONSTANTS'
 import ExtensionStorageManager from '../storage/storageManager'
 
 const OptionManager = {};
+window.OptionManager = OptionManager;
 
 OptionManager.EVENT_CHANGE = 'options-change';
 

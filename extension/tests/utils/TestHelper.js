@@ -5,13 +5,7 @@
 import Utils from '../../background/utils/utils'
 
 import tabGroupsMatchers from './tabGroupsMatchers'
-import {Background, waitInit} from '../utils/Background'
-let GroupManager, OptionManager, OPTION_CONSTANTS
-waitInit.then(()=>{
-  ({
-    GroupManager, OptionManager, OPTION_CONSTANTS,
-  } = Background)
-})
+import OPTION_CONSTANTS from '../../background/core/OPTION_CONSTANTS'
 
 const TestHelper = {};
 
@@ -38,8 +32,8 @@ TestHelper.initIntegrationBeforeAll = function() {
     this.previousGroups = TestHelper.swapGroups();
     this.initialWindows = await TestHelper.getWindowIds();
     this.initialStorage = await TestHelper.swapLocalStorage();
-    OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
-    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+    window.Background.OptionManager.eventlistener.fire(window.Background.OptionManager.EVENT_CHANGE);
+    window.Background.GroupManager.eventlistener.fire(window.Background.GroupManager.EVENT_PREPARE);
     await Utils.wait(300);
   }
 }
@@ -50,8 +44,8 @@ TestHelper.initIntegrationAfterAll = function() {
     TestHelper.swapOptions(this.previousOptions);
     TestHelper.swapGroups(this.previousGroups);
     await TestHelper.swapLocalStorage(this.initialStorage);
-    OptionManager.eventlistener.fire(OptionManager.EVENT_CHANGE);
-    GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
+    window.Background.OptionManager.eventlistener.fire(window.Background.OptionManager.EVENT_CHANGE);
+    window.Background.GroupManager.eventlistener.fire(window.Background.GroupManager.EVENT_PREPARE);
     await TestHelper.clearWindows(this.initialWindows);
     await Utils.wait(300);
   }
@@ -67,8 +61,8 @@ TestHelper.setDynamicEnable = function() {
 TestHelper.changeSomeOptions = async function(params) {
   let previousValues = {};
   for (let p in params) {
-    previousValues[p] = OptionManager.getOptionValue(p);
-    await OptionManager.updateOption(p, params[p]);
+    previousValues[p] = window.Background.OptionManager.getOptionValue(p);
+    await window.Background.OptionManager.updateOption(p, params[p]);
   }
 }
 
@@ -77,8 +71,8 @@ TestHelper.changeSomeOptions = async function(params) {
  * return the previous ones
  */
 TestHelper.swapOptions = function(params=OPTION_CONSTANTS.TEMPLATE()) {
-  let options = OptionManager.options;
-  OptionManager.options = params;
+  let options = window.Background.OptionManager.options;
+  window.Background.OptionManager.options = params;
   return options;
 }
 
@@ -87,8 +81,8 @@ TestHelper.swapOptions = function(params=OPTION_CONSTANTS.TEMPLATE()) {
  * return the previous ones
  */
 TestHelper.swapGroups = function(params=[]) {
-  let groups = GroupManager.groups;
-  GroupManager.groups = params;
+  let groups = window.Background.GroupManager.groups;
+  window.Background.GroupManager.groups = params;
   return groups;
 }
 
@@ -129,8 +123,8 @@ TestHelper.installFakeTime = function() {
     // Change setInterval and set this reference to the backgroung
     savedTime = {};
     TIME_OBJECTS.forEach((time)=>{
-      savedTime[time] = Background[time];
-      Background[time] = window[time];
+      savedTime[time] = window.Background.Background[time];
+      window.Background.Background[time] = window[time];
     });
   }
 }
@@ -139,7 +133,7 @@ TestHelper.installFakeTime = function() {
 TestHelper.uninstallFakeTime = function() {
   if (Object.keys(savedTime).length) {
     jasmine.clock().uninstall();
-    Object.assign(Background, savedTime);
+    Object.assign(window.Background.Background, savedTime);
     savedTime = {};
   }
 }

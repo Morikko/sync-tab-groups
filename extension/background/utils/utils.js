@@ -1,54 +1,8 @@
-/**
- * Useful code shared in all the apps UI and background
- * Shared variables definition
- Tools:
- - search
- - extractSearchValue
- - sendMessage
- - getCopy
- - wait
-Array:
- - shuffleArray
- - range
-Objects:
- - mergeObject
- - setObjectPropertiesWith
- - objectHasUndefined
- - isDeadObject
- - checkCorruptedObject
-
- Browser type:
- - isFirefox
- - isChrome
- - hasDiscardFunction
- - hasSessionWindowValue
- - hasWindowTitlePreface
- - hasHideFunction
-
- URLs
- - extractTabUrl
- - getPrivilegedURL
- - getDiscardedURL
- - isPrivilegedURL
- - openUrlOncePerWindow
-
- HTML Page:
- - getParameterByName
- - setIcon
- - copyToTheClipBoard
-
- - getGroupTitle
- - setBrowserActionIcon
- - createGroupsJsonFile
- - windowExists
- - doActivateHotkeys
- - getOffset
-
- */
 import TAB_CONSTANTS from '../core/TAB_CONSTANTS'
 
 //const browser.windows.WINDOW_ID_NONE = browser.windows.WINDOW_ID_NONE;
 const Utils = {};
+window.Utils = Utils;
 
 /**
  * Show GroupId, Index, WindowId, Position in as group hover in menu

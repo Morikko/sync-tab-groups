@@ -1,32 +1,3 @@
-/**
- * Functions that update the windows in browser
-
- Functions
- - openGroupInNewWindow
- - closeGroup
- - removeGroup
- - selectGroup
- - selectNextGroup
-
- Low-level
-  - switchGroupInCurrentWindow
-  - closeWindowFromGroupId
-  - openGroupInWindow (never use directly, prefer switchGroupInCurrentWindow)
-
- Integration
- - associateGroupIdToWindow
- - desassociateGroupIdToWindow
- - addGroupFromWindow
- - integrateWindowWithTabsComparaison
- - integrateWindowWithSession
- - integrateWindow
-
- - isWindowIdOpen
- - setWindowPrefixGroupTitle
-
- Decorator
- - decoratorCurrentlyChanging
- */
 import Utils from '../utils/utils'
 import LogManager from '../error/logmanager'
 import GroupManager from '../core/groupmanager'
@@ -35,6 +6,7 @@ import OptionManager from '../core/optionmanager'
 import getGroupIndexSortedByPosition from './getGroupIndexSortedByPosition'
 
 const WindowManager = {};
+window.WindowManager = WindowManager;
 
 WindowManager.WINDOW_GROUPID = "groupId";
 

@@ -3,6 +3,7 @@ import BackgroundHelper from '../core/backgroundHelper'
 import OptionManager from '../core/optionmanager'
 
 const LogManager = {};
+window.LogManager = LogManager
 
 LogManager.LOG_NUMBER_LIMIT = 10000;
 LogManager.NOTIFICATION_ID = "LOG_ERROR";

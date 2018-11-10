@@ -3,21 +3,6 @@
  If TestManager.DOUBLE_MONITORS is true, the screen is not the first one but the second one (the one the more on the right)
 **/
 import Utils from '../../background/utils/utils'
-import {Background, waitInit} from '../utils/Background'
-let
-  GroupManager,
-  TabManager,
-  LogManager,
-  BackgroundHelper
-waitInit.then(()=>{
-  ({
-    GroupManager,
-    TabManager,
-    LogManager,
-    BackgroundHelper,
-  } = Background)
-})
-
 import Session from '../examples/session'
 import TASKMANAGER_CONSTANTS from '../../background/utils/TASKMANAGER_CONSTANTS'
 
@@ -33,7 +18,7 @@ TestUtils.splitOnHalfScreen = async function(windowId) {
       state: "normal",
     });
   } catch (e) {
-    LogManager.error(e, {args: arguments}, {logs: null});
+    window.Background.LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 
@@ -46,7 +31,7 @@ TestUtils.splitOnHalfTopScreen = async function(windowId) {
       height: Math.round(screen.width/2),
     });
   } catch (e) {
-    LogManager.error(e, {args: arguments}, {logs: null});
+    window.Background.LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 
@@ -59,7 +44,7 @@ TestUtils.splitOnHalfBottomScreen = async function(windowId) {
       height: Math.round(screen.width/2),
     });
   } catch (e) {
-    LogManager.error(e, {args: arguments}, {logs: null});
+    window.Background.LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 
@@ -69,11 +54,11 @@ TestUtils.splitOnHalfBottomScreen = async function(windowId) {
  * Use TestManager.getGroup instead, more general, more robust
  */
 TestUtils.getGroupDeprecated = (groups, id)=>{
-  return GroupManager.groups[groups[id].groupIndex];
+  return window.Background.GroupManager.groups[groups[id].groupIndex];
 };
 
 TestUtils.getGroup = (groups, id)=>{
-  let index = GroupManager.getGroupIndexFromGroupId(id, {
+  let index = window.Background.GroupManager.getGroupIndexFromGroupId(id, {
     error: true,
     groups: groups,
   });
@@ -138,7 +123,7 @@ TestUtils.getRandomIndex = function(
 
 async function hasLoadingTabs(windowId) {
   // Get all tabs
-  let tabs = await TabManager.getTabsInWindowId(windowId, {
+  let tabs = await window.Background.TabManager.getTabsInWindowId(windowId, {
     withPinned: true,
   });
   return tabs.filter(tab => tab.status === "loading").length > 0;
@@ -155,7 +140,7 @@ TestUtils.waitAllTabsToBeLoadedInWindowId = async function(windowId) {
 
     // Waited too much
     if (i === LIMIT) {
-      LogManager.warning("TestManager.waitAllTabsToBeLoadedInWindowId: Waited too much...");
+      window.Background.LogManager.warning("TestManager.waitAllTabsToBeLoadedInWindowId: Waited too much...");
       break;
     }
   }
@@ -264,11 +249,11 @@ TestUtils.removeGroups = async function(groupIds) {
   }
 
   for (let groupId of groupIds) {
-    if (GroupManager.getGroupIndexFromGroupId(groupId, {error: false}) >= 0) {
+    if (window.Background.GroupManager.getGroupIndexFromGroupId(groupId, {error: false}) >= 0) {
       try {
-        await GroupManager.removeGroupFromId(groupId);
+        await window.Background.GroupManager.removeGroupFromId(groupId);
       } catch (e) {
-        LogManager.error(e, {args: arguments}, {logs: null});
+        window.Background.LogManager.error(e, {args: arguments}, {logs: null});
       }
     }
   }
@@ -278,7 +263,7 @@ TestUtils.getRandomGroupId = function(groups) {
   let index = TestUtils.getRandom(0, groups.length-1);
 
   if (!groups[index]) {
-    LogManager.warning("Index not found: " + index, null, {logs: null});
+    window.Background.LogManager.warning("Index not found: " + index, null, {logs: null});
   }
   return groups[
     index
@@ -288,7 +273,7 @@ TestUtils.getRandomGroupId = function(groups) {
 TestUtils.getRandomTabIndex = function(
   groups,
   groupId=TestUtils.getRandomGroupId(groups)) {
-  let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, {groups: groups});
+  let groupIndex = window.Background.GroupManager.getGroupIndexFromGroupId(groupId, {groups: groups});
   return TestUtils.getRandom(0, groups[groupIndex].tabs.length-1);
 }
 
@@ -302,7 +287,7 @@ const ACTIONS = [
   // MOVE
   async(groups) =>{
     if (!groups.length) return;
-    await BackgroundHelper.onGroupChangePosition({
+    await window.Background.BackgroundHelper.onGroupChangePosition({
       groupId: TestUtils.getRandomGroupId(groups),
       position: TestUtils.getRandomGroupPosition(groups),
     })
@@ -311,7 +296,7 @@ const ACTIONS = [
     if (!groups.length) return;
     let sourceGroupId = TestUtils.getRandomGroupId(groups);
     let targetGroupId = TestUtils.getRandomGroupId(groups);
-    await BackgroundHelper.onMoveTabToGroup({
+    await window.Background.BackgroundHelper.onMoveTabToGroup({
       sourceGroupId: sourceGroupId,
       sourceTabIndex: TestUtils.getRandomTabIndex(groups, sourceGroupId),
       targetGroupId: targetGroupId,
@@ -322,7 +307,7 @@ const ACTIONS = [
   async(groups) =>{
     if (!groups.length) return;
     let groupId = TestUtils.getRandomGroupId(groups);
-    await GroupManager.addTabInGroupId(
+    await window.Background.GroupManager.addTabInGroupId(
       groupId,
       Session.getFakeTab(),
       TestUtils.getRandomTabIndex(groups, groupId)
@@ -331,7 +316,7 @@ const ACTIONS = [
   async(groups) =>{
     if (!groups.length) return;
     let groupId = TestUtils.getRandomGroupId(groups);
-    await BackgroundHelper.onTabClose({
+    await window.Background.BackgroundHelper.onTabClose({
       groupId: groupId,
       tabIndex: TestUtils.getRandomTabIndex(groups, groupId),
     })
@@ -339,7 +324,7 @@ const ACTIONS = [
   async(groups) =>{
     if (!groups.length) return;
     let groupId = TestUtils.getRandomGroupId(groups);
-    await BackgroundHelper.onTabChangePin({
+    await window.Background.BackgroundHelper.onTabChangePin({
       groupId: groupId,
       tabIndex: TestUtils.getRandomTabIndex(groups, groupId),
     })
@@ -347,7 +332,7 @@ const ACTIONS = [
   // GROUP CHANGE
   async(groups) =>{
     if (!groups.length) return;
-    await BackgroundHelper.onGroupRemove({
+    await window.Background.BackgroundHelper.onGroupRemove({
       groupId: TestUtils.getRandomGroupId(groups),
       taskRef: TASKMANAGER_CONSTANTS.FORCE,
     })
@@ -357,14 +342,14 @@ const ACTIONS = [
     for (let i=0; i<TestUtils.getRandom(1,15); i++) {
       tabs.push(Session.getFakeTab());
     }
-    GroupManager.addGroupWithTab(
+    window.Background.GroupManager.addGroupWithTab(
       tabs, {
         title: Date.now().toString(),
       });
   },
   async(groups) =>{
     if (!groups.length) return;
-    await BackgroundHelper.onGroupRename({
+    await window.Background.BackgroundHelper.onGroupRename({
       groupId: TestUtils.getRandomGroupId(groups),
       title: Date.now().toString(),
     });
@@ -372,7 +357,7 @@ const ACTIONS = [
 ]
 
 TestUtils.changeGroups = async function(
-  groups=GroupManager.groups,
+  groups=window.Background.GroupManager.groups,
   actionIndex=TestUtils.getRandomAction()) {
   await ACTIONS[actionIndex](groups);
 }
@@ -425,7 +410,7 @@ TestUtils.replaceTabs = async function(windowId, tabs) {
 
 TestUtils.removeTabs = async function(ids) {
   await browser.tabs.remove(ids);
-  await TabManager.waitTabsToBeClosed(ids);
+  await window.Background.TabManager.waitTabsToBeClosed(ids);
 }
 
 TestUtils.countHiddenTabsInGroups = (groups) => {

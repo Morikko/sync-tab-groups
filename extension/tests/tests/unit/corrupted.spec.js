@@ -1,14 +1,6 @@
 import TestManager from '../../utils/TestManager'
 import Session from '../../examples/session'
-
-import Background from '../../utils/Background'
 import OPTION_CONSTANTS from '../../../background/core/OPTION_CONSTANTS'
-
-const {
-  GroupManager,
-  Utils,
-  OptionManager,
-} = Background
 
 describe("Check Corrupted", ()=>{
   beforeAll(TestManager.initUnitBeforeAll());
@@ -16,27 +8,27 @@ describe("Check Corrupted", ()=>{
 
   describe("in Groups", ()=>{
     beforeAll(()=>{
-      Utils.DEBUG_MODE = false;
+      window.Background.Utils.DEBUG_MODE = false;
     });
     afterAll(()=>{
-      Utils.DEBUG_MODE = true;
+      window.Background.Utils.DEBUG_MODE = true;
     });
 
     beforeEach(function() {
-      spyOn(GroupManager, "reloadGroupsFromDisk");
+      spyOn(window.Background.GroupManager, "reloadGroupsFromDisk");
     });
 
     describe("should find critical undefined", ()=> {
       it("and reload the groups from the disk.", async function() {
-        const [corrupted] = await GroupManager.checkCorruptedGroups(
+        const [corrupted] = await window.Background.GroupManager.checkCorruptedGroups(
           [undefined], {withMessage: true}
         );
         expect(corrupted).toBe(true);
-        expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(1);
+        expect(window.Background.GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(1);
       });
 
       it("when the groups array is undefined", async function() {
-        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await window.Background.GroupManager.checkCorruptedGroups(
           null, {withMessage: true}
         );
         expect(corrupted).toBe(true);
@@ -44,7 +36,7 @@ describe("Check Corrupted", ()=>{
       });
 
       it("when a group is undefined", async function() {
-        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await window.Background.GroupManager.checkCorruptedGroups(
           [undefined], {withMessage: true}
         );
         expect(corrupted).toBe(true);
@@ -56,7 +48,7 @@ describe("Check Corrupted", ()=>{
           pinnedTabs: 2});
 
         group.tabs = undefined;
-        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await window.Background.GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(true);
@@ -68,7 +60,7 @@ describe("Check Corrupted", ()=>{
           pinnedTabs: 2});
 
         group.tabs[1] = undefined;
-        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await window.Background.GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(true);
@@ -80,7 +72,7 @@ describe("Check Corrupted", ()=>{
           pinnedTabs: 2});
 
         group.tabs[1].url = undefined;
-        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await window.Background.GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(true);
@@ -94,7 +86,7 @@ describe("Check Corrupted", ()=>{
           pinnedTabs: 2});
         group.incognito = undefined;
 
-        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await window.Background.GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(false);
@@ -108,7 +100,7 @@ describe("Check Corrupted", ()=>{
 
         group.tabs[0].pinned = undefined;
         group.tabs[3].active = undefined;
-        let [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        let [corrupted, message] = await window.Background.GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(false);
@@ -123,7 +115,7 @@ describe("Check Corrupted", ()=>{
         group.incognito = undefined;
         group.tabs[2].pinned = undefined;
 
-        const [corrupted, message] = await GroupManager.checkCorruptedGroups(
+        const [corrupted, message] = await window.Background.GroupManager.checkCorruptedGroups(
           [group], {withMessage: true}
         );
         expect(corrupted).toBe(false);
@@ -139,46 +131,46 @@ describe("Check Corrupted", ()=>{
         tabsLength: 7,
         pinnedTabs: 2});
 
-      const isCorrupted = await GroupManager.checkCorruptedGroups(groups);
+      const isCorrupted = await window.Background.GroupManager.checkCorruptedGroups(groups);
       expect(isCorrupted).toBe(false);
-      expect(GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(0);
+      expect(window.Background.GroupManager.reloadGroupsFromDisk).toHaveBeenCalledTimes(0);
     });
   });
 
   describe("Options: ", ()=>{
     beforeAll(()=>{
-      Utils.DEBUG_MODE = false;
+      window.Background.Utils.DEBUG_MODE = false;
     });
     afterAll(()=>{
-      Utils.DEBUG_MODE = true;
+      window.Background.Utils.DEBUG_MODE = true;
     });
 
     beforeEach(function() {
-      spyOn(OptionManager, "reloadOptionsFromDisk");
+      spyOn(window.Background.OptionManager, "reloadOptionsFromDisk");
     });
 
     it("No corruption", async function() {
       let options = OPTION_CONSTANTS.TEMPLATE();
 
-      let corrupted = await OptionManager.checkCorruptedOptions(options);
+      let corrupted = await window.Background.OptionManager.checkCorruptedOptions(options);
       expect(corrupted).toBe(false);
-      expect(OptionManager.reloadOptionsFromDisk).toHaveBeenCalledTimes(0);
+      expect(window.Background.OptionManager.reloadOptionsFromDisk).toHaveBeenCalledTimes(0);
     });
 
     it("Options is undefined", async function() {
-      let corrupted = await OptionManager.checkCorruptedOptions({undefined});
+      let corrupted = await window.Background.OptionManager.checkCorruptedOptions({undefined});
 
       expect(corrupted).toBe(true);
-      expect(OptionManager.reloadOptionsFromDisk).toHaveBeenCalledTimes(1);
+      expect(window.Background.OptionManager.reloadOptionsFromDisk).toHaveBeenCalledTimes(1);
     });
 
     it("A property of an option is undefined", async function() {
       let options = OPTION_CONSTANTS.TEMPLATE();
       options.groups = undefined;
 
-      let corrupted = await OptionManager.checkCorruptedOptions(options);
+      let corrupted = await window.Background.OptionManager.checkCorruptedOptions(options);
       expect(corrupted).toBe(true);
-      expect(OptionManager.reloadOptionsFromDisk).toHaveBeenCalledTimes(1);
+      expect(window.Background.OptionManager.reloadOptionsFromDisk).toHaveBeenCalledTimes(1);
     });
   });
 });

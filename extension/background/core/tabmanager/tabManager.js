@@ -15,5 +15,6 @@ const TabManager = {
   ...updateTabs,
   ...utilsTabs,
 }
+window.TabManager = TabManager;
 
 export default TabManager

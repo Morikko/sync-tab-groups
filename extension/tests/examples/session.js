@@ -1,21 +1,5 @@
 import Utils from '../../background/utils/utils'
-import {Background, waitInit} from '../utils/Background'
 import TAB_CONSTANTS from '../../background/core/TAB_CONSTANTS'
-let
-  GroupManager,
-  TabManager,
-  LogManager,
-  OptionManager,
-  WindowManager
-waitInit.then(()=>{
-  ({
-    GroupManager,
-    TabManager,
-    LogManager,
-    OptionManager,
-    WindowManager,
-  } = Background)
-})
 
 import TestManager from '../utils/TestManager'
 
@@ -124,7 +108,7 @@ Session.createGroup = function({
     active,
     fakeTab,
   });
-  let group = new GroupManager.Group({
+  let group = new window.Background.GroupManager.Group({
     id: (Date.now()-TestManager.getRandom(1000, Date.now())),
     title,
     tabs,
@@ -132,7 +116,7 @@ Session.createGroup = function({
     incognito,
   });
   if (global) {
-    return [GroupManager.addGroups([
+    return [window.Background.GroupManager.addGroups([
       group,
     ])[0], group];
   } else {
@@ -170,7 +154,7 @@ Session.createArrayGroups = function(params={}) {
   for (let pro in params) {
     if (typeof params[pro] !== "string" && params[pro].length !== undefined
       && params[pro].length !== params.groupsLength) {
-      LogManager.error(Error(""), {
+      window.Background.LogManager.error(Error(""), {
         args: arguments,
         paramName: pro,
         paramValue: params[pro],
@@ -217,11 +201,11 @@ Session.addTabToGroup = async function(group, tab_params) {
   let tab = Session.createTab(tab_params)
 
   if (group.id) { // Local Mode
-    let realIndex = TabManager.secureIndex(tab_params.index, tab, group.tabs);
+    let realIndex = window.Background.TabManager.secureIndex(tab_params.index, tab, group.tabs);
     group.tabs.splice(realIndex, 0, tab);
   } else { // Global
     let id = group;
-    await GroupManager.addTabInGroupId(id, tab, {targetIndex: tab.index});
+    await window.Background.GroupManager.addTabInGroupId(id, tab, {targetIndex: tab.index});
   }
 }
 
@@ -230,7 +214,7 @@ Session.addTabToGroup = async function(group, tab_params) {
  * 5 groups:  2x7 + 2x7(Pinned) + 1x7(Private) + Empty + 1x7(Priv/Ext)
  */
 Session.setLightSession = function() {
-  GroupManager.removeAllGroups();
+  window.Background.GroupManager.removeAllGroups();
   Session.createArrayGroups({
     groupsLength: 7,
     global: true,
@@ -438,9 +422,9 @@ Session.keepOneWindowOpen = async function() {
     for (let i = 1; i < windows.length; i++) {
       await browser.windows.remove(windows[i].id);
     }
-    return "WindowManager.keepOneWindowOpen done";
+    return "window.Background.WindowManager.keepOneWindowOpen done";
   } catch (e) {
-    LogManager.error(e, {args: arguments}, {logs: null});
+    window.Background.LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 
@@ -449,13 +433,13 @@ Session.keepOneWindowOpen = async function() {
  */
 Session.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
   try {
-    OptionManager.options.groups.syncNewWindow = sync_window;
+    window.Background.OptionManager.options.groups.syncNewWindow = sync_window;
     const windows = await browser.windows.getAll();
 
     const w = await browser.windows.create();
 
     if (sync_window) {
-      await WindowManager.integrateWindow(w.id);
+      await window.Background.WindowManager.integrateWindow(w.id);
     }
 
     for (let i = 0; i < windows.length; i++) {
@@ -464,7 +448,7 @@ Session.closeAllAndOpenOnlyOneNewWindow = async function(sync_window = true) {
 
     return w.id;
   } catch (e) {
-    LogManager.error(e, {args: arguments}, {logs: null});
+    window.Background.LogManager.error(e, {args: arguments}, {logs: null});
   }
 }
 

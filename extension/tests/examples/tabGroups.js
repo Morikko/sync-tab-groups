@@ -1,10 +1,7 @@
 /**
  * Groups for testing importing files
  */
-import Background from '../utils/Background'
-const {
-  TAB_CONSTANTS,
-} = Background
+import TAB_CONSTANTS from '../../background/core/TAB_CONSTANTS'
 
 const Examples = {};
 

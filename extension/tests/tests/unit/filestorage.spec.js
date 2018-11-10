@@ -3,11 +3,6 @@ import Examples from '../../examples/tabGroups'
 
 import OPTION_CONSTANTS from '../../../background/core/OPTION_CONSTANTS'
 
-import Background from '../../utils/Background'
-const {
-  ExtensionStorageManager,
-} = Background
-
 describe('FileStorage', ()=>{
   beforeAll(TestManager.initUnitBeforeAll());
   beforeEach(TestManager.initBeforeEach());
@@ -26,7 +21,7 @@ describe('FileStorage', ()=>{
   describe(' on import file', ()=>{
     describe(' of type Sync Tab Groups', ()=>{
       it(' should import file', ()=>{
-        let importedGroups = ExtensionStorageManager.File.importGroupsFromFile(
+        let importedGroups = window.Background.ExtensionStorageManager.File.importGroupsFromFile(
           Examples.syncTabGroups_2w_3g
         );
 
@@ -36,7 +31,7 @@ describe('FileStorage', ()=>{
 
     describe(' of type Tab Groups (legacy)', ()=>{
       it(' should import file with session', ()=>{
-        let importedGroups = ExtensionStorageManager.File.importGroupsFromFile(
+        let importedGroups = window.Background.ExtensionStorageManager.File.importGroupsFromFile(
           Examples.tabGroups_2w_3g_session
         );
 
@@ -44,7 +39,7 @@ describe('FileStorage', ()=>{
       });
 
       it(' should import file without session', ()=>{
-        let importedGroups = ExtensionStorageManager.File.importGroupsFromFile(
+        let importedGroups = window.Background.ExtensionStorageManager.File.importGroupsFromFile(
           Examples.tabGroups_2w_3g
         );
 

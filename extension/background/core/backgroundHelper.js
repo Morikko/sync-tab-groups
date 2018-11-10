@@ -10,6 +10,7 @@ import ImportSelector from './importSelector'
 import SELECTOR_TYPE from './SELECTOR_TYPE'
 
 const BackgroundHelper = {}
+window.BackgroundHelper = BackgroundHelper
 
 BackgroundHelper.refreshOptionsUI = function() {
   console.log(OptionManager.options)

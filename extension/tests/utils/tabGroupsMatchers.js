@@ -1,12 +1,4 @@
 import TestComparator from './TestComparator'
-import {Background, waitInit} from '../utils/Background'
-let LogManager
-waitInit.then(()=>{
-  ({
-    LogManager,
-  } = Background)
-  console.log(LogManager);
-})
 
 const tabGroupsMatchers = {
   /**
@@ -74,7 +66,7 @@ const tabGroupsMatchers = {
           [result.pass, result.message] = TestComparator.compareTabs(actual, expected);
 
           if (!result.pass) {
-            LogManager.error("toEqualTabs didn't pass", {
+            window.Background.LogManager.error("toEqualTabs didn't pass", {
               args: arguments,
               resultMessage: result.message,
             }, {logs: null});

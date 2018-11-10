@@ -3,12 +3,6 @@ import Session from '../../examples/session'
 
 import tabGroupsMatchers from '../../utils/tabGroupsMatchers'
 
-import Background from '../../utils/Background'
-const {
-  GroupManager,
-  Utils,
-} = Background
-
 describe("Session: ", () => {
 
   beforeAll(TestManager.initUnitBeforeAll());
@@ -120,22 +114,22 @@ describe("Session: ", () => {
       });
       let actualPrivLength = group.tabs.filter((tab)=>{
         return Session.ListOfPrivTabURLs.filter((list)=>{
-          return Utils.extractTabUrl(tab.url).includes(list.url);
+          return window.Background.Utils.extractTabUrl(tab.url).includes(list.url);
         }).length;
       }).length;
 
       let actualExtLength = group.tabs.filter((tab)=>{
         return Session.ListOfExtensionTabURLs.filter((list)=>{
-          return  Utils.extractTabUrl(tab.url).includes(list.url);
+          return  window.Background.Utils.extractTabUrl(tab.url).includes(list.url);
         }).length;
       }).length;
 
       let openPrivLength = group.tabs.filter((tab)=>{
-        return Utils.extractLazyUrl(tab.url).includes(Utils.PRIV_PAGE_URL);
+        return window.Background.Utils.extractLazyUrl(tab.url).includes(window.Background.Utils.PRIV_PAGE_URL);
       }).length;
 
       let lazyLength = group.tabs.filter((tab)=>{
-        return tab.url.includes(Utils.LAZY_PAGE_URL);
+        return tab.url.includes(window.Background.Utils.LAZY_PAGE_URL);
       }).length;
 
       expect(group.tabs.length).toEqual(length);
@@ -152,13 +146,13 @@ describe("Session: ", () => {
         title: title,
         global: true});
 
-      let groupIndex = GroupManager.getGroupIndexFromGroupId(id);
+      let groupIndex = window.Background.GroupManager.getGroupIndexFromGroupId(id);
 
-      TestManager.resetActiveProperties(GroupManager.groups[groupIndex].tabs);
+      TestManager.resetActiveProperties(window.Background.GroupManager.groups[groupIndex].tabs);
 
-      expect(group).toEqualGroups(GroupManager.groups[groupIndex]);
+      expect(group).toEqualGroups(window.Background.GroupManager.groups[groupIndex]);
 
-      await GroupManager.removeGroupFromId(id);
+      await window.Background.GroupManager.removeGroupFromId(id);
     });
   });
 
@@ -192,7 +186,7 @@ describe("Session: ", () => {
       let groupsLength = 4, title=["Coucou", "bonjour", "Salut", "Aurevoir"];
       let groups = Session.createArrayGroups({
         groupsLength: groupsLength,
-        tabsLength: Utils.range(groupsLength),
+        tabsLength: window.Background.Utils.range(groupsLength),
         pinnedTabs: 1,
         lazyMode: false,
         privilegedLength: 0,
@@ -219,10 +213,10 @@ describe("Session: ", () => {
       let ids = [], groups = [];
       try {
         let groupsLength = 4, titlePrefix="Create Global Groups";
-        let previousGroupsLength = GroupManager.groups.length;
+        let previousGroupsLength = window.Background.GroupManager.groups.length;
         [ids, groups] = Session.createArrayGroups({
           groupsLength: groupsLength,
-          tabsLength: Utils.range(groupsLength),
+          tabsLength: window.Background.Utils.range(groupsLength),
           pinnedTabs: 1,
           lazyMode: false,
           privilegedLength: 0,
@@ -236,18 +230,18 @@ describe("Session: ", () => {
 
         expect(groups.length).toEqual(groupsLength);
         expect(ids.length).toEqual(groupsLength);
-        expect(previousGroupsLength).toEqual(GroupManager.groups.length-groupsLength);
+        expect(previousGroupsLength).toEqual(window.Background.GroupManager.groups.length-groupsLength);
         ids.forEach((id, index)=>{
-          let groupIndex = GroupManager.getGroupIndexFromGroupId(id);
-          let group = GroupManager.groups[groupIndex];
+          let groupIndex = window.Background.GroupManager.getGroupIndexFromGroupId(id);
+          let group = window.Background.GroupManager.groups[groupIndex];
           expect(group.tabs.length).toEqual(index);
           expect(group.incognito).toBe((index%2)?true:false);
           expect(group.title).toEqual(titlePrefix + " " + index);
         });
       } finally {
         ids.forEach((id, index)=>{
-          if (GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0) {
-            GroupManager.removeGroupFromId(id);
+          if (window.Background.GroupManager.getGroupIndexFromGroupId(id, {error: false}) >= 0) {
+            window.Background.GroupManager.removeGroupFromId(id);
           }
         });
       }
@@ -256,7 +250,7 @@ describe("Session: ", () => {
     it("Raise error if param length is wrong", ()=>{
       expect(Session.createArrayGroups.bind(null, {
         groupsLength: 4,
-        tabsLength: Utils.range(4),
+        tabsLength: window.Background.Utils.range(4),
         incognito: [false, true, false],
       })).toThrow();
     });

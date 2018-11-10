@@ -1,12 +1,7 @@
 /**
- * You should create Error with bg.Error in order to pass `instanceof Error` in background window.
+ * You should create Error with Error in order to pass `instanceof Error` in background window.
  */
 import TestManager from '../../utils/TestManager'
-import Background from '../../utils/Background'
-const {
-  LogManager,
-  Error,
-} = Background
 
 describe("Logmanager", () => {
   beforeAll(TestManager.initUnitBeforeAll());
@@ -16,7 +11,7 @@ describe("Logmanager", () => {
     it("should report error passed in argument", () => {
       const logs = [];
       const msg = 'Coucou';
-      LogManager.error(Error(msg), null, {
+      window.Background.LogManager.error(window.Background.Error(msg), null, {
         logs,
         print: false,
         showNotification: false,
@@ -31,7 +26,7 @@ describe("Logmanager", () => {
     it("should report an error from a string passed in argument", () => {
       const logs = [];
       const msg = 'Coucou';
-      LogManager.error(msg, null, {
+      window.Background.LogManager.error(msg, null, {
         logs,
         print: false,
         showNotification: false,
@@ -49,7 +44,7 @@ describe("Logmanager", () => {
         one: 'one',
         two: 'two',
       }
-      LogManager.error(Error(msg), data, {
+      window.Background.LogManager.error(window.Background.Error(msg), data, {
         logs,
         print: false,
         showNotification: false,
@@ -65,7 +60,7 @@ describe("Logmanager", () => {
   describe(".getStack", () => {
 
     it("should split stack", () => {
-      const stack = LogManager.getStack(Error().stack)
+      const stack = window.Background.LogManager.getStack(window.Background.Error().stack)
 
       expect(Array.isArray(stack)).toBe(true);
       expect(stack.length).toBeGreaterThan(3);
