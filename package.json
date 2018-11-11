@@ -16,6 +16,10 @@
     "firefox-dev": "npx web-ext run --sourceDir=build"
   },
   "dependencies": {
+    "css-loader": "^1.0.1",
+    "font-awesome": "^4.7.0",
+    "node-sass": "^4.10.0",
+    "sass-loader": "^7.1.0",
     "web-ext": "^2.9.1"
   },
   "devDependencies": {
@@ -32,6 +36,7 @@
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-jsdoc": "^3.9.1",
     "eslint-plugin-react": "^7.11.1",
+    "file-loader": "^2.0.0",
     "immutable": "^3.8.2",
     "jasmine": "^2.99.0",
     "mark.js": "^8.11.1",
@@ -42,6 +47,7 @@
     "react-dom": "^16.6.0",
     "react-redux": "^5.1.0",
     "redux": "^3.7.2",
+    "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.1.0",
     "webextension-polyfill": "^0.3.1",
     "webpack": "^4.24.0",

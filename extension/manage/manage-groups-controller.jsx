@@ -6,6 +6,8 @@ import Utils from '../background/utils/utils'
 import GroupActions from '../share/components/groups/wrapper/groupActions'
 import ManageWrapper from './components/manage-wrapper'
 
+import '../css/font-awesome.scss'
+
 document.addEventListener("DOMContentLoaded", () => {
   // Set tab title
   document.title = browser.i18n.getMessage("group_manager");

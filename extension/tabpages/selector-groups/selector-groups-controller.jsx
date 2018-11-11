@@ -7,6 +7,8 @@ import SelectorWrapper from './components/selector-wrapper'
 import selectorStore from './selectorStore'
 import ActionCreators from './action_creators'
 
+import '../../css/font-awesome.scss'
+
 class SelectorActions {
   static getGroups() {
     Utils.sendMessage("Ask:SelectorGroups", {});

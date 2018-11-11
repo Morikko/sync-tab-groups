@@ -6,6 +6,8 @@ import PopupMenu from './components/popupmenu'
 import GroupActions from '../share/components/groups/wrapper/groupActions'
 import store from '../share/components/groups/wrapper/groupStore'
 
+import '../css/font-awesome.scss'
+
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
     React.createElement(

@@ -173,7 +173,7 @@ class SaveSectionStandalone extends React.Component {
                 label="Max backup"
                 id="backup-local-maxSave"
                 onChange={this.props.onOptionChange}
-                name={this.props.options.backup.local.maxSave}
+                name={toString(this.props.options.backup.local.maxSave)}
               />
             </div>
             <select size="6"

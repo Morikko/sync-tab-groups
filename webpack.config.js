@@ -27,11 +27,11 @@ const config = {
     'background': './background/background.js',
     'popup/popup': './popup/popup.js',
     'options/option-page': './options/option-page.js',
-    './manage/manage-groups': './manage/manage-groups-controller.jsx',
-    './tabpages/lazytab/lazytab': './tabpages/lazytab/lazytab.js',
-    './tabpages/privileged-tab/privileged-tab': './tabpages/privileged-tab/privileged-tab.jsx',
-    './tabpages/selector-groups/selector-groups-controller': './tabpages/selector-groups/selector-groups-controller.jsx',
-    './tabpages/shortcut-help/shortcut-help': './tabpages/shortcut-help/shortcut-help.jsx',
+    'manage/manage-groups': './manage/manage-groups-controller.jsx',
+    'tabpages/lazytab/lazytab': './tabpages/lazytab/lazytab.js',
+    'tabpages/privileged-tab/privileged-tab': './tabpages/privileged-tab/privileged-tab.jsx',
+    'tabpages/selector-groups/selector-groups-controller': './tabpages/selector-groups/selector-groups-controller.jsx',
+    'tabpages/shortcut-help/shortcut-help': './tabpages/shortcut-help/shortcut-help.jsx',
   },
   output: {
     filename: '[name].js',
@@ -65,17 +65,46 @@ const config = {
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
+      {
+        test: /\.(scss|css)$/,
+        use: [
+          require.resolve('style-loader'),
+          //MiniCssExtractPlugin.loader,
+          {
+            loader: require.resolve('css-loader'),
+          },
+          {
+            loader: require.resolve('sass-loader'),
+          },
+        ],
+      },
+      {
+        test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: '/fonts/',
+            publicPath: '/fonts/'
+          }
+        }]
+      },
     ],
   },
   plugins: [
     new CopyWebpackPlugin(
-      multipleCopy('_locales', 'manifest.json', 'lib')
+      multipleCopy('_locales', 'manifest.json')
         .concat([
           {from: '**/*.html'},
           {from: '**/*.css'},
           {from: '**/*.png'},
         ])
     ),
+
+/*     new MiniCssExtractPlugin({
+      filename: '[name].css',
+      // chunkFilename: "[id].css"
+    }), */
 
     /* new WebpackShellPlugin({
       onBuildEnd: ['node scripts/remove-evals.js'],

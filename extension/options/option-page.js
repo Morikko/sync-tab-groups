@@ -6,6 +6,8 @@ import Utils from '../background/utils/utils'
 import OptionsActionCreators from './optionsActionCreators'
 import Options from './components/options'
 
+import '../css/font-awesome.scss'
+
 const Actions = {
   askOptions: function() {
     Utils.sendMessage("Option:Ask", {});
