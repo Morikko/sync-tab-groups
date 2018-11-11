@@ -5,10 +5,11 @@
 
     <link id="favIconUrl" rel="shortcut icon" href="/share/icons/tabspace-active-64.png"/>
 
-    <link rel="stylesheet" type="text/css" href="/tests/jasmine/lib/jasmine-2.9.0/jasmine.css">
-    <script type="text/javascript" src="/tests/jasmine/lib/jasmine-2.9.0/jasmine.js"></script>
-    <script type="text/javascript" src="/tests/jasmine/lib/jasmine-2.9.0/jasmine-html.js"></script>
-    <script type="text/javascript" src="/tests/jasmine/lib/jasmine-2.9.0/boot.js"></script>
+    <!-- Needed so jasmine is global -->
+    <link rel="stylesheet" type="text/css" href="/tests/jasmine-core/jasmine.css">
+    <script type="text/javascript" src="/tests/jasmine-core/jasmine.js"></script>
+    <script type="text/javascript" src="/tests/jasmine-core/jasmine-html.js"></script>
+    <script type="text/javascript" src="/tests/jasmine-core/boot.js"></script> 
   
     <script type="text/javascript" src="/tests/tests/integration/all.spec.js"></script>
 

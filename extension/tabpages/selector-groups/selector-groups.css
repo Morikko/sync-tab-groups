@@ -103,7 +103,7 @@ body {
 /** Group Lists **/
 .group-list {
   height: calc(100vh - 110px) !important;
-  box-sizing: border-box;*
+  box-sizing: border-box;
   box-sizing: content-box;
 }
 
