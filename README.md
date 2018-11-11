@@ -61,7 +61,7 @@ If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-gr
 Translation:
  - German (thanks @bitkleberAST)
  - Russian (thanks @Александр)
- - Spanish (thanks @lucas-mancini)
+ - Spanish (thanks [@lucas-mancini](https://github.com/lucas-mancini/))
  - Taiwanese Mandarin (thanks @rzfang)
 Bootstraped from this project: [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups)
 

@@ -1,452 +1,990 @@
 {
   "extension_description": {
-    "message": "Sync Tab Groups es una extensión que provee una manera fácil de organizar las pestañas basadas en un mismo asunto. Cada grupo abierto es sincronizado con una ventana y las pestañas son guardadas. Por lo tanto, puedes cerrar un grupo de pestañas mientras abres otro.",
+    "message": "Sync Tab Groups es una extensión que provee una manera fácil de organizar las pestañas basadas en un mismo asunto. Puedes agrupar, organizar, buscar y activar las pestañas fácilmente.",
     "description": "Description of the extension"
   },
-
   "add_group": {
     "message": "Crear nuevo grupo",
     "description": "Create new group button text"
   },
-
   "search": {
-    "message": "Buscar...",
+    "message": "Buscar…",
     "description": "Place holder in search input"
   },
-
   "clear_search": {
-    "message": "Borrar Búsqueda",
+    "message": "Borrar búsqueda",
     "description": "Clear search help button"
   },
-
   "unnamed_group": {
-    "message": "Grupo Sin Nombre",
+    "message": "Grupo sin nombre",
     "description": "Default name for unnamed group"
   },
-
-  "open_preferences": {
-    "message": "Abrir Preferencias",
-    "description": "Open Preferences"
+  "contextmenu_preferences": {
+    "message": "Preferencias",
+    "description": "Open Preferences from the shortcuts Menu"
   },
-
   "expand_menu": {
-    "message": "Expandir Menu",
+    "message": "Expandir menu",
     "description": "Expand Menu hover button"
   },
-
   "reduce_menu": {
-    "message": "Colapsar Menu",
+    "message": "Colapsar menu",
     "description": "Reduce Menu hover button"
   },
-
   "close_group": {
-    "message": "Cerrar Ventana",
+    "message": "Cerrar ventana",
     "description": "Hover help for close button"
   },
-
   "remove_group": {
-    "message": "Eliminar Grupo",
+    "message": "Eliminar grupo",
     "description": "Hover help for remove button"
   },
-
   "open_window_group": {
     "message": "Abrir en nueva ventana",
     "description": "Hover help for open in new window button"
   },
-
   "rename_group": {
-    "message": "Renombrar",
+    "message": "Renombrar el grupo",
     "description": "Hover help for rename button"
   },
-
   "show_tabs": {
-    "message": "Mostrar Pestañas en el grupo",
+    "message": "Mostrar pestañas en el grupo",
     "description": "Hover help for show tabs in group button"
   },
-
   "hide_tabs": {
-    "message": "Esconder Pestañas en el grupo",
+    "message": "Esconder pestañas en el grupo",
     "description": "Hover help for hide tabs in group button"
   },
-
   "undo_removing": {
     "message": "Deshacer eliminar",
     "description": "Hover help for undo removing button"
   },
-
   "undo_closing": {
     "message": "Deshacer cerrar",
     "description": "Hover help for undo closing button"
   },
-
   "force_removing": {
     "message": "Forzar la eliminación",
     "description": "Hover help for force removing button"
   },
-
   "force_closing": {
     "message": "Forzar el cierre",
     "description": "Hover help for force closing button"
   },
-
   "open_tab": {
-    "message": "Abrir Pestaña en ventana actual",
+    "message": "Abrir pestaña en ventana actual",
     "description": "Hover help for open tab button"
   },
-
   "close_tab": {
-    "message": "Eliminar Pestaña y cerrarla si está abierta",
+    "message": "Eliminar pestaña y cerrarla si está abierta",
     "description": "Hover help for open tab button"
   },
-
   "move_tab_group": {
-    "message": "Mover a otro Grupo",
+    "message": "Mover a otro grupo",
     "description": "Name of the menu in the context (right click on tab)"
   },
-
   "export_groups": {
-    "message": "Exportar Grupos",
+    "message": "Exportar grupos",
     "description": "Name of the menu"
   },
-
   "import_groups": {
-    "message": "Importar Grupos",
+    "message": "Importar grupos",
     "description": "Name of the menu"
   },
-
   "save_bookmarks_groups": {
-    "message": "Guardar tus Grupos en Marcadores",
+    "message": "Guardar tus grupos en marcadores",
     "description": "Name of the menu"
   },
-
   "group_title": {
     "message": "Grupo",
     "description": "Option section title"
   },
-
   "new_window": {
     "message": "Una nueva ventana abierta crea automáticamente un nuevo grupo.",
     "description": "Label new window"
   },
-
   "remove_empty_groups": {
     "message": "Eliminar los grupos que no poseen pestañas automáticamente",
     "description": "Label remove empty groups"
   },
-
   "new_private_window": {
-    "message": "Una nueva ventana Privada crea automáticamente un nuevo grupo.",
+    "message": "Una nueva ventana privada crea automáticamente un nuevo grupo.",
     "description": "Label new private window"
   },
-
   "close_private_window": {
     "message": "Eliminar el grupo en una ventana privada, cuando esta ventana se cierre.",
     "description": "Label close private window"
   },
-
   "pinned_tabs_title": {
-    "message": "Pestañas Fijadas",
+    "message": "Pestañas fijas",
     "description": "Option section title"
   },
-
   "sync_pinned_tabs": {
-    "message": "Incluir pestañas fijadas dentro de los grupos (si no, no se cerrarán al cambiar de grupo).",
+    "message": "Incluir pestañas fijas dentro de los grupos (de lo contrario, no se cerrarán al cambiar de grupo).",
     "description": "Label sync pinned tabs"
   },
-
   "bookmarks_title": {
     "message": "Marcadores",
     "description": "Option section title"
   },
-
   "bookmark_help_folder": {
     "message": "Marcadores son guardados en OtherBookmarks/SyncTabGroups por omisión.",
     "description": ""
   },
-
   "bookmark_help_moving": {
-    "message": "Para cambiar la ubicación raíz, mover la carpeta SyncTabGroups a cualquier otro lado dentro de tus marcadores.",
+    "message": "Para cambiar la ubicación raíz, mueva la carpeta SyncTabGroups a cualquier otro lado dentro de tus marcadores.",
     "description": ""
   },
-
   "bookmark_help_session": {
     "message": "El nombre de la sesión es la subcarpeta donde los marcadores son guardados para este equipo.",
     "description": ""
   },
-
   "bookmark_help_precaution": {
     "message": "No poseer otra carpeta llamada SyncTabGroups.",
     "description": ""
   },
-
   "name_session": {
     "message": "Nombre de la sesión: ",
     "description": ""
   },
-
   "examples_session": {
-    "message": "Ejemplo: Equipo 1, portátil...",
+    "message": "Ejemplo: Equipo 1, portátil.…",
     "description": ""
   },
-
   "save_bookmarks_automatically": {
     "message": "Almacenar grupos en marcadores automáticamente (cada 30 segundos)",
     "description": ""
   },
-
   "save_now": {
-    "message": "Guardar Ahora",
+    "message": "Guardar ahora",
     "description": ""
   },
-
   "import_export_title": {
     "message": "Importar/Exportar grupos",
     "description": "Option section title"
   },
-
   "import_export_help_added": {
     "message": "Los grupos importados son agregados como grupos cerrados",
     "description": ""
   },
-
   "import_export_help_support": {
-    "message": "Importación soporta: archivo json de Sync Tab Groups y de Tab Groups",
+    "message": "Importación soporta: archivos json de Sync Tab Groups y de Tab Groups",
     "description": ""
   },
-
   "tab_information": {
-    "message": "Información actual de la Pestaña",
+    "message": "Información actual de la pestaña",
     "description": ""
   },
-
   "tab_title": {
     "message": "Título",
     "description": ""
   },
-
   "tab_address": {
     "message": "URL",
     "description": ""
   },
-
   "copy_url": {
     "message": "Copiar URL en el portapapeles",
     "description": ""
   },
-
   "privileged_url": {
-    "message": "Acerca de URLs con Privilegios",
+    "message": "Acerca de URLs con privilegios",
     "description": ""
   },
-
   "privileged_url_help_reason": {
     "message": "Sync Tab Groups no puede abrir directamente URLs privilegiadas por cuestiones de seguridad:",
     "description": ""
   },
-
   "open_url_help_method_part_1": {
     "message": "Clickear en el botón",
     "description": ""
   },
-
   "open_url_help_method_part_2": {
     "message": "Pegar la URL en la barra de direcciones",
     "description": ""
   },
-
   "open_url_help_method_part_3": {
-    "message": "Presionar Enter",
+    "message": "Presionar enter",
     "description": ""
   },
-
   "privileged_url_help_warning": {
-    "message": "Advertencia: aquellas URLs son cerradas automáticamente por Firefox cuando la extensión es actualizada o desactivada.",
+    "message": "Advertencia: aquellas URLs son cerradas automáticamente por el navegador cuando la extensión es actualizada o desactivada.",
     "description": ""
   },
-
   "shortcut_list": {
     "message": "Lista de atajos de teclado",
     "description": ""
   },
-
   "command_description_swtich_next_group": {
     "message": "Cambiar el próximo grupo cerrado.",
     "description": ""
   },
-
   "command_description_swtich_previous_group": {
     "message": "Cambiar al anterior grupo cerrado.",
     "description": ""
   },
-
   "command_description_create_group_swtich": {
     "message": "Crear un nuevo grupo y cambiar a él.",
     "description": ""
   },
-
   "command_description_focus_next_group": {
     "message": "Focalizar ventana con el próximo grupo abierto.",
     "description": ""
   },
-
   "command_description_focus_previous_group": {
     "message": "Focalizar ventana con el anterior grupo abierto.",
     "description": ""
   },
-
   "command_description_remove_group_swtich": {
-    "message": "Cerrar y eliminar grupo actual en ventana y cambiar al próximo.",
+    "message": "Cerrar y eliminar grupo actual en la ventana.",
     "description": ""
   },
-
   "command_description__execute_browser_action": {
-    "message": "Abrir Menú de Sync Tab Group.",
+    "message": "Abrir menú de Sync Tab Groups.",
     "description": ""
   },
-
-  "open_shortcut_list": {
-    "message": "Abrir Lista de Atajos",
-    "description": ""
-  },
-
   "command_shortcuts": {
     "message": "Atajo",
     "description": ""
   },
-
   "command_description": {
     "message": "Descripción",
     "description": ""
   },
-
   "toolbar_menu": {
-    "message": "Menú de Herramientas",
+    "message": "Menú de herramientas",
     "description": ""
   },
-
   "icon_option": {
     "message": "Usar ícono blanco en vez de negro.",
     "description": ""
   },
-
   "show_tabs_number": {
-    "message": "Mostrar número de Pestañas entre paréntesis despues del título del Grupo.",
+    "message": "Mostrar número de pestañas entre paréntesis despues del título del grupo.",
     "description": ""
   },
-
   "show_search_bar": {
     "message": "Mostrar barra de búsqueda",
     "description": ""
   },
-
   "shortcuts": {
     "message": "Atajos",
     "description": ""
   },
-
   "allow_global_shortcuts": {
     "message": "Permitir atajos de teclado desde cualquier lugar del navegador.",
     "description": ""
   },
-
   "show_title_window": {
-    "message": "Mostrar Nombre del Grupo como prefijo de todas las ventanas",
+    "message": "Mostrar el nombre del grupo como prefijo de todas las ventanas",
     "description": ""
   },
-
   "group_name": {
     "message": "Nombre",
     "description": ""
   },
-
   "bookmarks_weak_help": {
     "message": "El auto-guardado de marcadores puede ser problemático. Recomiento no usarlo hasta que lo haya arreglado.",
     "description": ""
   },
-
   "label_sort_custom": {
     "message": "Personalizado",
     "description": ""
   },
-
   "label_sort_old": {
     "message": "Más antiguos primero",
     "description": ""
   },
-
   "label_sort_recent": {
     "message": "Más recientes primero",
     "description": ""
   },
-
   "label_sort_alphabetical": {
     "message": "Alfabético",
     "description": ""
   },
-
   "label_sort_accessed": {
     "message": "Recientemente accedidos",
     "description": "Name of sorting in select in option page"
   },
-
   "unpin_tab": {
-    "message": "Despegar esta pestaña",
+    "message": "Anular fijación de esta pestaña",
     "description": "In context menu on tab in menu"
   },
-
   "pin_tab": {
-    "message": "Pegar esta pestaña",
+    "message": "Fijar pestaña",
     "description": "In context menu on tab in menu"
   },
-
   "open_group": {
     "message": "Clickear para cambiar a este grupo en la ventana actual.",
     "description": "Hover help for open group click"
   },
-
   "expand_all_groups": {
     "message": "Expandir todos los grupos (ver pestañas)",
-    "description": "Hover help for button for expanding all groups (see tabs)"
+    "description": "Hover help the button expanding all groups (see tabs)"
   },
-
   "reduce_all_groups": {
     "message": "Colapsar todos los grupos (esconder pestañas)",
-    "description": "Hover help for button for reducing all groups (hide tabs)"
+    "description": "Hover help for button reducing all groups (hide tabs)"
   },
-
   "manage_groups": {
-    "message": "Administrar Grupos",
+    "message": "Administrar grupos",
     "description": ""
   },
-
   "open_url_help_method": {
     "message": "Pero puedes abrirlo manualmente:",
     "description": ""
   },
-
   "state_new_normal_window": {
-    "message": "Nuevas Ventanas",
-    "description": "Setting title: option if a new window is visible group or invisible"
-  },
-
-  "private_window_title": {
-    "message": "Ventanas Privadas",
-    "description": "Option section title"
-  },
-
-  "label_select_sorting_type": {
-    "message": "Ordenar Grupos Por",
+    "message": "Nuevas ventanas",
     "description": ""
   },
-
-  "synchronized_window": {
-    "message": "Grupo Visible",
-    "description": "Label for group visible in popup"
+  "private_window_title": {
+    "message": "Ventanas privadas",
+    "description": "Option section title"
   },
-
+  "label_select_sorting_type": {
+    "message": "Ordenar grupos por",
+    "description": ""
+  },
+  "synchronized_window": {
+    "message": "Grupo visible",
+    "description": "Label for group visible in the popup"
+  },
   "unsynchronized_window": {
-    "message": "Grupo Invisible",
-    "description": "Status in Mainbar in popup when group are invisible"
+    "message": "Grupo invisible",
+    "description": "Status in Mainbar (Menu) when a group is invisible"
+  },
+  "contextmenu_backup": {
+    "message": "Crear respaldo (manual)",
+    "description": "Right click on extension icon, the title for doing a backup."
+  },
+  "options_about_start": {
+    "message": "¡Bienvenido a Sync Tab Groups! Te recomiendo que comiences mirando las distintas opciones. Deberías poder personalizar Sync Tab Groups para que cumpla tus expectativas. Además, entenderás cómo usar la extensión de forma correcta, dado que cada opción está explicada.",
+    "description": ""
+  },
+  "options_about_further": {
+    "message": "Para más información, hecha un vistazo a la guía (usa el link en la barra de navegación), en el sitio web de Sync Tab Groups.",
+    "description": "Not used yet!"
+  },
+  "options_about_enjoy": {
+    "message": "Espero que estés disfrutando de tu experiencia con Sync Tab Groups. De ser así, por favor recuerda agregar una buena revisión en el sitio de la extensión.",
+    "description": "Message in the about section of the Preferences"
+  },
+  "options_about_contribute": {
+    "message": "Además de usar la extensión, puedes contribuir. Encontrando defectos, sugiriendo nuevas funcionalidades, or simplemente traduciendola en tu idioma. Por cualquier cuestión, no dudes en contactarme.",
+    "description": "Message in the about section of the Preferences"
+  },
+  "options_about_dev": {
+    "message": "Sync Tab Groups es una extensión que estoy desarrollando en mi tiempo libre. Estoy haciendo el mejor esfuerzo para proveer la mejor extensión. Si encuentras un defecto, te pido disculpas por anticipado.",
+    "description": "Message in the about section of the Preferences"
+  },
+  "options_help_title": {
+    "message": "Ayuda",
+    "description": ""
+  },
+  "options_behaviors_help_title_invisible": {
+    "message": "Invisible",
+    "description": ""
+  },
+  "options_behaviors_help_invisible": {
+    "message": "Nuevas ventanas abiertas sin Sync Tab Groups son invisibles",
+    "description": ""
+  },
+  "options_behaviors_help_title_visible": {
+    "message": "Visible",
+    "description": ""
+  },
+  "options_behaviors_help_visible_new": {
+    "message": "Nuevas ventanas abiertas sin usar Sync Tab Groups son visibles en un grupo sin nombre.",
+    "description": ""
+  },
+  "options_behaviors_help_change_visibility": {
+    "message": "Cualquier ventana puede ser cambiada desde/a visible/invisible desde el menú (botón en la parte inferior izquierda).",
+    "description": ""
+  },
+  "options_behaviors_pinned_excluded": {
+    "message": "Excluidas",
+    "description": "Pinned Tabs are not part of a group."
+  },
+  "options_behaviors_pinned_excluded_notpart": {
+    "message": "Pestañas fijas no son parte de ningún grupo.",
+    "description": ""
+  },
+  "options_behaviors_pinned_excluded_switching": {
+    "message": "Cambiar/cerrar grupo no tiene impacto en las pestañas fijas.",
+    "description": ""
+  },
+  "options_behaviors_pinned_excluded_usecase": {
+    "message": "Caso de uso: pestañas globales (email, música, etc)",
+    "description": ""
+  },
+  "options_behaviors_pinned_included": {
+    "message": "Incluidas",
+    "description": "Pinned are saved in the group"
+  },
+  "options_behaviors_pinned_included_part": {
+    "message": "Pestañas fijas son parte del grupo en la ventana",
+    "description": ""
+  },
+  "options_behaviors_pinned_included_switching": {
+    "message": "Cambiar/cerrar grupo cierra y guarda las pestañas fijas en el grupo.",
+    "description": ""
+  },
+  "options_behaviors_pinned_included_usecase": {
+    "message": "Caso de uso: pestañas importantes para el grupo.",
+    "description": ""
+  },
+  "options_behaviors_tabsopening": {
+    "message": "Pestañas abiertas",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_discarded": {
+    "message": "Descartadas",
+    "description": "Tabs are not fully loaded on opening"
+  },
+  "options_behaviors_tabsopening_discarded_lighter": {
+    "message": "Rápido y liviano",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_discarded_notfullyloaded": {
+    "message": "Pestañas no son cargadas del todo al abrir grupo.",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_discarded_loadedclick": {
+    "message": "Las pestañas son cargadas cuando se hace foco en ellas. Luego de ellos, permanecen cargadas.",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_full": {
+    "message": "Lleno",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_full_loadedopening": {
+    "message": "Pestañas son completamente cargadas al abrir grupo.",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_full_heavier": {
+    "message": "Consume más memoria y datos de la red.",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_limits": {
+    "message": "Límites (en ambos casos)",
+    "description": "Limits for tabs opening behavior"
+  },
+  "options_behaviors_tabsopening_limits_temporary": {
+    "message": "Datos temporal (formularios) agregados antes de que las pestañas se cierren se perderán. (Limitado por el mismo navegador)",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_limits_history": {
+    "message": "Historial de pestañas no es restaurado. (Limitado por el mismo navegador)",
+    "description": ""
+  },
+  "options_behaviors_private": {
+    "message": "Privadas",
+    "description": "Behavior of the Private windows"
+  },
+  "options_behaviors_private_visible": {
+    "message": "Nuevas ventanas privadas abiertas sin usar Sync Tab Groups son visibles como nuevos grupos privados.",
+    "description": ""
+  },
+  "options_behaviors_private_groups": {
+    "message": "Grupos abiertos en ventanas privadas son también privados.",
+    "description": ""
+  },
+  "options_behaviors_private_notsaved": {
+    "message": "Grupos privados no son guardados en el disco.",
+    "description": ""
+  },
+  "options_behaviors_private_autoremoved": {
+    "message": "Un grupo privado cerrado se elimina automáticamente .",
+    "description": ""
+  },
+  "options_behaviors_private_restart": {
+    "message": "Al reiniciar el navegador, se cerrarán y eliminarán todos los grupos privados.",
+    "description": ""
+  },
+  "options_behaviors_private_invisible": {
+    "message": "Invisibles",
+    "description": "Behavior of the Private windows"
+  },
+  "options_behaviors_private_invisible_creation": {
+    "message": "Nuevas ventanas privadas abiertas sin Sync Tab Groups son invisibles.",
+    "description": ""
+  },
+  "options_behaviors_private_changestate": {
+    "message": "Cualquier ventana privada puede ser específicamente cambiada a privada/invisible desde el menú.",
+    "description": ""
+  },
+  "options_settings_others": {
+    "message": "Otras",
+    "description": "Subsection in settings"
+  },
+  "options_settings": {
+    "message": "Preferencias",
+    "description": "Option section for the groups settings (behavior)"
+  },
+  "options_interface": {
+    "message": "Interfaz",
+    "description": "Option section for the groups interface"
+  },
+  "options_interface_windows": {
+    "message": "Ventanas",
+    "description": "Option subsection for the groups interface"
+  },
+  "options_interface_groups": {
+    "message": "Grupos",
+    "description": "Option subsection for the groups interface"
+  },
+  "options_interface_sortexplanation_custom": {
+    "message": "Personalizar: drag & drop para posicionar tus grupos.",
+    "description": ""
+  },
+  "options_interface_sortexplanation_alphabetical": {
+    "message": "Alfabético: orderar por nombre",
+    "description": ""
+  },
+  "options_interface_sortexplanation_last": {
+    "message": "Último acceso: orderar por los que fueron utilizados por última vez",
+    "description": ""
+  },
+  "options_interface_sortexplanation_old": {
+    "message": "Mas antiguos primero",
+    "description": ""
+  },
+  "options_interface_sortexplanation_recent": {
+    "message": "Recientemente creados primero",
+    "description": ""
+  },
+  "options_groups": {
+    "message": "Grupos",
+    "description": "Option section for the groups data"
+  },
+  "options_groups_backup_local": {
+    "message": "Respaldo local",
+    "description": ""
+  },
+  "options_groups_backup_download": {
+    "message": "Descargar respaldo",
+    "description": ""
+  },
+  "options_groups_backup_behavior": {
+    "message": "Comportamiento",
+    "description": ""
+  },
+  "options_groups_backup_behavior_download": {
+    "message": "Automáticamente descargar un archivo con todos tus grupos (excepto los privados).",
+    "description": ""
+  },
+  "options_groups_backup_behavior_invisible": {
+    "message": "La descarga es invisible en el historial.",
+    "description": ""
+  },
+  "options_groups_backup_behavior_distinctfile": {
+    "message": "Cada timer es guardado en un archivo distinto.",
+    "description": ""
+  },
+  "options_groups_backup_behavior_overwritten": {
+    "message": "Sin embargo, el mismo timer sobreescribirá el respaldo anterior.",
+    "description": ""
+  },
+  "options_groups_backup_location": {
+    "message": "Ubicación",
+    "description": ""
+  },
+  "options_groups_backup_location_subfolder": {
+    "message": "Realizado en la subcarpeta '$FOLDER$' dentro de las descargas de tu navegador.",
+    "description": "",
+    "placeholders": {
+      "folder": {
+        "content": "$1",
+        "example": "backup/"
+      }
+    }
+  },
+  "options_groups_backup_location_restiction": {
+    "message": "El navegador restringe la descarga a la carpetas de elementos descargados, por eso, no puedes cambiar la ubicación",
+    "description": ""
+  },
+  "options_groups_backup_timer": {
+    "message": "Explicación de contador de timers",
+    "description": ""
+  },
+  "options_groups_backup_timer_start": {
+    "message": "Los timers se disparan cuando la extensión es lanzada or el respaldo es habilitado, y cuando el respaldo indicado se acaba.",
+    "description": ""
+  },
+  "options_groups_backup_timer_done": {
+    "message": "El guardado se realiza cuando el tiempo indicado se ha acabado",
+    "description": ""
+  },
+  "options_groups_backup_timer_reset": {
+    "message": "El timer se resetea a 0, al reiniciar el navegador, al deshabilitar la opción de respaldo o al deshabilitar la extensión.",
+    "description": ""
+  },
+  "options_groups_backup_manual": {
+    "message": "Respaldo manual",
+    "description": ""
+  },
+  "options_groups_backup_manual_button": {
+    "message": "Del menú de atajos (click derecho en el ícono de la extensión)",
+    "description": ""
+  },
+  "options_groups_backup_manual_file": {
+    "message": "Guardado en un archivo distinto, manual, tambien es sobreescrito.",
+    "description": ""
+  },
+  "options_groups_backup_every": {
+    "message": "Realizado cada",
+    "description": "See options_groups_backup_t_..., a space is automatically added after"
+  },
+  "options_groups_backup_t_5mins": {
+    "message": "5 minutos",
+    "description": "Follows options_groups_backup_every"
+  },
+  "options_groups_backup_t_1h": {
+    "message": "1 hora",
+    "description": ""
+  },
+  "options_groups_backup_t_4h": {
+    "message": "4 horas",
+    "description": ""
+  },
+  "options_groups_backup_t_1d": {
+    "message": "día",
+    "description": ""
+  },
+  "options_groups_backup_t_1w": {
+    "message": "semana",
+    "description": ""
+  },
+  "options_groups_cleaning": {
+    "message": "Limpieza",
+    "description": ""
+  },
+  "options_groups_cleaning_removeall": {
+    "message": "Remover todos los grupos",
+    "description": ""
+  },
+  "options_groups_cleaning_removeall_warning": {
+    "message": "Una vez realizado, ¡no puedes recuperar tus grupos!",
+    "description": ""
+  },
+  "options_button_enable": {
+    "message": "Activar",
+    "description": "Button Title"
+  },
+  "options_button_disable": {
+    "message": "Desactivar",
+    "description": "Button Title"
+  },
+  "options_about": {
+    "message": "Acerca de",
+    "description": "Option Section Title"
+  },
+  "options_guide": {
+    "message": "Guía de uso",
+    "description": "Option Section Title"
+  },
+  "change_window_invisible": {
+    "message": "Click para hacer el grupo invisible (eliminado)",
+    "description": "Hover help for button in the bottom left of the menu"
+  },
+  "change_window_visible": {
+    "message": "Click para hacer la ventana invisible (agregada como nuevo grupo)",
+    "description": "Hover help for button in the bottom left of the menu"
+  },
+  "open_manager": {
+    "message": "Abrir pestaña con el administrador de grupos",
+    "description": "Hover help for button in the bottom of the menu"
+  },
+  "group_manager": {
+    "message": "Administrador de Grupos",
+    "description": "Tab name where you can organize your groups"
+  },
+  "group_manager_single_button": {
+    "message": "Simple",
+    "description": "Button in Groups Manager for showing only one side"
+  },
+  "group_manager_split_button": {
+    "message": "Partida",
+    "description": "Button in Groups Manager for showing 2 sides"
+  },
+  "options_shortcuts_global": {
+    "message": "Atajos globales",
+    "description": "Shortcuts available from anywhere in the browser"
+  },
+  "notification_update_title": {
+    "message": "Sync Tab Groups se ha actualizado a la versión",
+    "description": "Title in the notification displayed when the extension is updated"
+  },
+  "notification_update_message": {
+    "message": "Haz click aquí para ver los cambios de la nueva versión.",
+    "description": "Message in the notification displayed when the extension is updated"
+  },
+  "options_shortcuts_navigation": {
+    "message": "Navegación",
+    "description": "Shortcuts available from the groups interface (Popup & manager)"
+  },
+  "options_shortcuts_navigation_allow": {
+    "message": "Habilitar atajos de navigación desde la interfaz de grupos",
+    "description": ""
+  },
+  "command_description_general_down": {
+    "message": "Próximo grupo/pestaña (o el primero)",
+    "description": ""
+  },
+  "command_description_general_up": {
+    "message": "Anterior grupo/pestaña (o el último)",
+    "description": ""
+  },
+  "command_description_general_insert": {
+    "message": "Crear un nuevo grupo (aceptar nombre con enter)",
+    "description": ""
+  },
+  "command_description_general_escape": {
+    "message": "Cerrar la ventana emergente (comportamiento por omisión)",
+    "description": ""
+  },
+  "command_description_general_home": {
+    "message": "Primer grupo",
+    "description": ""
+  },
+  "command_description_general_end": {
+    "message": "Último grupo",
+    "description": ""
+  },
+  "command_description_general_pageup": {
+    "message": "Seleccionar la primera pestaña (si la pestaña es seleccionada)",
+    "description": ""
+  },
+  "command_description_general_pagedown": {
+    "message": "Seleccionar la última perstaña (si la pestaña es seleccionada)",
+    "description": ""
+  },
+  "command_description_general_shift_pageup": {
+    "message": "Colapsar todos los grupos",
+    "description": ""
+  },
+  "command_description_general_shift_pagedown": {
+    "message": "Expandir todos los grupos",
+    "description": ""
+  },
+  "command_description_general_ctrl_f": {
+    "message": "Hacer foco en la barra de búsqueda",
+    "description": ""
+  },
+  "command_description_popup_ctrl_m": {
+    "message": "Abrir administrador",
+    "description": ""
+  },
+  "command_description_popup_ctrl_p": {
+    "message": "Abrir preferencias",
+    "description": ""
+  },
+  "command_description_popup_ctrl_o": {
+    "message": "Hacer el grupo visible/invisible",
+    "description": ""
+  },
+  "command_description_popup_ctrl_l": {
+    "message": "Cambiar tamaño de ventana emergente (pequeña/grande)",
+    "description": ""
+  },
+  "command_description_group_space": {
+    "message": "Mostrar/escondar pestañas",
+    "description": ""
+  },
+  "command_description_group_enter": {
+    "message": "Abrir el grupo (o hacer foco en él)",
+    "description": ""
+  },
+  "command_description_group_shift_enter": {
+    "message": "Abrir el grupo en una nueva ventana (o hacer foco en él)",
+    "description": ""
+  },
+  "command_description_group_delete": {
+    "message": "Cerrar el grupo (o forzar)",
+    "description": ""
+  },
+  "command_description_group_shift_delete": {
+    "message": "Remover el grupo (o forzar)",
+    "description": ""
+  },
+  "command_description_group_backspace": {
+    "message": "Deshacer el cierre o remover acción",
+    "description": ""
+  },
+  "command_description_group_ctrl_e": {
+    "message": "Editar el nombre del grupo (enter para aceptar) (Mayús + Retroceso para cancelar)",
+    "description": ""
+  },
+  "command_description_group_shift_up": {
+    "message": "Mover el grupo a la posición anterior (si no hay un orden determinado)",
+    "description": ""
+  },
+  "command_description_group_shift_down": {
+    "message": "Mover el grupo a la posición siguiente (si no hay un orden determinado)",
+    "description": ""
+  },
+  "command_description_tab_enter": {
+    "message": "Abrir la pestaña (o hacer foco en ella)",
+    "description": ""
+  },
+  "command_description_tab_shift_enter": {
+    "message": "Abrir la pestaña en una ventana nueva (o hacer foco en ella)",
+    "description": ""
+  },
+  "command_description_tab_space": {
+    "message": "Hacer foco en el grupo padre (presionar de nuevo para esconder las pestañas)",
+    "description": ""
+  },
+  "command_description_tab_delete": {
+    "message": "Cerra la pestaña",
+    "description": ""
+  },
+  "command_description_tab_ctrl_enter": {
+    "message": "Abrir una pestaña similar en la ventana actual",
+    "description": ""
+  },
+  "command_description_tab_shift_p": {
+    "message": "Fijar/Anular fijación de pestaña",
+    "description": ""
+  },
+  "command_description_tab_shift_up": {
+    "message": "Mover la pestaña a la posición anterior",
+    "description": ""
+  },
+  "command_description_tab_shift_down": {
+    "message": "Mover la pestañas a la posición siguiente",
+    "description": ""
+  },
+  "command_description_searchbar_shift_backspace": {
+    "message": "Limpiar el valor de búsqueda",
+    "description": ""
+  },
+  "command_description_addbutton_shift_backspace": {
+    "message": "Cancelar la creación de grupo",
+    "description": ""
+  },
+  "command_description_addbutton_enter": {
+    "message": "Aceptar el nombre y crear el grupo",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_recommendation": {
+    "message": "Recomendación de Chrome",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_recommendation_state": {
+    "message": "Todas las pestañas que no fueron cargadas son cerradas cuando la extensión se desactiva, se desinstala o se actualiza (solamente en Chrome).",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_recommendation_button": {
+    "message": "El botón `$BUTTON$` carga todas las pestañas (una por una) que no fueron abiertas aún ",
+    "description": "",
+    "placeholders": {
+      "button": {
+        "content": "$1",
+        "example": "Title of the button in this section (see options_behaviors_tabsopening_reload)"
+      }
+    }
+  },
+  "options_behaviors_tabsopening_recommendation_update": {
+    "message": "La acción de cargar las pestañas se realiza automáticamente antes de una actualización automática de la extensión (solamente en Chrome)",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_reload": {
+    "message": "Cargar pestañas abiertas que fueron descartadas",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_confirm_reload": {
+    "message": "¿Está seguro, de que quiera cargar todas las pestañas en el modo descartado del la extensión?",
+    "description": ""
+  },
+  "options_behaviors_tabsopening_nothing_reload": {
+    "message": "No hay pestañas en el modo de extensión descartada.\n",
+    "description": ""
+  },
+  "options_remove_groups_confirm": {
+    "message": "¿Está seguro que quiere remover todos los grupos?",
+    "description": ""
+  },
+  "options_about_start_title": {
+    "message": "Bienvenido",
+    "description": ""
+  },
+  "options_about_enjoy_title": {
+    "message": "Compartir",
+    "description": ""
+  },
+  "options_about_contribute_title": {
+    "message": "Contribuir",
+    "description": ""
+  },
+  "options_about_dev_title": {
+    "message": "Gracias",
+    "description": ""
+  },
+  "tab_show_actions_menu": {
+    "message": "Abrir menú con acciones adicionales",
+    "description": ""
+  },
+  "selector_select_all": {
+    "message": "Seleccionar todas las pestañas y grupos.",
+    "description": "In the selector popup (import/export)"
+  },
+  "selector_select_none": {
+    "message": "Deseleccionar todas las pestañas y grupos.",
+    "description": "In the selector popup (import/export)"
+  },
+  "remove_all_groups": {
+    "message": "Remover todos los grupos.",
+    "description": ""
+  },
+  "switch_hidden_disable_sync_pinned": {
+    "message": "Las pestañas ocultas no son compatibles con las pestañas fijas en grupos. Si desea continuar, las pestañas fijas no van a formar más parte de los grupos. ¿Desea continuar?",
+    "description": ""
+  },
+  "switch_pinned_included_disable_hidden": {
+    "message": "Las pestañas ocultas no son compatibles con las pestañas fijas en grupos. Si desea continuar, las pestañas fijas van a ser parte de los grupos pero no estarán más ocultas. ¿Desea continuar?",
+    "description": ""
+  },
+  "close_hidden_tab": {
+    "message": "Cerrar la pestaña oculta",
+    "description": "From tab context menu"
+  },
+  "close_hidden_tabs_in_group": {
+    "message": "Cerrar las pestañas ocultas en el grupo",
+    "description": "From tab context menu"
+  },
+  "setting_discard_hidden_tab": {
+    "message": "Descartar las pestañas al ocultar",
+    "description": ""
+  },
+  "setting_remove_unknown_hidden_tabs": {
+    "message": "Remover las pestañas ocultas que no son parte de ningún grupo de forma automática",
+    "description": ""
+  },
+  "setting_confirm_unknown_hidden_tabs": {
+    "message": "¿Está seguro, que quiere cerrar todas las pestañas escondidas que no son parte de ningún grupo?",
+    "description": ""
+  },
+  "setting_close_all_hidden_tabs": {
+    "message": "Cerrar TODAS las pestañas escondidas en Firefox.",
+    "description": ""
+  },
+  "setting_confirm_close_all_hidden_tabs": {
+    "message": "¿Está seguro, que quiere cerrar todas las pestañas escondidas en Firefox?",
+    "description": ""
+  },
+  "setting_nothin_close_all_hidden_tabs": {
+    "message": "No hay pestañas escondidas abiertas en Firefox.",
+    "description": ""
+  },
+  "setting_download_error_log": {
+    "message": "Bajar registro de errores",
+    "description": ""
+  },
+  "setting_enable_error_log": {
+    "message": "Habilitar la extensión para registrar los errores",
+    "description": ""
   }
-
 }
