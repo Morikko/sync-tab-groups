@@ -2,7 +2,7 @@ import TestManager from '../../utils/TestManager'
 import Session from '../../examples/session'
 import OPTION_CONSTANTS from '../../../background/core/OPTION_CONSTANTS'
 
-fdescribe("When Hidden Closing State is enabled, ", ()=>{
+describe("When Hidden Closing State is enabled, ", ()=>{
   // Keep previous states
   beforeAll(TestManager.initIntegrationBeforeAll());
   // Set back previous states

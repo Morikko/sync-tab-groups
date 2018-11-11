@@ -7,7 +7,12 @@ const plugins = [
     'process.env.IS_PROD': false,
   }),
   new CopyWebpackPlugin([
-    {from: 'tests/jasmine/**/*'},
+    {
+      from: 'node_modules/jasmine-core/lib/jasmine-core/*.*',
+      to: 'tests/jasmine-core/',
+      context: '../',
+      flatten: true,
+    },
   ]),
 ];
 

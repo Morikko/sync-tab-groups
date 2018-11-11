@@ -98,12 +98,6 @@ const config = {
           {from: '**/*.html'},
           {from: '**/*.css'},
           {from: '**/*.png'},
-          {
-            from: 'node_modules/jasmine-core/lib/jasmine-core/*.*', 
-            to: 'tests/jasmine-core/', 
-            context: '../',
-            flatten: true,
-          },
         ])
     ),
 

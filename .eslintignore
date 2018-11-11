@@ -1,5 +1,2 @@
-extension/lib
-extension/tests/jasmine
 build/
-webpack.config.js
-web-ext-config.js
+release/

@@ -7,7 +7,10 @@ module.exports = {
   },
   run: {
     startUrl: ["about:debugging"],
-    pref: ["extensions.webextensions.tabhide.enabled=true"],
+    pref: [
+      "extensions.webextensions.tabhide.enabled=true",
+    ],
     noReload: true,
+    firefox: "firefoxdeveloperedition",
   },
 };
