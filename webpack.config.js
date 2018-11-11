@@ -1,11 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WebpackShellPlugin = require('webpack-shell-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const devConfig = require('./webpack.dev.config');
 const prodConfig = require('./webpack.prod.config');
@@ -85,9 +82,9 @@ const config = {
           options: {
             name: '[name].[ext]',
             outputPath: '/fonts/',
-            publicPath: '/fonts/'
-          }
-        }]
+            publicPath: '/fonts/',
+          },
+        }],
       },
     ],
   },
@@ -100,15 +97,6 @@ const config = {
           {from: '**/*.png'},
         ])
     ),
-
-/*     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      // chunkFilename: "[id].css"
-    }), */
-
-    /* new WebpackShellPlugin({
-      onBuildEnd: ['node scripts/remove-evals.js'],
-    }), */
   ],
 };
 

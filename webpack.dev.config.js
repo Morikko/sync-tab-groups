@@ -13,6 +13,12 @@ const plugins = [
       context: '../',
       flatten: true,
     },
+    {
+      from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js',
+      to: 'lib/',
+      context: '../',
+      flatten: true,
+    },
   ]),
 ];
 
