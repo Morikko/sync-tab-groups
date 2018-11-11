@@ -1,23 +1,30 @@
 /**
  * Events specific to the extension
  */
-var Event = Event || {};
-Event.Extension = Event.Extension || {};
+import GroupManager from '../core/groupmanager'
+import BackgroundHelper from '../core/backgroundHelper'
+import OptionManager from '../core/optionmanager'
 
-Event.Extension.initSendDataEventListener = function() {
+import ExtensionStorageManager from '../storage/storageManager'
+
+const ExtensionEvents = {};
+
+ExtensionEvents.initSendDataEventListener = function() {
   GroupManager.eventlistener.on(GroupManager.EVENT_CHANGE,
     () => {
-      Background.refreshUi();
+      BackgroundHelper.refreshUi();
     }
   );
   OptionManager.eventlistener.on(OptionManager.EVENT_CHANGE,
     () => {
-      Background.refreshOptionsUI();
+      BackgroundHelper.refreshOptionsUI();
     }
   );
-  StorageManager.Local.eventlistener.on(StorageManager.Local.BACKUP_CHANGE,
+  ExtensionStorageManager.Local.eventlistener.on(ExtensionStorageManager.Local.BACKUP_CHANGE,
     ()=>{
-        Background.refreshBackupListUI();
+      BackgroundHelper.refreshBackupListUI();
     }
   );
 }
+
+export default ExtensionEvents

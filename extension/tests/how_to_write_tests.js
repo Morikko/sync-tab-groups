@@ -1,33 +1,30 @@
-// Tests best practices:
 /*
   * 1. Keep extension state: Save previous states (option, storage...), restore them after
-  TODO: each it or deeper describe ???
   * 2. Each test can be launched lonely (else it should be precised)
   * 3. Success 10 times in a row (not lucky success)
   * 4. Respect the following structure for clarity
 */
-TestManager.installFakeTime();
-TestManager.uninstallFakeTime();
+import TestHelper from './utils/TestHelper'
+import TestUtils from './utils/TestUtils';
+import Session from './examples/session';
 
-{
-  /** Copy to the ROOTEST describe **/
+describe('Tests best practices', ()=>{
   // Keep previous states
-  beforeAll(TestManager.initIntegrationBeforeAll());
+  beforeAll(TestHelper.initIntegrationBeforeAll());
   // Set back previous states
-  afterAll(TestManager.initIntegrationAfterAll());
+  afterAll(TestHelper.initIntegrationAfterAll());
 
   // OR unit tests
-  beforeAll(TestManager.initUnitBeforeAll());
-  beforeEach(TestManager.initBeforeEach());
+  beforeAll(TestHelper.initUnitBeforeAll());
 
-  {
-    /** Tweaking Before Tests **/
+  beforeEach(TestHelper.initBeforeEach());
 
+  beforeAll(async function someTweakingExamples() {
     // Set custom options
-    await TestManager.changeSomeOptions({
+    await TestHelper.changeSomeOptions({
       "privateWindow-removeOnClose": true,
       "pinnedTab-sync": false,
-    })
+    });
 
     // Create Groups
     [this.groupIds, this.groups] = Session.createArrayGroups({
@@ -41,61 +38,68 @@ TestManager.uninstallFakeTime();
       global: true,
       incognito: false,
       active: -1,
-      title:"Examples",
+      title: "Examples",
     })
 
     // Open windows
+
     this.windowIds = (await browser.windows.create()).id;
-    this.windowIds = await WindowManager.openGroupInNewWindow(this.groups[1].id);
+    this.windowIds = await window.Background.WindowManager.openGroupInNewWindow(this.groups[1].id);
 
-    TestManager.splitOnHalfScreen(windowId)
-    TestManager.splitOnHalfTopScreen(windowId)
-    TestManager.splitOnHalfBottomScreen(windowId)
+    let windowId
+    TestUtils.splitOnHalfScreen(windowId)
+    TestUtils.splitOnHalfTopScreen(windowId)
+    TestUtils.splitOnHalfBottomScreen(windowId)
 
-    TestManager.installFakeTime();
+    TestHelper.installFakeTime();
     jasmine.clock.tick(10000);
-  }
+  })
 
-  /** TESTS **/
-  {
+  afterAll(async function someTweakingExamples() {
+    /** Cleaning AFTER
+      Might not  be necessary because everything is cleaned when a root describe is overed
+  **/
+
+    TestHelper.uninstallFakeTime();
+
+    // Close all windows
+    await TestUtils.closeWindows(this.windowIds)
+
+    // Remove groups
+    await TestUtils.removeGroups(this.groupIds)
+
+  })
+
+  it('should do your test', async()=>{
     // Do you stuff...
 
-    let previousTabs = Utils.getCopy(TestManager.getGroup(
-      GroupManager.groups,
+    let targetGroupIndex
+    let previousTabs = window.Background.Utils.getCopy(TestUtils.getGroup(
+      window.Background.GroupManager.groups,
       this.groupIds[targetGroupIndex]
     ).tabs)
 
     // If in windowId, there was a focus change on a discarded tab, this tab will load
     // Without wait, the tab can have the state about:blank instead of real value
-    await TestManager.waitAllTabsToBeLoadedInWindowId(this.windowId)
+    await TestUtils.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
-    let resultingTabs = await TabManager.getTabsInWindowId(
+    let resultingTabs = await window.Background.TabManager.getTabsInWindowId(
       this.windowId, {
         withoutRealUrl: false,
         withPinned: true,
       });
 
     // Don't care about some values
-    TestManager.resetActiveProperties(tabs)
-    TestManager.resetIndexProperties(tabs)
-    TestManager.setActiveProperties(previousTabs, targetTabIndex);
+    let tabs, targetTabIndex
+    TestUtils.resetActiveProperties(tabs)
+    TestUtils.resetIndexProperties(tabs)
+    TestUtils.setActiveProperties(previousTabs, targetTabIndex);
 
     // Control the results...
+    let resultingGroups, resultingGroup, expectedGroup, expectedTabs, expectedGroups
+
     expect(resultingTabs).toEqualTabs(expectedTabs);
     expect(resultingGroup).toEqualGroup(expectedGroup);
     expect(resultingGroups).toEqualGroups(expectedGroups);
-  }
-
-  /** Cleaning AFTER
-      Might not  be necessary because everything is cleaned when a root describe is overed
-  **/
-
-  TestManager.uninstallFakeTime();
-
-  // Close all windows
-  await TestManager.closeWindows(this.windowIds)
-
-  // Remove groups
-  await TestManager.removeGroups(this.groupIds)
-
-}
+  })
+})

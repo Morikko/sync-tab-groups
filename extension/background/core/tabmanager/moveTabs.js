@@ -1,27 +1,26 @@
-/*
- - moveOpenTabToGroup
- - moveTabBetweenGroups
- - moveUnFollowedTabToGroup
- - moveTabToNewGroup
- - moveUnFollowedTabToNewGroup
- */
-var TabManager = TabManager || {};
+import OptionManager from '../../core/optionmanager'
+import LogManager from '../../error/logmanager'
+import GroupManager from '../../core/groupmanager'
+import {
+  secureIndex,
+  countPinnedTabs,
+} from './utilsTabs'
 
 /**
  * Move a tab opened between two open windows
  * The tab is put at the last position for pinned and normal tabs
  * in the targeted window.
  * @param {Tab} tab
- * @param {Number} windowId
- * @param {Number} targetIndex
+ * @param {number} windowId
+ * @param {number} targetIndex
  */
-TabManager.moveOpenTabToGroup = async function(tab, windowId, targetIndex = -1) {
+async function moveOpenTabToGroup(tab, windowId, targetIndex = -1) {
   try {
     const tabs = await browser.tabs.query({windowId: windowId});
     if (!OptionManager.options.pinnedTab.sync && targetIndex > -1) { // Add offset of unvisible unsync pinned tab
-      targetIndex += TabManager.countPinnedTabs(tabs);
+      targetIndex += countPinnedTabs(tabs);
     }
-    let realIndex = TabManager.secureIndex(targetIndex, tab, tabs);
+    let realIndex = secureIndex(targetIndex, tab, tabs);
 
     if (tab.windowId === windowId && realIndex > tab.index) { // The move will first removed the tab before the next place it will appear
       realIndex--;
@@ -29,24 +28,24 @@ TabManager.moveOpenTabToGroup = async function(tab, windowId, targetIndex = -1) 
 
     await browser.tabs.move(tab.id, {
       index: realIndex,
-      windowId: windowId
+      windowId: windowId,
     });
-    return "TabManager.moveOpenTabToGroup done!";
+    return "moveOpenTabToGroup done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 /**
  * Move tab beetwen groups already created (closed or opened)
  * If targetTabIndex is -1, put the tab at the end
- * @param {Number} sourceGroupId
- * @param {Number} sourceTabIndex
- * @param {Number} targetGroupId
- * @param {Number} targetTabIndex (default=-1)
- * @return {Promise}
+ * @param {number} sourceGroupId
+ * @param {number} sourceTabIndex
+ * @param {number} targetGroupId
+ * @param {number} targetTabIndex (default=-1)
+ * @returns {Promise}
  */
-TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex, targetGroupId, targetTabIndex = -1) {
+async function moveTabBetweenGroups(sourceGroupId, sourceTabIndex, targetGroupId, targetTabIndex = -1) {
   try {
     let targetGroupIndex = GroupManager.getGroupIndexFromGroupId(targetGroupId);
     let sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(sourceGroupId);
@@ -63,12 +62,12 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex, 
         (sourceTabIndex === GroupManager.groups[sourceGroupIndex].tabs.length - 1 && // Still same last index
         targetTabIndex === -1))) {
       // Nothing to do
-      return "TabManager.moveTabBetweenGroups done!";
+      return "moveTabBetweenGroups done!";
     }
 
     // Case 5: Open Group -> Open Group (Even the same)
     if ((isSourceGroupOpen && isTargetGroupOpen)) {
-      await TabManager.moveOpenTabToGroup(tab, GroupManager.groups[targetGroupIndex].windowId, targetTabIndex);
+      await moveOpenTabToGroup(tab, GroupManager.groups[targetGroupIndex].windowId, targetTabIndex);
       // Case 2: Closed Group -> Closed Group
       // Case 3: Open Group -> Closed Groups
       // Case 4: Closed Group -> Open Group
@@ -80,73 +79,73 @@ TabManager.moveTabBetweenGroups = async function(sourceGroupId, sourceTabIndex, 
       }
       await GroupManager.moveTabBetweenGroups(tab, sourceGroupId, sourceTabIndex, targetGroupId, targetTabIndex);
     }
-    return "TabManager.moveTabBetweenGroups done!";
+    return "moveTabBetweenGroups done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 /**
  * Move a tab from a non followed window to a group
- * @param {Number} tabId
- * @param {Number} targetGroupId
+ * @param {number} tabId
+ * @param {number} targetGroupId
  */
-TabManager.moveUnFollowedTabToGroup = async function(tabId, targetGroupId) {
+async function moveUnFollowedTabToGroup(tabId, targetGroupId) {
   try {
     let sourceGroupId = GroupManager.getGroupIdFromTabId(tabId, false);
     if (sourceGroupId >= 0) { // Is in groups
       let sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(sourceGroupId);
       let tabIndex = GroupManager.getTabIndexFromTabId(tabId, sourceGroupIndex, {error: true});
-      await TabManager.moveTabBetweenGroups(sourceGroupId, tabIndex, targetGroupId);
+      await moveTabBetweenGroups(sourceGroupId, tabIndex, targetGroupId);
     } else { // Unsync window
       let targetGroupIndex = GroupManager.getGroupIndexFromGroupId(targetGroupId);
       let isTargetGroupOpen = GroupManager.isGroupIndexInOpenWindow(targetGroupIndex);
       const tab = await browser.tabs.get(tabId);
       if (isTargetGroupOpen) { // To open group
-        await TabManager.moveOpenTabToGroup(tab, GroupManager.groups[targetGroupIndex].windowId, -1);
+        await moveOpenTabToGroup(tab, GroupManager.groups[targetGroupIndex].windowId, -1);
       } else { // To close group
         await GroupManager.addTabInGroupId(targetGroupId, tab);
         await browser.tabs.remove(tabId);
       }
     }
-    return "TabManager.moveUnFollowedTabToGroup done!";
+    return "moveUnFollowedTabToGroup done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 /**
  * Move a tab to a new group
- * @param {Number} sourceGroupId
- * @param {Number} tabIndex
- * @return {Number} id of the created group or -1
+ * @param {number} sourceGroupId
+ * @param {number} tabIndex
+ * @returns {number} id of the created group or -1
  */
-TabManager.moveTabToNewGroup = async function(sourceGroupId, tabIndex, title = "") {
+async function moveTabToNewGroup(sourceGroupId, tabIndex, title = "") {
   try {
-    var sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(sourceGroupId);
+    let sourceGroupIndex = GroupManager.getGroupIndexFromGroupId(sourceGroupId);
 
     let tab = GroupManager.groups[sourceGroupIndex].tabs[tabIndex];
     let id = GroupManager.addGroupWithTab([tab], {
-      title
+      title,
     });
 
     await GroupManager.removeTabFromIndexInGroupId(sourceGroupId, tabIndex);
 
     return id;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
     return -1;
   }
 }
 
 /**
  * Move a tab from a non followed window to a new group
- * @param {Number} tabId
- * @return {Number} id of the created group or -1
+ * @param {number} tabId
+ * @returns {number} id of the created group or -1
  */
-TabManager.moveUnFollowedTabToNewGroup = async function(tabId) {
+async function moveUnFollowedTabToNewGroup(tabId) {
   try {
     const tab = await browser.tabs.get(tabId);
 
@@ -155,7 +154,15 @@ TabManager.moveUnFollowedTabToNewGroup = async function(tabId) {
 
     return id;
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
     return -1;
   }
+}
+
+export {
+  moveTabToNewGroup,
+  moveUnFollowedTabToNewGroup,
+  moveUnFollowedTabToGroup,
+  moveTabBetweenGroups,
+  moveOpenTabToGroup,
 }

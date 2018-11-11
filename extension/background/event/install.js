@@ -4,21 +4,20 @@
 - prepareExtensionForUpdate
 - updateFromBelow_0_6_2
  */
-var Event = Event || {};
-Event.Install = Event.Install || {};
+import BackgroundHelper from '../core/backgroundHelper'
+import OptionManager from '../core/optionmanager'
 
-Event.Install.DEV_TABS = [
+const InstallEvents = {};
+
+InstallEvents.DEV_TABS = [
   "/tests/test-page/unit.html",
   "/tests/test-page/integration.html",
-  "/optionpages/option-page.html#settings",
+  "/options/option-page.html#settings",
   //"/tests/test-page/integration.html?spec=Selector%20-%20",
-  //"/optionpages/option-page.html#groups"
 ]
 
-Event.Install.onDevelopmentInstall = function() {
-  const testUrl = browser.extension.getURL("/tests/test-page/unit.html");
-
-  Event.Install.DEV_TABS.forEach((url)=>{
+InstallEvents.onDevelopmentInstall = function() {
+  InstallEvents.DEV_TABS.forEach((url)=>{
     browser.tabs.create({
       active: false,
       url: browser.extension.getURL(url),
@@ -30,21 +29,21 @@ Event.Install.onDevelopmentInstall = function() {
 }
 
 
-Event.Install.onNewInstall = function() {
-  Background.install = true;
-  Background.onOpenSettings(false);
+InstallEvents.onNewInstall = function() {
+  BackgroundHelper.install = true;
+  BackgroundHelper.onOpenSettings(false);
 }
 
-Event.Install.onUpdate = function(previousVersion) {
-  Background.lastVersion = previousVersion;
+InstallEvents.onUpdate = function(previousVersion) {
+  BackgroundHelper.lastVersion = previousVersion;
   // Focus Settings if click on notification
   browser.notifications.onClicked.addListener((notificationId)=>{
-    if ( notificationId === Background.updateNotificationId ) {
-      Background.onOpenSettings(true);
+    if (notificationId === BackgroundHelper.updateNotificationId) {
+      BackgroundHelper.onOpenSettings(true);
     }
   });
   // Generic message
-  browser.notifications.create(Background.updateNotificationId, {
+  browser.notifications.create(BackgroundHelper.updateNotificationId, {
     "type": "basic",
     "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
     "title": browser.i18n.getMessage("notification_update_title") + " " + browser.runtime.getManifest().version,
@@ -52,28 +51,28 @@ Event.Install.onUpdate = function(previousVersion) {
   });
 }
 
-Event.Install.isVersionBelow = function(version, reference) {
+InstallEvents.isVersionBelow = function(version, reference) {
   let splitVersion = version.split('.').map(n => parseInt(n,10)),
-      splitReference = reference.split('.').map(n => parseInt(n,10));
+    splitReference = reference.split('.').map(n => parseInt(n,10));
 
-  if ( splitVersion[0] < splitReference[0] ) {
+  if (splitVersion[0] < splitReference[0]) {
     return true;
   }
-  if ( splitVersion[0] > splitReference[0] ) {
+  if (splitVersion[0] > splitReference[0]) {
     return false;
   }
 
-  if ( splitVersion[1] < splitReference[1] ) {
+  if (splitVersion[1] < splitReference[1]) {
     return true;
   }
-  if ( splitVersion[1] > splitReference[1] ) {
+  if (splitVersion[1] > splitReference[1]) {
     return false;
   }
 
-  if ( splitVersion[2] < splitReference[2] ) {
+  if (splitVersion[2] < splitReference[2]) {
     return true;
   }
-  if ( splitVersion[2] > splitReference[2] ) {
+  if (splitVersion[2] > splitReference[2]) {
     return false;
   }
   // Equal
@@ -83,30 +82,32 @@ Event.Install.isVersionBelow = function(version, reference) {
 /**
  * Recpect order version increasing
  */
-Event.Install.prepareExtensionForUpdate = function(lastVersion, newVersion) {
-  if ( !lastVersion ) {
+InstallEvents.prepareExtensionForUpdate = function(lastVersion, newVersion) {
+  if (!lastVersion) {
     return;
   }
 
-  if (Event.Install.isVersionBelow(lastVersion, "0.6.2")
-        && !Event.Install.isVersionBelow(newVersion, "0.6.2") ){
-    Event.Install.updateFromBelow_0_6_2();
+  if (InstallEvents.isVersionBelow(lastVersion, "0.6.2")
+        && !InstallEvents.isVersionBelow(newVersion, "0.6.2")) {
+    InstallEvents.updateFromBelow_0_6_2();
   }
 }
 
-Event.Install.updateFromBelow_0_6_2 = function (options=OptionManager.options) {
+InstallEvents.updateFromBelow_0_6_2 = function(options=OptionManager.options) {
   // Move OptionManager.options.backup -> OptionManager.options.backup.download
-  if (options.hasOwnProperty("backup")){
-    if ( !options.backup.hasOwnProperty("download") ) {
+  if (options.hasOwnProperty("backup")) {
+    if (!options.backup.hasOwnProperty("download")) {
       options.backup.download = {};
     }
-    if ( options.backup.hasOwnProperty("enable")) {
-        options.backup.download["enable"] = options.backup.enable;
-        delete options.backup.enable;
+    if (options.backup.hasOwnProperty("enable")) {
+      options.backup.download["enable"] = options.backup.enable;
+      delete options.backup.enable;
     }
-    if ( options.backup.hasOwnProperty("time")) {
-        options.backup.download["time"] = options.backup.time;
-        delete options.backup.time;
+    if (options.backup.hasOwnProperty("time")) {
+      options.backup.download["time"] = options.backup.time;
+      delete options.backup.time;
     }
   }
 }
+
+export default InstallEvents

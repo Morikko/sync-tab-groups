@@ -72,13 +72,27 @@
  * Event: EVENT_CHANGE EVENT_PREPARE
  * DelayedTask: store() (Limited mode)
  */
-var GroupManager = GroupManager || {};
+import Utils from '../utils/utils'
+import OptionManager from '../core/optionmanager'
+import LogManager from '../error/logmanager'
+import BackgroundHelper from '../core/backgroundHelper'
+import WindowManager from '../core/windowmanager'
+import TaskManager from '../utils/taskManager'
+import EventListener from '../utils/eventlistener'
+import TabManager from './tabmanager/tabManager'
+import ExtensionStorageManager from '../storage/storageManager'
+
+import OPTION_CONSTANTS from '../core/OPTION_CONSTANTS'
+import TAB_CONSTANTS from '../core/TAB_CONSTANTS'
+
+const GroupManager = {};
+window.GroupManager = GroupManager;
 
 GroupManager.setTabIsHidden = function(tabId, hiddenValue, groups=GroupManager.groups) {
   const tab = groups.map(group => group.tabs)
-                      .reduce((allTabs, tabs) => allTabs.concat(tabs), [])
-                      .filter(tab => tab.id === tabId)
-  if ( tab.length > 0 ) {
+    .reduce((allTabs, tabs) => allTabs.concat(tabs), [])
+    .filter(tab => tab.id === tabId)
+  if (tab.length > 0) {
     tab[0].hidden = hiddenValue;
   }
 }
@@ -97,8 +111,8 @@ GroupManager.Group = function({
   id = -1,
   title = "",
   tabs = [],
-  windowId = WINDOW_ID_NONE,
-  incognito = false
+  windowId = browser.windows.WINDOW_ID_NONE,
+  incognito = false,
 }={}) {
   this.title = title;
   this.tabs = tabs.map(tab => TabManager.getTabFactory(tab));
@@ -116,23 +130,23 @@ GroupManager.Group = function({
 /**
  * Return the group id displayed in the window with windowId
  * If no group found: throw Error
- * @param {Number} - windowId
- * @returns {Number} - group id
+ * @param {number} windowId
+ * @returns {number} - group id
  */
 GroupManager.getGroupIdInWindow = function(windowId, {error = true}={}) {
   if (windowId !== browser.windows.WINDOW_ID_NONE) {
     for (let group of GroupManager.groups) {
       if (group.windowId === windowId)
         return group.id;
-      }
     }
+  }
 
   const msg = "Failed to find group in window";
   if (error) {
     throw Error(msg + " " + windowId);
   } else {
     LogManager.warning(msg,
-      {arguments}
+      {args: arguments}
     );
     return -1;
   }
@@ -142,19 +156,18 @@ GroupManager.getGroupIdInWindow = function(windowId, {error = true}={}) {
 /**
  * Return the group index for a specific group
  * If no index found: throw Error or -1
- * @param {Number} - group id
- * @param {Boolean} - error: if true raise error else return -1
- * @param {Array[Group]} - array on which looking for groupId
- * @returns {Number} - group index
+ * @param {number} groupId
+ * @param {Array<Group>} - array on which looking for groupId
+ * @returns {number} - group index
  */
 GroupManager.getGroupIndexFromGroupId = function(groupId, {
   error = true,
-  groups = GroupManager.groups
+  groups = GroupManager.groups,
 }={}) {
   for (let i = 0; i < groups.length; i++) {
     if (groups[i].id === groupId)
       return i;
-    }
+  }
   if (error) {
     throw Error("GroupManager.getGroupIndexFromGroupId: Failed to find group index for id:  " + groupId);
   } else {
@@ -166,14 +179,14 @@ GroupManager.getGroupIndexFromGroupId = function(groupId, {
 /**
  * Return the group index for a specific window
  * If no index found: throw Error
- * @param {Number} - window id
- * @returns {Number} - group index
+ * @param {number} windowId
+ * @returns {number} - group index
  */
 GroupManager.getGroupIndexFromWindowId = function(windowId, {error = true}={}) {
   for (let i = 0; i < GroupManager.groups.length; i++) {
     if (GroupManager.groups[i].windowId === windowId)
       return i;
-    }
+  }
 
   if (error) {
     throw Error("GroupManager.getGroupIndexFromWindowId: Failed to find group index for id:  " + windowId);
@@ -186,16 +199,16 @@ GroupManager.getGroupIndexFromWindowId = function(windowId, {error = true}={}) {
 /**
  * Return the group id for a specific tab
  * If no id found return -1/ Error
- * @param {Number} - tab id
- * @returns {Number} - group id
+ * @param {number} tabId
+ * @returns {number} - group id
  */
 GroupManager.getGroupIdFromTabId = function(tabId, {error = false}={}) {
   for (let i = 0; i < GroupManager.groups.length; i++) {
     for (let j = 0; j < GroupManager.groups[i].tabs.length; j++) {
       if (GroupManager.groups[i].tabs[j].id === tabId)
         return GroupManager.groups[i].id;
-      }
     }
+  }
 
   if (error) {
     throw Error("GroupManager.getGroupIdFromTabId: Failed to find group id for tab id:  " + tabId);
@@ -207,15 +220,15 @@ GroupManager.getGroupIdFromTabId = function(tabId, {error = false}={}) {
 /**
  * Return the tab index for a specific tab in a group
  * If no id found return -1
- * @param {Number} - tab id
- * @param {Number} - groupe index
- * @returns {Number} - group id
+ * @param {number} tabId
+ * @param {number} groupIndex
+ * @returns {number} - group id
  */
 GroupManager.getTabIndexFromTabId = function(tabId, groupIndex, {error = false}={}) {
   for (let j = 0; j < GroupManager.groups[groupIndex].tabs.length; j++) {
     if (GroupManager.groups[groupIndex].tabs[j].id === tabId)
       return j;
-    }
+  }
 
   if (error) {
     throw Error("GroupManager.getTabIndexFromTabId: Failed to find tab index for tab id:  " + tabId + " in group id " + GroupManager.groups[groupIndex].id);
@@ -227,16 +240,16 @@ GroupManager.getTabIndexFromTabId = function(tabId, groupIndex, {error = false}=
 /**
  * Return the windowId for a specific group
  * If no window opened: throw Error
- * @param {Number} - group id
- * @returns {Number} - windowId
+ * @param {number} groupId
+ * @returns {number} - windowId
  */
 GroupManager.getWindowIdFromGroupId = function(groupId) {
   for (let i = 0; i < GroupManager.groups.length; i++) {
     if (GroupManager.groups[i].id === groupId) {
       if (GroupManager.groups[i].windowId !== browser.windows.WINDOW_ID_NONE)
         return GroupManager.groups[i].windowId;
-      }
     }
+  }
 
   throw Error("GroupManager.getWindowIdFromGroupId: Failed to find opened window for id:  " + groupId);
 }
@@ -244,7 +257,7 @@ GroupManager.getWindowIdFromGroupId = function(groupId) {
 /**
  * Return the windowId for a specific group
  * If no window opened: throw Error
- * @param {Number} - group id
+ * @param {number} groupId
  * @returns {Group} - group (success)
  * @returns {null} - (failure and error false)
  */
@@ -254,10 +267,11 @@ GroupManager.getGroupFromGroupId = function(groupId, {
   error=true,
 }={}) {
   const index = GroupManager.getGroupIndexFromGroupId(groupId, {
-    groups, error
-  }) 
+    groups,
+    error,
+  })
 
-  if ( index > -1 && index < groups.length ) {
+  if (index > -1 && index < groups.length) {
     return copy
       ? Utils.getCopy(groups[index])
       : groups[index]
@@ -271,7 +285,7 @@ GroupManager.getGroupFromGroupId = function(groupId, {
 }
 
 GroupManager.isWindowAlreadyRegistered = function(windowId) {
-  if (windowId === WINDOW_ID_NONE)
+  if (windowId === browser.windows.WINDOW_ID_NONE)
     return false;
   for (let g of GroupManager.groups) {
     if (g.windowId === windowId) {
@@ -284,7 +298,7 @@ GroupManager.isWindowAlreadyRegistered = function(windowId) {
 
 /**
  * Return a deep copy object of GroupManager.groups
- * @return {Array[Group]}
+ * @returns {Array<Group>}
  */
 GroupManager.getCopy = function() {
   return JSON.parse(JSON.stringify(GroupManager.groups));
@@ -296,7 +310,7 @@ GroupManager.getCopy = function() {
  * Change the groups if necessary for:
  *  1. At least one tab active (last by default)
  *  2. No more than 1 tab active (last by default)
- * @param {Array[Group]} groups
+ * @param {Array<Group>} groups
  */
 GroupManager.coherentActiveTabInGroups = function({groups = GroupManager.groups}={}) {
   for (let i = 0; i < groups.length; i++) {
@@ -327,34 +341,33 @@ GroupManager.coherentActiveTabInGroups = function({groups = GroupManager.groups}
 
 /**
  * Change the expand state of one or more group to expandState
- * @param {Array[Number]} groupIds
- * @param {Boolean} expandState
- * @param {Array[Group]} groups (Optional)
+ * @param {Array<number>} groupIds
+ * @param {boolean} expandState
+ * @param {Array<Group>} groups (Optional)
  */
 GroupManager.changeExpandState = function(groupIds, expandState, {groups = GroupManager.groups}={}) {
   try {
-    groupIds.map((groupId) => {
+    groupIds.forEach((groupId) => {
       let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, {
         error: true,
-        groups: groups
+        groups: groups,
       });
       groups[groupIndex].expand = expandState;
     })
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 GroupManager.changeGroupPosition = function(groupId, position, {
   groups = GroupManager.groups,
-  allow=OptionManager.options.groups.sortingType=== OptionManager.SORT_CUSTOM
-}={})
-  {
+  allow=OptionManager.options.groups.sortingType=== OPTION_CONSTANTS.SORT_CUSTOM,
+}={}) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, {
       error: true,
-      groups: groups
+      groups: groups,
     });
     let oldPosition = groups[groupIndex].position;
     if (oldPosition === position || position === oldPosition + 1) { // Move useless, same position
@@ -377,37 +390,38 @@ GroupManager.changeGroupPosition = function(groupId, position, {
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 /**
  * Set the UI position variable for each group in groups
- * @param {Array[Group]} groups - (default: global groups)
- * @param {Number} sortingType - (default: the one set in option)
+ * @param {Object} parameter
+ * @param {Array<Group>} parameter.groups - (default: global groups)
+ * @param {number} parameter.sortingType - (default: the one set in option)
  */
 GroupManager.setAllPositions = function({
   groups = GroupManager.groups,
-  sortingType = OptionManager.options.groups.sortingType
+  sortingType = OptionManager.options.groups.sortingType,
 }={}) {
   // Set a position to every groups and remove doublon
   GroupManager.coherentPositionInGroups(groups);
 
-  if (sortingType === OptionManager.SORT_CUSTOM) {
+  if (sortingType === OPTION_CONSTANTS.SORT_CUSTOM) {
     return;
   }
 
   let positions = [];
-  if (sortingType === OptionManager.SORT_OLD_RECENT) {
+  if (sortingType === OPTION_CONSTANTS.SORT_OLD_RECENT) {
     positions = [...Array(groups.length).keys()];
   }
-  if (sortingType === OptionManager.SORT_RECENT_OLD) {
+  if (sortingType === OPTION_CONSTANTS.SORT_RECENT_OLD) {
     positions = [...Array(groups.length).keys()].reverse();
   }
-  if (sortingType === OptionManager.SORT_ALPHABETICAL) {
+  if (sortingType === OPTION_CONSTANTS.SORT_ALPHABETICAL) {
     positions = GroupManager.sortGroupsAlphabetically(groups);
   }
-  if (sortingType === OptionManager.SORT_LAST_ACCESSED) {
+  if (sortingType === OPTION_CONSTANTS.SORT_LAST_ACCESSED) {
     positions = GroupManager.sortGroupsLastAccessed(groups);
   }
 
@@ -418,25 +432,25 @@ GroupManager.setAllPositions = function({
 
 /**
  * Set time to lastAccessed in group groupId
- * @param {Number} groupId
- * @param {Number} time
+ * @param {number} groupId
+ * @param {number} time
  */
 GroupManager.setLastAccessed = function(groupId, time, {groups = GroupManager.groups}={}) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, {
       error: true,
-      groups: groups
+      groups: groups,
     });
     groups[groupIndex].lastAccessed = time;
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 /**
  * Set the bigger last Accessed from the tab to the group
- * @param {Array[Group]} groups - (default: global groups)
+ * @param {Array<Group>} groups - (default: global groups)
  */
 GroupManager.updateLastAccessedFromTabs = function(groups = GroupManager.groups) {
   for (let g of groups) {
@@ -452,7 +466,7 @@ GroupManager.updateLastAccessedFromTabs = function(groups = GroupManager.groups)
 
 /**
  * Set the index variable for each group in groups
- * @param {Array[Group]} groups - (default: global groups)
+ * @param {Array<Group>} groups - (default: global groups)
  */
 GroupManager.setAllIndexes = function(groups = GroupManager.groups) {
   let i = 0;
@@ -464,8 +478,8 @@ GroupManager.setAllIndexes = function(groups = GroupManager.groups) {
 
 /**
  * Change tabs in group with groupId
- * @param {Number} groupId
- * @param {Array[Tab]} tabs
+ * @param {number} groupId
+ * @param {Array<Tab>} tabs
  */
 GroupManager.setTabsInGroupId = function(groupId, tabs) {
   try {
@@ -474,7 +488,7 @@ GroupManager.setTabsInGroupId = function(groupId, tabs) {
 
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -490,17 +504,17 @@ GroupManager.attachWindowWithGroupId = async function(groupId, windowId) {
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 /**
  * Check that group objects in groups array have all the good properties
- * @param {Array[GroupManager.Group]} groups
- * @return {Array[GroupManager.Group]} groups - verified
+ * @param {Array<GroupManager.Group>} groups
+ * @returns {Array<GroupManager.Group>} groups - verified
  */
 GroupManager.check_integrity = function(groups) {
-  var ref_group = new GroupManager.Group();
+  let ref_group = new GroupManager.Group();
   for (let group of groups) {
     Utils.mergeObject(group, ref_group);
   }
@@ -509,17 +523,16 @@ GroupManager.check_integrity = function(groups) {
 
 /**
  * Remove the windowId associated to a group
- * @param {Number} windowId
+ * @param {number} groupId
  */
 GroupManager.detachWindowFromGroupId = async function(groupId) {
-  let groupIndex;
   try {
-    windowId = GroupManager.getWindowIdFromGroupId(groupId);
+    const windowId = GroupManager.getWindowIdFromGroupId(groupId);
 
     await GroupManager.detachWindow(windowId);
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -527,8 +540,8 @@ GroupManager.detachWindowFromGroupId = async function(groupId) {
  * Remove all the elements in groups
  * @param {Array} groups
  */
-GroupManager.removeAllGroups = function (groups=GroupManager.groups) {
-  if ( Utils.isDeadObject(groups) ) { // Critical case
+GroupManager.removeAllGroups = function(groups=GroupManager.groups) {
+  if (Utils.isDeadObject(groups)) { // Critical case
     GroupManager.groups = [];
   } else { // Normal
     groups.length = 0;
@@ -537,17 +550,17 @@ GroupManager.removeAllGroups = function (groups=GroupManager.groups) {
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
-GroupManager.reloadGroupsFromDisk = async function () {
-  GroupManager.groups = await StorageManager.Local.loadGroups();
+GroupManager.reloadGroupsFromDisk = async function() {
+  GroupManager.groups = await ExtensionStorageManager.Local.loadGroups();
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
 
 /**
  * Remove the windowId associated to a group (windows was closed)
- * @param {Number} windowId
+ * @param {number} windowId
  */
 GroupManager.detachWindow = async function(windowId, {
-  fireEvent=true
+  fireEvent=true,
 }={}) {
   let groupIndex;
   try {
@@ -566,12 +579,12 @@ GroupManager.detachWindow = async function(windowId, {
       await WindowManager.desassociateGroupIdToWindow(windowId);
     }
 
-    if ( fireEvent ) {
+    if (fireEvent) {
       GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
     }
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -589,7 +602,7 @@ GroupManager.removeGroupsInPrivateWindow = async function(groups=GroupManager.gr
     }
     return "GroupManager.removeGroupsInPrivateWindow done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -609,13 +622,13 @@ GroupManager.removeGroupFromId = async function(groupId) {
     GroupManager.groups.splice(groupIndex, 1);
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, {
   changeBrowser = true,
-  fireEvent=true
+  fireEvent=true,
 }={}) {
   let groupIndex;
   try {
@@ -630,14 +643,14 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, {
       GroupManager.groups[groupIndex].tabs.splice(tabIndex, 1);
     }
 
-    if ( fireEvent ) {
+    if (fireEvent) {
       GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
     }
 
     return "GroupManager.removeTabFromIndexInGroupId done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 
 }
@@ -645,11 +658,11 @@ GroupManager.removeTabFromIndexInGroupId = async function(groupId, tabIndex, {
 GroupManager.moveTabBetweenGroups = async function(tab, sourceGroupId, sourceTabIndex, targetGroupId, targetTabIndex = -1) {
   await GroupManager.addTabInGroupId(targetGroupId, tab, {
     targetIndex: targetTabIndex,
-    fireEvent: false
+    fireEvent: false,
   });
   await GroupManager.removeTabFromIndexInGroupId(sourceGroupId, sourceTabIndex, {
     changeBrowser: true,
-    fireEvent: false
+    fireEvent: false,
   });
   GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
 }
@@ -657,7 +670,7 @@ GroupManager.moveTabBetweenGroups = async function(tab, sourceGroupId, sourceTab
 
 GroupManager.addTabInGroupId = async function(groupId, tab, {
   targetIndex = -1,
-  fireEvent=true
+  fireEvent=true,
 }={}) {
   let groupIndex;
   try {
@@ -667,21 +680,21 @@ GroupManager.addTabInGroupId = async function(groupId, tab, {
       const openedTabs = await TabManager.openListOfTabs(
         [tab], GroupManager.groups[groupIndex].windowId, {
           inLastPos: true,
-      });
+        });
       await TabManager.moveOpenTabToGroup(openedTabs[0], GroupManager.groups[groupIndex].windowId, targetIndex,);
     } else {
       let realIndex = TabManager.secureIndex(targetIndex, tab, GroupManager.groups[groupIndex].tabs);
       GroupManager.groups[groupIndex].tabs.splice(realIndex, 0, tab);
     }
 
-    if ( fireEvent ) {
+    if (fireEvent) {
       GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
     }
 
     return "GroupManager.addTabInGroupId done!";
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 
 }
@@ -697,13 +710,13 @@ GroupManager.updateAllOpenedGroups = async function() {
 /**
  * Renames a given group.
  *
- * @param {Number} groupIndex
- * @param {String} title - the new title
+ * @param {number} groupIndex
+ * @param {string} title - the new title
  */
 GroupManager.renameGroup = function(groupIndex, title) {
   GroupManager.groups[groupIndex].title = title;
 
-  if ( GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE ) {
+  if (GroupManager.groups[groupIndex].windowId !== browser.windows.WINDOW_ID_NONE) {
     WindowManager.setWindowPrefixGroupTitle(GroupManager.groups[groupIndex].windowId, GroupManager.groups[groupIndex]);
   }
 
@@ -713,29 +726,34 @@ GroupManager.renameGroup = function(groupIndex, title) {
 /**
  * Add a new group with one tab: "newtab"
  * No window is associated with this group
- * @param {String} title - kept blank if not given
- * @param {Number} windowId
+ * @param {Object} parameter
+ * @param {string} parameter.title - kept blank if not given
+ * @param {number} parameter.windowId
  */
 GroupManager.addGroup = function({
   title = "",
-  windowId = WINDOW_ID_NONE,
-  incognito = false
+  windowId = browser.windows.WINDOW_ID_NONE,
+  incognito = false,
 }={}) {
-  if (GroupManager.isWindowAlreadyRegistered(windowId)){
+  if (GroupManager.isWindowAlreadyRegistered(windowId)) {
     return;
   }
 
   let tabs = [
     {
-      url: TabManager.NEW_TAB,
+      url: TAB_CONSTANTS.NEW_TAB,
       title: "New Tab",
-      active: true
-    }
+      active: true,
+    },
   ];
   let uniqueGroupId;
   try {
     uniqueGroupId = GroupManager.createUniqueGroupId();
-    GroupManager.groups.push(new GroupManager.Group({id: uniqueGroupId, title, tabs, windowId, incognito}));
+    GroupManager.groups.push(new GroupManager.Group({id: uniqueGroupId,
+      title,
+      tabs,
+      windowId,
+      incognito}));
   } catch (e) {
     throw Error("addGroup: Group not created because " + e);
   }
@@ -747,14 +765,14 @@ GroupManager.addGroup = function({
 /**
  * Adds a group with associated tab.
  * Error Throwable
- * @param {Array[Tab]} tabs - the tabs to place into the new group
- * @param {String} title - the name to give to that group
+ * @param {Array<Tab>} tabs - the tabs to place into the new group
+ * @param {string} title - the name to give to that group
  */
 GroupManager.addGroupWithTab = function(tabs, {
   windowId = browser.windows.WINDOW_ID_NONE,
   title = "",
-  incognito = false
-}={}){
+  incognito = false,
+}={}) {
   if (tabs.length === 0) {
     return GroupManager.addGroup({
       title,
@@ -766,7 +784,11 @@ GroupManager.addGroupWithTab = function(tabs, {
   let uniqueGroupId;
   try {
     uniqueGroupId = GroupManager.createUniqueGroupId();
-    GroupManager.groups.push(new GroupManager.Group({id: uniqueGroupId, title, tabs, windowId, incognito}));
+    GroupManager.groups.push(new GroupManager.Group({id: uniqueGroupId,
+      title,
+      tabs,
+      windowId,
+      incognito}));
   } catch (e) {
     // Propagate Error
     throw Error("addGroupWithTab: Group not created because " + e.message);
@@ -788,12 +810,12 @@ GroupManager.addGroups = function(newGroups, {
   let ids = [];
   for (let g of newGroups) {
     g.id = GroupManager.createUniqueGroupId(groups);
-    g.windowId = WINDOW_ID_NONE;
+    g.windowId = browser.windows.WINDOW_ID_NONE;
     ids.push(g.id);
     groups.push(Utils.getCopy(g));
   }
 
-  if ( showNotification ){
+  if (showNotification) {
     browser.notifications.create({
       "type": "basic",
       "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
@@ -814,10 +836,10 @@ GroupManager.filterGroups = function(groups, filter=undefined) {
 
   let filteredGroups = [];
   for (let g of groups) {
-    if ( filter.hasOwnProperty(g.id) && filter[g.id].selected > 0 ) {
+    if (filter.hasOwnProperty(g.id) && filter[g.id].selected > 0) {
       let nextGroup = Utils.getCopy(g);
       nextGroup.tabs = nextGroup.tabs.filter(
-                          (_, index) => filter[g.id].tabs[index])
+        (_, index) => filter[g.id].tabs[index])
 
       filteredGroups.push(
         nextGroup
@@ -835,7 +857,7 @@ GroupManager.resetAssociatedWindows = function({fireEvent=true}={}) {
   for (let g of GroupManager.groups) {
     g.windowId = browser.windows.WINDOW_ID_NONE;
   }
-  if(fireEvent) {
+  if (fireEvent) {
     GroupManager.eventlistener.fire(GroupManager.EVENT_CHANGE);
   }
 }
@@ -857,14 +879,14 @@ GroupManager.removeUnopenGroups = function() {
  */
 GroupManager.removeEmptyGroup = function({
   fireEvent=true,
-  groups=GroupManager.groups
+  groups=GroupManager.groups,
 }={}) {
   for (let i = groups.length - 1; i >= 0; i--) {
     if (groups[i].tabs.length === 0) {
       groups.splice(i, 1);
     }
   }
-  if(fireEvent) {
+  if (fireEvent) {
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
   }
 }
@@ -872,7 +894,7 @@ GroupManager.removeEmptyGroup = function({
 /******** OTHER *********/
 
 /**
- * @param {Number} groupIndex
+ * @param {number} groupIndex
  * @returns {boolean}
  */
 GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
@@ -880,11 +902,11 @@ GroupManager.isGroupIndexInOpenWindow = function(groupIndex) {
     return true;
   else
     return false;
-  }
+}
 
 /**
  * Find an Id that is not used in the groups
- * @return {Number} uniqueGroupId
+ * @returns {number} uniqueGroupId
  */
 GroupManager.createUniqueGroupId = function(groups=GroupManager.groups) {
   let uniqueGroupId = groups.length - 1;
@@ -912,14 +934,14 @@ GroupManager.createUniqueGroupId = function(groups=GroupManager.groups) {
 /**
  * Asynchronous function
  * Get the saved groups if exist else set empty array
- * @return {Promise}
+ * @returns {Promise}
  */
 GroupManager.init = async function() {
   try {
     // 1. Set the data
-    let groups = await StorageManager.Local.loadGroups();
+    let groups = await ExtensionStorageManager.Local.loadGroups();
     GroupManager.groups = GroupManager.check_integrity(groups);
-    GroupManager.resetAssociatedWindows({fireEvent:false});
+    GroupManager.resetAssociatedWindows({fireEvent: false});
 
     // 2. Integrate open windows
     await GroupManager.integrateAllOpenedWindows();
@@ -929,7 +951,7 @@ GroupManager.init = async function() {
 
     return "GroupManager.init done";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
@@ -939,11 +961,11 @@ GroupManager.init = async function() {
 GroupManager.integrateAllOpenedWindows = async function() {
   const windowInfoArray = await browser.windows.getAll();
   for (let windowInfo of windowInfoArray) {
-    // Don't 
+    // Don't
     try {
       await WindowManager.integrateWindow(
         windowInfo.id,
-        {even_new_one: Background.install?true:false} // When installed add all, else none
+        {even_new_one: BackgroundHelper.install?true:false} // When installed add all, else none
       );
     } catch (e) {
       LogManager.error(e);
@@ -956,14 +978,14 @@ GroupManager.integrateAllOpenedWindows = async function() {
  * Function is avorted if groups are corrupted
  */
 GroupManager.store = function() {
-  if ( GroupManager.checkCorruptedGroups(GroupManager.groups) ) {
+  if (GroupManager.checkCorruptedGroups(GroupManager.groups)) {
     LogManager.information("Corrupted groups, saved not done.")
     return;
   }
-  StorageManager.Local.saveGroups(GroupManager.getCopy());
+  ExtensionStorageManager.Local.saveGroups(GroupManager.getCopy());
   /* TODO - end of bookmark auto-save
   if (OptionManager.options.bookmarks.sync) {
-    StorageManager.Bookmark.backUp(GroupManager.getCopy());
+    ExtensionStorageManager.Bookmark.backUp(GroupManager.getCopy());
   }
   */
 }
@@ -992,7 +1014,7 @@ GroupManager.initGroupManagerEventListener = function() {
  * Do on the groups itself
  * /!\ Should NEVER fire GroupManager.EVENT_PREPARE
  */
-GroupManager.prepareGroups = function (groups=GroupManager.groups, {
+GroupManager.prepareGroups = function(groups=GroupManager.groups, {
   removeEmptyGroup=OptionManager.options.groups.removeEmptyGroup,
 }={}) {
   try {
@@ -1006,7 +1028,7 @@ GroupManager.prepareGroups = function (groups=GroupManager.groups, {
     GroupManager.setAllIndexes(groups);
     GroupManager.setAllPositions({
       groups: groups,
-      sortingType: OptionManager.options.groups.sortingType
+      sortingType: OptionManager.options.groups.sortingType,
     });
     GroupManager.coherentActiveTabInGroups({groups});
     GroupManager.setUniqueTabIds(groups);
@@ -1024,27 +1046,27 @@ GroupManager.getUniqueTabId = function(id, index) {
  * Avoid collision of new tabs in open groups
  * New id is a long string
  */
-GroupManager.setUniqueTabIds = function (groups=GroupManager.groups) {
+GroupManager.setUniqueTabIds = function(groups=GroupManager.groups) {
   groups.forEach((group) => {
-    if( WindowManager.GROUP_CURRENTLY_SWITCHING[group.id] === true ) {
+    if (WindowManager.GROUP_CURRENTLY_SWITCHING[group.id] === true) {
       return;
     }
-    if( group.windowId !== -1 ) {
+    if (group.windowId !== -1) {
       return;
     }
 
     let newIds = {};
     group.tabs.forEach((tab, index)=>{
-        if ( Utils.hasHideFunction() && tab.hidden === true ) {
-          return;
-        }
+      if (Utils.hasHideFunction() && tab.hidden === true) {
+        return;
+      }
 
-        // Update ids
-        if ( (!tab.id || !tab.id.length) ) {
-          let oldId = tab.id;
-          tab.id = GroupManager.getUniqueTabId(group.id, index);
-          newIds[oldId] = tab.id;
-        }
+      // Update ids
+      if ((!tab.id || !tab.id.length)) {
+        let oldId = tab.id;
+        tab.id = GroupManager.getUniqueTabId(group.id, index);
+        newIds[oldId] = tab.id;
+      }
     });
 
     // Update parent Ids
@@ -1064,11 +1086,11 @@ GroupManager.checkCorruptedTab = function(tab, index) {
   const properties = {
     "title": "Title lost, you need to reopen the tab",
     "url": null,
-    "pinned": false, 
-    "windowId": WINDOW_ID_NONE,
+    "pinned": false,
+    "windowId": browser.windows.WINDOW_ID_NONE,
     "active": false,
-  } 
-  if( Utils.hasDiscardFunction() || Utils.isFF57()) {
+  }
+  if (Utils.hasDiscardFunction() || Utils.isFF57()) {
     properties["discarded"] = false;
   }
   if (Utils.isFirefox()) {
@@ -1087,13 +1109,13 @@ GroupManager.checkCorruptedTab = function(tab, index) {
 GroupManager.checkCorruptedTabs = function(tabs, prefix) {
   const results = tabs.map(GroupManager.checkCorruptedTab)
     .filter(([__, msg]) => msg.length>0);
-  
+
   if (results.length === 0) {
     return [false, ""];
   } else {
     return [
       results.filter(([isCritical, __]) => isCritical).length>0,
-      results.map(([__, msgs])=>  msgs.map(msg => `${prefix}.${msg}`).join(',')).join(',')
+      results.map(([__, msgs])=>  msgs.map(msg => `${prefix}.${msg}`).join(',')).join(','),
     ];
   }
 }
@@ -1104,8 +1126,8 @@ GroupManager.checkCorruptedGroup = function(group, index) {
     group, {
       "title": "",
       "tabs": null,
-      "id":  Math.floor(Math.random() * 100) + 500*index,
-      "windowId": WINDOW_ID_NONE,
+      "id": Math.floor(Math.random() * 100) + 500*index,
+      "windowId": browser.windows.WINDOW_ID_NONE,
       "expand": false,
       "lastAccessed": 0,
       "incognito": false,
@@ -1114,12 +1136,12 @@ GroupManager.checkCorruptedGroup = function(group, index) {
   )
   const criticalIndex = 0;
   const messagesIndex = 1;
-  if(group && group.tabs != null) {
+  if (group && group.tabs != null) {
     const tabsResults = GroupManager.checkCorruptedTabs(group.tabs, prefix);
     results[criticalIndex] = results[criticalIndex] || tabsResults[criticalIndex]
-    if(tabsResults[messagesIndex].length>0) {
+    if (tabsResults[messagesIndex].length>0) {
       results[messagesIndex].push(tabsResults[messagesIndex])
-    } 
+    }
   }
 
   if (results[messagesIndex].length === 0) {
@@ -1133,12 +1155,12 @@ GroupManager.checkCorruptedGroup = function(group, index) {
 }
 
 GroupManager.checkCorruptedGroupsArray = function(groups) {
-  if(groups != null) {
+  if (groups != null) {
     const results = groups.map(GroupManager.checkCorruptedGroup)
-              .filter(([__, msg]) => msg.length>0);
+      .filter(([__, msg]) => msg.length>0);
     return [
       results.filter(([isCritical, __]) => isCritical).length>0,
-      results.map(([__, msg])=>  msg).join(',')
+      results.map(([__, msg])=>  msg).join(','),
     ];
   } else {
     return [true, "GroupManager.groups"]
@@ -1157,15 +1179,15 @@ GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
   let corruptedMessage = "";
   const isDeadObject = Utils.isDeadObject(groups);
 
-  if(isDeadObject) {
-    areGroupsCorrupted = true; 
+  if (isDeadObject) {
+    areGroupsCorrupted = true;
     corruptedMessage = "Groups are dead";
   } else {
-    [areGroupsCorrupted, corruptedMessage] 
+    [areGroupsCorrupted, corruptedMessage]
       = GroupManager.checkCorruptedGroupsArray(groups)
   }
 
-  if ( areGroupsCorrupted ) {
+  if (areGroupsCorrupted) {
     LogManager.error(
       `Sync Tab Groups has detected a corruption in your groups: ${corruptedMessage}`
     );
@@ -1174,7 +1196,7 @@ GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
       GroupManager.reloadGroupsFromDisk();
       LogManager.information('Tried to correct groups corruption...');
     }
-  } else if(corruptedMessage.length > 0) {
+  } else if (corruptedMessage.length > 0) {
     LogManager.information(
       `Sync Tab Groups has detected a corruption in your groups and fixed it: ${corruptedMessage}`
     );
@@ -1186,15 +1208,18 @@ GroupManager.checkCorruptedGroups = function(groups=GroupManager.groups, {
 
 /**
  * Sort the groups so the last accessed group first
- * @param {Array[Group]} - groups
- * @return {Array[number]} - array with the positions sort by groups index
+ * @param {Array<Group>} groups
+ * @returns {Array<number>} - array with the positions sort by groups index
  */
 GroupManager.sortGroupsLastAccessed = function(groups=GroupManager.groups) {
 
   let positions = [];
   let toSort = [];
-  groups.map((group) => {
-    toSort.push({lastAccessed: group.lastAccessed, id: group.id, title: group.title, index: group.index});
+  groups.forEach((group) => {
+    toSort.push({lastAccessed: group.lastAccessed,
+      id: group.id,
+      title: group.title,
+      index: group.index});
   });
 
   toSort.sort((a, b) => {
@@ -1221,7 +1246,7 @@ GroupManager.sortGroupsLastAccessed = function(groups=GroupManager.groups) {
       ? 1
       : -1;
   });
-  toSort.map((sorted, index) => {
+  toSort.forEach((sorted, index) => {
     positions[sorted.index] = index;
   });
 
@@ -1230,15 +1255,17 @@ GroupManager.sortGroupsLastAccessed = function(groups=GroupManager.groups) {
 
 /**
  * Sort the groups to be in alphabetical order
- * @param {Array[Group]} - groups
- * @return {Array[number]} - array with the positions sort by groups index
+ * @param {Array<Group>} groups
+ * @returns {Array<number>} - array with the positions sort by groups index
  */
 GroupManager.sortGroupsAlphabetically = function(groups=GroupManager.groups) {
 
   let positions = [];
   let toSort = [];
-  groups.map((group) => {
-    toSort.push({title: group.title, id: group.id, index: group.index});
+  groups.forEach((group) => {
+    toSort.push({title: group.title,
+      id: group.id,
+      index: group.index});
   });
 
   toSort.sort((a, b) => {
@@ -1260,7 +1287,7 @@ GroupManager.sortGroupsAlphabetically = function(groups=GroupManager.groups) {
       : 1;
   });
 
-  toSort.map((sorted, index) => {
+  toSort.forEach((sorted, index) => {
     positions[sorted.index] = index;
   });
 
@@ -1275,13 +1302,13 @@ GroupManager.getGroupsWithoutPrivate = function(groups=GroupManager.groups) {
  * Keep the current position of the groups and replace unknown group position, with the next position available in the order of groups index
  * Remove doublon as well
  * Change directly on groups
- * @param {Array[Group]} - groups
+ * @param {Array<Group>} groups
  */
 GroupManager.coherentPositionInGroups = function(groups=GroupManager.groups) {
   let alreadyPositioned = [];
 
   // Detect Gap: groups removed
-  for (let pos of[...Array(groups.length).keys()]) {
+  for (let pos of [...Array(groups.length).keys()]) {
     let hasPos = false;
     for (let group of groups) { // check pos is present
       if (group.position === pos) {
@@ -1299,7 +1326,7 @@ GroupManager.coherentPositionInGroups = function(groups=GroupManager.groups) {
   }
 
   // Check used position
-  groups.map((group) => {
+  groups.forEach((group) => {
     if (group.position >= 0) {
       if (!alreadyPositioned[group.position]) {
         alreadyPositioned[group.position] = true;
@@ -1310,7 +1337,7 @@ GroupManager.coherentPositionInGroups = function(groups=GroupManager.groups) {
   });
 
   // Fill unused position
-  for (let pos of[...Array(groups.length).keys()]) {
+  for (let pos of [...Array(groups.length).keys()]) {
     if (!alreadyPositioned[pos]) {
       for (let group of groups) {
         if (group.position === -1) { // Update first unkown positioned group
@@ -1326,7 +1353,6 @@ GroupManager.coherentPositionInGroups = function(groups=GroupManager.groups) {
  *
  */
 GroupManager.compareTabs = function(tabs, tabs_ref) {
-  let title = "Tabs comparator";
   if (tabs.length !== tabs_ref.length)
     return false;
 
@@ -1348,8 +1374,8 @@ GroupManager.compareTabs = function(tabs, tabs_ref) {
  *  4. if more than one result, take the last accessed
  * Notes: extension tabs contain extension prefix (manage tab, settings)...
       But not privileged tabs, lazy tab as they are not closed
- * @param {Array[Tab]} tabs
- * @return {Number} groupId
+ * @param {Array<Tab>} tabs
+ * @returns {number} groupId
  */
 GroupManager.bestMatchGroup = function(tabs, groups = GroupManager.groups) {
   /* Notes
@@ -1361,34 +1387,36 @@ GroupManager.bestMatchGroup = function(tabs, groups = GroupManager.groups) {
   let ext_page_prefix = browser.runtime.getURL("");
 
   groups = groups.filter((group)=>{
-    return (tabs.length && tabs[0].incognito === group.incognito );
+    return (tabs.length && tabs[0].incognito === group.incognito);
   });
 
   let result = groups.filter((group)=>{
     return GroupManager.compareTabs(tabs, group.tabs);
   });
 
-  if ( !result.length ) {
+  if (!result.length) {
     let tabsWithoutExtTabs = Utils.getCopy(tabs).filter((tab)=>{
-        return !Utils.extractTabUrl(tab.url).includes(ext_page_prefix);
+      return !Utils.extractTabUrl(tab.url).includes(ext_page_prefix);
     });
     result = groups.filter((group)=>{
       let groupTabsWithoutExtTabs = Utils.getCopy(group.tabs).filter((tab)=>{
-          return !Utils.extractTabUrl(tab.url).includes(ext_page_prefix);
+        return !Utils.extractTabUrl(tab.url).includes(ext_page_prefix);
       });
       return GroupManager.compareTabs(tabsWithoutExtTabs, groupTabsWithoutExtTabs);
     });
   }
 
-  if ( result.length > 1 ) {   // Criterion 3    // Prefer recent one
+  if (result.length > 1) {   // Criterion 3    // Prefer recent one
     result = result.reduce((a, b) => {
-        if (a.lastAccessed >= b.lastAccessed)
-          return a;
-        else
-          return b;
+      if (a.lastAccessed >= b.lastAccessed)
+        return a;
+      else
+        return b;
     });
     result = [result];
   }
 
   return result.length?result[0].id:-1;
 }
+
+export default GroupManager

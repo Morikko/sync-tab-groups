@@ -1,67 +1,72 @@
 /**
  * Everything related to do automatic/manual backup
  */
-var StorageManager = StorageManager || {};
-StorageManager.Backup = StorageManager.Backup || {};
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import OptionManager from '../core/optionmanager'
+import GroupManager from '../core/groupmanager'
+import OPTION_CONSTANTS from '../core/OPTION_CONSTANTS'
 
-StorageManager.Backup.TIMERS = Utils.setObjectPropertiesWith(OptionManager.TIMERS(), undefined);
+const BackupStorage = {};
+
+BackupStorage.TIMERS = Utils.setObjectPropertiesWith(OPTION_CONSTANTS.TIMERS(), undefined);
 
 
-StorageManager.Backup.init = function () {
-  if( !OptionManager.options.backup.download.enable ) {
+BackupStorage.init = function() {
+  if (!OptionManager.options.backup.download.enable) {
     return;
   }
 
   // Start enable timers
-  StorageManager.Backup.TIMERS = {};
-  for (let t in OptionManager.options.backup.download.time ) {
-    if ( OptionManager.options.backup.download.time[t] ) {
-      StorageManager.Backup.startTimer(t);
+  BackupStorage.TIMERS = {};
+  for (let t in OptionManager.options.backup.download.time) {
+    if (OptionManager.options.backup.download.time[t]) {
+      BackupStorage.startTimer(t);
     } else {
-      StorageManager.Backup.TIMERS[t] = undefined
+      BackupStorage.TIMERS[t] = undefined
     }
   }
 }
 
 
-StorageManager.Backup.stopAll = function () {
+BackupStorage.stopAll = function() {
   // Stop all timers
-  for (let time in StorageManager.Backup.TIMERS ) {
-    StorageManager.Backup.stopTimer(time);
+  for (let time in BackupStorage.TIMERS) {
+    BackupStorage.stopTimer(time);
   }
 }
 
 // Stop a specific timer
-StorageManager.Backup.stopTimer = function (timer) {
-  if ( StorageManager.Backup.TIMERS[timer] ) {
-    clearInterval(StorageManager.Backup.TIMERS[timer]);
+BackupStorage.stopTimer = function(timer) {
+  if (BackupStorage.TIMERS[timer]) {
+    clearInterval(BackupStorage.TIMERS[timer]);
   }
-  StorageManager.Backup.TIMERS[timer] = undefined;
+  BackupStorage.TIMERS[timer] = undefined;
 }
 
 /**
   * Start a specific timer
   * Stop previous one if there was
   */
-StorageManager.Backup.startTimer = function (timer) {
-  StorageManager.Backup.stopTimer(timer);
-  StorageManager.Backup.TIMERS[timer] = setInterval(function(){
-    StorageManager.Backup.backup(timer.substring(2));
-  }, OptionManager.TIMERS()[timer]);
+BackupStorage.startTimer = function(timer) {
+  BackupStorage.stopTimer(timer);
+  BackupStorage.TIMERS[timer] = setInterval(function() {
+    BackupStorage.backup(timer.substring(2));
+  }, OPTION_CONSTANTS.TIMERS()[timer]);
 }
 
 
 
 /**
- *  Save the groups in a json file in StorageManager.Backup.LOCATION subfolder in the browser download folder.
+ *  Save the groups in a json file in BackupStorage.LOCATION subfolder in the browser download folder.
  * The file name is "synctabgroups-backup-" with time variable as a suffix.
  * Every new back up overwrites the previous one.
  * A download is immediately removed from the history.
  */
-StorageManager.Backup.backup = async function (time, groups=GroupManager.groups) {
+BackupStorage.backup = async function(time, groups=GroupManager.groups) {
   try {
     // Avoid corrupted backup
-    if ( GroupManager.checkCorruptedGroups(groups) ) {
+    if (GroupManager.checkCorruptedGroups(groups)) {
       return;
     }
 
@@ -71,7 +76,7 @@ StorageManager.Backup.backup = async function (time, groups=GroupManager.groups)
 
     let id = await browser.downloads.download({
       url: url,
-      filename: StorageManager.Backup.LOCATION + "synctabgroups-backup-" + time + ".json",
+      filename: BackupStorage.LOCATION + "synctabgroups-backup-" + time + ".json",
       conflictAction: "overwrite",
       saveAs: false,
     });
@@ -80,10 +85,11 @@ StorageManager.Backup.backup = async function (time, groups=GroupManager.groups)
     await Utils.waitDownload(id);
 
     await browser.downloads.erase({
-      id:id
+      id: id,
     });
     URL.revokeObjectURL(url);
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
+export default BackupStorage

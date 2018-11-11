@@ -1,3 +1,6 @@
+import React from 'react'
+import LogManager from '../../background/error/logmanager'
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +17,7 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return this.props.fallback 
+      return this.props.fallback
         ? this.props.fallback
         : <div>Error occured</div>;
     }
@@ -22,3 +25,4 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+export default ErrorBoundary

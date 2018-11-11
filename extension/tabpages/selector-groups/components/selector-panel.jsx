@@ -1,3 +1,8 @@
+import React from 'react'
+
+import GroupList from '../../../share/components/groups/grouplist'
+import SearchBar from '../../../share/components/groups/searchbar'
+
 class Panel extends React.Component {
   constructor(props) {
     super(props);
@@ -42,12 +47,12 @@ class Panel extends React.Component {
   componentDidUpdate() {
     if ( this.state.forceExpand ) {
       this.setState({
-        forceExpand: false
+        forceExpand: false,
       });
     }
     if ( this.state.forceReduce ) {
       this.setState({
-        forceReduce: false
+        forceReduce: false,
       });
     }
   }
@@ -159,3 +164,5 @@ class Panel extends React.Component {
     this.props.selectNoneInSelectionFilter();
   }
 }
+
+export default Panel

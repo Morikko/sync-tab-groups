@@ -1,3 +1,7 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import classNames from 'classnames'
+
 class NiceCheckbox extends React.Component {
   constructor(props) {
     super(props);
@@ -8,7 +12,7 @@ class NiceCheckbox extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       checked: nextProps.checked,
       disabled: nextProps.disabled || false,
@@ -18,8 +22,8 @@ class NiceCheckbox extends React.Component {
   render() {
 
     let indeterminate = this.props.indeterminate !== undefined
-                         ? this.props.indeterminate.toString()
-                         : "false";
+      ? this.props.indeterminate.toString()
+      : "false";
 
     return (
       <label
@@ -48,12 +52,12 @@ class NiceCheckbox extends React.Component {
   handleClick(event) {
     event.stopPropagation();
     this.props.onCheckChange(this.props.id, !this.state.checked);
-  
+
     this.setState({
-      checked: !this.state.checked
+      checked: !this.state.checked,
     });
   }
-};
+}
 
 NiceCheckbox.propTypes = {
   onCheckChange: PropTypes.func,
@@ -62,3 +66,5 @@ NiceCheckbox.propTypes = {
   label: PropTypes.string,
   disabled: PropTypes.bool,
 };
+
+export default NiceCheckbox

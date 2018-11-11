@@ -1,32 +1,27 @@
-/**
- Tools:
- - countPinnedTabs
- - secureIndex
- - waitTabsToBeClosed
- */
-var TabManager = TabManager || {};
+import Utils from '../../utils/utils'
+import TAB_CONSTANTS from '../../core/TAB_CONSTANTS'
 
 // Return with all standard tab information
 // Id are Index are set once in a group (see GroupManager.prepareGroups)
-TabManager.getTabFactory = function(tab) {
+function getTabFactory(tab) {
   return Object.assign({
     title: "New Tab",
-    url: TabManager.NEW_TAB,
+    url: TAB_CONSTANTS.NEW_TAB,
     favIconUrl: "chrome://branding/content/icon32.png",
     hidden: false,
     lastAccessed: 0,
     pinned: false,
-    windowId: WINDOW_ID_NONE,
-    discarded: false
+    windowId: browser.windows.WINDOW_ID_NONE,
+    discarded: false,
   }, tab);
 }
 
 /**
  * Count the number of pinned tabs in tabs
- * @param {Array[Tab]} - tabs
- * @return {Number} - nbr of pinned tabs
+ * @param {Array<Tab>} tabs - tabs
+ * @returns {number} - nbr of pinned tabs
  */
-TabManager.countPinnedTabs = function(tabs) {
+function countPinnedTabs(tabs) {
   return tabs.filter(tab => tab.pinned).length;
 }
 
@@ -35,14 +30,14 @@ TabManager.countPinnedTabs = function(tabs) {
  *   pinned tabs are always before normal tabs
  *   normal tabs are always after pinned tabs
  *   -1 value is replaced with the real last index value
- * @param {Number} index - index where to go
+ * @param {number} index - index where to go
  * @param {Tab} tab - tab related
- * @param {Array[Tab]} tabs - targeted tabs
- * @return {Number} secureIndex
+ * @param {Array<Tab>} tabs - targeted tabs
+ * @returns {number} secureIndex
  */
-TabManager.secureIndex = function(index, tab, tabs) {
+function secureIndex(index, tab, tabs) {
   let realIndex = index;
-  let pinnedTabsCount = TabManager.countPinnedTabs(tabs);
+  let pinnedTabsCount = countPinnedTabs(tabs);
   if (tab.pinned) { // Pinned tabs are in targeted position and at least just behind last pinned tab
     realIndex = (realIndex > pinnedTabsCount || realIndex === -1)
       ? pinnedTabsCount
@@ -62,10 +57,10 @@ TabManager.secureIndex = function(index, tab, tabs) {
 /**
  * Return true if tabs were closed in the waiting time.
  */
-TabManager.waitTabsToBeClosed = async function(tabsIdsToRemove, {
+async function waitTabsToBeClosed(tabsIdsToRemove, {
   maxLoop=20,
-  waitPerLoop=50 //ms
-}={}){
+  waitPerLoop=50, //ms
+}={}) {
   if (!Array.isArray(tabsIdsToRemove)) {
     tabsIdsToRemove = [tabsIdsToRemove]
   }
@@ -74,18 +69,25 @@ TabManager.waitTabsToBeClosed = async function(tabsIdsToRemove, {
     await Utils.wait(waitPerLoop);
 
     const stillOpen = await Promise.all(
-      tabsIdsToRemove.map(async (id) => {
+      tabsIdsToRemove.map(async(id) => {
         try {
           await browser.tabs.get(id);
           return true;
-        } catch(e) {
+        } catch (e) {
           return false;
         }
-    }));
+      }));
 
-    if ( stillOpen.filter(i => i).length === 0 ) {
+    if (stillOpen.filter(i => i).length === 0) {
       return true;
     }
   }
   return false;
+}
+
+export {
+  getTabFactory,
+  secureIndex,
+  waitTabsToBeClosed,
+  countPinnedTabs,
 }

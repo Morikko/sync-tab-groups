@@ -1,20 +1,19 @@
-/*
- - activeTabInWindow
- - selectTab (Open/Close group)
- - changePinState
- */
-var TabManager = TabManager || {};
+import LogManager from '../../error/logmanager'
+import GroupManager from '../../core/groupmanager'
+import WindowManager from '../../core/windowmanager'
+import {getTabsInWindowId} from './getTabs'
 
 /**
  * Go to the tab specified with tabId
  * The tab needs to be in an open window
- * @param {Number} tabIndex - the tab index
- * @return {Promise}
+ * @param {number} windowId
+ * @param {number} tabIndex - the tab index
+ * @returns {Promise}
  */
-TabManager.activeTabInWindow = async function(windowId, tabIndex) {
+async function activeTabInWindow(windowId, tabIndex) {
   try {
     // Filter pinned if necessary
-    const tabs = await TabManager.getTabsInWindowId(windowId, {
+    const tabs = await getTabsInWindowId(windowId, {
       withoutRealUrl: false,
     });
     let tabId = tabs.filter((tab, index) => index === tabIndex).map((tab) => tab.id);
@@ -23,13 +22,13 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
       await browser.tabs.update(tabId[0], {active: true});
     }
 
-    return "TabManager.activeTabInWindow done!";
+    return "activeTabInWindow done!";
   } catch (e) {
     LogManager.error(e, {
       args: {
         windowId,
-        tabIndex
-      }
+        tabIndex,
+      },
     });
   }
 }
@@ -37,18 +36,18 @@ TabManager.activeTabInWindow = async function(windowId, tabIndex) {
 /**
  * Selects a given tab.
  * Switch to another group if necessary
- * @param {Number} tabIndex - the tabs index
- * @param {Number} groupId - the tabs groupId
- * @return {Promise}
+ * @param {number} tabIndex - the tabs index
+ * @param {number} groupId - the tabs groupId
+ * @returns {Promise}
  */
-TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
+async function selectTab(tabIndex, groupId, newWindow=false) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
     // 1. Change active tab
-    if ( GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
+    if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
       let windowId = GroupManager.groups[groupIndex].windowId;
-      await TabManager.activeTabInWindow(windowId, tabIndex);
+      await activeTabInWindow(windowId, tabIndex);
     } else {
       GroupManager.groups[groupIndex].tabs.forEach((tab)=>{
         tab.active = false;
@@ -57,19 +56,19 @@ TabManager.selectTab = async function(tabIndex, groupId, newWindow=false) {
     }
 
     // 2. Open the group
-    if ( newWindow && !GroupManager.isGroupIndexInOpenWindow(groupIndex) ) {
+    if (newWindow && !GroupManager.isGroupIndexInOpenWindow(groupIndex)) {
       await WindowManager.openGroupInNewWindow(groupId);
     } else {
       await WindowManager.selectGroup(groupId);
     }
 
-    return "TabManager.selectTab done!";
+    return "selectTab done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
-TabManager.changePinState = async function(groupId, tabIndex) {
+async function changePinState(groupId, tabIndex) {
   try {
     let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId);
 
@@ -77,7 +76,7 @@ TabManager.changePinState = async function(groupId, tabIndex) {
 
     if (GroupManager.isGroupIndexInOpenWindow(groupIndex)) { // Open group
       await browser.tabs.update(tab.id, {
-        pinned: !tab.pinned
+        pinned: !tab.pinned,
       });
     } else { // Close group
       tab.pinned = !tab.pinned;
@@ -86,11 +85,17 @@ TabManager.changePinState = async function(groupId, tabIndex) {
       // Last position for pinned or first for normal
       await GroupManager.addTabInGroupId(
         groupId, tab, tab.pinned
-        ? -1
-        : 0);
+          ? -1
+          : 0);
     }
-    return "TabManager.changePinState done!";
+    return "changePinState done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
+}
+
+export {
+  activeTabInWindow,
+  changePinState,
+  selectTab,
 }

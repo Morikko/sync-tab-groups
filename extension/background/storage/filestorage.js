@@ -1,10 +1,14 @@
 /**
  * Everything related to save file on the disk
  */
-var StorageManager = StorageManager || {};
-StorageManager.File = StorageManager.File || {};
+import GroupManager from '../core/groupmanager'
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import TabManager from '../core/tabmanager/tabManager'
 
-StorageManager.File.downloadGroups = async function(groups) {
+const FileStorage = {};
+
+FileStorage.downloadGroups = async function(groups) {
   try {
     let export_groups = GroupManager.getGroupsWithoutPrivate(groups);
 
@@ -15,13 +19,13 @@ StorageManager.File.downloadGroups = async function(groups) {
     });
 
     let d = new Date();
-    let url = Utils.createGroupsJsonFile(export_groups, {prettify:true});
-    let filename = "syncTabGroups" + "-" + "manual" + "-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
+    let url = Utils.createGroupsJsonFile(export_groups, {prettify: true});
+    let filename = "syncTabGroups-manual-" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2) + "-" + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2) + ".json";
 
     let id = await browser.downloads.download({
       url: url,
       filename: filename,
-      saveAs: true
+      saveAs: true,
     });
 
     await Utils.waitDownload(id);
@@ -30,12 +34,12 @@ StorageManager.File.downloadGroups = async function(groups) {
     return true;
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
     return false;
   }
 }
 
-StorageManager.File.importGroupsFromFile = function(content_file) {
+FileStorage.importGroupsFromFile = function(content_file) {
   try {
     if (!content_file.hasOwnProperty('version')) {
       throw Error("ImportGroups: Content file is not in a supported format.");
@@ -44,17 +48,17 @@ StorageManager.File.importGroupsFromFile = function(content_file) {
 
     if (content_file['version'][0] === "tabGroups" ||
       content_file['version'][0] === "sessionrestore") {
-      groups = StorageManager.File.importTabGroups(content_file);
+      groups = FileStorage.importTabGroups(content_file);
     } else if (content_file['version'][0] === "syncTabGroups") {
-      groups = StorageManager.File.importSyncTabGroups(content_file);
+      groups = FileStorage.importSyncTabGroups(content_file);
     } else {
       throw Error("ImportGroups: Content file is not in a supported format.");
     }
 
-    GroupManager.prepareGroups(groups, {fireEvent:false});
+    GroupManager.prepareGroups(groups, {fireEvent: false});
 
     return groups;
-  } catch(e) {
+  } catch (e) {
     browser.notifications.create({
       "type": "basic",
       "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
@@ -62,12 +66,12 @@ StorageManager.File.importGroupsFromFile = function(content_file) {
       "message": e.message,
       "eventTime": 4000,
     });
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 
-StorageManager.File.importSyncTabGroups = function(content_file) {
+FileStorage.importSyncTabGroups = function(content_file) {
   if (!content_file.hasOwnProperty('version') ||
     !content_file.hasOwnProperty('groups') ||
     content_file['version'][0] !== "syncTabGroups") {
@@ -89,7 +93,7 @@ StorageManager.File.importSyncTabGroups = function(content_file) {
  *
  * legacy
  */
-StorageManager.File.importTabGroups = function(content_file) {
+FileStorage.importTabGroups = function(content_file) {
   if (!content_file.hasOwnProperty('version') ||
     (content_file['version'][0] !== "tabGroups" &&
       content_file['version'][0] !== "sessionrestore") || !content_file.hasOwnProperty('windows')) {
@@ -172,3 +176,5 @@ StorageManager.File.importTabGroups = function(content_file) {
 
   return groups;
 }
+
+export default FileStorage

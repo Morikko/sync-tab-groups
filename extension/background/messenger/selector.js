@@ -1,47 +1,55 @@
-var Messenger = Messenger || {};
-Messenger.Selector = Messenger.Selector || {};
+import Utils from '../utils/utils'
+import ImportSelector from '../core/importSelector'
+import BackgroundHelper from '../core/backgroundHelper'
+import GroupManager from '../core/groupmanager'
+import SELECTOR_TYPE from '../core/SELECTOR_TYPE'
+import ExtensionStorageManager from '../storage/storageManager'
 
-Messenger.Selector.selectorMessenger = function(message) {
+const SelectorMessenger = {};
+
+SelectorMessenger.selectorMessenger = function(message) {
   switch (message.task) {
-    case "Ask:SelectorGroups":
-      Utils.sendMessage("Selector:Groups", {
-        groups: Selector.groups,
-      });
-      break;
-    case "Selector:Finish":
-      Messenger.Selector.manageFinish(message.params);
-      break;
-    case "Ask:Options":
-      Background.refreshOptionsUI();
-      break;
+  case "Ask:SelectorGroups":
+    Utils.sendMessage("Selector:Groups", {
+      groups: ImportSelector.groups,
+    });
+    break;
+  case "Selector:Finish":
+    SelectorMessenger.manageFinish(message.params);
+    break;
+  case "Ask:Options":
+    BackgroundHelper.refreshOptionsUI();
+    break;
   }
 }
 
-Messenger.Selector.manageFinish = async function({
+SelectorMessenger.manageFinish = async function({
   filter,
   importType,
 }) {
   let done = false;
-  if ( Selector.type === Selector.TYPE.EXPORT ) {
-    done = await StorageManager.File.downloadGroups(
+  if (ImportSelector.type === SELECTOR_TYPE.EXPORT) {
+    done = await ExtensionStorageManager.File.downloadGroups(
       GroupManager.filterGroups(
-        Selector.groups,
+        ImportSelector.groups,
         filter,
       )
     );
   } else {
     let ids = GroupManager.addGroups(
       GroupManager.filterGroups(
-        Selector.groups,
+        ImportSelector.groups,
         filter,
       ), {
-      showNotification: true,
-    });
+        showNotification: true,
+      });
     done = ids.length>0;
   }
 
   // In case of success
-  if ( done ) {
-    await Selector.closeGroupsSelector();
+  if (done) {
+    await ImportSelector.closeGroupsSelector();
   }
 }
+
+export default SelectorMessenger

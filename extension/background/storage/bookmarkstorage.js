@@ -1,54 +1,58 @@
 /**
  * Save the groups as bookmarks for having a back up
- * In : Other bookmarks / StorageManager.Bookmark.ROOT /
+ * In : Other bookmarks / Bookmark.ROOT /
  */
-var StorageManager = StorageManager || {};
+// TODO: TaskManager
+import TaskManager from '../utils/taskManager'
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import OptionManager from '../core/optionmanager'
 
-StorageManager.Bookmark = StorageManager.Bookmark || {};
+const BookmarkStorage = {};
 
-StorageManager.Bookmark.ROOT = "SyncTabGroups";
-StorageManager.Bookmark.ROOT_ID;
+BookmarkStorage.ROOT = "SyncTabGroups";
+BookmarkStorage.ROOT_ID = null;
 
-StorageManager.Bookmark.repeatedtask = new TaskManager.RepeatedTask(30000);
+BookmarkStorage.repeatedtask = new TaskManager.RepeatedTask(30000);
 
 
 /**
  * Save the groups as bookmarks for having a back up.
- * In : Other bookmarks / StorageManager.Bookmark.ROOT /
+ * In : Other bookmarks / Bookmark.ROOT /
  * First create new back up and if succeeded, delete the old backup
  * Use a time out, in order to avoid too many writing in paralel that makes the function not working.
- * @param {Array[Group]} groups
+ * @param {Array<Group>} groups
  */
-StorageManager.Bookmark.backUp = function(groups, force=false) {
+BookmarkStorage.backUp = function(groups, force=false) {
   // Never do it asynchronously or you can break Firefox
-  StorageManager.Bookmark.repeatedtask.add(
+  BookmarkStorage.repeatedtask.add(
     async() => {
       try {
-        await StorageManager.Bookmark.init();
-        await StorageManager.Bookmark.cleanGroups();
-        await StorageManager.Bookmark.saveGroups(groups);
+        await BookmarkStorage.init();
+        await BookmarkStorage.cleanGroups();
+        await BookmarkStorage.saveGroups(groups);
 
-        return "StorageManager.Bookmark.backUp done!";
+        return "Bookmark.backUp done!";
       } catch (e) {
-        LogManager.error(e, {arguments});
+        LogManager.error(e, {args: arguments});
       }
     },
-  force)
+    force)
 }
 
 /**
  * Save the groups as back up bookmarks
- * Format: Other bookmarks / StorageManager.Bookmark.ROOT / StorageManager.Bookmark.BACKUP / Group Title / Each tabs
- * @param {Array[Group]} groups
+ * Format: Other bookmarks / Bookmark.ROOT / Bookmark.BACKUP / Group Title / Each tabs
+ * @param {Array<Group>} groups
  */
-StorageManager.Bookmark.saveGroups = async function(groups) {
+BookmarkStorage.saveGroups = async function(groups) {
   try {
-    var rootId;
+    let rootId;
 
     // 1. Create root
     const bmRoot = await browser.bookmarks.create({
       title: OptionManager.options.bookmarks.folder === "" ? "Default" : OptionManager.options.bookmarks.folder,
-      parentId: StorageManager.Bookmark.ROOT_ID
+      parentId: BookmarkStorage.ROOT_ID,
     });
 
     rootId = bmRoot.id;
@@ -58,7 +62,7 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
       // 2. Create Group folder
       const bmGroup = await browser.bookmarks.create({
         title: Utils.getGroupTitle(g),
-        parentId: rootId
+        parentId: rootId,
       });
 
       // 3. Create Tabs bookmarks (for is mandatory for keeping order)
@@ -67,25 +71,25 @@ StorageManager.Bookmark.saveGroups = async function(groups) {
           title: tab.title,
           index: tab.index,
           url: tab.url,
-          parentId: bmGroup.id
+          parentId: bmGroup.id,
         });
       }
 
     }
 
-    return "StorageManager.Bookmark.saveGroups done!";
+    return "Bookmark.saveGroups done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 /**
- * Delete the previous bookmarks backup folder in StorageManager.Bookmark.ROOT
+ * Delete the previous bookmarks backup folder in Bookmark.ROOT
  */
-StorageManager.Bookmark.cleanGroups = async function(title = StorageManager.Bookmark.BACKUP_OLD) {
+BookmarkStorage.cleanGroups = async function(title = BookmarkStorage.BACKUP_OLD) {
   try {
     const bookmarks_groups = await browser.bookmarks.getSubTree(
-      StorageManager.Bookmark.ROOT_ID
+      BookmarkStorage.ROOT_ID
     );
 
     for (let b of bookmarks_groups[0].children) {
@@ -94,32 +98,34 @@ StorageManager.Bookmark.cleanGroups = async function(title = StorageManager.Book
       }
     }
 
-    return "StorageManager.Bookmark.cleanGroups done!";
+    return "Bookmark.cleanGroups done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
 
 /**
- * Create Other bookmarks / StorageManager.Bookmark.ROOT / if doesn't exist.
- * Save the id of this bookmark (StorageManager.Bookmark.ROOT_ID) in order to do the backup inside later.
+ * Create Other bookmarks / Bookmark.ROOT / if doesn't exist.
+ * Save the id of this bookmark (Bookmark.ROOT_ID) in order to do the backup inside later.
  */
-StorageManager.Bookmark.init = async function() {
+BookmarkStorage.init = async function() {
   try {
     const searchResults = await browser.bookmarks.search({
-      title: StorageManager.Bookmark.ROOT
+      title: BookmarkStorage.ROOT,
     });
 
     if (searchResults.length === 0) {
       const folder = await browser.bookmarks.create({
-        title: StorageManager.Bookmark.ROOT
+        title: BookmarkStorage.ROOT,
       });
-      StorageManager.Bookmark.ROOT_ID = folder.id;
+      BookmarkStorage.ROOT_ID = folder.id;
     } else {
-      StorageManager.Bookmark.ROOT_ID = searchResults[0].id;
+      BookmarkStorage.ROOT_ID = searchResults[0].id;
     }
-    return "StorageManager.Bookmark.init done!";
+    return "Bookmark.init done!";
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
 }
+
+export default BookmarkStorage

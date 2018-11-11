@@ -1,3 +1,6 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
 class TextInput extends React.Component {
   constructor(props) {
     super(props);
@@ -6,7 +9,7 @@ class TextInput extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       name: nextProps.name,
     })
@@ -25,12 +28,12 @@ class TextInput extends React.Component {
       <div className="option-input-text">
         <div style={{
           display: "flex",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}>
           <span
             className="option-input-text-label"
             htmlFor={this.props.id}>
-              {this.props.label}
+            {this.props.label}
           </span>
           <input
             type="text"
@@ -39,12 +42,12 @@ class TextInput extends React.Component {
             onBlur={((event) => {
               this.props.onChange(this.props.id, event.target.value);
               this.setState({
-                name: event.target.value
+                name: event.target.value,
               });
             }).bind(this)}
             onChange={((event) => {
               this.setState({
-                name: event.target.value
+                name: event.target.value,
               });
             }).bind(this)}
           />
@@ -52,7 +55,7 @@ class TextInput extends React.Component {
         {help_section}
       </div>);
   }
-};
+}
 
 TextInput.propTypes = {
   label: PropTypes.string,
@@ -61,3 +64,5 @@ TextInput.propTypes = {
   onChange: PropTypes.func,
   id: PropTypes.string,
 }
+
+export default TextInput

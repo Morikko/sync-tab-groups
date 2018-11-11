@@ -1,11 +1,10 @@
-/*
-I might have modified some parts of the code.
-Copyright (c) 2017 Eric Masseran
+import React from 'react'
+import PropTypes from 'prop-types'
 
-From: https://github.com/denschub/firefox-tabgroups
-Copyright (c) 2015 Dennis Schubert
-*/
-class TabList extends React.Component{
+import ErrorBoundary from '../ErrorBoundary'
+import Tab from './tab'
+
+class TabList extends React.Component {
   render() {
     return (
       <ul className ={"tab-list "
@@ -17,8 +16,8 @@ class TabList extends React.Component{
               : undefined;
 
             return (
-              <ErrorBoundary 
-                key={index} 
+              <ErrorBoundary
+                key={index}
                 fallback={<div>Error on Tab at index {index}</div>}
               >
                 <Tab
@@ -29,7 +28,7 @@ class TabList extends React.Component{
                   onTabClick={this.props.onTabClick}
                   onGroupDrop={this.props.onGroupDrop}
                   onMoveTabToNewGroup={this.props.onMoveTabToNewGroup}
-                  onRemoveHiddenTab={this.props.onRemoveHiddenTab}    
+                  onRemoveHiddenTab={this.props.onRemoveHiddenTab}
                   opened={this.props.opened}
                   onCloseTab={this.props.onCloseTab}
                   onOpenTab={this.props.onOpenTab}
@@ -50,7 +49,7 @@ class TabList extends React.Component{
       </ul>
     );
   }
-};
+}
 
 TabList.propTypes = {
   onTabClick: PropTypes.func,
@@ -60,8 +59,10 @@ TabList.propTypes = {
   onOpenTab: PropTypes.func,
   onGroupDrop: PropTypes.func,
   onMoveTabToNewGroup: PropTypes.func,
-  searchTabsResults: PropTypes.object,
-  groups: PropTypes.object,
+  searchTabsResults: PropTypes.array,
+  groups: PropTypes.array,
   onChangePinState: PropTypes.func,
   allowClickSwitch: PropTypes.bool,
 }
+
+export default TabList

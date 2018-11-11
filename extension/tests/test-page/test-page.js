@@ -1,54 +1,51 @@
-var bg;
+import Utils from '../../background/utils/utils'
+import {waitInit} from '../utils/Background'
 
-var queryString = new jasmine.QueryString({
+let queryString = new jasmine.QueryString({
   getWindowLocation: function() {
     return window.location;
-  }
+  },
 });
 
-var specFilter = new jasmine.HtmlSpecFilter({
+let specFilter = new jasmine.HtmlSpecFilter({
   filterString: function() {
     if (Utils.getParameterByName("enable") !== 'true') {
       return "@@@@@@@";
     } else {
       return queryString.getParam("spec")
     }
-  }
+  },
 });
 
 
-var env = jasmine.getEnv();
+let env = jasmine.getEnv();
 
 env.specFilter = function(spec) {
   return specFilter.matches(spec.getFullName());
 };
 
-var waitInit = (async () => {
-  bg = await browser.runtime.getBackgroundPage();
-  GroupManager = bg.GroupManager;
-  WindowManager = bg.WindowManager;
-  TabManager = bg.TabManager;
-  OptionManager = bg.OptionManager;
-  StorageManager = bg.StorageManager;
-  Selector = bg.Selector;
-  Background = bg.Background;
-  TabHidden = bg.TabHidden;
-  LogManager = bg.LogManager;
-  Event = bg.Event;
-})()
+let currentWindowOnload = window.onload;
+
+window.onload = async function() {
+  await waitInit;
+
+  if (currentWindowOnload) {
+    currentWindowOnload();
+  }
+};
 
 function insertParam(key, value) {
   key = encodeURI(key);
   value = encodeURI(value);
 
-  var kvp = document.location.search.substr(1).split('&');
+  let kvp = document.location.search.substr(1).split('&');
 
-  var i = kvp.length;
-  var x;
+  let i = kvp.length;
+  let x;
   while (i--) {
     x = kvp[i].split('=');
 
-    if (x[0] == key) {
+    if (x[0] === key) {
       x[1] = value;
       kvp[i] = x.join('=');
       break;
@@ -63,7 +60,7 @@ function insertParam(key, value) {
   document.location.search = kvp.join('&');
 }
 
-var enableButton = document.createElement("button");
+let enableButton = document.createElement("button");
 enableButton.innerText = Utils.getParameterByName("enable") === 'true'
   ? "Disable"
   : "Enable";
@@ -75,7 +72,7 @@ enableButton.addEventListener("click", () => {
   }
 })
 
-var focusButton = document.createElement("button");
+let focusButton = document.createElement("button");
 focusButton.innerText = Utils.getParameterByName("doAll") === 'true'
   ? "Focus Only"
   : "All";
@@ -94,9 +91,3 @@ document.addEventListener("DOMContentLoaded", () => {
   div.innerText = "Filter: " + Utils.getParameterByName("spec");
   document.body.insertBefore(div, focusButton);
 });
-
-if ( Utils.getParameterByName("doAll") !== 'true' ) {
-  fdescribe('Force only fdescribe and fit to run', ()=>{
-
-  });
-}

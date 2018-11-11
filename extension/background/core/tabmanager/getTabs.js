@@ -1,34 +1,32 @@
- /*
- - getTabsInWindowId
- - updateTabsInGroup
- */
-var TabManager = TabManager || {};
-
-
+import Utils from '../../utils/utils'
+import OptionManager from '../../core/optionmanager'
+import LogManager from '../../error/logmanager'
+import GroupManager from '../../core/groupmanager'
+import WindowManager from '../../core/windowmanager'
 
 /**
  * Return all the tabs in the window with windowId
  * Pinned tabs are inlcuded/excluded depending options.pinnedTab.sync
- * If the window doesn't exist return an empty array 
- * @param {Number} windowId
- * @return {Array[Tab]} tabs
+ * If the window doesn't exist return an empty array
+ * @param {number} windowId
+ * @returns {Array<Tab>} tabs
  */
-TabManager.getTabsInWindowId = async function(windowId, {
+async function getTabsInWindowId(windowId, {
   withoutRealUrl = true,
   withPinned = OptionManager.options.pinnedTab.sync,
-  hidden = (Utils.hasHideFunction() ? false : undefined)
+  hidden = (Utils.hasHideFunction() ? false : undefined),
 }={}) {
   let selector = {
-    windowId
+    windowId,
   };
 
 
-  if ( hidden !== undefined ) {
+  if (hidden !== undefined) {
     selector["hidden"] = hidden;
   }
 
   // Pinned tab
-  if ( !withPinned ) {
+  if (!withPinned) {
     selector["pinned"] = false;
   }
   let tabs = await browser.tabs.query(selector);
@@ -37,7 +35,7 @@ TabManager.getTabsInWindowId = async function(windowId, {
   if (withoutRealUrl) {
     tabs.forEach((tab) => {
       tab.url = Utils.extractTabUrl(tab.url);
-      if ( tab.hasOwnProperty('isArticle') && tab.isArticle === undefined ) {
+      if (tab.hasOwnProperty('isArticle') && tab.isArticle === undefined) {
         tab.isArticle = false;
       }
     });
@@ -45,7 +43,7 @@ TabManager.getTabsInWindowId = async function(windowId, {
 
   // Remove sharingState field that could be undefined
   tabs.forEach((tab) => {
-    if(tab["sharingState"]) delete tab["sharingState"]
+    if (tab["sharingState"]) delete tab["sharingState"]
   })
 
   return tabs;
@@ -54,10 +52,10 @@ TabManager.getTabsInWindowId = async function(windowId, {
 /**
  * Take the current tabs on the desire window and set it as the tabs
  * for the group
- * @param {Number} window id
- * @return {Promise}
+ * @param {number} windowId
+ * @returns {Promise}
  */
-TabManager.updateTabsInGroup = async function(windowId) {
+async function updateTabsInGroup(windowId) {
   try {
 
     if (WindowManager.WINDOW_CURRENTLY_SWITCHING[windowId]) {
@@ -79,21 +77,21 @@ TabManager.updateTabsInGroup = async function(windowId) {
     }
 
     if (window === undefined) {
-      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window has been closed";
+      return ".updateTabsInGroup not done for windowId " + windowId + " because window has been closed";
     }
 
     // Private Window sync
     if (!OptionManager.options.privateWindow.sync && window.incognito) {
-      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because private windows are not synchronized";
+      return ".updateTabsInGroup not done for windowId " + windowId + " because private windows are not synchronized";
     }
 
     if (!GroupManager.isWindowAlreadyRegistered(window.id)) {
-      return "TabManager.updateTabsInGroup not done for windowId " + windowId + " because window is not synchronized";
+      return ".updateTabsInGroup not done for windowId " + windowId + " because window is not synchronized";
     }
 
     let groupId = GroupManager.getGroupIdInWindow(windowId, {error: false});
-    if(groupId === -1) return false;
-    const tabs = await TabManager.getTabsInWindowId(windowId);
+    if (groupId === -1) return false;
+    const tabs = await getTabsInWindowId(windowId);
 
     // In case of delay
     if (WindowManager.WINDOW_CURRENTLY_CLOSING[windowId]) {
@@ -101,9 +99,14 @@ TabManager.updateTabsInGroup = async function(windowId) {
     }
 
     GroupManager.setTabsInGroupId(groupId, tabs);
-    return "TabManager.updateTabsInGroup done on window id " + windowId;
+    return ".updateTabsInGroup done on window id " + windowId;
 
   } catch (e) {
-    LogManager.error(e, {arguments});
+    LogManager.error(e, {args: arguments});
   }
+}
+
+export {
+  updateTabsInGroup,
+  getTabsInWindowId,
 }

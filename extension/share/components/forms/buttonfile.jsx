@@ -1,3 +1,7 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import readJsonFile from '../../../background/utils/readJsonFile'
+
 class ButtonFile extends React.Component {
   constructor(props) {
     super(props);
@@ -14,9 +18,9 @@ class ButtonFile extends React.Component {
         tabIndex="-1"
       />
       <label
-          className="button-file-label"
-          htmlFor={this.props.id}
-          tabIndex="0">
+        className="button-file-label"
+        htmlFor={this.props.id}
+        tabIndex="0">
         {this.props.title}
       </label>
     </div>);
@@ -29,20 +33,21 @@ class ButtonFile extends React.Component {
       if (files.length === 0) {
         return "No file selected..."
       }
-      const jsonContent = await StorageManager.File.readJsonFile(files[0]);
+      const jsonContent = await readJsonFile(files[0]);
       this.props.onFileSelected({
         content: jsonContent,
         filename: files[0].name,
       });
     } catch (e) {
       console.error(e)
-      return msg;
     }
   }
-};
+}
 
 ButtonFile.propTypes = {
   title: PropTypes.string,
   onFileSelected: PropTypes.func,
   id: PropTypes.string,
 };
+
+export default ButtonFile

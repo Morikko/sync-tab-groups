@@ -1,3 +1,8 @@
+import React from 'react'
+import classNames from 'classnames'
+import PropTypes from 'prop-types'
+import Utils from '../../background/utils/utils'
+
 class MainBar extends React.Component {
   constructor(props) {
     super(props);
@@ -12,8 +17,6 @@ class MainBar extends React.Component {
   }
 
   render() {
-    let id = "window-is-sync";
-
     let maximizerClasses = classNames({
       "icon-maximized": !this.props.maximized,
       "icon-minimized": this.props.maximized,
@@ -26,7 +29,7 @@ class MainBar extends React.Component {
 
     let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
 
-    let labelSynchronized = this.props.isSync 
+    let labelSynchronized = this.props.isSync
       ? browser.i18n.getMessage("to_unsynchronize_window")
       : browser.i18n.getMessage("to_synchronize_window")
     let titleSynchronized = browser.i18n.getMessage(
@@ -47,9 +50,9 @@ class MainBar extends React.Component {
           <span>{labelSynchronized}</span>
         </div>
         <div  className="manage-button"
-              id="open-manager"
-              onClick={this.handleClickManageButton}
-              title={browser.i18n.getMessage("open_manager")}>
+          id="open-manager"
+          onClick={this.handleClickManageButton}
+          title={browser.i18n.getMessage("open_manager")}>
           <i className="fa fa-fw fa-list"/>
           <span>{browser.i18n.getMessage("group_manager")}</span>
         </div>
@@ -85,7 +88,7 @@ class MainBar extends React.Component {
   handleClickManageButton(event) {
     event.stopPropagation();
     Utils.openUrlOncePerWindow(browser.extension.getURL(
-      "/tabpages/manage-groups/manage-groups.html"
+      "/manage/manage-groups.html"
     )).then(()=>{ // Let time to window to Open
       window.close();
     })
@@ -127,7 +130,7 @@ class MainBar extends React.Component {
   handleDrop(event) {
     event.stopPropagation();
   }
-};
+}
 
 MainBar.propTypes = {
   onChangeWindowSync: PropTypes.func,
@@ -138,3 +141,5 @@ MainBar.propTypes = {
   currentWindowId: PropTypes.number.isRequired,
   handleAllChangeExpand: PropTypes.func,
 };
+
+export default MainBar

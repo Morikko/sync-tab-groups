@@ -1,5 +1,15 @@
-var ContextMenu = ContextMenu || {};
+import Utils from '../utils/utils'
+import LogManager from '../error/logmanager'
+import GroupManager from '../core/groupmanager'
+import TabManager from '../core/tabmanager/tabManager'
+import BackgroundHelper from '../core/backgroundHelper'
+import TaskManager from '../utils/taskManager'
 
+import readJsonFile from '../utils/readJsonFile'
+import getGroupIndexSortedByPosition from './getGroupIndexSortedByPosition'
+import ExtensionStorageManager from '../storage/storageManager'
+
+const ContextMenu = {};
 
 ContextMenu.MoveTabMenu_ID = "stg-move-tab-group-";
 ContextMenu.SpecialActionMenu_ID = "stg-special-actions-";
@@ -14,22 +24,22 @@ ContextMenu.again = false;
 ContextMenu.createMoveTabMenu = async function() {
   try {
     // Security for avoiding concurrency
-    if ( ContextMenu.occupied ) {
-        ContextMenu.again = true;
-        return;
+    if (ContextMenu.occupied) {
+      ContextMenu.again = true;
+      return;
     }
     ContextMenu.occupied = true;
 
     for (let id of ContextMenu.MoveTabMenuIds) {
       try {
         await browser.contextMenus.remove(id);
-      } catch(e) {}
+      } catch (e) {return}
     }
     await Utils.wait(100)
     ContextMenu.MoveTabMenuIds.length = 0;
 
     const contexts = ["page"];
-    if ( !Utils.isChrome() ) { // Incompatible Chrome: "tab" in context menus
+    if (!Utils.isChrome()) { // Incompatible Chrome: "tab" in context menus
       contexts.push("tab");
     }
 
@@ -44,7 +54,7 @@ ContextMenu.createMoveTabMenu = async function() {
     if (!Utils.isChrome()) {
       contextManageGroups.icons = {
         "64": "/share/icons/tabspace-active-64.png",
-        "32": "/share/icons/tabspace-active-32.png"
+        "32": "/share/icons/tabspace-active-32.png",
       };
     }
     await browser.contextMenus.create(contextManageGroups);
@@ -52,19 +62,17 @@ ContextMenu.createMoveTabMenu = async function() {
 
     let currentWindowId;
     try {
-      currentWindowId = (await browser.windows.getLastFocused({
-        windowTypes: ['normal']
-      })).id;
-    } catch(e) {
+      currentWindowId = (await browser.windows.getLastFocused()).id;
+    } catch (e) {
       LogManager.warning(e.message);
     }
- 
+
 
     let groups = GroupManager.getCopy();
-    let sortedIndex = GroupManager.getIndexSortByPosition(groups);
+    let sortedIndex = getGroupIndexSortedByPosition(groups);
     for (let i of sortedIndex) {
       ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + groups[i].id);
-      const openPrefix = groups[i].windowId !== WINDOW_ID_NONE ? "[OPEN]" : "";
+      const openPrefix = groups[i].windowId !== browser.windows.WINDOW_ID_NONE ? "[OPEN]" : "";
       await browser.contextMenus.create({
         id: ContextMenu.MoveTabMenu_ID + groups[i].id,
         title: openPrefix + " " + Utils.getGroupTitle(groups[i]),
@@ -79,7 +87,7 @@ ContextMenu.createMoveTabMenu = async function() {
       id: ContextMenu.MoveTabMenu_ID + "separator-2",
       type: "separator",
       contexts: contexts,
-      parentId: parentId
+      parentId: parentId,
     });
 
     ContextMenu.MoveTabMenuIds.push(ContextMenu.MoveTabMenu_ID + "new");
@@ -87,10 +95,10 @@ ContextMenu.createMoveTabMenu = async function() {
       id: ContextMenu.MoveTabMenu_ID + "new",
       title: browser.i18n.getMessage("add_group"),
       contexts: contexts,
-      parentId: parentId
+      parentId: parentId,
     });
 
-    if ( ContextMenu.again ) {
+    if (ContextMenu.again) {
       setTimeout(
         ContextMenu.repeatedtask.add(
           () => {
@@ -108,9 +116,9 @@ ContextMenu.createMoveTabMenu = async function() {
 
 ContextMenu.updateMoveFocus = async function(disabledId) {
   try {
-    if ( ContextMenu.occupied ) {
-        //ContextMenu.again = true;
-        return;
+    if (ContextMenu.occupied) {
+      //ContextMenu.again = true;
+      return;
     }
     ContextMenu.occupied = true;
 
@@ -119,12 +127,12 @@ ContextMenu.updateMoveFocus = async function(disabledId) {
       let groupId = parseInt(order);
       if (groupId >= 0) {
         let groupIndex = GroupManager.getGroupIndexFromGroupId(groupId, {
-          error: false
+          error: false,
         });
-        if ( groupIndex >= 0 ) {
+        if (groupIndex >= 0) {
           return browser.contextMenus.update(
             id, {
-              enabled: disabledId !== GroupManager.groups[groupIndex].windowId
+              enabled: disabledId !== GroupManager.groups[groupIndex].windowId,
             });
         }
       }
@@ -149,7 +157,7 @@ ContextMenu.createSpecialActionMenu = function() {
   if (Utils.isFirefox()) {
     contextManageGroups.icons = {
       "64": "/share/icons/list-64.png",
-      "32": "/share/icons/list-32.png"
+      "32": "/share/icons/list-32.png",
     };
   }
   browser.contextMenus.create(contextManageGroups);
@@ -162,7 +170,7 @@ ContextMenu.createSpecialActionMenu = function() {
   if (Utils.isFirefox()) {
     contextExportGroups.icons = {
       "64": "/share/icons/upload-64.png",
-      "32": "/share/icons/upload-32.png"
+      "32": "/share/icons/upload-32.png",
     };
   }
   browser.contextMenus.create(contextExportGroups);
@@ -175,7 +183,7 @@ ContextMenu.createSpecialActionMenu = function() {
   if (Utils.isFirefox()) {
     contextBackUp.icons = {
       "64": "/share/icons/hdd-o-64.png",
-      "32": "/share/icons/hdd-o-32.png"
+      "32": "/share/icons/hdd-o-32.png",
     };
   }
   browser.contextMenus.create(contextBackUp);
@@ -210,7 +218,7 @@ ContextMenu.createSpecialActionMenu = function() {
   if (Utils.isFirefox()) {
     contextOpenPreferences.icons = {
       "64": "/share/icons/gear-64.png",
-      "32": "/share/icons/gear-32.png"
+      "32": "/share/icons/gear-32.png",
     };
   }
   browser.contextMenus.create(contextOpenPreferences);
@@ -229,7 +237,7 @@ ContextMenu.createSpecialActionMenu = function() {
   }
   browser.contextMenus.create(contextGuide);
   */
-  if ( Utils.DEBUG_MODE ) {
+  if (Utils.DEBUG_MODE) {
     let contextTestPreferences = {
       id: ContextMenu.SpecialActionMenu_ID + "open_tests",
       title: "Tests",
@@ -254,50 +262,54 @@ ContextMenu.MoveTabMenuListener = function(info, tab) {
   }
 };
 
+function onImportGroup() {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.json';
+  fileInput.acceptCharset = 'utf-8';
+  fileInput.onchange = () => {
+    readJsonFile(fileInput.files[0]).then((jsonContent) => {
+      BackgroundHelper.onImportGroups({
+        content_file: jsonContent,
+      });
+    });
+  };
+  fileInput.click();
+}
+
 ContextMenu.SpecialActionMenuListener = function(info, tab) {
   if (info.menuItemId.includes(ContextMenu.SpecialActionMenu_ID)) {
     let order = info.menuItemId.substring(ContextMenu.SpecialActionMenu_ID.length, info.menuItemId.length);
     switch (order) {
-      case "export_groups":
-        Background.onExportGroups();
-        break;
-      case "import_groups":
-        let fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.json';
-        fileInput.acceptCharset = 'utf-8';
-        fileInput.onchange = () => {
-          StorageManager.File.readJsonFile(fileInput.files[0]).then((jsonContent) => {
-            Background.onImportGroups({
-              content_file: jsonContent
-            });
-          });
-        };
-        fileInput.click();
-        break;
-      case "save_bookmarks_groups":
-        Background.onBookmarkSave();
-        break;
-      case "open_preferences":
-        Background.onOpenSettings();
-        break;
-      case "manage_groups":
-        Utils.openUrlOncePerWindow(browser.extension.getURL(
-          "/tabpages/manage-groups/manage-groups.html"
-        ));
-        break;
-      case "backup":
-        StorageManager.Backup.backup("manual");
-        break;
-      case "guide":
-        Background.onOpenGuide();
-        break;
-      case "open_tests":
-        Utils.openUrlOncePerWindow(
-          browser.extension.getURL("/tests/test-page/test-page.html"),
-          true,
-        );
-        break;
+    case "export_groups":
+      BackgroundHelper.onExportGroups();
+      break;
+    case "import_groups":
+      onImportGroup();
+      break;
+    case "save_bookmarks_groups":
+      BackgroundHelper.onBookmarkSave();
+      break;
+    case "open_preferences":
+      BackgroundHelper.onOpenSettings();
+      break;
+    case "manage_groups":
+      Utils.openUrlOncePerWindow(browser.extension.getURL(
+        "/manage/manage-groups.html"
+      ));
+      break;
+    case "backup":
+      ExtensionStorageManager.Backup.backup("manual");
+      break;
+    case "guide":
+      BackgroundHelper.onOpenGuide();
+      break;
+    case "open_tests":
+      Utils.openUrlOncePerWindow(
+        browser.extension.getURL("/tests/test-page/test-page.html"),
+        true,
+      );
+      break;
     }
   }
 };
@@ -317,3 +329,5 @@ ContextMenu.initContextMenus = function() {
       )
     });
 }
+
+export default ContextMenu
