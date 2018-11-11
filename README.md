@@ -11,23 +11,22 @@ Check the [website](https://morikko.github.io/synctabgroups/) for more informati
 
 # Contributing
 
-I have spent a lot of time on this project, however today I lack time to continue and motivation to work alone on it. Altough, I won't add any new features now, but I might still fix bugs. Else:
  - **I will gladly help and guide anyone willing to maintain and improve the extension**. 
  - **Thus, any PR are welcomed.**
  - **I will mark all the issues I am ready to include in the project**.
 
 The only conditions are:
  - the tests should pass
- - the compatiblity should be kept with the previous features
- - it should work on both Chrome and Firefox (or for new features, not disturbs the incompatible one)
+ - the lint should have no error
+ - the compatibility should be kept with the previous features
+ - it should work on both Chrome and Firefox (or for specific browser features, it should not disturb the incompatible browser)
 
-Also, I was thinking of changing the environment before stopping the development: add webpack, switch the shell script to only the npm scripts, use ES Lint... I will accept also those PR.
 
 ## Translation
 I would gladly accept other translations. Select the link related to your language and translate the different messages. Download the resulting files and send it me (Email) or with a PR.
  - [French](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blobôô/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/2351491da6541038be7db42f3917f04831116f47/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/2351491da6541038be7db42f3917f04831116f47/extension/_locales/fr/messages.json) (v0.6.3)
  - [German](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/v0.6.0/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/v0.6.0/extension/_locales/de/messages.json) (v0.6.0)
- - [Spanish](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/34c72370b945423baafb5550a23b3ace11e44fa6/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/34c72370b945423baafb5550a23b3ace11e44fa6/extension/_locales/es/messages.json) (v0.4.1)
+ - [Spanish](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/94208ab87efa8cb9ed39a2756d6f1ec9a2b8f6b4/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/94208ab87efa8cb9ed39a2756d6f1ec9a2b8f6b4/extension/_locales/es/messages.json) (v0.7.1)
  - [Russian](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/e9caca3ed60c9108a2c53f6b9d92ab3ad5a338f4/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/e9caca3ed60c9108a2c53f6b9d92ab3ad5a338f4/extension/_locales/ru/messages.json) (v0.4.1)
  - [Taiwanese Mandarin](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json&baseoriginal=https://github.com/Morikko/sync-tab-groups/blob/b8750968b21f7dc7f9a4461f2790e0a700764e6a/extension/_locales/en/messages.json&basetarget=https://github.com/Morikko/sync-tab-groups/blob/b8750968b21f7dc7f9a4461f2790e0a700764e6a/extension/_locales/zh_TW/messages.json) (v0.6.5 Partial)
  - [New language](https://morikko.github.io/translate-web-extension/translate?headoriginal=https://github.com/Morikko/sync-tab-groups/blob/master/extension/_locales/en/messages.json) 
@@ -37,24 +36,25 @@ If you find a bug, please [open an issue](https://github.com/Morikko/sync-tab-gr
 
 # Build
 
-## Makefile
-- `make js` compile all .jsx -> .js
-- `make watch` launch a daemon that compile all .jsx -> js and do it again when you save a .jsx file
-- `make watch REBUILD=` Idem as previous but recompile all .jsx files first
-- `make stop-watch` kill previous daemon
-- `make release` Create the extension in release mode, a zip and a xpi in build/
-- `make release CHROME=1` idem but for chrome purpose
-- `make` or `make all` Compile all .jsx and export the release
-- `make clean` Remove files built in build/ only
+## External dependencies
+ - Node >= 8
+ - Firefox Dev Edition (if you want to use web-ext)
 
-## Release mode
-1. included scripts are in .production.min.js instead of .development.js
-2. Utils.DEBUG_MODE is set to false
-3. Extension in build doesn't include
-  - .jsx files
-  - .development.js libraries
-  - tests files
-4. ZIP and XPI files are mirror of extension in build/
+## Scripts (with `npm run`)
+- `build` the extension in dev mode is built to the `build/` folder
+- `watch` Same than the `build` command but recompile the modified files
+- `build:prod` the extension ready for production is built to the `release/build/` folder
+- `zip`  Create the `XPI` and `ZIP` files in `release/` from the production build
+- `release` Do the `build:prod` and `zip` commands
+- `lint` show only errors
+- `clean` Remove the folders `build/` and `release/`
+- `firefox:dev` run firefox loaded with the dev extension
+- `firefox:prod` run firefox loaded with the production extension
+
+## Difference between mode
+1. `process.env.IS_PROD` is only true in the production code, so `Utils.DEBUG_MODE` is true only in the dev code
+2. Tests are only built in the dev version
+3. ZIP and XPI files are the same than `release/build/`
 
 
 # Credits
