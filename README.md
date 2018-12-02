@@ -63,8 +63,8 @@ Translation:
  - Russian (thanks @Александр)
  - Spanish (thanks [@lucas-mancini](https://github.com/lucas-mancini/))
  - Taiwanese Mandarin (thanks @rzfang)
-Bootstraped from this project: [denschub/firefox-tabgroups](https://github.com/denschub/firefox-tabgroups)
-
+ - French (thanks @ko-dever)
+ 
 [Website Repository](https://github.com/Morikko/synctabgroups)
 
 Thank you all of you for helping me improving and fixing the extension :)
