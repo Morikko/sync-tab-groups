@@ -1,5 +1,4 @@
 import React from 'react'
-import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import Utils from '../../../background/utils/utils'
 import getGroupIndexSortedByPosition from '../../../background/core/getGroupIndexSortedByPosition'
@@ -9,10 +8,6 @@ import Action from './controls/Action'
 class TabControls extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      waitFirstMount: false,
-    };
   }
 
   render() {
@@ -49,10 +44,10 @@ class TabControls extends React.Component {
     return (
       <ActionsMenu
         actions={actions}
-        menuPosition={this.state.menuPosition}
         extraPanels={{
           move: this.createMoveTabToGroupPanel(),
         }}
+        customClassNames="tab-edit"
       />
     )
   }

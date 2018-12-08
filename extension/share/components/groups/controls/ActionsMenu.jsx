@@ -31,11 +31,13 @@ class ActionsMenu extends React.Component {
         {this.renderPanel()}
       </div>
     )
+    const fullClassNames = "fa fa-fw fa-exchange tab-actions "
+      + this.props.customClassNames || ""
     return (
       <i
         key="tooltip"
         title={browser.i18n.getMessage("tab_show_actions_menu")}
-        className="tab-edit fa fa-fw fa-exchange tab-actions"
+        className={fullClassNames}
         onClick={this.handleOpenExtraActions.bind(this)}
         onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
         onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}>
@@ -188,8 +190,9 @@ class ActionsMenu extends React.Component {
 }
 
 ActionsMenu.propTypes = {
-  actions: PropTypes.array.isRequired,
+  actions: PropTypes.array,
   extraPanels: PropTypes.object,
+  customClassNames: PropTypes.string,
 }
 
 ActionsMenu.POSITION = Object.freeze({
