@@ -190,11 +190,7 @@ class Tab extends React.Component {
       </li>);
   }
 
-  handleOnMoveTabNewMenuClick(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-
+  handleOnMoveTabNewMenuClick() {
     this.props.onMoveTabToNewGroup(
       '',
       this.props.group.id,
@@ -202,13 +198,7 @@ class Tab extends React.Component {
     );
   }
 
-  handleOnMoveTabMenuClick(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-
-    let targetGroupId = parseInt(Utils.getParameterByName("groupId", event.target.className), 10);
-
+  handleOnMoveTabMenuClick(targetGroupId) {
     if (targetGroupId >= 0) {
       this.props.onGroupDrop(
         this.props.group.id,
@@ -368,36 +358,6 @@ class Tab extends React.Component {
     event.dataTransfer.setData("tab/index", this.props.tabIndex);
     event.dataTransfer.setData("tab/group", group.id);
   }
-  /* TODO to correct or to remove (doesn't update on group rename)
-  shouldComponentUpdate(nextProps, nextState) {
-    if ( nextProps.searchTabResult !== this.props.searchTabResult  ){
-      return true;
-    }
-
-    if ( nextProps.tab.pinned !== this.props.tab.pinned
-    || nextProps.tab.index !== this.props.tab.index
-    || nextProps.tab.url !== this.props.tab.url
-    || nextProps.tab.active !== this.props.tab.active
-    || nextProps.tab.title !== this.props.tab.title ) {
-      return true;
-    }
-
-    if ( this.state.dragOnTop !== nextState.dragOnTop
-    || this.state.dragOnBottom !== nextState.dragOnBottom ){
-      return true;
-    }
-
-    if ( nextProps.groups.length !== this.props.groups.length ) {
-      return true;
-    }
-
-    if ( this.state.waitFirstMount !== nextState.waitFirstMount ) {
-      return true;
-    }
-
-    return false;
-  }
-  */
 }
 
 Tab.propTypes = {

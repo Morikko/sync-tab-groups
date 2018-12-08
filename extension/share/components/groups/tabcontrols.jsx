@@ -3,20 +3,16 @@ import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import Utils from '../../../background/utils/utils'
 import getGroupIndexSortedByPosition from '../../../background/core/getGroupIndexSortedByPosition'
+import ActionsMenu from './controls/ActionsMenu'
+import Action from './controls/Action'
 
 class TabControls extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      menuPosition: TabControls.POSITION.MIDDLE,
-      show: false,
-      panel: "main",
       waitFirstMount: false,
-      maxHeight: window.innerHeight/2,
     };
-
-    this.closeMenuTimeout = undefined;
   }
 
   render() {
@@ -24,15 +20,7 @@ class TabControls extends React.Component {
 
     if (this.props.controlsEnable) {
       controls = ([
-        <i
-          key="tooltip"
-          title={browser.i18n.getMessage("tab_show_actions_menu")}
-          className="tab-edit fa fa-fw fa-exchange tab-actions"
-          onClick={this.handleOpenExtraActions.bind(this)}
-          onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
-          onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}>
-          {this.state.waitFirstMount && this.createExtraActionsMenu()}
-        </i>,
+        this.createExtraActionsMenu(),
         <i
           key="close"
           title={browser.i18n.getMessage("close_tab")}
@@ -42,104 +30,71 @@ class TabControls extends React.Component {
       ]);
     }
 
-
     return (<span className="tab-controls"
       onMouseUp={(e)=>e.stopPropagation()}>
       {controls}
     </span>);
   }
 
-  componentDidMount() {
-    if (!this.state.waitFirstMount) {
-      this.differedTimeOut = setTimeout(()=>{
-        this.setState({
-          waitFirstMount: true,
-        });
-      }, 500);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.differedTimeOut) {
-      clearTimeout(this.differedTimeOut);
-    }
-
-    if (this.closeMenuTimeout) {
-      clearTimeout(this.closeMenuTimeout);
-    }
-  }
-
   createExtraActionsMenu() {
+    const actions = [
+      this.getMoveAction(),
+      this.getTabOpenAction(),
+      this.getTabPinAction(),
+    ]
+    if (this.props.tab.hidden) {
+      actions.push(this.getHiddenRemoveAction())
+    }
+
     return (
-      <div  className={classNames({
-        "tab-actions-menu": true,
-        "top": this.state.menuPosition === TabControls.POSITION.TOP,
-        "bottom": this.state.menuPosition === TabControls.POSITION.BOTTOM,
-        "middle": this.state.menuPosition === TabControls.POSITION.MIDDLE,
-        "show": this.state.show,
-      })}>
-        {this.createTabActionsPanel()}
-        {this.createMoveTabToGroupPanel()}
-      </div>
-    );
+      <ActionsMenu
+        actions={actions}
+        menuPosition={this.state.menuPosition}
+        extraPanels={{
+          move: this.createMoveTabToGroupPanel(),
+        }}
+      />
+    )
   }
 
-  createTabActionsPanel() {
-    const hiddenRemoveAction = this.props.tab.hidden
-      ? (
-        <span
-          className="row"
-          onClick={((event)=>{
-            if (event) {
-              event.stopPropagation();
-            }
-            this.props.onRemoveHiddenTab(this.props.tab.id);
-            this.closeExtraActions();
-          }).bind(this)}>
-          <i className="fa fa-fw fa-eye-slash" />
-          {browser.i18n.getMessage("close_hidden_tab")}
-        </span>
-      )
-      : null;
+  getHiddenRemoveAction() {
+    return new Action({
+      key: "hidden_remove",
+      action: this.props.onRemoveHiddenTab.bind(null, this.props.tab.id),
+      close: true,
+      icon: <i className="fa fa-fw fa-eye-slash" />,
+      message: browser.i18n.getMessage("close_hidden_tab"),
+    })
+  }
 
-    return (
-      <div className={classNames({
-        "tab-actions-panel": true,
-        "hiddenBySearch": this.state.panel !== "main",
-      })}>
-        <span
-          className="row"
-          onClick={this.handleSwitchToMoveTabToGroupPanel.bind(this)}>
-          <img src="/share/icons/tabspace-active-32.png" />
-          {browser.i18n.getMessage("move_tab_group")}
-        </span>
-        <span
-          className="row"
-          onClick={((event)=>{
-            if (event) {
-              event.stopPropagation();
-            }
-            this.props.onOpenTab();
-            this.closeExtraActions();
-          }).bind(this)}>
-          <i className="fa fa-fw fa-plus" />
-          {browser.i18n.getMessage("open_tab")}
-        </span>
-        <span
-          className="row"
-          onClick={((event)=>{
-            if (event) {
-              event.stopPropagation();
-            }
-            this.props.onPinChange();
-            this.closeExtraActions();
-          }).bind(this)}>
-          <i className="fa fa-fw fa-thumb-tack" />
-          {browser.i18n.getMessage(this.props.isPinned ? "unpin_tab" : "pin_tab")}
-        </span>
-        {hiddenRemoveAction}
-      </div>
-    )
+  getMoveAction() {
+    return new Action({
+      key: "move_tab",
+      action: "move",
+      close: false,
+      icon: <img src="/share/icons/tabspace-active-32.png" />,
+      message: browser.i18n.getMessage("move_tab_group"),
+    })
+  }
+
+  getTabOpenAction() {
+    return new Action({
+      key: "tab_open",
+      action: this.props.onOpenTab,
+      close: true,
+      icon: <i className="fa fa-fw fa-plus" />,
+      message: browser.i18n.getMessage("open_tab"),
+    })
+  }
+
+  getTabPinAction() {
+    return new Action({
+      key: "tab_pin",
+      action: this.props.onPinChange,
+      close: true,
+      icon: <i className="fa fa-fw fa-thumb-tack" />,
+      message: browser.i18n.getMessage(this.props.isPinned ? "unpin_tab" : "pin_tab"),
+    })
   }
 
   createMoveTabToGroupPanel() {
@@ -152,118 +107,31 @@ class TabControls extends React.Component {
         ? "[OPEN] "
         : "";
       subMenusMoveTab.push(
-        <span
-          key={this.props.tab.id+"-"+g.id}
-          disabled={g.id === this.props.group.id}
-          className={"?groupId=" + g.id + " row"}
-          onClick={((e)=>{
-            if (e) {
-              e.stopPropagation();
-            }
-            this.props.handleOnMoveTabMenuClick(e);
-            this.closeExtraActions();
-          }).bind(this)}>
-          {prefix + Utils.getGroupTitle(g)}
-        </span>);
+        new Action({
+          disabled: g.id === this.props.group.id,
+          key: this.props.tab.id+"-"+g.id,
+          action: this.props.handleOnMoveTabMenuClick.bind(null, g.id),
+          close: true,
+          message: prefix + Utils.getGroupTitle(g),
+        })
+      )
     }
 
-    return (
-      <div className={classNames({
-        "tab-move-to-group-panel": true,
-        "hiddenBySearch": this.state.panel !== "move",
-      })}
-      style={{maxHeight: this.state.maxHeight}}>
-        <span
-          className="row"
-          onClick={this.handleSwitchToTabActionsPanel.bind(this)}>
-          <i className="fa fa-fw fa-chevron-left" />
-          {"Back"}
-        </span>
-        <span className="separator"></span>
-        {subMenusMoveTab}
-        <span className="separator"></span>
-        <span
-          className="row"
-          onClick={((e)=>{
-            if (e) {
-              e.stopPropagation();
-            }
-            this.props.handleOnMoveTabNewMenuClick(e);
-            this.closeExtraActions();
-          }).bind(this)}>
-          <i className="fa fa-fw fa-plus" />
-          {browser.i18n.getMessage("add_group")}
-        </span>
-      </div>
+    subMenusMoveTab.push("separator")
+
+    subMenusMoveTab.push(
+      new Action({
+        key: this.props.tab.id+"-new",
+        action: this.props.handleOnMoveTabNewMenuClick,
+        close: true,
+        icon: <i className="fa fa-fw fa-plus" />,
+        message: browser.i18n.getMessage("add_group"),
+      })
     )
+
+    return subMenusMoveTab
   }
 
-  handleSwitchToMoveTabToGroupPanel(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-
-    this.setState({
-      panel: "move",
-    });
-  }
-
-  handleSwitchToTabActionsPanel(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-
-    this.setState({
-      panel: "main",
-    });
-  }
-
-  handleOpenExtraActions(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-
-    let parentGroupList = Utils.getParentElement(event.target, "group-list");
-
-    let pos = Utils.getOffset(event.target, parentGroupList),
-      height = parentGroupList.clientHeight;
-
-    let menuPosition = TabControls.POSITION.MIDDLE;
-
-    if (pos < (height/2 + 34)) {
-      menuPosition = TabControls.POSITION.TOP;
-    } else {
-      menuPosition = TabControls.POSITION.BOTTOM;
-    }
-
-    this.setState({
-      menuPosition: menuPosition,
-      show: !this.state.show,
-      panel: "main",
-      maxHeight: height/2,
-    })
-  }
-
-  handleMouseLeaveExtraActions(event) {
-    //return; // For debug
-    this.closeMenuTimeout = setTimeout(()=>{
-      this.closeExtraActions();
-      this.closeMenuTimeout = undefined;
-    }, 500);
-  }
-
-  handleMouseEnterExtraActions(event) {
-    if (this.closeMenuTimeout) {
-      clearTimeout(this.closeMenuTimeout);
-    }
-  }
-
-  closeExtraActions() {
-    this.setState({
-      show: false,
-      panel: "main",
-    });
-  }
 }
 
 TabControls.propTypes = {
