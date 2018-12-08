@@ -33,17 +33,37 @@ class ActionsMenu extends React.Component {
     )
     const fullClassNames = "fa fa-fw fa-exchange tab-actions "
       + this.props.customClassNames || ""
-    return (
-      <i
-        key="tooltip"
-        title={browser.i18n.getMessage("tab_show_actions_menu")}
-        className={fullClassNames}
-        onClick={this.handleOpenExtraActions.bind(this)}
-        onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
-        onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}>
-        {this.state.show && menu}
-      </i>
-    )
+
+    if (this.props.actions.length > 1) {
+      return (
+        <i
+          key="tooltip"
+          title={browser.i18n.getMessage("tab_show_actions_menu")}
+          className={fullClassNames}
+          onClick={this.handleOpenExtraActions.bind(this)}
+          onMouseLeave={this.handleMouseLeaveExtraActions.bind(this)}
+          onMouseEnter={this.handleMouseEnterExtraActions.bind(this)}>
+          {this.state.show && menu}
+        </i>
+      )
+    // Only compatible with the menu panel
+    } else if (this.props.actions.length === 1) {
+      const action = this.props.actions[0]
+      return (
+        <div
+          key="tooltip"
+          title={action.message}
+          className="group-edit group-control"
+          onClick={(event) => {
+            if (event) event.stopPropagation();
+            action.action()
+          }}>
+          {action.icon}
+        </div>
+      )
+    } else {
+      return
+    }
   }
 
   renderPanel() {
