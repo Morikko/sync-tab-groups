@@ -32,8 +32,8 @@ class SettingsSection extends React.Component {
         {this.getPinnedSubsection()}
         {this.getOpeningSubsection()}
         {this.getPrivateWindowsSubsection()}
-        {this.getOthersSubsection()}
         {Utils.hasHideFunction() && this.getClosingSubsection()}
+        {this.getOthersSubsection()}
       </div>
     );
   }
