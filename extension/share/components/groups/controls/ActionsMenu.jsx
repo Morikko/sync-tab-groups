@@ -31,7 +31,7 @@ class ActionsMenu extends React.Component {
         {this.renderPanel()}
       </div>
     )
-    const fullClassNames = "fa fa-fw fa-exchange tab-actions "
+    const fullClassNames = "fa fa-fw fa-bars tab-actions "
       + this.props.customClassNames || ""
 
     if (this.props.actions.length > 1) {
