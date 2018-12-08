@@ -43,6 +43,7 @@ class TabControls extends React.Component {
 
     return (
       <ActionsMenu
+        key="tooltip"
         actions={actions}
         extraPanels={{
           move: this.createMoveTabToGroupPanel(),

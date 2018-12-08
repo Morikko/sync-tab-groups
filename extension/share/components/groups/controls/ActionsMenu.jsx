@@ -37,7 +37,6 @@ class ActionsMenu extends React.Component {
     if (this.props.actions.length > 1) {
       return (
         <i
-          key="tooltip"
           title={browser.i18n.getMessage("tab_show_actions_menu")}
           className={fullClassNames}
           onClick={this.handleOpenExtraActions.bind(this)}
@@ -51,7 +50,6 @@ class ActionsMenu extends React.Component {
       const action = this.props.actions[0]
       return (
         <div
-          key="tooltip"
           title={action.message}
           className="group-edit group-control"
           onClick={(event) => {
@@ -98,9 +96,15 @@ class ActionsMenu extends React.Component {
 
   getHtmlTagFromAction(action) {
     if (action === "separator") {
-      return <span className="separator"></span>
+      return (
+        <span
+          key="separator"
+          className="separator"
+        ></span>
+      )
     }
 
+    //  Actually disabled is not working
     return (
       <span
         key={action.key}
