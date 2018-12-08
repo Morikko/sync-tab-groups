@@ -145,7 +145,7 @@ li {
   background-color: var(--not-checked);
 }
 
-.addButton:hover {
+.addButton:hover, .edit-group-title {
   background-color: var(--not-checked-hover);
 }
 
@@ -449,18 +449,18 @@ input[type="search"]::-webkit-search-cancel-button {
   font-weight: bold;
 }
 
-.addButton .group-title {
+.addButton .add-button-title, .edit-group-title {
   display: flex;
   height: 100%;
   width: 100%;
 }
 
-.addButton input {
+.edit-group-title input {
   flex: 1;
   margin: auto;
 }
 
-.addButton .group-title span {
+.addButton .add-button-title span, .edit-group-title span {
   margin: auto;
   font-size: 15px;
 }

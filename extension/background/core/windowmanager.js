@@ -571,13 +571,16 @@ WindowManager.desassociateGroupIdToWindow = async function(windowId) {
  * @param {number} windowId
  * @returns {number} groupId created
  */
-WindowManager.addGroupFromWindow = async function(windowId) {
+WindowManager.addGroupFromWindow = async function(windowId, {
+  title="",
+}={}) {
   const tabs = await TabManager.getTabsInWindowId(windowId);
   const w = await browser.windows.get(windowId);
 
   let newGroupId = GroupManager.addGroupWithTab(tabs, {
     windowId,
     incognito: w.incognito,
+    title,
   });
   await WindowManager.associateGroupIdToWindow(
     windowId,
@@ -634,6 +637,7 @@ WindowManager.integrateWindowWithSession = async function(windowId, {
  */
 WindowManager.integrateWindow = async function(windowId, {
   even_new_one = OptionManager.options.groups.syncNewWindow,
+  title="",
 }={}) {
   try {
     const window = await browser.windows.get(windowId);
@@ -667,7 +671,7 @@ WindowManager.integrateWindow = async function(windowId, {
       if (even_new_one ||
         (OptionManager.options.privateWindow.sync &&
           window.incognito)) {
-        id = await WindowManager.addGroupFromWindow(windowId);
+        id = await WindowManager.addGroupFromWindow(windowId, {title});
       }
     }
 

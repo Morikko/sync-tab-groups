@@ -183,10 +183,14 @@ BackgroundHelper.changeSynchronizationStateOfWindow = async function(args) {
   const {
     isSync,
     windowId,
+    title="",
   } = args
   try {
     if (isSync) {
-      await WindowManager.integrateWindow(windowId, {even_new_one: true});
+      await WindowManager.integrateWindow(windowId, {
+        even_new_one: true,
+        title,
+      });
     } else {
       try {
         let currentGroupId = GroupManager.getGroupIdInWindow(

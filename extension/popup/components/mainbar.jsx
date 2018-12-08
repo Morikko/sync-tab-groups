@@ -2,13 +2,15 @@ import React from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import Utils from '../../background/utils/utils'
+import GroupNameEditor from '../../share/components/groups/GroupNameEditor'
 
-class MainBar extends React.Component {
+class MainBar extends GroupNameEditor {
   constructor(props) {
     super(props);
-    this.state = {
+
+    Object.assign(this.state, {
       maximized: false,
-    };
+    });
 
     this.handleClickPref = this.handleClickPref.bind(this);
     this.handleCloseAllExpand = this.handleCloseAllExpand.bind(this);
@@ -17,28 +19,32 @@ class MainBar extends React.Component {
   }
 
   render() {
-    let maximizerClasses = classNames({
-      "icon-maximized": !this.props.maximized,
-      "icon-minimized": this.props.maximized,
-      "fa-expand": !this.props.maximized,
-      "fa-compress": this.props.maximized,
-      "app-maximize": true,
-      "fa": true,
-      "fa-fw": true,
-    });
+    let inside
+    if (this.state.editing) {
+      inside = super.render()
+    } else {
+      let maximizerClasses = classNames({
+        "icon-maximized": !this.props.maximized,
+        "icon-minimized": this.props.maximized,
+        "fa-expand": !this.props.maximized,
+        "fa-compress": this.props.maximized,
+        "app-maximize": true,
+        "fa": true,
+        "fa-fw": true,
+      });
 
-    let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
+      let title_expand = this.props.maximized ? browser.i18n.getMessage("reduce_menu") : browser.i18n.getMessage("expand_menu");
 
-    let labelSynchronized = this.props.isSync
-      ? browser.i18n.getMessage("to_unsynchronize_window")
-      : browser.i18n.getMessage("to_synchronize_window")
-    let titleSynchronized = browser.i18n.getMessage(
-      (this.props.isSync?"change_window_invisible":"change_window_visible")
-    );
+      let labelSynchronized = this.props.isSync
+        ? browser.i18n.getMessage("to_unsynchronize_window")
+        : browser.i18n.getMessage("to_synchronize_window")
+      let titleSynchronized = browser.i18n.getMessage(
+        (this.props.isSync?"change_window_invisible":"change_window_visible")
+      );
 
-    return (
-      <li className="mainbar">
+      inside = [
         <div
+          key="change-visibility"
           id="change-visibility"
           className={classNames({
             "grouped-button": true,
@@ -48,15 +54,19 @@ class MainBar extends React.Component {
           onClick={this.handleCheckChange}
           title={titleSynchronized}>
           <span>{labelSynchronized}</span>
-        </div>
-        <div  className="manage-button"
+        </div>,
+        <div
+          className="manage-button"
+          key="open-manager"
           id="open-manager"
           onClick={this.handleClickManageButton}
           title={browser.i18n.getMessage("open_manager")}>
           <i className="fa fa-fw fa-list"/>
           <span>{browser.i18n.getMessage("group_manager")}</span>
-        </div>
-        <div className="right-actions">
+        </div>,
+        <div
+          className="right-actions"
+          key="right-actions">
           <i
             className="app-pref fa fa-fw fa-angle-double-down expand-groups"
             title={browser.i18n.getMessage("expand_all_groups")}
@@ -79,8 +89,13 @@ class MainBar extends React.Component {
             title={browser.i18n.getMessage("contextmenu_preferences")}
             onClick={this.handleClickPref}
           />
-        </div>
+        </div>,
+      ]
+    }
 
+    return (
+      <li className="mainbar">
+        {inside}
       </li>
     );
   }
@@ -112,7 +127,19 @@ class MainBar extends React.Component {
 
   handleCheckChange(event) {
     event.stopPropagation();
-    this.props.onChangeWindowSync(this.props.currentWindowId, !this.props.isSync);
+    if (this.props.isSync) {
+      this.props.onChangeWindowSync(this.props.currentWindowId, false);
+    } else {
+      this.setState({editing: true})
+    }
+  }
+
+  onTitleSet(event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.props.onChangeWindowSync(this.props.currentWindowId, true, this.state.newTitle);
+    this.resetButton();
   }
 
   handleGroupDragOver(event) {

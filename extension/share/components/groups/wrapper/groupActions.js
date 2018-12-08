@@ -86,10 +86,11 @@ const GroupActions = {
     Utils.sendMessage("App:OpenSettings", {});
   },
 
-  onChangeWindowSync: function(windowId, value) {
+  onChangeWindowSync: function(windowId, value, title="") {
     Utils.sendMessage("Window:Sync", {
       windowId: windowId,
       isSync: value,
+      title,
     });
   },
 

@@ -6,20 +6,18 @@ import Utils from '../../../background/utils/utils'
 import {
   addButtonNavigationListener,
 } from './wrapper/navigation'
+import GroupNameEditor from './GroupNameEditor';
 
-class GroupAddButton extends React.Component {
+class GroupAddButton extends GroupNameEditor {
   constructor(props) {
     super(props);
-    this.state = {
+
+    Object.assign(this.state, {
       draggingOverCounter: 0,
-      editing: false,
-      newTitle: '',
       tabIndex: -1,
       sourceGroup: -1,
-    };
+    });
 
-    this.onEditAbort = this.onEditAbort.bind(this);
-    this.onTitleSet = this.onTitleSet.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleGroupDragOver = this.handleGroupDragOver.bind(this);
     this.handleDrop = this.handleDrop.bind(this);
@@ -37,42 +35,10 @@ class GroupAddButton extends React.Component {
 
     let button;
     if (this.state.editing) {
-      button = (
-        <span className="group-title">
-          <span>
-            {browser.i18n.getMessage("group_name") + ': '}
-          </span>
-          <input
-            className="max-width-115"
-            autoFocus
-            type="text"
-            onChange={(event) => {
-              this.setState({
-                newTitle: event.target.value,
-              });
-            }}
-            onClick={(e)=>e.stopPropagation()}
-            onMouseUp={(e)=>e.stopPropagation()}
-            onFocus={(e) => {
-              e.target.select();
-            }}
-          />
-          <span
-            className="groupadd-controls"
-            onMouseUp={(e)=>e.stopPropagation()}>
-            <i
-              className="group-edit fa fa-fw fa-check"
-              onClick={this.onTitleSet}
-            ></i>
-            <i
-              className="group-edit fa fa-fw fa-ban"
-              onClick={this.onEditAbort}
-            ></i>
-          </span>
-        </span>);
+      button = super.render()
     } else {
       button = (
-        <span className="group-title">
+        <span className="add-button-title">
           <span>{browser.i18n.getMessage("add_group")}</span>
         </span>
       );
@@ -94,41 +60,6 @@ class GroupAddButton extends React.Component {
         {button}
       </div>
     );
-  }
-
-  onEditAbort(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-    this.setState({
-      editing: false,
-      newTitle: '',
-    });
-  }
-
-  resetButton() {
-    this.setState({
-      editing: false,
-      newTitle: '',
-      tabIndex: -1,
-      sourceGroup: -1,
-    });
-  }
-
-  onTitleSet(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-    if (this.state.tabIndex >= 0 && this.state.sourceGroup >= 0) {
-      this.props.onDrop(
-        this.state.newTitle,
-        this.state.sourceGroup,
-        this.state.tabIndex,
-      );
-    } else {
-      this.props.onClick(this.state.newTitle);
-    }
-    this.resetButton();
   }
 
   handleClick(event) {
@@ -186,6 +117,22 @@ class GroupAddButton extends React.Component {
       sourceGroup: parseInt(event.dataTransfer.getData("tab/group")),
       tabIndex: parseInt(event.dataTransfer.getData("tab/index")),
     });
+  }
+
+  onTitleSet(event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (this.state.tabIndex >= 0 && this.state.sourceGroup >= 0) {
+      this.props.onDrop(
+        this.state.newTitle,
+        this.state.sourceGroup,
+        this.state.tabIndex,
+      );
+    } else {
+      this.props.onClick(this.state.newTitle);
+    }
+    this.resetButton();
   }
 
 }
