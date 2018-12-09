@@ -1096,7 +1096,7 @@ GroupManager.checkCorruptedTab = function(tab, index) {
   if (Utils.isFirefox()) {
     properties["lastAccessed"] = 0;
   }
-  if (!Utils.hasHideFunction()) {
+  if (Utils.hasHideFunction()) {
     properties["hidden"] = false;
   }
   return Utils.ojectPropertiesAreUndefined(
