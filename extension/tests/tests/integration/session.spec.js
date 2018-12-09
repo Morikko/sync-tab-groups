@@ -1,5 +1,6 @@
 import TestManager from '../../utils/TestManager'
 import Session from '../../examples/session'
+import TestUtils from '../../utils/TestUtils';
 
 describe("Session: ", ()=>{
   // Keep previous states
@@ -38,6 +39,7 @@ describe("Session: ", ()=>{
       let previousLength = group.tabs.length;
 
       await Session.addTabToGroup(this.id, tab);
+      await TestUtils.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
       expect(group.tabs.length).toEqual(previousLength+1);
       expect(group.tabs[group.tabs.length-1].url).toEqual(tab.url);
@@ -52,6 +54,7 @@ describe("Session: ", ()=>{
       let previousLength = group.tabs.length;
 
       await Session.addTabToGroup(this.id, tab);
+      await TestUtils.waitAllTabsToBeLoadedInWindowId(this.windowId)
 
       let pinnedTabs = group.tabs.filter(tab => tab.pinned);
 

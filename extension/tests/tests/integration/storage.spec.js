@@ -186,6 +186,7 @@ describe('Storage', () => {
 
         expect(window.Background.ExtensionStorageManager.Local.BACKUP_TIMEOUT).not.toBe(undefined);
         expect(id).not.toBe(undefined);
+
         expect(window.Background.ExtensionStorageManager.Local.addBackup).toHaveBeenCalledTimes(1);
 
         window.Background.ExtensionStorageManager.Local.abortBackUp();

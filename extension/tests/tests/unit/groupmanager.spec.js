@@ -503,7 +503,9 @@ describe("window.Background.GroupManager", () => {
       let index = getGroupIndexSortedByPosition(groups);
 
       expect(index.length).toEqual(groups.length)
-      expect(index).toEqual(expectIndex);
+      expect(index).toEqual([
+        2, 0, 4, 5, 3, 1, 6,
+      ]);
     });
   });
 });
