@@ -15,14 +15,8 @@ import OptionManager from './core/optionmanager'
 import GroupManager from './core/groupmanager'
 import ContextMenu from './core/contextmenus'
 import BackgroundHelper from './core/backgroundHelper'
-import TASKMANAGER_CONSTANTS from './utils/TASKMANAGER_CONSTANTS'
 
 LogManager.LOCATION = LogManager.BACK
-
-TaskManager.fromUI = {
-  [TASKMANAGER_CONSTANTS.CLOSE_REFERENCE]: new TaskManager.DelayedTask(),
-  [TASKMANAGER_CONSTANTS.REMOVE_REFERENCE]: new TaskManager.DelayedTask(),
-}
 
 /**
  * Only read groups data, never write directly

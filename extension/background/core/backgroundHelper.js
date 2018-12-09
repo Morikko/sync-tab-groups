@@ -9,6 +9,13 @@ import WindowManager from './windowmanager'
 import ImportSelector from './importSelector'
 import TabHidden from '../core/tabhidden'
 import SELECTOR_TYPE from './SELECTOR_TYPE'
+import TASKMANAGER_CONSTANTS from '../utils/TASKMANAGER_CONSTANTS'
+
+TaskManager.fromUI = {
+  [TASKMANAGER_CONSTANTS.CLOSE_REFERENCE]: new TaskManager.DelayedTask(),
+  [TASKMANAGER_CONSTANTS.REMOVE_REFERENCE]: new TaskManager.DelayedTask(),
+}
+
 
 const BackgroundHelper = {}
 window.BackgroundHelper = BackgroundHelper
@@ -91,7 +98,7 @@ BackgroundHelper.onGroupClose = function({
     }
   };
 
-  TaskManager.fromUI[TaskManager.CLOSE_REFERENCE].manage(
+  TaskManager.fromUI[TASKMANAGER_CONSTANTS.CLOSE_REFERENCE].manage(
     taskRef,
     delayedFunction,
     groupId,
@@ -110,7 +117,7 @@ BackgroundHelper.onGroupRemove = async function({
       resolve();
     };
 
-    TaskManager.fromUI[TaskManager.REMOVE_REFERENCE].manage(
+    TaskManager.fromUI[TASKMANAGER_CONSTANTS.REMOVE_REFERENCE].manage(
       taskRef,
       delayedFunction,
       groupId,
