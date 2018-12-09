@@ -353,6 +353,7 @@ li {
 
 .window-open {
   height: 20px;
+  line-height: 20px;
   align-self: center;
   color: #fff;
   font-weight: bold;
