@@ -436,11 +436,11 @@
 
   "to_synchronize_window": {
     "message": "Create a new group from the tabs in the window",
-    "description": "Label for group visible in the popup"
+    "description": "Label for group visible in the popup (max 60 chars)"
   },
   "to_unsynchronize_window": {
-    "message": "Remove the group in the window and keep the tabs opened",
-    "description": "Status in Mainbar (Menu) when a group is invisible"
+    "message": "Remove the actual group and keep the tabs opened",
+    "description": "Status in Mainbar (Menu) when a group is invisible (max 60 chars)"
   },
 
   "contextmenu_backup": {

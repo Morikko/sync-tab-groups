@@ -348,12 +348,12 @@
     "description": ""
   },
   "to_synchronize_window": {
-    "message": "Créer un nouveau groupe à partir des onglets de la fenêtre actuelle",
-    "description": "Label for group visible in the popup"
+    "message": "Créer un nouveau groupe à partir des onglets de la fenêtre",
+    "description": "Label for group visible in the popup (max 60 chars)"
   },
   "to_unsynchronize_window": {
-    "message": "Supprimer le groupe de la fenêtre actuelle et garder les onglets ouverts",
-    "description": "Status in Mainbar (Menu) when a group is invisible"
+    "message": "Supprimer le groupe actuel en gardant les onglets ouverts",
+    "description": "Status in Mainbar (Menu) when a group is invisible (max 60 chars)"
   },
   "contextmenu_backup": {
     "message": "Sauvegarde manuelle",
