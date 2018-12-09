@@ -941,10 +941,33 @@ GroupManager.init = async function() {
     // 1. Set the data
     let groups = await ExtensionStorageManager.Local.loadGroups();
     GroupManager.groups = GroupManager.check_integrity(groups);
+
+    const previously_open_group = []
+    for (let i=0; i<GroupManager.groups.length; i++) {
+      const group = GroupManager.groups[i]
+      if (group.windowId !== -1) {
+        previously_open_group.push(i)
+      }
+    }
+
     GroupManager.resetAssociatedWindows({fireEvent: false});
 
     // 2. Integrate open windows
     await GroupManager.integrateAllOpenedWindows();
+
+    // Warning if still not open
+    for (let index of previously_open_group) {
+      const group = GroupManager.groups[index]
+
+      if (group.windowId === -1) {
+        browser.notifications.create(null, {
+          "type": "basic",
+          "iconUrl": browser.extension.getURL("/share/icons/tabspace-active-64.png"),
+          "title": "Fail to find the window",
+          "message": `For the group previously opened named "${Utils.getGroupTitle(group)}".You might check your groups to avoid data loss.`,
+        });
+      }
+    }
 
     GroupManager.initGroupManagerEventListener();
     GroupManager.eventlistener.fire(GroupManager.EVENT_PREPARE);
