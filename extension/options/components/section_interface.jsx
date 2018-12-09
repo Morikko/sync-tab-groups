@@ -5,7 +5,7 @@ import SubSection from './subsection'
 import OptionSelect from '../../share/components/forms/optionselect'
 import NiceCheckbox from '../../share/components/forms/nicecheckbox'
 import OPTION_CONSTANTS from '../../background/core/OPTION_CONSTANTS'
-
+import Utils from '../../background/utils/utils'
 class InterfaceSection extends React.Component {
   render() {
     return (
@@ -89,20 +89,26 @@ class InterfaceSection extends React.Component {
             </div>
           }
         />
-        <SubSection
-          title={browser.i18n.getMessage("options_interface_windows")}
-          tooltip={undefined}
-          content = {
-            <NiceCheckbox
-              checked={this.props.options.groups.showGroupTitleInWindow}
-              label={browser.i18n.getMessage("show_title_window")}
-              onCheckChange={this.props.onOptionChange}
-              id="groups-showGroupTitleInWindow"
-            />
-          }
-        />
+        {Utils.isFirefox() && this.getWindowSection()}
       </div>
     );
+  }
+
+  getWindowSection() {
+    return (
+      <SubSection
+        title={browser.i18n.getMessage("options_interface_windows")}
+        tooltip={undefined}
+        content = {
+          <NiceCheckbox
+            checked={this.props.options.groups.showGroupTitleInWindow}
+            label={browser.i18n.getMessage("show_title_window")}
+            onCheckChange={this.props.onOptionChange}
+            id="groups-showGroupTitleInWindow"
+          />
+        }
+      />
+    )
   }
 }
 

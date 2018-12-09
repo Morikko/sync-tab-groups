@@ -168,7 +168,7 @@ class SettingsSection extends React.Component {
             <div className="double-buttons">
               <OptionButton
                 title= {browser.i18n.getMessage("options_behaviors_tabsopening_reload")}
-                onClick= {this.handleClickOnCloseAllHiddenTabs.bind(this)}
+                onClick= {this.handleClickOnUndiscardAllTabs.bind(this)}
                 highlight={true}
               />
             </div>
