@@ -41,16 +41,17 @@ WindowsEvents.initWindowsEventListener = function() {
 
     GroupManager.detachWindow(windowId);
   });
+
   /* TODO: doenst update context menu well if right click on a tab from another window
    */
   browser.windows.onFocusChanged.addListener(async function(windowId) {
     BackgroundHelper.refreshUi();
 
     try {
-      const w = await browser.windows.getLastFocused();
-      await ContextMenu.updateMoveFocus(w.id);
-
       if (windowId >= 0) {
+        const w = await browser.windows.getLastFocused();
+        await ContextMenu.updateMoveFocus(w.id);
+
         let groupId = GroupManager.getGroupIdInWindow(windowId, {error: false});
         if (groupId >= 0) { // Only grouped window
           GroupManager.setLastAccessed(groupId, Date.now());

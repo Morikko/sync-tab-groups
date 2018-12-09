@@ -6,7 +6,6 @@
 
 import LogManager from "./error/logmanager"
 import Utils from './utils/utils'
-import TaskManager from './utils/taskManager'
 import ExtensionStorageManager from './storage/storageManager'
 import Events from './event/event'
 import Messenger from './messenger/messenger'

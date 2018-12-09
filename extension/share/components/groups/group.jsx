@@ -126,8 +126,7 @@ class Group extends React.Component {
   getGroupClasses() {
     let groupInWindow = this.props.selectionFilter !== undefined
       ? false
-      : (this.props.currentWindowId
-                          === this.props.group.windowId);
+      : (this.props.currentWindowId === this.props.group.windowId);
 
     let isOpen = this.props.selectionFilter !== undefined
       ? this.props.selectionFilter.selected

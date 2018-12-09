@@ -4,6 +4,7 @@ import Utils from '../../../background/utils/utils'
 
 describe("Comparator: ", ()=>{
   beforeAll(TestManager.initUnitBeforeAll());
+
   beforeEach(TestManager.initBeforeEach());
 
   it("toEqualTabs", ()=>{
@@ -27,6 +28,7 @@ describe("Comparator: ", ()=>{
     let groups = Session.createGroup({tabsLength: 7,
       pinnedTabs: 2,
       incognito: false});
+
     expect(groups).toEqualGroup(groups);
 
     let groups_alter = Utils.getCopy(groups);

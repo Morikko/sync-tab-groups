@@ -6,6 +6,7 @@ import tabGroupsMatchers from '../../utils/tabGroupsMatchers'
 
 describe("window.Background.GroupManager", () => {
   beforeAll(TestManager.initUnitBeforeAll());
+
   beforeEach(TestManager.initBeforeEach());
 
   describe(".coherentActiveTabInGroups function: ", () => {
@@ -214,9 +215,11 @@ describe("window.Background.GroupManager", () => {
       });
 
       let bestId = window.Background.GroupManager.bestMatchGroup(group.tabs, [group, group2]);
+
       expect(bestId).toEqual(id);
 
       bestId = window.Background.GroupManager.bestMatchGroup(group2.tabs, [group, group2]);
+
       expect(bestId).toEqual(id2);
     });
 
@@ -296,6 +299,7 @@ describe("window.Background.GroupManager", () => {
       groups.forEach((group)=>{
         group.tabs.forEach((tab, index)=>{
           let parts = tab.id.split("-");
+
           expect(parts[0].length>0).toBe(true);
           expect(parts[1]).toEqual(String(group.id));
           expect(parts[2]).toEqual(String(index));
