@@ -141,11 +141,15 @@ li {
   background-color: var(--private-focus);
 }
 
-.groupadd-controls i:hover {
+.group-name-editor-controls i:hover {
   background-color: var(--not-checked);
 }
 
-.addButton:hover, .edit-group-title {
+.group .group-name-editor-controls i:hover {
+  background-color: var(--action-hover);
+}
+
+.addButton:hover, .addButton .edit-group-title {
   background-color: var(--not-checked-hover);
 }
 
@@ -460,12 +464,18 @@ input[type="search"]::-webkit-search-cancel-button {
   margin: auto;
 }
 
-.addButton .add-button-title span, .edit-group-title span {
+.addButton .add-button-title span {
   margin: auto;
   font-size: 15px;
 }
 
-.groupadd-controls i {
+.edit-group-title span {
+  margin: auto 3px;
+  font-size: 15px;
+}
+
+.group-name-editor-controls i {
+  min-height: 34px;
   font-size: 20px;
   padding: 6px 0px;
 }
@@ -502,7 +512,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 /** End Drag & Drop **/
 
-.group-controls i, .tab-controls i, .cancel-search, .groupadd-controls i {
+.group-controls i, .tab-controls i, .cancel-search, .group-name-editor-controls i {
   width: 26px;
   background-color: none;
 }

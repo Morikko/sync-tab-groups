@@ -248,10 +248,7 @@ const groupNavigationListener = function(group) {
       }
     },
     "enter": ()=>{
-      if (group.state.editing) {
-        Navigation.focusParent('group', document.activeElement);
-        group.handleGroupEditSaveClick();
-      } else {
+      if (!group.state.editing) {
         group.handleGroupClick()
       }
     },

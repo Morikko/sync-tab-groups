@@ -12,6 +12,7 @@ import {
   groupNavigationListener,
 } from './wrapper/navigation'
 import sharedVariable from './sharedVariable'
+import GroupTitle from './GroupTitle';
 
 class Group extends React.Component {
   constructor(props) {
@@ -30,7 +31,6 @@ class Group extends React.Component {
       draggingOver: false,
       dragOnTop: false,
       dragOnBottom: false,
-      newTitle: Utils.getGroupTitle(this.props.group),
       waitFirstMount: false,
       hasFocus: false,
     };
@@ -41,10 +41,7 @@ class Group extends React.Component {
     this.handleGroupCloseAbortClick = this.handleGroupCloseAbortClick.bind(this);
     this.handleGroupClick = this.handleGroupClick.bind(this);
     this.handleGroupEditClick = this.handleGroupEditClick.bind(this);
-    this.handleGroupEditAbortClick = this.handleGroupEditAbortClick.bind(this);
-    this.handleGroupEditSaveClick = this.handleGroupEditSaveClick.bind(this);
     this.handleGroupExpandClick = this.handleGroupExpandClick.bind(this);
-    this.handleGroupTitleInputKey = this.handleGroupTitleInputKey.bind(this);
     this.handleGroupDrop = this.handleGroupDrop.bind(this);
     this.handleGroupDragOver = this.handleGroupDragOver.bind(this);
     this.handleGroupDragEnter = this.handleGroupDragEnter.bind(this);
@@ -90,7 +87,6 @@ class Group extends React.Component {
       opened: openWindow,
       expanded: expanded_state,
       currentlySearching: nextProps.currentlySearching,
-      newTitle: Utils.getGroupTitle(nextProps.group),
     });
   }
 
@@ -115,37 +111,16 @@ class Group extends React.Component {
   }
 
   getTitleElement() {
-    let titleElement;
-    if (this.state.editing) {
-      titleElement = (
-        <input
-          className=""
-          id={"text-editiong-" + this.props.group.id}
-          autoFocus="autoFocus"
-          type="text"
-          value={this.state.newTitle}
-          onChange={((event) => {
-            this.setState({newTitle: event.target.value});
-          }).bind(this)}
-          onMouseUp={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-          onFocus={(e) => {
-            e.target.select();
-          }}
-          onKeyUp={this.handleGroupTitleInputKey}
-        />
-      );
-    } else {
-      let title = Utils.getGroupTitle(this.props.group);
-      if (this.props.showTabsNumber) {
-        title = title + "  (" + this.props.group.tabs.length + ")";
-      }
-      titleElement = (
-        <span className="group-title-text">
-          {title}
-        </span>);
-    }
-    return titleElement;
+    return (
+      <GroupTitle
+        editing={this.state.editing}
+        group={this.props.group}
+        showTabsNumber={this.props.showTabsNumber}
+        setEditing={(editing) => this.setState({editing})}
+        defaultName={Utils.getGroupTitle(this.props.group)}
+        onGroupTitleChange={this.props.onGroupTitleChange}
+      />
+    )
   }
 
   getGroupClasses() {
@@ -201,8 +176,6 @@ class Group extends React.Component {
         onClose={this.handleGroupCloseClick}
         onRemove={this.handleGroupRemoveClick}
         onEdit={this.handleGroupEditClick}
-        onEditAbort={this.handleGroupEditAbortClick}
-        onEditSave={this.handleGroupEditSaveClick}
         onExpand={this.handleGroupExpandClick}
         onUndoCloseClick={this.handleGroupCloseAbortClick}
         onOpenInNewWindow={this.handleOpenInNewWindowClick}
@@ -464,34 +437,6 @@ class Group extends React.Component {
     });
   }
 
-  handleGroupEditAbortClick(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-    if (!this.state.editing) { // Useless
-      return;
-    }
-
-    this.setState({
-      editing: false,
-      newTitle: Utils.getGroupTitle(this.props.group),
-    });
-  }
-
-  handleGroupEditSaveClick(event) {
-    if (event) {
-      event.stopPropagation();
-    }
-    if (!this.state.editing) { // Useless
-      return;
-    }
-    this.setState({
-      editing: false,
-      newTitle: Utils.getGroupTitle(this.props.group),
-    });
-    this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
-  }
-
   handleGroupExpandClick(event) {
     if (event) {
       event.stopPropagation();
@@ -502,17 +447,6 @@ class Group extends React.Component {
     this.setState({
       expanded: !this.state.expanded,
     });
-  }
-
-  handleGroupTitleInputKey(event) {
-    event.stopPropagation();
-    if (event.keyCode === 13) { // Enter key
-      this.setState({
-        editing: false,
-        newTitle: Utils.getGroupTitle(this.props.group),
-      });
-      this.props.onGroupTitleChange(this.props.group.id, this.state.newTitle);
-    }
   }
 
   handleGroupDrop(event) {

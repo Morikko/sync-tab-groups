@@ -89,6 +89,10 @@ body {
   text-align: center;
 }
 
+.mainbar .edit-group-title {
+  background-color: var(--not-checked-hover);
+}
+
 /*** Main End bar ***/
 .group-list {
   height: 480px;
@@ -99,6 +103,6 @@ body {
   height: 30px;
 }
 
-.groupadd-controls i {
+.group-name-editor-controls i {
   padding: 5px 0px;
 }

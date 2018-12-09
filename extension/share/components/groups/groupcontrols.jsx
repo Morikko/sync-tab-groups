@@ -9,23 +9,6 @@ class GroupControls extends React.Component {
     super(props);
   }
 
-  getEditControls() {
-    if (this.props.editing) {
-      return [
-        <i
-          key="rename_agree"
-          className="group-edit group-control fa fa-fw fa-check"
-          onClick={this.props.onEditSave}
-        ></i>,
-        <i
-          key="rename_abort"
-          className="group-edit group-control fa fa-fw fa-ban"
-          onClick={this.props.onEditAbort}
-        ></i>,
-      ];
-    }
-  }
-
   getUndoControls() {
     const overHelp = this.props.closing
       ? browser.i18n.getMessage("undo_closing")
@@ -60,7 +43,6 @@ class GroupControls extends React.Component {
         {this.getUndoRemovingButton()}
         {this.getCloseButton()}
         {this.getRemoveButton()}
-        {this.getEditButtons()}
         {this.getTooltipOpenerButton()}
         <i
           className={expanderClasses}
@@ -68,13 +50,6 @@ class GroupControls extends React.Component {
           title={this.getExpandTitle()}
         ></i>
       </span>);
-  }
-
-  getEditButtons() {
-    if (this.props.controlsEnable && !this.props.closing
-      && !this.props.removing) {
-      return this.getEditControls();
-    }
   }
 
   getRemoveButton() {
