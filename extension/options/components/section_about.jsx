@@ -45,6 +45,19 @@ class AboutSection extends React.Component {
           </a>
         </div>
         <h2>
+          Release Notes (0.8)
+        </h2>
+        <ul>
+          <li>Better group renaming experience</li>
+          <li>Adding the current window as a group asks you a name</li>
+          <li>Update French (@ko-dever) and Spanish (@lucas-mancini) translations</li>
+          <li>{'The icon for the tab/group menu has changed (double arrows => 3 bars)'}</li>
+          <li>Chrome: at starting a notification is sent if the window bound to a group is not found</li>
+          <li>Fix: the browser in headless mode (MAC) triggered errors</li>
+          <li>Dev: Switch the codebase to webpack</li>
+          <li>Dev: Add a linter</li>
+        </ul>
+        <h2>
           Release Notes (0.7.1)
         </h2>
         <ul>
