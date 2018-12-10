@@ -478,7 +478,8 @@ Utils.createGroupsJsonFile = function(groups,{
  */
 Utils.waitDownload = async function(downloadId, waitingTime=6) {
   for (let i=0; i<waitingTime*4; i++) {
-    if ((await browser.downloads.search({id: downloadId}))[0].state !== "in_progress") {
+    const download = await browser.downloads.search({id: downloadId})
+    if (download && download.length > 0 && download[0].state !== "in_progress") {
       break;
     }
     await Utils.wait(250);
