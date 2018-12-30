@@ -31,5 +31,6 @@ module.exports = {
   target: 'web',
   mode: 'production',
   plugins,
-  devtool: 'source-map',
+  // Prefer size and performance
+  devtool: 'none',
 };

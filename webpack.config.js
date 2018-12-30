@@ -32,7 +32,7 @@ const config = {
   },
   output: {
     filename: '[name].js',
-    sourceMapFilename: '[name].map.js',
+    sourceMapFilename: '[name].js.map',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
