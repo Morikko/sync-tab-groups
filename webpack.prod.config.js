@@ -14,6 +14,9 @@ const plugins = [
       to: 'lib/browser-polyfill.js',
       context: '../',
       flatten: true,
+      transform: function(content, path) {
+        return content.toString().replace('//# sourceMappingURL=browser-polyfill.min.js.map', '')
+      },
     },
   ]),
   new OptimizeCssAssetsPlugin({

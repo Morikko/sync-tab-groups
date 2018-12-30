@@ -18,6 +18,9 @@ const plugins = [
       to: 'lib/',
       context: '../',
       flatten: true,
+      transform: function(content, path) {
+        return content.toString().replace('//# sourceMappingURL=browser-polyfill.js.map', '')
+      },
     },
   ]),
 ];
