@@ -45,6 +45,14 @@ class AboutSection extends React.Component {
           </a>
         </div>
         <h2>
+          Release Notes (0.8.2)
+        </h2>
+        <ul>
+          <li>Fix: Context menu for moving tabs was buggy</li>
+          <li>Dev: Clean source maps (enable and working only in dev mode)</li>
+          <li>Dev: Make the extension code compliant with the firefox web extension lint</li>
+        </ul>
+        <h2>
           Release Notes (0.8.1)
         </h2>
         <ul>
