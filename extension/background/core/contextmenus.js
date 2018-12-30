@@ -99,12 +99,9 @@ ContextMenu.createMoveTabMenu = async function() {
     });
 
     if (ContextMenu.again) {
-      setTimeout(
-        ContextMenu.repeatedtask.add(
-          () => {
-            ContextMenu.createMoveTabMenu();
-          }
-        ), 0);
+      setTimeout(() => {
+        ContextMenu.repeatedtask.add(() => ContextMenu.createMoveTabMenu())
+      }, 0);
       ContextMenu.again = false;
     }
   } catch (e) {
