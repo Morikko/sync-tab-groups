@@ -1,3 +1,22 @@
+# The project is no more maintained
+
+Although I used it a lot, I feel less and less need for such an advanced way to manage my tabs. Aside from my full-time job, I have not much time left to put in this project. 
+
+Even, if this project ends, I thank all of you that used the extension or helped me to make this extension so great.
+
+The project remains:
+ - Available: you continue to use it
+ - Open-source: you are free to fork it or reuse the code
+
+Alternatives:
+- Firefox: [Simple Tab Groups](https://addons.mozilla.org/en-US/firefox/addon/simple-tab-groups/)
+  - Actively maintained and with more features
+  - But no more pinned tabs inside groups and the double window to manage the tabs 
+- Chrome: nothing I am aware of
+
+If you are curious about the experience of developing an open-source extension, you will enjoy [the article about Sync Tab Groups](https://medium.com/@Morikko/the-story-of-sync-tab-groups-the-web-extension-for-managing-your-tabs-d40ebb1079ec).
+
+
 # Sync Tab Groups
 
 Sync Tab Groups is an easy way to manage all your tabs. You organize them depending on a topic by group. Groups can be closed and reopened without caring about your session. Moreover, you can easily search, active, move, save and remove your groups and tabs.
