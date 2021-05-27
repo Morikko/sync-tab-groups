@@ -12,7 +12,7 @@ Alternatives:
 - Firefox: [Simple Tab Groups](https://addons.mozilla.org/en-US/firefox/addon/simple-tab-groups/)
   - Actively maintained and with more features
   - But no more pinned tabs inside groups and the double window to manage the tabs 
-- Chrome: nothing I am aware of
+- Chrome: [Tab Session Manager](https://github.com/sienori/Tab-Session-Manager) (also compatible FF)
 
 If you are curious about the experience of developing an open-source extension, you will enjoy [the article about Sync Tab Groups](https://medium.com/@Morikko/the-story-of-sync-tab-groups-the-web-extension-for-managing-your-tabs-d40ebb1079ec).
 
